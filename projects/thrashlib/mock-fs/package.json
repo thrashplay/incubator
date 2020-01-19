@@ -1,0 +1,29 @@
+{
+  "name": "@thrashplay/mock-fs",
+  "version": "0.0.1",
+  "description": "Mock (memory-backed) filesystem for testing.",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "homepage": "https://github.com/thrashplay/devops-tools#readme",
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib/**"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thrashplay/devops-tools.git"
+  },
+  "scripts": {
+    "postinstall": "patch-package",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "lodash": "4.17.15",
+    "metro-memory-fs": "0.57.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "4.14.149",
+    "patch-package": "6.2.0"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "@thrashplay/fs-utils",
+  "version": "0.0.1",
+  "description": "Filesystem utilities for Thrashplay projects.",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "homepage": "https://github.com/thrashplay/devops-tools#readme",
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thrashplay/devops-tools.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "lodash": "4.17.15"
+  }
+}

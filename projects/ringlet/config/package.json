@@ -1,14 +1,14 @@
 {
-  "name": "@thrashplay/npm-utils",
+  "name": "@ringlet/config",
   "version": "0.0.1",
-  "description": "Utilities for working with NPM projects and data structures.",
+  "description": "Ringlet configuration: Read and write tool configurations",
   "author": "Sean Kleinjung <sean@thrashplay.com>",
   "homepage": "https://github.com/thrashplay/devops-tools#readme",
   "license": "MIT",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "files": [
-    "dist/**"
+    "lib/**"
   ],
   "repository": {
     "type": "git",
@@ -16,5 +16,13 @@
   },
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "@ringlet/core": "^0.0.1",
+    "@thrashplay/fs-utils": "^0.0.1",
+    "@thrashplay/logging": "^0.0.1",
+    "@thrashplay/mock-fs": "^0.0.1",
+    "@thrashplay/project-utils": "^0.0.1",
+    "lodash": "4.17.15"
   }
 }

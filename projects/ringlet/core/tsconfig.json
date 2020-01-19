@@ -1,0 +1,29 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "./lib",
+    "outDir": "./lib",
+    "rootDirs": ["./src"]
+  },
+  "exclude": [
+    "node_modules/**"
+  ],
+  "include": [
+    "src/**/*.ts"
+  ],
+  "references": [
+    {
+      "path": "../../thrashlib/fs-utils"
+    },
+    {
+      "path": "../../thrashlib/logging"
+    },
+    {
+      "path": "../../thrashlib/mock-fs"
+    },
+    {
+      "path": "../../thrashlib/project-utils"
+    }
+  ]
+}

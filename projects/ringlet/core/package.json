@@ -1,0 +1,27 @@
+{
+  "name": "@ringlet/core",
+  "version": "0.0.1",
+  "description": "Ringlet prototype - core",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "homepage": "https://github.com/thrashplay/devops-tools#readme",
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thrashplay/devops-tools.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "@thrashplay/fs-utils": "^0.0.1",
+    "@thrashplay/logging": "^0.0.1",
+    "@thrashplay/mock-fs": "^0.0.1",
+    "@thrashplay/project-utils": "^0.0.1",
+    "lodash": "4.17.15"
+  }
+}

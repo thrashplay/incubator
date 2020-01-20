@@ -34,6 +34,11 @@ local pipelineBuilder = function (steps, when, env, utils, templates) [
             amend: true,
             lernaOptions: ['--conventional-prerelease', '--preid', 'next'],
           },
+          publish: {
+            channels: 'next',
+            lernaOptions: 'from-package',
+            npmTokenSecret: 'NPM_PUBLISH_TOKEN',
+          },
         }) + when(branch = 'master'),
 
         steps.slack(templates.continuousIntegration.buildCompleted, 'notify-complete') + when(status = ['success', 'failure']),
@@ -45,36 +50,36 @@ local pipelineBuilder = function (steps, when, env, utils, templates) [
       }
     },
   },
-  {
-    name: 'publish-tag',
-    slack: slackConfig(),
+  // {
+  //   name: 'publish-tag',
+  //   slack: slackConfig(),
 
-    steps:
-      utils.join([
-        steps.slack(templates.publishing('next').buildStarted, 'notify-start'),
-        steps.yarn('install', ['install --frozen-lockfile --non-interactive']),
-        steps.yarn('bootstrap'),
-        steps.yarn('build'),
+  //   steps:
+  //     utils.join([
+  //       steps.slack(templates.publishing('next').buildStarted, 'notify-start'),
+  //       steps.yarn('install', ['install --frozen-lockfile --non-interactive']),
+  //       steps.yarn('bootstrap'),
+  //       steps.yarn('build'),
 
-        // publish prereleases from every master build
-        steps.release(
-        {
-          publish: {
-            channels: 'next',
-            lernaOptions: 'from-package',
-            npmTokenSecret: 'NPM_PUBLISH_TOKEN',
-          },
-        }),
+  //       // publish prereleases from every master build
+  //       steps.release(
+  //       {
+  //         publish: {
+  //           channels: 'next',
+  //           lernaOptions: 'from-package',
+  //           npmTokenSecret: 'NPM_PUBLISH_TOKEN',
+  //         },
+  //       }),
 
-        steps.slack(templates.publishing('next').buildCompleted, 'notify-complete') + when(status = ['success', 'failure']),
-      ]),
+  //       steps.slack(templates.publishing('next').buildCompleted, 'notify-complete') + when(status = ['success', 'failure']),
+  //     ]),
 
-    trigger: {
-      event: {
-        include: ['tag'],
-      }
-    },
-  },
+  //   trigger: {
+  //     event: {
+  //       include: ['tag'],
+  //     }
+  //   },
+  // },
   {
     name: 'promote-build',
     slack: slackConfig(),

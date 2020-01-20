@@ -1,6 +1,6 @@
 {
   "name": "@thrashplay/fs-utils",
-  "version": "0.1.0-next.1",
+  "version": "0.1.0-next.2",
   "description": "Filesystem utilities for Thrashplay projects.",
   "bugs": "https://github.com/thrashplay/incubator-node/issues",
   "license": "MIT",

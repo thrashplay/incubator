@@ -1,6 +1,6 @@
 {
   "name": "@thrashplay/mock-fs",
-  "version": "0.1.0-next.0",
+  "version": "0.1.0-next.1",
   "description": "Utilities for working with Node project structures and configuration.",
   "bugs": "https://github.com/thrashplay/incubator-node/issues",
   "license": "MIT",
@@ -22,5 +22,8 @@
   "devDependencies": {
     "@types/lodash": "4.14.149",
     "patch-package": "6.2.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

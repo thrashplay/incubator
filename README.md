@@ -15,16 +15,15 @@
 </p>
 
 ## Projects
-- Ringlet
 - [Thrashlib](#thrashlib)
   - [fs-utils](./projects/thrashlib/fs-utils#readme)
   - [logging](./projects/thrashlib/logging#readme)
   - [mock-fs](./projects/thrashlib/mock-fs#readme)
   - [project-utils](./projects/thrashlib/project-utils#readme)
+- [Ringlet](#ringlet)
 
 ## Thrashlib
-Library of utilities developed by Thrashplay, mostly for internal use on other projects. The packages here are meant to be small, and focused on
-single tasks. 
+Library of utilities developed by Thrashplay, mostly for internal use on other projects. The packages here are meant to be small, and focused on single tasks. 
 
 ### Packages
 
@@ -32,3 +31,9 @@ single tasks.
 - [**logging**](./projects/thrashlib/logging#readme): Basic logging API, intended as a placeholder interface until more robust logging is implemented.
 - [**mock-fs**](./projects/thrashlib/mock-fs#readme): Mock `fs` implementation that is basically a Typescript adaptation of [metro-memory-fs](https://github.com/facebook/metro/tree/master/packages/metro-memory-fs)
 - [**project-utils**](./projects/thrashlib/project-utils#readme): Helpers for exploring packages in a standalone or monorepo project in an abstract way.
+
+## Ringlet
+One build system to rule them all. `Ringlet` aims to ease much of the burden of setting up a new Typescript project by 
+providing a very opinionated, convention-based toolkit for eliminating or generating he configuration required for common
+tools such as `tsc`, `Babel`, and `webpack`. Unlike similar efforts, such as [create-react-app](https://github.com/facebook/create-react-app), `Ringlet`'s goal is to allow users much flexibility without the jarring experience of having to *eject* their
+application.

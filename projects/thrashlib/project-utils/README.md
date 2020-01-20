@@ -1,6 +1,5 @@
 # @thrashplay/project-utils
 
-## Overview
 Helpers for exploring packages in a standalone or monorepo project in an abstract way.
 This package provides methods for discovering the project's structure, as well as metadata
 for each package -- including the package name, directory path, and full `package.json`
@@ -11,11 +10,15 @@ Currently supported project structures include:
 - Lerna monorepos
 - (*Coming Soon*) [Yarn workspaces](https://github.com/thrashplay/incubator-node/issues/1)
 
+## Examples
+
+*Coming soon...*
+
 ## Functions
 
 ### `getProject`
 Promises to create a `Project` instance for the specified initial path, if the path is part
-of a known project structure. Returns a promise that resolves to the new Project
+of a known project structure. Returns a promise that resolves to the new `Project`
 instance, and rejects if the initial path is not part of a recognized project.
 
 ### `getPackages`

@@ -92,7 +92,6 @@ local pipelineBuilder = function (steps, when, env, utils, templates) [
         steps.yarn('bootstrap'),
         steps.yarn('build'),
 
-
         // promote build from any branch, because it's manual
         steps.release({
           npmTokenSecret: 'NPM_PUBLISH_TOKEN',

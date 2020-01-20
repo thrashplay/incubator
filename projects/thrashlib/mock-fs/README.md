@@ -1,0 +1,1 @@
+# @thrashplay/mock-fs

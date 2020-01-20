@@ -17,8 +17,10 @@
   "npmClient": "yarn",
   "useWorkspaces": true,
   "packages": [
-    "projects/ringlet/*",
-    "projects/thrashlib/*"
+    "projects/thrashlib/fs-utils",
+    "projects/thrashlib/logging",
+    "projects/thrashlib/mock-fs",
+    "projects/thrashlib/project-utils"
   ],
   "version": "independent"
 }

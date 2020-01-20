@@ -1,12 +1,11 @@
-const fs = require('fs')
-const path = require('path')
+const { map } = require('lodash')
+const { getPackageJsons } = require('@thrashplay/project-utils')
 
-const getPackages = () => {
-  return fs.readdirSync(path.resolve('packages'))
-    .filter(name => !name.startsWith('.'))
-}
+const getPackages = () => getPackageJsons(__dirname).then((packageJsons) => {
+  return map(packageJsons, (packageJson) => packageJson.name)
+})
 
-module.exports = {
+module.exports = (async () => ({
   extends: [
     '@commitlint/config-conventional',
   ],
@@ -16,9 +15,8 @@ module.exports = {
     'header-full-stop': [2, 'always', '.'],
     'header-max-length': [2, 'always', 100],
     'scope-case': [2, 'always', 'kebab-case'],
-    'scope-enum': [2, 'always', getPackages().concat(['publish'])],
+    'scope-enum': [2, 'always', [await getPackages()]],
     'subject-case': [2, 'always', 'sentence-case'],
     'subject-full-stop': [2, 'always', '.'],
   },
-}
-
+}))()

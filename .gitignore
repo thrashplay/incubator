@@ -4,8 +4,6 @@
 dist
 projects/**/lib
 packages/**/tsconfig.json
-projects/**/src/**/*.d.ts
-projects/**/src/**/*.d.ts.map
 
 # Logs
 logs

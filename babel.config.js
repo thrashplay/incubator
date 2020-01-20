@@ -44,12 +44,20 @@ module.exports = api => {
     createPluginConfig('@babel/proposal-export-default-from'),
   ]
 
+  const sharedIgnoredFiles = [/node_modules/]
+  const productionIgnoredFies = [
+    /__fixtures__/,
+    /__mocks__/,
+    /__tests__/,
+    /.*\.test\..*/,
+  ]
+
   return {
     babelrcRoots: [
       '.',
       'packages/*',
     ],
-    ignore: [/node_modules/],
+    ignore: [...sharedIgnoredFiles, ...(api.env('test') ? [] : productionIgnoredFies)],
     plugins,
     presets,
   }

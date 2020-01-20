@@ -1,26 +1,26 @@
 {
   "name": "@thrashplay/project-utils",
-  "version": "0.0.1",
+  "version": "0.1.0-next.0",
   "description": "Utilities for working with Node project structures and configuration.",
-  "author": "Sean Kleinjung <sean@thrashplay.com>",
-  "homepage": "https://github.com/thrashplay/devops-tools#readme",
+  "bugs": "https://github.com/thrashplay/incubator-node/issues",
   "license": "MIT",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "files": [
+    "lib/**"
+  ],
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
-  "files": [
-    "dist/**"
-  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thrashplay/devops-tools.git"
+    "url": "https://github.com/thrashplay/incubator-node.git",
+    "directory": "projects/thrashlib/project-utils"
   },
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "@thrashplay/fs-utils": "^0.0.1",
-    "@thrashplay/logging": "^0.0.1",
-    "@thrashplay/mock-fs": "^0.0.1",
+    "@thrashplay/fs-utils": "^0.1.0-next.0",
+    "@thrashplay/mock-fs": "^0.1.0-next.0",
     "lodash": "4.17.15"
   }
 }

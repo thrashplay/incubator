@@ -1,22 +1,19 @@
 {
   "name": "@thrashplay/mock-fs",
-  "version": "0.0.1",
-  "description": "Mock (memory-backed) filesystem for testing.",
-  "author": "Sean Kleinjung <sean@thrashplay.com>",
-  "homepage": "https://github.com/thrashplay/devops-tools#readme",
+  "version": "0.1.0-next.0",
+  "description": "Utilities for working with Node project structures and configuration.",
+  "bugs": "https://github.com/thrashplay/incubator-node/issues",
   "license": "MIT",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
   "files": [
     "lib/**"
   ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thrashplay/devops-tools.git"
-  },
-  "scripts": {
-    "postinstall": "patch-package",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "url": "https://github.com/thrashplay/incubator-node.git",
+    "directory": "projects/thrashlib/mock-fs"
   },
   "dependencies": {
     "lodash": "4.17.15",

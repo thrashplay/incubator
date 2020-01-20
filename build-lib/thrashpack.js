@@ -15,7 +15,7 @@ const exec = (...commandParts) => {
   const skipWebpack = get(configuration, 'webpack.skip', false)
 
   if (skipWebpack) {
-    exec('yarn', '--silent', 'babel', '--root-mode', 'upward', 'src', '--out-dir', 'dist', '--extensions', '.ts,.tsx,.js,.jsx')
+    exec('yarn', '--silent', 'babel', '--root-mode', 'upward', 'src', '--out-dir', 'lib', '--extensions', '.ts,.tsx,.js,.jsx')
   } else {
     exec('yarn', '--silent', 'webpack', '--env.name', 'dev')
   }

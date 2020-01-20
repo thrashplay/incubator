@@ -49,7 +49,13 @@ module.exports = api => {
       '.',
       'packages/*',
     ],
-    ignore: [/node_modules/],
+    ignore: [
+      /node_modules/,
+      /__fixtures__/,
+      /__mocks__/,
+      /__tests__/,
+      /.*\.test\..*/,
+    ],
     plugins,
     presets,
   }

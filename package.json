@@ -7,17 +7,19 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "projects/ringlet/*",
-      "projects/thrashlib/*"
+      "projects/thrashlib/fs-utils",
+      "projects/thrashlib/logging",
+      "projects/thrashlib/mock-fs",
+      "projects/thrashlib/project-utils"
     ]
   },
   "scripts": {
     "bootstrap": "yarn && yarn lerna bootstrap && yarn _build:ts-config",
-    "build": "yarn _build:ts-config && yarn run-p _build:types _build:js",
+    "build": "yarn run-p _build:types _build:js",
     "build:clean": "run-s clean build",
     "build:dev": "yarn _build:ts-config && yarn run-p _build:types _build:js:dev",
     "build:watch": "yarn _build:ts-config && yarn run-p _build:watch:js _build:watch:types",
-    "clean": "rm -rf packages/*/dist && rm -rf packages/*/lib && rm -rf packages/*/tsconfig.tsbuildinfo && rm -f tsconfig.tsbuildinfo",
+    "clean": "rm -rf projects/*/*/dist && rm -rf projects/*/*/lib && rm -rf projects/*/*/tsconfig.build.tsbuildinfo && rm -f tsconfig.build.tsbuildinfo",
     "clean:all": "yarn clean && yarn _clean:ts-config && yarn _clean:node_modules",
     "lint": "eslint . --ext .ts,.js",
     "lint:fix": "eslint . --fix --ext .ts,.js",
@@ -27,9 +29,8 @@
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
     "version:graduate": "yarn lerna version --conventional-graduate",
-    "_build:js": "lerna exec --stream -- node ../../build-lib/thrashpack.js",
+    "_build:js": "lerna exec --stream -- node ../../../build-lib/thrashpack.js",
     "_build:js:dev": "lerna run --parallel build:dev",
-    "_build:ts-config": "echo thrasher create-tsconfigs",
     "_build:types": "tsc --build tsconfig.build-types.json",
     "_build:watch:js": "lerna exec --parallel -- webpack --watch --env.name dev",
     "_build:watch:types": "tsc --build tsconfig.build-types.json --watch",

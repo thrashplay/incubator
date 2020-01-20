@@ -3,7 +3,10 @@
   "files": [],
   "references": [
     {
-      "path": "projects/ringlet/config"
+      "path": "projects/thrashlib/logging/tsconfig.build.json"
+    },
+    {
+      "path": "projects/thrashlib/project-utils/tsconfig.build.json"
     }
   ]
 }

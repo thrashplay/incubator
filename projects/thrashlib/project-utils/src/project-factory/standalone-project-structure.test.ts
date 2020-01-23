@@ -51,7 +51,7 @@ const createTests = (fileSystemInitializer: () => string) => () => {
       expect(projectOrUndefined).toBeDefined()
 
       const project = projectOrUndefined!
-      expect(project.projectRootDir).toBe(projectRoot)
+      expect(project.directory).toBe(projectRoot)
     })
 
     it('creates project with correct packages', async () => {

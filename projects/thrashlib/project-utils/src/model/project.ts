@@ -29,6 +29,12 @@ export class Project {
 
     this.ioHelper = new IoHelper(this.directory)
   }
+  
+  /**
+   * Retrieves the package with the specified name from in this project. If the project does not
+   * contain a package with the given name, `undefined` is returned.
+   */
+  getPackage = (name: string) => find(this.packages, { name })
 
   getPackageFromDir = (directory: string) => {
     return find(this.packages, { directory })

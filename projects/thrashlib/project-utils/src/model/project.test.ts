@@ -38,6 +38,45 @@ describe('class Project', () => {
     })
   })
 
+  describe('getPackage', () => {
+    describe('when standalone project', () => {
+      const packageConfig1 = new PackageConfig('/any-dir', {
+        name: 'app',
+        version: '1.0.0',
+      })    
+      const project = new Project(false, '/any-dir', [packageConfig1])
+
+      it('returns package when name matches this project', () => {
+        expect(project.getPackage('app')).toBe(packageConfig1)
+      })
+
+      it('returns undefined when name DOES NOT match this project', () => {
+        expect(project.getPackage('not-app')).toBeUndefined()
+      })
+    })
+
+    describe('when monorepo project', () => {
+      const packageConfig1 = new PackageConfig('/app/pkg1', {
+        name: 'pkg1',
+        version: '1.0.0',
+      })
+      const packageConfig2 = new PackageConfig('/app/pkg2', {
+        name: 'pkg2',
+        version: '1.0.0',
+      })
+      const project = new Project(true, '/app', [packageConfig1, packageConfig2])
+
+      it('returns package when name exists in the project', () => {
+        expect(project.getPackage('pkg1')).toBe(packageConfig1)
+        expect(project.getPackage('pkg2')).toBe(packageConfig2)
+      })
+
+      it('returns undefined when name is completely outside project', () => {
+        expect(project.getPackage('any-other-pkg')).toBeUndefined()
+      })
+    })
+  })
+
   describe('getPackageFromDir', () => {
     describe('when standalone project', () => {
       const packageConfig1 = new PackageConfig('/any-dir', {

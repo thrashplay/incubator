@@ -55,7 +55,7 @@ module.exports = api => {
   return {
     babelrcRoots: [
       '.',
-      'packages/*',
+      'projects/*/*',
     ],
     ignore: [...sharedIgnoredFiles, ...(api.env('test') ? [] : productionIgnoredFies)],
     plugins,

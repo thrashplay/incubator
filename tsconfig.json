@@ -1,7 +1,7 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "allowJs": false,
+    "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "alwaysStrict": true,
     "baseUrl": "./projects",
@@ -25,6 +25,7 @@
     "noUnusedLocals": true,
     "paths": {
       "@ringlet/*": ["ringlet/*/src"],
+      "@thrashplay/genotype-*": ["genotype/*/src"],
       "@thrashplay/*": ["thrashlib/*/src"]
     },
     "noUnusedParameters": true,

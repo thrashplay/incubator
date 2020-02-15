@@ -17,10 +17,8 @@
   "npmClient": "yarn",
   "useWorkspaces": true,
   "packages": [
-    "projects/thrashlib/fs-utils",
-    "projects/thrashlib/logging",
-    "projects/thrashlib/mock-fs",
-    "projects/thrashlib/project-utils"
+    "projects/genotype/*",
+    "projects/thrashlib/*"
   ],
   "version": "independent"
 }

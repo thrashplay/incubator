@@ -3,6 +3,9 @@
   "files": [],
   "references": [
     {
+      "path": "projects/genotype/native/tsconfig.build.json"
+    },
+    {
       "path": "projects/thrashlib/logging/tsconfig.build.json"
     },
     {

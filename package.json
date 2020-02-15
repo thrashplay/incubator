@@ -7,10 +7,9 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "projects/thrashlib/fs-utils",
-      "projects/thrashlib/logging",
-      "projects/thrashlib/mock-fs",
-      "projects/thrashlib/project-utils"
+      "projects/genotype/*",
+      "projects/ringlet/haul-config-helpers",
+      "projects/thrashlib/*"
     ]
   },
   "scripts": {

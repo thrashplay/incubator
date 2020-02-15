@@ -1,6 +1,6 @@
 {
   "name": "@thrashplay/genotype-native",
-  "version": "0.0.1",
+  "version": "0.1.0-next.0",
   "description": "Genotype native applications component",
   "bugs": "https://github.com/thrashplay/incubator-node/issues",
   "author": "Sean Kleinjung <sean@thrashplay.com>",
@@ -19,13 +19,13 @@
   },
   "dependencies": {
     "@babel/runtime": "7.7.2",
-    "@thrashplay/genotype-components": "0.0.1",
+    "@thrashplay/genotype-components": "^0.1.0-next.0",
     "react": "16.9.0",
     "react-native": "0.61.5"
   },
   "devDependencies": {
-    "@ringlet/haul-config-helpers": "0.0.1",
-    "@thrashplay/genotype-storybook": "0.0.1",
+    "@ringlet/haul-config-helpers": "^0.1.0-next.0",
+    "@thrashplay/genotype-storybook": "^0.1.0-next.0",
     "haul": "1.0.0-rc.15",
     "npm-run-all": "4.1.5",
     "react-native-dev-menu": "4.0.0"

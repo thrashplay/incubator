@@ -3,6 +3,7 @@
 # generated files
 dist
 projects/**/lib
+# this project only has pre-compiled libs that we want to check in
 packages/**/tsconfig.json
 
 # Logs
@@ -75,6 +76,10 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
+# Local yarn settings
+.yarn
+.yarnrc
+
 # dotenv environment variables file
 .env
 .env.test
@@ -109,3 +114,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+# vscode-react-native temporary files
+.vscode/.react

@@ -14,7 +14,6 @@ module.exports = (async () => ({
     'footer-max-line-length': [2, 'always', 100],
     'header-full-stop': [2, 'always', '.'],
     'header-max-length': [2, 'always', 100],
-    'scope-case': [2, 'always', 'kebab-case'],
     'scope-enum': [2, 'always', [await getPackages()]],
     'subject-case': [2, 'always', 'sentence-case'],
     'subject-full-stop': [2, 'always', '.'],

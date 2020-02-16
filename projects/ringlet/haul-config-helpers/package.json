@@ -21,5 +21,8 @@
   "peerDependencies": {
     "@babel/runtime": "^7.4.0",
     "haul": "^1.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

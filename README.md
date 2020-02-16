@@ -20,6 +20,7 @@
   - [logging](./projects/thrashlib/logging#readme)
   - [mock-fs](./projects/thrashlib/mock-fs#readme)
   - [project-utils](./projects/thrashlib/project-utils#readme)
+  - [tsconfig-utils](./projects/thrashlib/tsconfig-utils#readme)
 - [Ringlet](#ringlet)
 
 ## Thrashlib
@@ -31,6 +32,7 @@ Library of utilities developed by Thrashplay, mostly for internal use on other p
 - [**logging**](./projects/thrashlib/logging#readme): Basic logging API, intended as a placeholder interface until more robust logging is implemented.
 - [**mock-fs**](./projects/thrashlib/mock-fs#readme): Mock `fs` implementation that is basically a Typescript adaptation of [metro-memory-fs](https://github.com/facebook/metro/tree/master/packages/metro-memory-fs)
 - [**project-utils**](./projects/thrashlib/project-utils#readme): Helpers for exploring packages in a standalone or monorepo project in an abstract way.
+- [**tsconfig-utils**](./projects/thrashlib/project-utils#readme): Utilities for working with tsconfig files in a project.
 
 ## Ringlet
 One build system to rule them all. `Ringlet` aims to ease much of the burden of setting up a new Typescript project by 

@@ -1,5 +1,5 @@
 diff --git a/node_modules/typescript/lib/lib.es2015.promise.d.ts b/node_modules/typescript/lib/lib.es2015.promise.d.ts
-index b20efae..2ea9662 100644
+index b20efae..703d4b8 100644
 --- a/node_modules/typescript/lib/lib.es2015.promise.d.ts
 +++ b/node_modules/typescript/lib/lib.es2015.promise.d.ts
 @@ -38,7 +38,7 @@ interface PromiseConstructor {

@@ -1,0 +1,34 @@
+{
+  "name": "@ringlet/cli",
+  "version": "0.0.0",
+  "description": "Trhasher prototype",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "homepage": "https://github.com/thrashplay/devops-tools#readme",
+  "license": "MIT",
+  "main": "./lib/module/index.js",
+  "types": "./lib/module/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "bin": "./dist/cli.js",
+  "thrashpack": {
+    "outputType": "script"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thrashplay/devops-tools.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "@lerna/project": "3.18.0",
+    "@types/fs-extra": "8.0.1",
+    "ajv": "6.10.2",
+    "find-up": "4.1.0",
+    "fs-extra": "8.1.0",
+    "glob": "7.1.6",
+    "lodash": "4.17.15",
+    "pkg-dir": "4.2.0"
+  }
+}

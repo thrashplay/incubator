@@ -11,7 +11,10 @@ export type TsConfig = CompileOnSaveDefinition &
 CompilerOptionsDefinition &
 ExtendsDefinition &
 TypeAcquisitionDefinition &
-(ExcludeDefinition | FilesDefinition | IncludeDefinition | ReferencesDefinition);
+ExcludeDefinition & 
+FilesDefinition & 
+IncludeDefinition &
+ReferencesDefinition;
 
 export interface CompileOnSaveDefinition {
 /**

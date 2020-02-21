@@ -1,0 +1,26 @@
+{
+  "name": "@ringlet/tsconfigure",
+  "version": "0.0.1",
+  "description": "Ringlet tsconfigure prototype",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "homepage": "https://github.com/thrashplay/devops-tools#readme",
+  "license": "MIT",
+  "files": [
+    "lib/**"
+  ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "@thrashplay/tsconfig-utils": "^0.0.1",
+    "lodash": "4.17.15"
+  },
+  "devDependencies": {
+    "metro-memory-fs": "0.57.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

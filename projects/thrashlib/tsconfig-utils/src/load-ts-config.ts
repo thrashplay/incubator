@@ -3,7 +3,7 @@ import path from 'path'
 import os from 'os'
 
 import Ajv from 'ajv'
-import { assign, get, join, map, size } from 'lodash'
+import { assign, get, flow, join, map, size } from 'lodash'
 
 import { TsConfig } from './ts-config'
 import tsconfigSchema from './schemas/tsconfig.schema.json'
@@ -32,6 +32,23 @@ const getErrorMessage = (error: Ajv.ErrorObject) => {
       return error.message
   }
 }
+
+
+
+/////////////////
+// FUNCTIONAL
+/////////////////
+
+export const loadTsConfigPure = flow(
+  
+)
+
+
+/////////////////
+// END
+/////////////////
+
+
 
 /**
  * Loads a `TypescriptConfiguration` from a specified path.

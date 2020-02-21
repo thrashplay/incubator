@@ -18,6 +18,8 @@
   "useWorkspaces": true,
   "packages": [
     "projects/genotype/*",
+    "projects/ringlet/haul-config-helpers",
+    "projects/ringlet/tsconfigure",
     "projects/thrashlib/*"
   ],
   "version": "independent"

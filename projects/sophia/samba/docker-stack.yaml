@@ -1,0 +1,41 @@
+version: '3.7'
+services:
+  samba:
+    image: dperson/samba:armhf
+    ports:
+      - "139:139/tcp"
+      - "445:445/tcp"
+    entrypoint: /sbin/tini -- /bin/bash -c "/usr/bin/samba.sh -r $$(< /run/secrets/smb_users)"
+    environment:
+      - GROUPID=0
+      - INCLUDE=/etc/samba/smb-local.conf
+      - TZ=America/Chicago
+      - USERID=0
+      - WORKGROUP=CONCLAVE
+    volumes:
+      - type: bind
+        source: /mnt/backup
+        target: /mount/backup
+      - type: bind
+        source: /mnt/samba/home
+        target: /mount/home
+      - type: bind
+        source: /mnt/samba/shared
+        target: /mount/shared
+    configs:
+      - source: smb_conf
+        target: /etc/samba/smb-local.conf
+    secrets:
+      - smb_users
+    deploy:
+      placement:
+        constraints: [node.labels.net.the-pegasus.storage == true]
+
+configs:
+  smb_conf:
+    name: smb_conf-${SETTINGS_VERSION:-default}
+    file: ./config/smb.conf
+
+secrets:
+  smb_users:
+    file: ../../secrets/samba/users

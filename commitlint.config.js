@@ -5,6 +5,8 @@ const getPackages = () => getPackageJsons(__dirname).then((packageJsons) => {
   return map(packageJsons, (packageJson) => packageJson.name)
 })
 
+const getAllowedScopes = async () => ['sophia', ...(await getPackages())]
+
 module.exports = (async () => ({
   extends: [
     '@commitlint/config-conventional',
@@ -14,7 +16,7 @@ module.exports = (async () => ({
     'footer-max-line-length': [2, 'always', 100],
     'header-full-stop': [2, 'always', '.'],
     'header-max-length': [2, 'always', 100],
-    'scope-enum': [2, 'always', [await getPackages()]],
+    'scope-enum': async () => [2, 'always', [await getAllowedScopes()]],
     'subject-case': [2, 'always', 'sentence-case'],
     'subject-full-stop': [2, 'always', '.'],
   },

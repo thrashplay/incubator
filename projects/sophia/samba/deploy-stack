@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+SETTINGS_VERSION=$(sha256sum config/smb.conf | cut -d " " -f 1 | head -c 8) docker stack deploy --resolve-image=never --compose-file docker-stack.yaml samba

@@ -25,6 +25,7 @@
     "noUnusedLocals": true,
     "paths": {
       "@ringlet/*": ["ringlet/*/src"],
+      "@sophia/*": ["sophia/*/src"],
       "@thrashplay/genotype-*": ["genotype/*/src"],
       "@thrashplay/*": ["thrashlib/*/src"]
     },

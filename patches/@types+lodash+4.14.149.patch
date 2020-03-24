@@ -1,0 +1,15 @@
+diff --git a/node_modules/@types/lodash/ts3.1/fp.d.ts b/node_modules/@types/lodash/ts3.1/fp.d.ts
+index 5ab08e2..dd660bf 100644
+--- a/node_modules/@types/lodash/ts3.1/fp.d.ts
++++ b/node_modules/@types/lodash/ts3.1/fp.d.ts
+@@ -1569,7 +1569,9 @@ declare namespace _ {
+         (defaultValue: lodash.__, object: any): LodashGetOr7x6;
+         (defaultValue: any, object: any): any;
+     }
+-    type LodashGetOr6x3<TDefault> = (object: null | undefined) => TDefault;
++    // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37499
++    // the types for `getOr` are badly broken, this at least gets what we use working
++    type LodashGetOr6x3<TObject extends object, TDefault> = (object: TObject | null | undefined) => TDefault;
+     interface LodashGetOr6x4 {
+         <TDefault>(defaultValue: TDefault): LodashGetOr6x5<TDefault>;
+         (defaultValue: lodash.__, path: lodash.PropertyPath): LodashGetOr6x6;

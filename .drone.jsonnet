@@ -19,7 +19,7 @@ local createBuildSteps(steps) = [
 
 local pipelineBuilder = function (steps, when, env, utils, templates) [
   {
-    name: 'continuous-integration',
+    name: 'ci-node',
     slack: slackConfig(),
 
     steps:
@@ -47,9 +47,89 @@ local pipelineBuilder = function (steps, when, env, utils, templates) [
     trigger: {
       event: {
         include: ['push'],
-      }
+      },
+      changeset: {
+        includes: [
+          'projects/**',
+          'patches/**',
+          '@types/**',
+          'build-lib/**',
+          'tsconfig.*.json',
+          'package.json',
+          'lerna.json',
+          'jest.config.js',
+          'babel.conf.js',
+          '.eslintrc.js',
+          '.eslintignore',
+          '.drone.jsonnet',
+        ],
+      },
     },
   },
+  {
+    name: 'deployment-agent',
+    slack: slackConfig(),
+
+    steps:
+      utils.join([
+        steps.slack(templates.continuousIntegration.buildStarted, 'notify-start'),
+        
+        steps.custom('publish-image', 'plugins/docker', [], {
+          repo: 'thrashplay/drone-deployment-agent',
+          tag: 'drone_test',
+          dockerfile: 'services/sophia/deployment-agent/Dockerfile',
+          username: {
+            from_secret: 'DOCKER_USERNAME',
+          },
+          password: {
+            from_secret: 'DOCKER_PASSWORD',
+          },
+        }),
+
+        steps.custom('publish-manifest', 'plugins/manifest:1.2', [], {
+          ignore_missing: true,
+          repo: 'thrashplay/drone-deployment-agent',
+          spec: 'services/sophia/deployment-agent/manifest.server.tmpl',
+          tag: 'drone_test',
+          dockerfile: 'services/sophia/deployment-agent/Dockerfile',
+          username: {
+            from_secret: 'DOCKER_USERNAME',
+          },
+          password: {
+            from_secret: 'DOCKER_PASSWORD',
+          },
+        }),
+
+        // publish prereleases from every master build
+        // steps.release(
+        // {
+        //   version: {
+        //     amend: true,
+        //     lernaOptions: ['--conventional-prerelease', '--preid', 'next'],
+        //   },
+        //   publish: {
+        //     channels: 'next',
+        //     lernaOptions: 'from-package',
+        //     npmTokenSecret: 'NPM_PUBLISH_TOKEN',
+        //   },
+        // }) + when(branch = 'master'),
+
+        steps.slack(templates.continuousIntegration.buildCompleted, 'notify-complete') + when(status = ['success', 'failure']),
+      ]),
+
+    trigger: {
+      event: {
+        include: ['push'],
+      },
+      changeset: {
+        includes: [
+          'services/sophia/deployment-agent/**',
+          '.drone.jsonnet',
+        ],
+      },
+    },
+  },
+  
   // {
   //   name: 'publish-tag',
   //   slack: slackConfig(),

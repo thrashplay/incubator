@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # See: https://medium.com/@basi/docker-environment-variables-expanded-from-secrets-8fa70617b3bc
 

@@ -1,13 +1,96 @@
 kind: pipeline
-name: deploy-nginx
+name: deploy-scripts
 
 steps:
-- name: hello
-  image: hello-world
+- name: transfer
+  image: appleboy/drone-scp
+  settings:
+    host:
+      from_secret: DEPLOY_HOST
+    username:
+      from_secret: DEPLOY_USERNAME
+    key: 
+      from_secret: DEPLOY_SSH_KEY
+    passphrase:
+      from_secret: DEPLOY_KEY_PASSPHRASE
+    rm: true
+    strip_components: 2
+    source:
+      - services/bin
+    target:
+      - /opt/sophia/bin
+
+- name: make-executable
+  image: appleboy/drone-ssh
+  settings:
+    host:
+      from_secret: DEPLOY_HOST
+    username:
+      from_secret: DEPLOY_USERNAME
+    key: 
+      from_secret: DEPLOY_SSH_KEY
+    passphrase:
+      from_secret: DEPLOY_KEY_PASSPHRASE
+    script:
+      - chmod -R u+x /opt/sophia/bin
+
+when:
+  branch:
+    - master
 
 trigger:
   changeset:
-    includes: [ .drone.yaml, services/sophia/nginx/** ]
+    includes: [ .drone.yaml, services/bin/** ]
+
+---
+
+kind: pipeline
+name: deploy-nginx
+
+steps:
+- name: transfer-files
+  image: appleboy/drone-scp
+  settings:
+    host:
+      from_secret: DEPLOY_HOST
+    username:
+      from_secret: DEPLOY_USERNAME
+    key: 
+      from_secret: DEPLOY_SSH_KEY
+    passphrase:
+      from_secret: DEPLOY_KEY_PASSPHRASE
+    rm: true
+    strip_components: 3
+    target:
+      - /opt/sophia/etc/nginx
+    source:
+      - services/sophia/nginx
+
+- name: make-executable
+  image: appleboy/drone-ssh
+  settings:
+    host:
+      from_secret: DEPLOY_HOST
+    username:
+      from_secret: DEPLOY_USERNAME
+    key: 
+      from_secret: DEPLOY_SSH_KEY
+    passphrase:
+      from_secret: DEPLOY_KEY_PASSPHRASE
+    script:
+      - cd /opt/sophia/bin
+      - ./deploy-stack
+
+depends_on:
+- deploy-scripts
+
+when:
+  branch:
+    - master
+
+trigger:
+  changeset:
+    includes: [ .drone.yaml, services/bin/**, services/sophia/nginx/** ]
 
 # // local deployService(name, path) = {
 # //   kind: "pipeline",

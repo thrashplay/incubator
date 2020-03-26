@@ -1,2 +1,0 @@
-#!/usr/bin/env bash
-SETTINGS_VERSION=$(sha256sum nginx/config/nginx.conf | cut -d " " -f 1 | head -c 8) docker stack deploy --compose-file ./nginx/stack-compose.yaml nginx

@@ -103,6 +103,11 @@ platform:
   os: linux
 
 steps:
+  - name: calculate-config-versions
+    image: node:lts
+    commands:
+      - npx \@sophia/config-version-helper services/sophia/nginx/stack-compose.yaml nginx
+
   - name: deploy
     image: thrashplay/sophia-deployer
     settings:

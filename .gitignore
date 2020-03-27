@@ -1,6 +1,7 @@
 .idea
 
 secret-configs
+*.env
 
 # generated files
 dist

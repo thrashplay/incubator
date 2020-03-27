@@ -1,6 +1,6 @@
 {
-  "name": "@sophia/genotype-components",
-  "version": "0.0.1",
+  "name": "@sophia/config-version-helper",
+  "version": "0.1.0-next.0",
   "description": "Helper for generating Docker Swarm config versions.",
   "bugs": "https://github.com/thrashplay/incubator-node/issues",
   "license": "MIT",
@@ -10,6 +10,7 @@
   ],
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
+  "bin": "./lib/cli.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/thrashplay/incubator-node.git",
@@ -19,10 +20,12 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "@thrashplay/fp": "^0.0.1",
-    "@thrashplay/fs-utils": "^0.1.0-next.4",
-    "@thrashplay/mock-fs": "^0.1.0-next.4",
-    "lodash": "4.17.15"
+    "@thrashplay/fp": "^0.1.0-next.1",
+    "@thrashplay/fs-utils": "^0.1.0-next.6",
+    "@thrashplay/mock-fs": "^0.1.0-next.6",
+    "js-yaml": "^3.13.1",
+    "lodash": "4.17.15",
+    "yargs": "^15.3.1"
   },
   "publishConfig": {
     "access": "public"

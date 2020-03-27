@@ -1,74 +1,121 @@
+---
 kind: pipeline
-name: deploy-stacks
+type: docker
+name: build-deploy-tools
+
+platform:
+  arch: arm
+  os: linux
 
 steps:
-- name: transfer-scripts
-  image: appleboy/drone-scp
-  when:
-    changeset:
-      includes: [ .drone.yaml, services/bin/** ]
-  settings:
-    host: control.the-pegasus.net
-    username: sophia
-    key:
-      from_secret: DEPLOY_SSH_KEY
-    passphrase:
-      from_secret: DEPLOY_KEY_PASSPHRASE
-    rm: true
-    strip_components: 2
-    source:
-      - services/bin
-    target:
-      - /opt/sophia/bin
-
-- name: make-scripts-executable
-  image: appleboy/drone-ssh
-  when:
-    changeset:
-      includes: [ .drone.yaml, services/bin/** ]
-  settings:
-    host: control.the-pegasus.net
-    username: sophia
-    key: 
-      from_secret: DEPLOY_SSH_KEY
-    passphrase:
-      from_secret: DEPLOY_KEY_PASSPHRASE
-    script:
-      - chmod -R u+x /opt/sophia/bin
-
-- name: transfer-configs
-  image: appleboy/drone-scp
-  settings:
-    host: control.the-pegasus.net
-    username: sophia
-    key: 
-      from_secret: DEPLOY_SSH_KEY
-    passphrase:
-      from_secret: DEPLOY_KEY_PASSPHRASE
-    rm: true
-    strip_components: 2
-    target:
-      - /opt/sophia/etc
-    source:
-      - services/sophia
-
-- name: deploy
-  image: appleboy/drone-ssh
-  settings:
-    host: control.the-pegasus.net
-    username: sophia
-    key: 
-      from_secret: DEPLOY_SSH_KEY
-    passphrase:
-      from_secret: DEPLOY_KEY_PASSPHRASE
-    script:
-      - cd /opt/sophia/bin
-      - ./deploy-stack
-
-when:
-  branch:
-    - master
+  - name: build-deployer
+    image: plugins/docker
+    settings:
+      context: projects/sophia/deployer
+      dockerfile: projects/sophia/deployer/Dockerfile
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/sophia-deployer
+      tags: latest
+      username: thrashplay
 
 trigger:
   changeset:
-    includes: [ .drone.yaml, services/** ]
+    includes: [ .drone.yaml, projects/sophia/deployer/** ]
+  branch:
+    - master
+---
+
+kind: pipeline
+type: docker
+name: build-npm-packages
+
+steps:
+  - name: initialize
+    image: alpine/git
+    commands:
+      - git config --local user.email drone@thrashplay.com
+      - git config --local user.name Drone
+
+  - name: bootstrap
+    image: node:lts
+    commands:
+      - yarn install --frozen-lockfile --non-interactive
+      - yarn lerna bootstrap
+
+  - name: build
+    image: node:lts
+    commands:
+      - yarn build
+
+  - name: test
+    image: node:lts
+    commands:
+      - yarn test
+
+  - name: bump-versions
+    image: node:lts
+    commands:
+      - sh .ci/amend-commit.sh
+      - yarn lerna version --conventional-prerelease --preid next --amend --no-changelog --no-push --yes
+      - sh .ci/push-tags.sh
+    when:
+      branch:
+        - master
+
+  - name: publish
+    image: node:lts
+    commands:
+      - yarn lerna publish from-package --no-git-reseet --dist-tag next --yes
+    when:
+      branch:
+        - master
+
+trigger:
+  changeset:
+    includes: [
+      '.drone.yaml',
+      'projects/**',
+      'patches/**',
+      '@types/**',
+      'build-lib/**',
+      'tsconfig.*.json',
+      'package.json',
+      'lerna.json',
+      'jest.config.js',
+      'babel.conf.js',
+      '.eslintrc.js',
+      '.eslintignore',
+      '.drone.jsonnet'
+    ]
+---
+
+kind: pipeline
+type: docker
+name: deploy-services
+
+depends_on:
+  - build-deploy-tools
+  - build-npm-packages
+
+platform:
+  arch: arm
+  os: linux
+
+steps:
+  - name: deploy
+    image: thrashplay/sophia-deployer
+    settings:
+      docker_host: control.pegasus:2376
+      docker_cacert:
+        from_secret: DOCKER_CACERT
+      docker_cert:
+        from_secret: DOCKER_CERT
+      docker_key:
+        from_secret: DOCKER_KEY
+
+trigger:
+  changeset:
+    includes: [ .drone.yaml, projects/sophia/deployer/**, services/** ]
+  branch:
+    - master

@@ -1,6 +1,6 @@
 {
   "name": "@ringlet/haul-config-helpers",
-  "version": "0.1.0-next.7",
+  "version": "0.1.0-next.8",
   "description": "Ringlet Helpers: Configuration helpers for Haul legacy projects.",
   "author": "Sean Kleinjung <sean@thrashplay.com>",
   "homepage": "https://github.com/thrashplay/devops-tools#readme",

@@ -5,9 +5,9 @@ import path from 'path'
 
 import yaml from 'js-yaml'
 import yargs from 'yargs'
-import { forEach, keyBy, flow, join, map } from 'lodash/fp'
+import { forEach, flow, join, map } from 'lodash/fp'
 
-import { ConfigEntryWithError, ConfigVersionsResult, StackDefinition } from './helpers'
+import { ConfigEntryWithError, ConfigVersionsResult } from './helpers'
 
 import { getConfigVersionVariables } from './index'
 

@@ -12,5 +12,5 @@ services:
 
 configs:
   nginx_config:
-    name: nginx_config-${SETTINGS_VERSION:-default}
+    name: nginx_config-${NGINX_CONFIG_VERSION:-default}
     file: ./config/nginx.conf

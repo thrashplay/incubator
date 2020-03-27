@@ -25,6 +25,9 @@ steps:
 
 - name: make-scripts-executable
   image: appleboy/drone-ssh
+  when:
+    changeset:
+      includes: [ .drone.yaml, services/bin/** ]
   settings:
     host:
       from_secret: DEPLOY_HOST

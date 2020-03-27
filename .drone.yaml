@@ -57,6 +57,7 @@ steps:
     commands:
       - sh .ci/amend-commit.sh
       - yarn lerna version --conventional-prerelease --preid next --amend --no-changelog --no-push --yes
+      - git tag -a builds/${DRONE_BUILD_NUMBER} -m "Tagging build"
       - sh .ci/push-tags.sh
     when:
       branch:
@@ -113,6 +114,12 @@ platform:
   os: linux
 
 steps:
+  - name: clone
+    image: alpine/git
+    commands:
+    - git clone ${DRONE_REPO_LINK} .
+    - git checkout builds/${DRONE_BUILD_NUMBER}
+
   - name: calculate-config-versions
     image: node:lts
     commands:

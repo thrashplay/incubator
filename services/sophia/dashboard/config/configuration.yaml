@@ -3,8 +3,15 @@
 default_config:
 
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
-# http:
-#   base_url: example.duckdns.org:8123
+http:
+  ssl_certificate: /tls/live/sophia.the-pegasus.net/fullchain.pem
+  ssl_key: /tls/live/sophia.the-pegasus.net/privkey.pem
+  base_url: !secret http_base_url
+
+namecheapdns:
+  host: !secret namecheap_dns_host
+  domain: !secret namecheap_dns_domain
+  password: !secret namecheap_dns_password
 
 # Text to speech
 tts:

@@ -1,0 +1,18 @@
+version: '3.7'
+services:
+  drone-runner:
+    image: drone/drone-runner-docker:1.2.1
+    command: [ "daemon", "/run/secrets/drone_secrets" ]
+    environment:
+      DRONE_RPC_HOST: drone.thrashplay.com
+      DRONE_RPC_PROTO: https
+      DRONE_RUNNER_NAME: control.pegasus
+      DRONE_LOGS_DEBUG: "true"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    secrets:
+      - drone_secrets
+
+secrets:
+  drone_secrets:
+    external: true

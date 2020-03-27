@@ -8,10 +8,8 @@ steps:
     changeset:
       includes: [ .drone.yaml, services/bin/** ]
   settings:
-    host:
-      from_secret: DEPLOY_HOST
-    username:
-      from_secret: DEPLOY_USERNAME
+    host: control.the-pegasus.net
+    username: sophia
     key:
       from_secret: DEPLOY_SSH_KEY
     passphrase:
@@ -29,10 +27,8 @@ steps:
     changeset:
       includes: [ .drone.yaml, services/bin/** ]
   settings:
-    host:
-      from_secret: DEPLOY_HOST
-    username:
-      from_secret: DEPLOY_USERNAME
+    host: control.the-pegasus.net
+    username: sophia
     key: 
       from_secret: DEPLOY_SSH_KEY
     passphrase:
@@ -43,10 +39,8 @@ steps:
 - name: transfer-configs
   image: appleboy/drone-scp
   settings:
-    host:
-      from_secret: DEPLOY_HOST
-    username:
-      from_secret: DEPLOY_USERNAME
+    host: control.the-pegasus.net
+    username: sophia
     key: 
       from_secret: DEPLOY_SSH_KEY
     passphrase:
@@ -61,10 +55,8 @@ steps:
 - name: deploy
   image: appleboy/drone-ssh
   settings:
-    host:
-      from_secret: DEPLOY_HOST
-    username:
-      from_secret: DEPLOY_USERNAME
+    host: control.the-pegasus.net
+    username: sophia
     key: 
       from_secret: DEPLOY_SSH_KEY
     passphrase:

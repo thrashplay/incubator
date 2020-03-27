@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-source ../sophia/nginx/config-versions.env
-docker stack deploy --compose-file ../sophia/nginx/stack-compose.yaml nginx
+source ../pegasus/nginx/config-versions.env
+docker stack deploy --compose-file ../pegasus/nginx/stack-compose.yaml nginx

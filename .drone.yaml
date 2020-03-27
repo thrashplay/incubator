@@ -1,4 +1,3 @@
----
 kind: pipeline
 type: docker
 name: build-deploy-tools
@@ -8,11 +7,26 @@ platform:
   os: linux
 
 steps:
+  - name: build-git-client
+    image: plugins/docker
+    depends_on: [ clone ]
+    settings:
+      context: projects/pegasus-ops/git-client
+      dockerfile: projects/pegasus-ops/git-client/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/git-client
+      tags: latest
+      username: thrashplay
+
   - name: build-deployer
     image: plugins/docker
+    depends_on: [ clone ]
     settings:
-      context: projects/sophia/deployer
-      dockerfile: projects/sophia/deployer/Dockerfile
+      context: projects/pegasus-ops/deployer
+      dockerfile: projects/pegasus-ops/deployer/Dockerfile
+      force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
       repo: thrashplay/sophia-deployer
@@ -21,9 +35,10 @@ steps:
 
 trigger:
   changeset:
-    includes: [ .drone.yaml, projects/sophia/deployer/** ]
+    includes: [ .drone.yaml, projects/pegasus-ops/** ]
   branch:
     - master
+
 ---
 
 kind: pipeline
@@ -58,7 +73,18 @@ steps:
     commands:
       - sh .ci/amend-commit.sh
       - yarn lerna version --conventional-prerelease --preid next --amend --no-changelog --no-push --yes
+      - git tag -a builds/${DRONE_BUILD_NUMBER} -m "Tagging build"
       - sh .ci/push-tags.sh
+    when:
+      branch:
+        - master
+
+  - name: authenticate-to-npm
+    image: robertstettner/drone-npm-auth
+    settings:
+      path: ~
+      token:
+        from_secret: NPM_PUBLISH_TOKEN
     when:
       branch:
         - master
@@ -66,7 +92,7 @@ steps:
   - name: publish
     image: node:lts
     commands:
-      - yarn lerna publish from-package --no-git-reseet --dist-tag next --yes
+      - yarn lerna publish from-package --no-git-reset --dist-tag next --yes
     when:
       branch:
         - master
@@ -74,25 +100,29 @@ steps:
 trigger:
   changeset:
     includes: [
+      '.drone.jsonnet',
       '.drone.yaml',
-      'projects/**',
-      'patches/**',
-      '@types/**',
-      'build-lib/**',
-      'tsconfig.*.json',
-      'package.json',
-      'lerna.json',
-      'jest.config.js',
-      'babel.conf.js',
-      '.eslintrc.js',
       '.eslintignore',
-      '.drone.jsonnet'
+      '.eslintrc.js',
+      '@types/**',
+      'babel.conf.js',
+      'build-lib/**',
+      'jest.config.js',
+      'lerna.json',
+      'package.json',
+      'patches/**',
+      'projects/**',
+      'tsconfig.*.json',
+      'yarn.lock'
     ]
 ---
 
 kind: pipeline
 type: docker
 name: deploy-services
+
+clone:
+  disable: true
 
 depends_on:
   - build-deploy-tools
@@ -103,6 +133,13 @@ platform:
   os: linux
 
 steps:
+  - name: clone
+    image: thrashplay/git-client
+    commands:
+    - git clone ${DRONE_REPO_LINK} .
+    - git config --local advice.detachedHead false
+    - git checkout builds/${DRONE_BUILD_NUMBER}
+
   - name: deploy
     image: thrashplay/sophia-deployer
     settings:
@@ -115,7 +152,5 @@ steps:
         from_secret: DOCKER_KEY
 
 trigger:
-  changeset:
-    includes: [ .drone.yaml, projects/sophia/deployer/**, services/** ]
   branch:
     - master

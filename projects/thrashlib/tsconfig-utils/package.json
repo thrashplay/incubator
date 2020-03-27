@@ -1,6 +1,6 @@
 {
   "name": "@thrashplay/tsconfig-utils",
-  "version": "0.1.0-next.1",
+  "version": "0.1.0-next.20",
   "description": "Utilities for working with Typescript configurations.",
   "bugs": "https://github.com/thrashplay/incubator-node/issues",
   "license": "MIT",
@@ -19,8 +19,8 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "@thrashplay/fs-utils": "^0.1.0-next.5",
-    "@thrashplay/mock-fs": "^0.1.0-next.5",
+    "@thrashplay/fs-utils": "^0.1.0-next.24",
+    "@thrashplay/mock-fs": "^0.1.0-next.24",
     "ajv": "6.11.0",
     "lodash": "4.17.15"
   },

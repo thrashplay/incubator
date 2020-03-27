@@ -1,15 +1,18 @@
 kind: pipeline
-name: deploy-scripts
+name: deploy-stacks
 
 steps:
-- name: transfer
+- name: transfer-scripts
   image: appleboy/drone-scp
+  when:
+    changeset:
+      includes: [ .drone.yaml, services/bin/** ]
   settings:
     host:
       from_secret: DEPLOY_HOST
     username:
       from_secret: DEPLOY_USERNAME
-    key: 
+    key:
       from_secret: DEPLOY_SSH_KEY
     passphrase:
       from_secret: DEPLOY_KEY_PASSPHRASE
@@ -20,7 +23,7 @@ steps:
     target:
       - /opt/sophia/bin
 
-- name: make-executable
+- name: make-scripts-executable
   image: appleboy/drone-ssh
   settings:
     host:
@@ -34,21 +37,7 @@ steps:
     script:
       - chmod -R u+x /opt/sophia/bin
 
-when:
-  branch:
-    - master
-
-trigger:
-  changeset:
-    includes: [ .drone.yaml, services/bin/** ]
-
----
-
-kind: pipeline
-name: deploy-nginx
-
-steps:
-- name: transfer-files
+- name: transfer-configs
   image: appleboy/drone-scp
   settings:
     host:
@@ -60,13 +49,13 @@ steps:
     passphrase:
       from_secret: DEPLOY_KEY_PASSPHRASE
     rm: true
-    strip_components: 3
+    strip_components: 2
     target:
-      - /opt/sophia/etc/nginx
+      - /opt/sophia/etc
     source:
-      - services/sophia/nginx
+      - services/sophia
 
-- name: make-executable
+- name: deploy
   image: appleboy/drone-ssh
   settings:
     host:
@@ -81,36 +70,10 @@ steps:
       - cd /opt/sophia/bin
       - ./deploy-stack
 
-depends_on:
-- deploy-scripts
-
 when:
   branch:
     - master
 
 trigger:
   changeset:
-    includes: [ .drone.yaml, services/bin/**, services/sophia/nginx/** ]
-
-# // local deployService(name, path) = {
-# //   kind: "pipeline",
-# //     name: "deploy-" + name,
-# //     steps: [
-# //         {
-# //             name: hello,
-# //             image: "hello-world",
-# //         },
-# //     ],
-# //     trigger: {
-# //       changeset: {
-# //         includes: [ 
-# //           ".drone.jsonnet",
-# //           path + "/**"
-# //         ],
-# //       },
-# //     },
-# // };
-
-# // [
-# //   deployService("nginx", "services/sophia/nginx"),
-# // ]
+    includes: [ .drone.yaml, services/** ]

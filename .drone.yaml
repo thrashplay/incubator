@@ -23,6 +23,7 @@ trigger:
     includes: [ .drone.yaml, projects/pegasus-ops/deployer/** ]
   branch:
     - master
+
 ---
 
 kind: pipeline

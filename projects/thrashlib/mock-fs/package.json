@@ -1,6 +1,6 @@
 {
   "name": "@thrashplay/mock-fs",
-  "version": "0.1.0-next.12",
+  "version": "0.1.0-next.13",
   "description": "Mock `fs` implementation that is basically a Typescript adaptation of `metro-memory-fs`.",
   "bugs": "https://github.com/thrashplay/incubator-node/issues",
   "license": "MIT",

@@ -11,8 +11,8 @@ steps:
   - name: build-deployer
     image: plugins/docker
     settings:
-      context: projects/sophia/deployer
-      dockerfile: projects/sophia/deployer/Dockerfile
+      context: projects/pegasus-ops/deployer
+      dockerfile: projects/pegasus-ops/deployer/Dockerfile
       password:
         from_secret: DOCKER_PASSWORD
       repo: thrashplay/sophia-deployer
@@ -21,7 +21,7 @@ steps:
 
 trigger:
   changeset:
-    includes: [ .drone.yaml, projects/sophia/deployer/** ]
+    includes: [ .drone.yaml, projects/pegasus-ops/deployer/** ]
   branch:
     - master
 ---
@@ -116,7 +116,7 @@ steps:
   - name: calculate-config-versions
     image: node:lts
     commands:
-      - npx \@sophia/config-version-helper services/sophia/nginx/stack-compose.yaml nginx
+      - npx \@pegasus-ops/config-version-helper services/pegasus/nginx/stack-compose.yaml nginx
 
   - name: deploy
     image: thrashplay/sophia-deployer
@@ -131,6 +131,6 @@ steps:
 
 trigger:
   changeset:
-    includes: [ .drone.yaml, projects/sophia/deployer/**, services/** ]
+    includes: [ .drone.yaml, projects/pegasus-ops/deployer/**, services/** ]
   branch:
     - master

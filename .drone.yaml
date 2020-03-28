@@ -136,8 +136,8 @@ steps:
   - name: clone
     image: thrashplay/git-client
     commands:
-    - git config --local advice.detachedHead false
     - git clone ${DRONE_REPO_LINK} .
+    - git config --local advice.detachedHead false
     - git checkout builds/${DRONE_BUILD_NUMBER}
 
   - name: deploy

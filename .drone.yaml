@@ -37,8 +37,8 @@ steps:
     image: plugins/docker
     depends_on: [ clone ]
     settings:
-      context: projects/pegasus-ops/ddns-sidecar
-      dockerfile: projects/pegasus-ops/ddns-sidecar/Dockerfile
+      context: projects/pegasus-ops/nginx-proxy/ddns-sidecar
+      dockerfile: projects/pegasus-ops/nginx-proxy/ddns-sidecar/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
@@ -137,7 +137,6 @@ trigger:
       - '.eslintrc.js'
       - '@types/**'
       - 'babel.config.js'
-      - 'build-lib/**'
       - 'build-lib/**'
       - 'jest.config.js'
       - 'lerna.json'

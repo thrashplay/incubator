@@ -1,6 +1,6 @@
 {
   "name": "@thrashplay/fp",
-  "version": "0.1.0-next.17",
+  "version": "0.1.0-next.18",
   "description": "Functional programming utilities and helpers.",
   "bugs": "https://github.com/thrashplay/incubator-node/issues",
   "license": "MIT",

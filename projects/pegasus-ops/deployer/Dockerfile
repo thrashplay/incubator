@@ -1,4 +1,4 @@
-FROM alpine:3.11
+FROM node:alpine3.10
 
 RUN apk update && \
     apk add docker-cli

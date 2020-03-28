@@ -1,6 +1,6 @@
 {
   "name": "@thrashplay/fs-utils",
-  "version": "0.1.0-next.21",
+  "version": "0.1.0-next.22",
   "description": "Helper functions for working with files and paths.",
   "bugs": "https://github.com/thrashplay/incubator-node/issues",
   "license": "MIT",

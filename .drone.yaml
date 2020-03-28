@@ -17,7 +17,7 @@ steps:
       password:
         from_secret: DOCKER_PASSWORD
       repo: thrashplay/git-client
-      tags: arm-latest
+      tags: latest
       username: thrashplay
 
   - name: build-deployer
@@ -30,7 +30,7 @@ steps:
       password:
         from_secret: DOCKER_PASSWORD
       repo: thrashplay/sophia-deployer
-      tags: arm-latest
+      tags: latest
       username: thrashplay
 
 trigger:
@@ -134,13 +134,13 @@ platform:
 
 steps:
   - name: clone
-    image: thrashplay/git-client:arm-latest
+    image: thrashplay/git-client
     commands:
     - git clone ${DRONE_REPO_LINK} .
     - git checkout builds/${DRONE_BUILD_NUMBER}
 
   - name: deploy
-    image: thrashplay/sophia-deployer:arm-latest
+    image: thrashplay/sophia-deployer
     settings:
       docker_host: control.pegasus:2376
       docker_cacert:

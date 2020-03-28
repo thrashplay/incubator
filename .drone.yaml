@@ -13,6 +13,7 @@ steps:
     settings:
       context: projects/pegasus-ops/git-client
       dockerfile: projects/pegasus-ops/git-client/Dockerfile
+      force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
       repo: thrashplay/git-client
@@ -25,6 +26,7 @@ steps:
     settings:
       context: projects/pegasus-ops/deployer
       dockerfile: projects/pegasus-ops/deployer/Dockerfile
+      force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
       repo: thrashplay/sophia-deployer

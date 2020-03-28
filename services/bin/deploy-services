@@ -15,4 +15,4 @@ deploy_stack () {
 set -e
 set -x
 
-deploy_stack pegasus/nginx nginx
+deploy_stack pegasus/nginx-proxy nginx-proxy

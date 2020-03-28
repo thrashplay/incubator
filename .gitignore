@@ -1,7 +1,7 @@
 .idea
 
 secret-configs
-*.env
+config-versions.env
 
 # generated files
 dist
@@ -84,7 +84,6 @@ typings/
 .yarnrc
 
 # dotenv environment variables file
-.env
 .env.test
 
 # parcel-bundler cache (https://parceljs.org/)

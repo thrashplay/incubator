@@ -1,0 +1,33 @@
+version: '3.7'
+services:
+  nginx:
+    image: nginx:1.16-alpine
+    configs:
+      - source: nginx_config
+        target: /etc/nginx/nginx.conf
+        mode: 0440
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - read_only: true
+        source: www_data
+        target: /var/www
+        type: volume
+      - read_only: true
+        source: cert_storage
+        target: /etc/letsencrypt
+
+configs:
+  nginx_config:
+    name: nginx_config-${NGINX_CONFIG_VERSION:-default}
+    file: ./config/nginx.conf
+
+volumes:
+  www_data:
+  cert_storage:
+    driver: local
+    driver_opts:
+      type: none
+      device: $CERT_PATH
+      o: bind

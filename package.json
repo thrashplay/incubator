@@ -9,7 +9,7 @@
     "packages": [
       "projects/genotype/*",
       "projects/ringlet/haul-config-helpers",
-      "projects/sophia/config-version-helper",
+      "projects/pegasus-ops/config-version-helper",
       "projects/thrashlib/*"
     ]
   },

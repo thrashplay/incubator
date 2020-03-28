@@ -9,6 +9,7 @@ platform:
 steps:
   - name: build-git-client
     image: plugins/docker
+    depends_on: [ clone ]
     settings:
       context: projects/pegasus-ops/git-client
       dockerfile: projects/pegasus-ops/git-client/Dockerfile
@@ -20,6 +21,7 @@ steps:
 
   - name: build-deployer
     image: plugins/docker
+    depends_on: [ clone ]
     settings:
       context: projects/pegasus-ops/deployer
       dockerfile: projects/pegasus-ops/deployer/Dockerfile

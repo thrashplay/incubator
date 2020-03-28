@@ -18,7 +18,7 @@
   "useWorkspaces": true,
   "packages": [ 
     "projects/genotype/*",
-    "projects/sophia/config-version-helper",
+    "projects/pegasus-ops/config-version-helper",
     "projects/thrashlib/*"
   ],
   "version": "independent"

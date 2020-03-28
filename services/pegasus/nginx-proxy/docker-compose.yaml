@@ -43,7 +43,7 @@ services:
     environment:
       - CONFIG_SECRETS_FILE=/run/secrets/ddns-secrets
     ports:
-      - "8000":"8000"
+      - "8000:8000"
     secrets:
       - ddns-secrets
     volumes:

@@ -50,10 +50,10 @@ services:
       - ddns-data:/updater/data
 
 configs:
-  ddns_config:
+  ddns-config:
     name: default-config-${DDNS_CONFIG_VERSION:-default}
     file: ./config/ddns.json
-  nginx_config:
+  nginx-config:
     name: default-config-${NGINX_CONFIG_VERSION:-default}
     file: ./config/default.conf
 

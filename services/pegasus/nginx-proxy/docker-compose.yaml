@@ -1,35 +1,65 @@
 version: '3.7'
 services:
-  nginx:
-    image: nginx:1.16-alpine
-    configs:
-      - source: default-config
-        target: /etc/nginx/conf.d/default.conf
-        mode: 0440
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - cert-storage:/etc/letsencrypt
-      - nginx-config:/etc/nginx
-      - read_only: true
-        source: www-data
-        target: /var/www
-        type: volume
+  # nginx:
+  #   image: nginx:1.16-alpine
+  #   configs:
+  #     - source: default-config
+  #       target: /etc/nginx/conf.d/default.conf
+  #       mode: 0440
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - cert-storage:/etc/letsencrypt
+  #     - read_only: true
+  #       source: www-data
+  #       target: /var/www
+  #       type: volume
 
-  certbot:
-    image: thrashplay/certbot-nginx:latest
+  # certbot:
+  #   image: thrashplay/certbot-sidecar:latest
+  #     command:
+  #       - --redirect
+  #       - -d
+  #       - dashboard.the-pegasus.net
+  #       - -d
+  #       - gots.the-pegasus.net
+  #       - -d
+  #       - www.dashboard.the-pegasus.net
+  #       - -d
+  #       - www.gots.the-pegasus.net
+  #   volumes:
+  #     - cert-storage:/etc/letsencrypt
+  #     - source: www-data
+  #       target: /var/www
+  #       type: volume
+
+  ddns:
+    image: thrashplay/ddns-sidecar:latest
+    configs:
+      - source: ddns-config
+        target: /ddns/config.json
+        mode: 0440
+    environment:
+      - CONFIG_SECRETS_FILE=/run/secrets/ddns-secrets
+    ports:
+      - "8000":"8000"
+    secrets:
+      - ddns-secrets
     volumes:
-      - cert-storage:/etc/letsencrypt
-      - nginx-config:/etc/nginx
-      - source: www-data
-        target: /var/www
-        type: volume
+      - ddns-data:/updater/data
 
 configs:
-  default-config:
+  ddns_config:
+    name: default-config-${DDNS_CONFIG_VERSION:-default}
+    file: ./config/ddns.json
+  nginx_config:
     name: default-config-${NGINX_CONFIG_VERSION:-default}
     file: ./config/default.conf
+
+secrets:
+  ddns-secrets:
+    external: true
 
 volumes:
   cert-storage:
@@ -38,10 +68,5 @@ volumes:
       type: none
       device: /mnt/nginx-proxy/cert_storage
       o: bind
-  nginx-config:
-    driver: local
-    driver_opts:
-      type: none
-      device: /mnt/nginx-proxy/nginx_config
-      o: bind
+  ddns-data:
   www-data:

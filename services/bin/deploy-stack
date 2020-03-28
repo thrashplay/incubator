@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
-source ../pegasus/nginx/config-versions.env
-docker stack deploy --compose-file ../pegasus/nginx/stack-compose.yaml nginx
+set -a
+. pegasus/nginx/config-versions.env
+set +a
+docker stack deploy --compose-file pegasus/nginx/stack-compose.yaml nginx

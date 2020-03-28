@@ -33,6 +33,19 @@ steps:
       tags: latest
       username: thrashplay
 
+  - name: build-certbot-nginx
+    image: plugins/docker
+    depends_on: [ clone ]
+    settings:
+      context: projects/pegasus-ops/certbot-nginx
+      dockerfile: projects/pegasus-ops/certbot-nginx/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/certbot-nginx
+      tags: latest
+      username: thrashplay
+
 trigger:
   changeset:
     includes: [ .drone.yaml, projects/pegasus-ops/** ]
@@ -97,24 +110,24 @@ steps:
       branch:
         - master
 
-trigger:
-  changeset:
-    includes: [
-      '.drone.jsonnet',
-      '.drone.yaml',
-      '.eslintignore',
-      '.eslintrc.js',
-      '@types/**',
-      'babel.conf.js',
-      'build-lib/**',
-      'jest.config.js',
-      'lerna.json',
-      'package.json',
-      'patches/**',
-      'projects/**',
-      'tsconfig.*.json',
-      'yarn.lock'
-    ]
+# trigger:
+#   changeset:
+#     includes: [
+#       '.drone.jsonnet',
+#       '.drone.yaml',
+#       '.eslintignore',
+#       '.eslintrc.js',
+#       '@types/**',
+#       'babel.conf.js',
+#       'build-lib/**',
+#       'jest.config.js',
+#       'lerna.json',
+#       'package.json',
+#       'patches/**',
+#       'projects/**',
+#       'tsconfig.*.json',
+#       'yarn.lock'
+#     ]
 ---
 
 kind: pipeline

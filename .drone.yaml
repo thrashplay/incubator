@@ -7,6 +7,17 @@ platform:
   os: linux
 
 steps:
+  - name: build-git-client
+    image: plugins/docker
+    settings:
+      context: projects/pegasus-ops/git-client
+      dockerfile: projects/pegasus-ops/git-client/Dockerfile
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/git-client
+      tags: arm-latest
+      username: thrashplay
+
   - name: build-deployer
     image: plugins/docker
     settings:
@@ -15,7 +26,7 @@ steps:
       password:
         from_secret: DOCKER_PASSWORD
       repo: thrashplay/sophia-deployer
-      tags: latest
+      tags: arm-latest
       username: thrashplay
 
 trigger:
@@ -119,7 +130,7 @@ platform:
 
 steps:
   - name: clone
-    image: alpine/git
+    image: thrashplay/git-client:arm-latest
     commands:
     - git clone ${DRONE_REPO_LINK} .
     - git checkout builds/${DRONE_BUILD_NUMBER}
@@ -130,7 +141,7 @@ steps:
       - npx \@pegasus-ops/config-version-helper services/pegasus/nginx/stack-compose.yaml nginx
 
   - name: deploy
-    image: thrashplay/sophia-deployer
+    image: thrashplay/sophia-deployer:arm-latest
     settings:
       docker_host: control.pegasus:2376
       docker_cacert:

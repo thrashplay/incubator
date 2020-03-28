@@ -1,6 +1,6 @@
 {
   "name": "@thrashplay/genotype-storybook",
-  "version": "0.1.0-next.10",
+  "version": "0.1.0-next.11",
   "description": "Storybook components for the Genotype application.",
   "bugs": "https://github.com/thrashplay/incubator-node/issues",
   "license": "MIT",

@@ -137,11 +137,6 @@ steps:
     - git clone ${DRONE_REPO_LINK} .
     - git checkout builds/${DRONE_BUILD_NUMBER}
 
-  - name: calculate-config-versions
-    image: node:lts
-    commands:
-      - npx \@pegasus-ops/config-version-helper services/pegasus/nginx/stack-compose.yaml nginx
-
   - name: deploy
     image: thrashplay/sophia-deployer:arm-latest
     settings:

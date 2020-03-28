@@ -8,5 +8,4 @@ echo "$PLUGIN_DOCKER_KEY" > ~/.docker/key.pem
 export DOCKER_HOST=${PLUGIN_DOCKER_HOST:-tcp://localhost:2376}
 export DOCKER_TLS_VERIFY=1
 
-cd services
-/bin/sh ./bin/deploy-stack
+/bin/sh ./services/bin/deploy-services

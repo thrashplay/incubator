@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+deploy_stack () {
+  npx @pegasus-ops/config-version-helper "$DIR/../$1/docker-compose.yaml"
+  set -a
+  . "$DIR/../$1/config-versions.env"
+  set +a
+
+  docker stack deploy --compose-file "$DIR/../$1/docker-compose.yaml" $2
+}
+
+set -e
+set -x
+
+deploy_stack pegasus/nginx nginx

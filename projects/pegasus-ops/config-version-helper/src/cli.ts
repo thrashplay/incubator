@@ -48,8 +48,6 @@ const getEnvString = (stackYamlPath: string) => {
 
 const main = ({ stackYamlPath }: Arguments) => {
   const envString = getEnvString(stackYamlPath)
-  console.log('Calculated config versions:')
-  console.log(envString)
   fs.writeFileSync(getStackRelativePath(stackYamlPath, 'config-versions.env'), envString)
 }
 

@@ -6,7 +6,4 @@ RUN apk update && \
 COPY scripts/entry-point.sh /usr/local/bin
 RUN chmod +x /usr/local/bin/entry-point.sh
 
-RUN adduser -D deployer
-USER deployer
-
 ENTRYPOINT [ "/usr/local/bin/entry-point.sh" ]

@@ -33,18 +33,31 @@ steps:
       tags: latest
       username: thrashplay
 
-  - name: build-certbot-nginx
+  - name: build-ddns-sidecar
     image: plugins/docker
     depends_on: [ clone ]
     settings:
-      context: projects/pegasus-ops/certbot-nginx
-      dockerfile: projects/pegasus-ops/certbot-nginx/Dockerfile
+      context: projects/pegasus-ops/ddns-sidecar
+      dockerfile: projects/pegasus-ops/ddns-sidecar/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
-      repo: thrashplay/certbot-nginx
+      repo: thrashplay/ddns-sidecar
       tags: latest
       username: thrashplay
+
+  # - name: build-certbot-sidecar
+  #   image: plugins/docker
+  #   depends_on: [ clone ]
+  #   settings:
+  #     context: projects/pegasus-ops/certbot-sidecar
+  #     dockerfile: projects/pegasus-ops/certbot-sidecar/Dockerfile
+  #     force_tag: true
+  #     password:
+  #       from_secret: DOCKER_PASSWORD
+  #     repo: thrashplay/certbot-sidecar
+  #     tags: latest
+  #     username: thrashplay
 
 trigger:
   changeset:
@@ -80,6 +93,11 @@ steps:
     image: node:lts
     commands:
       - yarn test
+
+  - name: fetch-tags
+    image: drone/git
+    commands:
+      - git fetch --tags
 
   - name: bump-versions
     image: node:lts

@@ -33,7 +33,7 @@ steps:
 
 trigger:
   changeset:
-    includes: [ .drone.yaml, projects/pegasus-ops/deployer/** ]
+    includes: [ .drone.yaml, projects/pegasus-ops/** ]
   branch:
     - master
 

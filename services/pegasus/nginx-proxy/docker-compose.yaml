@@ -1,38 +1,23 @@
 version: '3.7'
 services:
-  # nginx:
-  #   image: nginx:1.16-alpine
-  #   configs:
-  #     - source: default-config
-  #       target: /etc/nginx/conf.d/default.conf
-  #       mode: 0440
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   volumes:
-  #     - cert-storage:/etc/letsencrypt
-  #     - read_only: true
-  #       source: www-data
-  #       target: /var/www
-  #       type: volume
-
-  # certbot:
-  #   image: thrashplay/certbot-sidecar:latest
-  #     command:
-  #       - --redirect
-  #       - -d
-  #       - dashboard.the-pegasus.net
-  #       - -d
-  #       - gots.the-pegasus.net
-  #       - -d
-  #       - www.dashboard.the-pegasus.net
-  #       - -d
-  #       - www.gots.the-pegasus.net
-  #   volumes:
-  #     - cert-storage:/etc/letsencrypt
-  #     - source: www-data
-  #       target: /var/www
-  #       type: volume
+  nginx:
+    image: thrashplay/nginx-with-certbot:latest
+    configs:
+      - source: nginx-config
+        target: /etc/nginx/conf.d/default.conf
+        mode: 0440
+      - source: certificates-config
+        target: /etc/nginx/certificates.json
+        mode: 0440
+    environment:
+      - CERTBOT_EMAIL=sean@thrashplay.com
+      - CERTBOT_STAGING=true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - certbot-data:/var/lib/letsencrypt
+      - cert-storage:/etc/letsencrypt
 
   ddns:
     image: thrashplay/ddns-sidecar:latest
@@ -51,11 +36,14 @@ services:
 
 configs:
   ddns-config:
-    name: default-config-${DDNS_CONFIG_VERSION:-default}
+    name: ddns-config-${DDNS_CONFIG_VERSION:-default}
     file: ./config/ddns.json
   nginx-config:
-    name: default-config-${NGINX_CONFIG_VERSION:-default}
-    file: ./config/default.conf
+    name: nginx-config-${NGINX_CONFIG_VERSION:-default}
+    file: ./config/nginx.conf
+  certificates-config:
+    name: certificates-config-${CERTIFICATES_CONFIG_VERSION:-default}
+    file: ./config/certificates.json
 
 secrets:
   ddns-secrets:
@@ -68,5 +56,5 @@ volumes:
       type: none
       device: /mnt/nginx-proxy/cert_storage
       o: bind
+  certbot-data:
   ddns-data:
-  www-data:

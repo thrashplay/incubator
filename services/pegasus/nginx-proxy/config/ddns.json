@@ -2,10 +2,17 @@
   "settings": [
       {
           "domain": "the-pegasus.net",
-          "host": "*",
+          "host": "@",
           "ip_method": "provider",
           "password": "$NAMECHEAP_PASSWORD",
           "provider": "namecheap"
-      }
+      },
+      {
+        "domain": "the-pegasus.net",
+        "host": "*",
+        "ip_method": "provider",
+        "password": "$NAMECHEAP_PASSWORD",
+        "provider": "namecheap"
+    }
   ]
 }

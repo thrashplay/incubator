@@ -4,8 +4,6 @@ services:
     image: nginx
     environment:
       - NGINX_PORT=80
-    ports:
-      - "80:80"
 
 networks:
   default:

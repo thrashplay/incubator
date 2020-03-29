@@ -24,4 +24,4 @@ nginx
 /usr/local/bin/init-certificates.sh
 
 # do not terminate, so container continues to run
-tail -f /dev/null
+crond -f

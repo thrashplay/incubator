@@ -1,6 +1,6 @@
 kind: pipeline
 type: docker
-name: build-deploy-tools
+name: build-arm-images
 
 platform:
   arch: arm
@@ -157,7 +157,7 @@ clone:
   disable: true
 
 depends_on:
-  - build-deploy-tools
+  - build-arm-images
   - build-npm-packages
 
 platform:

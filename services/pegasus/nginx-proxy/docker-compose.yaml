@@ -46,8 +46,8 @@ configs:
 
 networks:
   default:
-    external:
-      name: proxy
+    external: true
+    name: proxy
 
 secrets:
   ddns-secrets:

@@ -17,3 +17,4 @@ set -x
 
 deploy_stack pegasus/nginx-proxy nginx-proxy
 deploy_stack pegasus/hello-world hello-world
+deploy_stack pegasus/dashboard dashboard

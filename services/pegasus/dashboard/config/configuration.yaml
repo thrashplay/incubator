@@ -3,19 +3,62 @@
 default_config:
 
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
-http:
-  ssl_certificate: /tls/live/sophia.the-pegasus.net/fullchain.pem
-  ssl_key: /tls/live/sophia.the-pegasus.net/privkey.pem
-  base_url: !secret http_base_url
+# http:
+#   ssl_certificate: /tls/live/sophia.the-pegasus.net/fullchain.pem
+#   ssl_key: /tls/live/sophia.the-pegasus.net/privkey.pem
+#   base_url: !secret http_base_url
 
-namecheapdns:
-  host: !secret namecheap_dns_host
-  domain: !secret namecheap_dns_domain
-  password: !secret namecheap_dns_password
+# namecheapdns:
+#   host: !secret namecheap_dns_host
+#   domain: !secret namecheap_dns_domain
+#   password: !secret namecheap_dns_password
 
 # Text to speech
 tts:
   - platform: google_translate
+
+sensor:
+  - platform: rest
+    name: YNAB
+    json_attributes_path: "$.data.month"
+    json_attributes:
+      - to_be_budgeted
+      - age_of_money
+    resource: https://api.youneedabudget.com/v1/budgets/ce38e572-a97c-424a-9282-c7041ba30118/months/current
+    value_template: 'OK'
+    headers:
+      Authorization: !secret ynab_token
+  - platform: template
+    sensors:
+      to_be_budgeted:
+        friendly_name: 'To Be Budgeted'
+        value_template: '{{ states.sensor.ynab.attributes["to_be_budgeted"] | multiply(0.001) | round(0) }}'
+      age_of_money:
+        friendly_name: 'Age of Money'
+        value_template: '{{ states.sensor.ynab.attributes["age_of_money"] }}'
+  - platform: rest
+    name: YNAB - Current Month
+    json_attributes_path: "$.data.month"
+    json_attributes:
+      - activity
+      - budgeted
+      - income
+    resource: https://api.youneedabudget.com/v1/budgets/ce38e572-a97c-424a-9282-c7041ba30118/months/current
+    value_template: 'OK'
+    headers:
+      Authorization: !secret ynab_token
+  - platform: template
+    sensors:
+      income:
+        friendly_name: 'Income'
+        value_template: '{{ states.sensor.ynab_current_month.attributes["income"] | multiply(0.001) | round(0) }}'
+      budgeted:
+        friendly_name: 'Budgeted'
+        value_template: '{{ states.sensor.ynab_current_month.attributes["budgeted"] | multiply(0.001) | round(0) }}'
+      activity:
+        friendly_name: 'Activity'
+        value_template: '{{ states.sensor.ynab_current_month.attributes["activity"] | multiply(0.001) | round(0) }}'
+  
 
 group: !include groups.yaml
 automation: !include automations.yaml

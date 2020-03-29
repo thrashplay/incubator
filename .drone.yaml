@@ -128,24 +128,24 @@ steps:
       branch:
         - master
 
-trigger:
-  changeset:
-    includes:
-      - '.ci/**'
-      - '.drone.yaml'
-      - '.eslintignore'
-      - '.eslintrc.js'
-      - '@types/**'
-      - 'babel.config.js'
-      - 'build-lib/**'
-      - 'jest.config.js'
-      - 'lerna.json'
-      - 'package.json'
-      - 'patches/**'
-      - 'projects/**'
-      - 'tsconfig.*.json'
-      - 'tsconfig.json'
-      - 'yarn.lock'
+# trigger:
+#   changeset:
+#     includes:
+#       - '.ci/**'
+#       - '.drone.yaml'
+#       - '.eslintignore'
+#       - '.eslintrc.js'
+#       - '@types/**'
+#       - 'babel.config.js'
+#       - 'build-lib/**'
+#       - 'jest.config.js'
+#       - 'lerna.json'
+#       - 'package.json'
+#       - 'patches/**'
+#       - 'projects/**'
+#       - 'tsconfig.*.json'
+#       - 'tsconfig.json'
+#       - 'yarn.lock'
 
 ---
 

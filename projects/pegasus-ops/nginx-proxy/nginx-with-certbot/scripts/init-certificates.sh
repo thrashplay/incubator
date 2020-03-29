@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-if [ $CERTBOT_STAGING = true ]; then
+if [ "$CERTBOT_STAGING" = "true" ]; then
   CERTBOT_CLI_OPTS=--test-cert 
 else
   CERTBOT_CLI_OPTS=

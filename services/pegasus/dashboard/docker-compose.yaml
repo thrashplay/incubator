@@ -1,10 +1,61 @@
-version: "3"
+version: '3.7'
 services:
   homeassistant:
-    image: "homeassistant/home-assistant:stable"
-    volumes:
-      - ./config:/config
+    image: "thrashplay/homeassistant"
+    configs: 
+      - source: automations
+        target: /config/automations.yaml
+        mode: 0440
+      - source: configuration
+        target: /config/configuration.yaml
+        mode: 0440
+      - source: groups
+        target: /config/groups.yaml
+        mode: 0440
+      - source: scenes
+        target: /config/scenes.yaml
+        mode: 0440
+      - source: scripts
+        target: /config/scripts.yaml
+        mode: 0440
     environment:
       - TZ=America/Chicago
-    ports:
-      - "8123:8123"
+    secrets:
+      - homeassistant-secrets
+    volumes:
+      - /mnt/homeassistant/home-assistant_v2.db:/config/home-assistant_v2.db
+      - storage:/config/.storage 
+
+configs:
+  automations:
+    name: automations-config-${AUTOMATIONS_CONFIG_VERSION:-default}
+    file: ./config/automations.yaml
+  configuration:
+    name: configuration-config-${CONFIGURATIONS_CONFIG_VERSION:-default}
+    file: ./config/configuration.yaml
+  groups:
+    name: groups-config-${GROUPS_CONFIG_VERSION:-default}
+    file: ./config/groups.yaml
+  scenes:
+    name: scenes-config-${SCENES_CONFIG_VERSION:-default}
+    file: ./config/scenes.yaml
+  scripts:
+    name: scripts-config-${SCRIPTS_CONFIG_VERSION:-default}
+    file: ./config/scripts.yaml
+    
+networks:
+  default:
+    external: true
+    name: proxy
+
+secrets:
+  homeassistant-secrets:
+    external: true
+
+volumes:
+  storage:
+    driver: local
+    driver_opts:
+      type: none
+      device: /mnt/homeassistant/storage
+      o: bind

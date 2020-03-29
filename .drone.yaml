@@ -19,6 +19,9 @@ steps:
       repo: thrashplay/git-client
       tags: latest
       username: thrashplay
+    when:
+      changeset:
+        includes: [ .drone.yaml, projects/pegasus-ops/git-client/** ]
 
   - name: build-deployer
     image: plugins/docker
@@ -32,6 +35,9 @@ steps:
       repo: thrashplay/sophia-deployer
       tags: latest
       username: thrashplay
+    when:
+      changeset:
+        includes: [ .drone.yaml, projects/pegasus-ops/deployer/** ]
 
   - name: build-ddns-sidecar
     image: plugins/docker
@@ -45,6 +51,9 @@ steps:
       repo: thrashplay/ddns-sidecar
       tags: latest
       username: thrashplay
+    when:
+      changeset:
+        includes: [ .drone.yaml, projects/pegasus-ops/nginx-proxy/ddns-sidecar/** ]
 
   - name: build-nginx-with-certbot
     image: plugins/docker
@@ -58,6 +67,25 @@ steps:
       repo: thrashplay/nginx-with-certbot
       tags: latest
       username: thrashplay
+    when:
+      changeset:
+        includes: [ .drone.yaml, projects/pegasus-ops/nginx-proxy/nginx-with-certbot/** ]
+
+  - name: build-homeassistant
+    image: plugins/docker
+    depends_on: [ clone ]
+    settings:
+      context: projects/pegasus-ops/homeassistant
+      dockerfile: projects/pegasus-ops/homeassistant/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/homeassistant
+      tags: latest
+      username: thrashplay
+    when:
+      changeset:
+        includes: [ .drone.yaml, projects/pegasus-ops/homeassistant/** ]
 
 trigger:
   changeset:
@@ -128,24 +156,24 @@ steps:
       branch:
         - master
 
-trigger:
-  changeset:
-    includes:
-      - '.ci/**'
-      - '.drone.yaml'
-      - '.eslintignore'
-      - '.eslintrc.js'
-      - '@types/**'
-      - 'babel.config.js'
-      - 'build-lib/**'
-      - 'jest.config.js'
-      - 'lerna.json'
-      - 'package.json'
-      - 'patches/**'
-      - 'projects/**'
-      - 'tsconfig.*.json'
-      - 'tsconfig.json'
-      - 'yarn.lock'
+# trigger:
+#   changeset:
+#     includes:
+#       - '.ci/**'
+#       - '.drone.yaml'
+#       - '.eslintignore'
+#       - '.eslintrc.js'
+#       - '@types/**'
+#       - 'babel.config.js'
+#       - 'build-lib/**'
+#       - 'jest.config.js'
+#       - 'lerna.json'
+#       - 'package.json'
+#       - 'patches/**'
+#       - 'projects/**'
+#       - 'tsconfig.*.json'
+#       - 'tsconfig.json'
+#       - 'yarn.lock'
 
 ---
 

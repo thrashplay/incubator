@@ -9,7 +9,7 @@ RUN apk update && apk add --no-cache certbot-nginx jq tini
 # bucket_size directive must be in root nginx.conf, not an override
 RUN sed -i '/http {/a server_names_hash_bucket_size 64;' /etc/nginx/nginx.conf
 
-RUN (crontab -l ; echo "* * * * * echo \"Hello world\") | crontab
+RUN (crontab -l ; echo "* * * * * echo \"Hello world\"") | crontab
 
 VOLUME /etc/letsencrypt
 VOLUME /var/lib/letsencrypt

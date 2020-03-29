@@ -24,7 +24,7 @@ services:
     secrets:
       - homeassistant-secrets
     volumes:
-      - db:/config/home-assistant_v2.db
+      - /mnt/homeassistant/home-assistant_v2.db:/config/home-assistant_v2.db
       - storage:/config/.storage 
 
 configs:
@@ -54,12 +54,6 @@ secrets:
     external: true
 
 volumes:
-  db:
-    driver: local
-    driver_opts:
-      type: none
-      device: /mnt/homeassistant/home-assistant_v2.db
-      o: bind
   storage:
     driver: local
     driver_opts:

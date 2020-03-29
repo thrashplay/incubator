@@ -46,18 +46,18 @@ steps:
       tags: latest
       username: thrashplay
 
-  # - name: build-certbot-sidecar
-  #   image: plugins/docker
-  #   depends_on: [ clone ]
-  #   settings:
-  #     context: projects/pegasus-ops/certbot-sidecar
-  #     dockerfile: projects/pegasus-ops/certbot-sidecar/Dockerfile
-  #     force_tag: true
-  #     password:
-  #       from_secret: DOCKER_PASSWORD
-  #     repo: thrashplay/certbot-sidecar
-  #     tags: latest
-  #     username: thrashplay
+  - name: build-nginx-with-certbot
+    image: plugins/docker
+    depends_on: [ clone ]
+    settings:
+      context: projects/pegasus-ops/nginx-proxy/nginx-with-certbot
+      dockerfile: projects/pegasus-ops/nginx-proxy/nginx-with-certbot/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/nginx-with-certbot
+      tags: latest
+      username: thrashplay
 
 trigger:
   changeset:

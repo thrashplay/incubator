@@ -17,7 +17,10 @@ steps:
       password:
         from_secret: DOCKER_PASSWORD
       repo: thrashplay/git-client
-      tags: latest
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
       username: thrashplay
     when:
       changeset:
@@ -33,7 +36,10 @@ steps:
       password:
         from_secret: DOCKER_PASSWORD
       repo: thrashplay/sophia-deployer
-      tags: latest
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
       username: thrashplay
     when:
       changeset:
@@ -49,7 +55,10 @@ steps:
       password:
         from_secret: DOCKER_PASSWORD
       repo: thrashplay/ddns-sidecar
-      tags: latest
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
       username: thrashplay
     when:
       changeset:
@@ -65,7 +74,10 @@ steps:
       password:
         from_secret: DOCKER_PASSWORD
       repo: thrashplay/nginx-with-certbot
-      tags: latest
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
       username: thrashplay
     when:
       changeset:
@@ -81,7 +93,10 @@ steps:
       password:
         from_secret: DOCKER_PASSWORD
       repo: thrashplay/homeassistant
-      tags: latest
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
       username: thrashplay
     when:
       changeset:
@@ -180,9 +195,6 @@ trigger:
 kind: pipeline
 type: docker
 name: deploy-services
-
-clone:
-  disable: true
 
 depends_on:
   - build-arm-images

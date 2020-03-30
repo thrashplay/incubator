@@ -15,7 +15,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - cert-storage:/etc/letsencrypt
+      - certs:/etc/letsencrypt
 
   ddns:
     image: thrashplay/ddns-sidecar:latest
@@ -53,10 +53,15 @@ secrets:
     external: true
 
 volumes:
-  cert-storage:
-    driver: local
+  certs:
+    driver: nfs
+    name: nginx-proxy.certs
     driver_opts:
-      type: none
-      device: /mnt/nginx-proxy/cert_storage
-      o: bind
+      share: nfs.pegasus:/
+      create: "true"
   ddns-data:
+    driver: nfs
+    name: nginx-proxy.ddns-data
+    driver_opts:
+      share: nfs.pegasus:/
+      create: "true"

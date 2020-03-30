@@ -1,0 +1,33 @@
+{
+  "name": "@pegasus-ops/config-version-helper",
+  "version": "0.1.0-next.15",
+  "description": "Helper for generating Docker Swarm config versions.",
+  "bugs": "https://github.com/thrashplay/incubator-node/issues",
+  "license": "MIT",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "files": [
+    "lib/**"
+  ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "bin": "./lib/cli.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thrashplay/incubator-node.git",
+    "directory": "packages/node/sophia/config-version-helper"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "@thrashplay/fp": "^0.1.0-next.22",
+    "@thrashplay/fs-utils": "^0.1.0-next.27",
+    "@thrashplay/mock-fs": "^0.1.0-next.27",
+    "js-yaml": "3.13.1",
+    "lodash": "4.17.15",
+    "yargs": "15.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

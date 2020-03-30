@@ -1,0 +1,1 @@
+{"version":3,"file":"project-structure.d.ts","sourceRoot":"","sources":["../../src/project-factory/project-structure.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,MAAM,UAAU,CAAA;AAElC;;GAEG;AACH,MAAM,WAAW,gBAAgB;IAC/B,IAAI,EAAE,MAAM,CAAA;IACZ,aAAa,EAAE,CAAC,gBAAgB,EAAE,MAAM,KAAK,OAAO,CAAC,OAAO,GAAG,SAAS,CAAC,CAAA;CAC1E"}

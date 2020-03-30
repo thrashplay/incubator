@@ -7,10 +7,10 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "projects/genotype/*",
-      "projects/ringlet/haul-config-helpers",
-      "projects/pegasus-ops/config-version-helper",
-      "projects/thrashlib/*"
+      "packages/node/genotype/*",
+      "packages/node/ringlet/haul-config-helpers",
+      "packages/node/devops/config-version-helper",
+      "packages/node/thrashlib/*"
     ]
   },
   "scripts": {
@@ -19,7 +19,7 @@
     "build:clean": "run-s clean build",
     "build:dev": "yarn _build:ts-config && yarn run-p _build:types _build:js:dev",
     "build:watch": "yarn _build:ts-config && yarn run-p _build:watch:js _build:watch:types",
-    "clean": "rm -rf projects/*/*/dist && rm -rf projects/*/*/lib && rm -rf projects/*/*/tsconfig.build.tsbuildinfo && rm -f tsconfig.build.tsbuildinfo",
+    "clean": "rm -rf packages/node/*/*/dist && rm -rf packages/node/*/*/lib && rm -rf packages/node/*/*/tsconfig.build.tsbuildinfo && rm -f tsconfig.build.tsbuildinfo",
     "clean:all": "yarn clean && yarn _clean:ts-config && yarn _clean:node_modules",
     "emulator:android": "bash -c \"emulator -avd $(emulator -list-avds | head -n 1)\"",
     "genotype": "yarn genotype:android",
@@ -33,13 +33,13 @@
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
     "version:graduate": "yarn lerna version --conventional-graduate",
-    "_build:js": "lerna exec --stream -- node ../../../build-lib/thrashpack.js",
+    "_build:js": "lerna exec --stream -- node ../../../../build-lib/thrashpack.js",
     "_build:js:dev": "lerna run --parallel build:dev",
     "_build:types": "tsc --build tsconfig.build-types.json",
     "_build:watch:js": "lerna exec --parallel -- webpack --watch --env.name dev",
     "_build:watch:types": "tsc --build tsconfig.build-types.json --watch",
-    "_clean:node_modules": "rm -rf node_modules && rm -rf projects/*/*/node_modules",
-    "_clean:ts-config": "rm -f projects/*/*/tsconfig.json",
+    "_clean:node_modules": "rm -rf node_modules && rm -rf packages/node/*/*/node_modules",
+    "_clean:ts-config": "rm -f packages/node/*/*/tsconfig.json",
     "postinstall": "patch-package"
   },
   "eslintConfig": {

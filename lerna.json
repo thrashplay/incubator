@@ -17,9 +17,9 @@
   "npmClient": "yarn",
   "useWorkspaces": true,
   "packages": [ 
-    "projects/genotype/*",
-    "projects/pegasus-ops/config-version-helper",
-    "projects/thrashlib/*"
+    "packages/node/genotype/*",
+    "packages/node/devops/config-version-helper",
+    "packages/node/thrashlib/*"
   ],
   "version": "independent"
 }

@@ -5,9 +5,7 @@ config-versions.env
 
 # generated files
 dist
-projects/**/lib
-# this project only has pre-compiled libs that we want to check in
-packages/**/tsconfig.json
+packages/**/lib
 
 # Logs
 logs

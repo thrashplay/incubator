@@ -17,7 +17,7 @@ const createPackageFromDir = (dir) => {
 
   return {
     displayName: packageJson.name,
-    moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/projects/' }),
+    moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/packages/node/' }),
     roots: [
       path.resolve(dir, 'src'),
     ],

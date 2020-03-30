@@ -11,8 +11,8 @@ steps:
     image: plugins/docker
     depends_on: [ clone ]
     settings:
-      context: projects/pegasus-ops/git-client
-      dockerfile: projects/pegasus-ops/git-client/Dockerfile
+      context: packages/pegasus-ops/docker/git-client
+      dockerfile: packages/pegasus-ops/docker/git-client/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
@@ -24,14 +24,14 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ .drone.yaml, projects/pegasus-ops/git-client/** ]
+        includes: [ .drone.yaml, packages/pegasus-ops/docker/git-client/** ]
 
   - name: build-deployer
     image: plugins/docker
     depends_on: [ clone ]
     settings:
-      context: projects/pegasus-ops/deployer
-      dockerfile: projects/pegasus-ops/deployer/Dockerfile
+      context: packages/pegasus-ops/docker/deployer
+      dockerfile: packages/pegasus-ops/docker/deployer/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
@@ -43,14 +43,14 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ .drone.yaml, projects/pegasus-ops/deployer/** ]
+        includes: [ .drone.yaml, packages/pegasus-ops/docker/deployer/** ]
 
   - name: build-ddns-sidecar
     image: plugins/docker
     depends_on: [ clone ]
     settings:
-      context: projects/pegasus-ops/nginx-proxy/ddns-sidecar
-      dockerfile: projects/pegasus-ops/nginx-proxy/ddns-sidecar/Dockerfile
+      context: packages/pegasus-ops/docker/nginx-proxy/ddns-sidecar
+      dockerfile: packages/pegasus-ops/docker/nginx-proxy/ddns-sidecar/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
@@ -62,14 +62,14 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ .drone.yaml, projects/pegasus-ops/nginx-proxy/ddns-sidecar/** ]
+        includes: [ .drone.yaml, packages/pegasus-ops/docker/nginx-proxy/ddns-sidecar/** ]
 
   - name: build-nginx-with-certbot
     image: plugins/docker
     depends_on: [ clone ]
     settings:
-      context: projects/pegasus-ops/nginx-proxy/nginx-with-certbot
-      dockerfile: projects/pegasus-ops/nginx-proxy/nginx-with-certbot/Dockerfile
+      context: packages/pegasus-ops/docker/nginx-proxy/nginx-with-certbot
+      dockerfile: packages/pegasus-ops/docker/nginx-proxy/nginx-with-certbot/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
@@ -81,14 +81,14 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ .drone.yaml, projects/pegasus-ops/nginx-proxy/nginx-with-certbot/** ]
+        includes: [ .drone.yaml, packages/pegasus-ops/docker/nginx-proxy/nginx-with-certbot/** ]
 
   - name: build-homeassistant
     image: plugins/docker
     depends_on: [ clone ]
     settings:
-      context: projects/pegasus-ops/homeassistant
-      dockerfile: projects/pegasus-ops/homeassistant/Dockerfile
+      context: packages/pegasus-ops/docker/homeassistant
+      dockerfile: packages/pegasus-ops/docker/homeassistant/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
@@ -100,11 +100,11 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ .drone.yaml, projects/pegasus-ops/homeassistant/** ]
+        includes: [ .drone.yaml, packages/pegasus-ops/docker/homeassistant/** ]
 
 trigger:
   changeset:
-    includes: [ .drone.yaml, projects/pegasus-ops/** ]
+    includes: [ .drone.yaml, packages/pegasus-ops/docker/** ]
   branch:
     - master
 
@@ -137,16 +137,15 @@ steps:
     commands:
       - yarn test
 
-  - name: fetch-tags
-    image: drone/git
-    commands:
-      - git fetch --tags
+  # - name: fetch-tags
+  #   image: drone/git
+  #   commands:
+  #     - git fetch --tags
 
   - name: bump-versions
     image: node:lts
     commands:
       # - sh .ci/amend-commit.sh
-      - git tag -a builds/${DRONE_BUILD_NUMBER} -m "Tagging build"
       - yarn lerna version --conventional-prerelease --preid next --amend --no-changelog --yes
       # - sh .ci/push-tags.sh
     when:
@@ -185,7 +184,7 @@ trigger:
       - 'lerna.json'
       - 'package.json'
       - 'patches/**'
-      - 'projects/**'
+      - 'packages/node/**'
       - 'tsconfig.*.json'
       - 'tsconfig.json'
       - 'yarn.lock'
@@ -205,13 +204,6 @@ platform:
   os: linux
 
 steps:
-  # - name: clone
-  #   image: thrashplay/git-client
-  #   commands:
-  #   - git clone ${DRONE_REPO_LINK} .
-  #   - git config --local advice.detachedHead false
-  #   - git checkout builds/${DRONE_BUILD_NUMBER}
-
   - name: deploy
     image: thrashplay/sophia-deployer
     settings:
@@ -222,6 +214,8 @@ steps:
         from_secret: DOCKER_CERT
       docker_key:
         from_secret: DOCKER_KEY
+
+  # - git tag -a builds/${DRONE_BUILD_NUMBER} -m "Tagging build"
 
 trigger:
   branch:

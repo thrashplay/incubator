@@ -4,7 +4,7 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "alwaysStrict": true,
-    "baseUrl": "./projects",
+    "baseUrl": "./packages/node",
     "composite": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,

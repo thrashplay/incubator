@@ -59,6 +59,19 @@ steps:
       tags: latest
       username: thrashplay
 
+  - name: build-homeassistant
+    image: plugins/docker
+    depends_on: [ clone ]
+    settings:
+      context: projects/pegasus-ops/homeassistant
+      dockerfile: projects/pegasus-ops/homeassistant/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/homeassistant
+      tags: latest
+      username: thrashplay
+
 trigger:
   changeset:
     includes: [ .drone.yaml, projects/pegasus-ops/** ]

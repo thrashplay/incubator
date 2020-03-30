@@ -1,0 +1,14 @@
+[Unit]
+Description=Docker NFS, AWS EFS & Samba/CIFS Volume Plugin
+Documentation=https://github.com/ContainX/docker-volume-netshare
+Wants=network-online.target
+After=network-online.target
+After=docker.service
+
+[Service]
+EnvironmentFile=/etc/docker-volume-netshare
+ExecStart=/usr/bin/docker-volume-netshare $DKV_NETSHARE_OPTS
+StandardOutput=syslog
+
+[Install]
+WantedBy=multi-user.target

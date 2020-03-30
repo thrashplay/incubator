@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+
+SCRIPT=$(readlink -f "$0")
+DIR=$(dirname "$SCRIPT")
+
+set -e
+set -x
+
+dpkg -i ${DIR}/docker-volume-netshare_0.36_armhf.deb
+
+cp ${DIR}/docker-volume-netshare /etc
+cp ${DIR}/docker-volume-netshare.service /etc/systemd/system
+systemctl enable docker-volume-netshare
+systemctl start docker-volume-netshare
+
+docker run --rm -i -t --volume-driver=nfs -v nfs.pegasus/:/mount ubuntu /bin/bash

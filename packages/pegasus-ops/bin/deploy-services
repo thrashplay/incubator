@@ -4,12 +4,16 @@ SCRIPT=$(readlink -f "$0")
 DIR=$(dirname "$SCRIPT")
 
 deploy_stack () {
-  npx @pegasus-ops/config-version-helper "$DIR/../deployments/$1/docker-compose.yaml"
+  STACK_NAME="$1"
+  shift
+  EXTRA_ARGS="$@"
+
+  npx @pegasus-ops/config-version-helper "$DIR/../deployments/$STACK_NAME/docker-compose.yaml"
   set -a
-  . "$DIR/../deployments/$1/config-versions.env"
+  . "$DIR/../deployments/$STACK_NAME/config-versions.env"
   set +a
 
-  docker stack deploy --compose-file "$DIR/../deployments/$1/docker-compose.yaml" $1
+  docker stack deploy $EXTRA_ARGS --compose-file "$DIR/../deployments/$STACK_NAME/docker-compose.yaml" $STACK_NAME
 }
 
 set -e

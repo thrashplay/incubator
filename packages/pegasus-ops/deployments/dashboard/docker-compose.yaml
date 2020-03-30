@@ -20,6 +20,10 @@ services:
         mode: 0440
     environment:
       - TZ=America/Chicago
+    networks:
+      - proxy
+    ports:
+      - "56700:56700/udp"
     secrets:
       - homeassistant-secrets
     volumes:
@@ -44,7 +48,7 @@ configs:
     file: ./config/scripts.yaml
     
 networks:
-  default:
+  proxy:
     external: true
     name: proxy
 

@@ -19,6 +19,9 @@ steps:
       repo: thrashplay/git-client
       tags: latest
       username: thrashplay
+    when:
+      changeset:
+        includes: [ .drone.yaml, projects/pegasus-ops/git-client ]
 
   - name: build-deployer
     image: plugins/docker
@@ -32,6 +35,9 @@ steps:
       repo: thrashplay/sophia-deployer
       tags: latest
       username: thrashplay
+    when:
+      changeset:
+        includes: [ .drone.yaml, projects/pegasus-ops/deployer ]
 
   - name: build-ddns-sidecar
     image: plugins/docker
@@ -45,6 +51,9 @@ steps:
       repo: thrashplay/ddns-sidecar
       tags: latest
       username: thrashplay
+    when:
+      changeset:
+        includes: [ .drone.yaml, projects/pegasus-ops/nginx-proxy/ddns-sidecar ]
 
   - name: build-nginx-with-certbot
     image: plugins/docker
@@ -58,6 +67,9 @@ steps:
       repo: thrashplay/nginx-with-certbot
       tags: latest
       username: thrashplay
+    when:
+      changeset:
+        includes: [ .drone.yaml, projects/pegasus-ops/nginx-proxy/nginx-with-certbot ]
 
   - name: build-homeassistant
     image: plugins/docker
@@ -71,6 +83,9 @@ steps:
       repo: thrashplay/homeassistant
       tags: latest
       username: thrashplay
+    when:
+      changeset:
+        includes: [ .drone.yaml, projects/pegasus-ops/homeassistant ]
 
 trigger:
   changeset:

@@ -8,4 +8,4 @@ services:
 networks:
   default:
     external: true
-    name: proxy
+    name: webgateway

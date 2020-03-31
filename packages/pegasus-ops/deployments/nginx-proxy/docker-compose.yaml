@@ -46,7 +46,7 @@ configs:
 networks:
   default:
     external: true
-    name: proxy
+    name: webgateway
 
 secrets:
   ddns-secrets:

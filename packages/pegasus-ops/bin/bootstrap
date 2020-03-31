@@ -25,7 +25,21 @@ ${DIR}/bootstrap-dist/load-netshare
 docker swarm init --advertise-addr $1
 docker node update --label-add public $HOST
 
-docker network create -d overlay --attachable proxy
+docker network create -d overlay --attachable webgateway
+
+# first worker node: 192.168.1.8 - 192.168.1.15
+docker network create --config-only --subnet=192.168.1.0/24 --gateway=192.168.1.1 -o parent=eth0 \
+  --ip-range=192.168.1.8/29 macvlan-config
+# second worker node: 192.168.1.16 - 192.168.1.23
+# docker network create --config-only --subnet=192.168.1.0/24 --gateway=192.168.1.1 -o parent=eth0 \
+#   --ip-range=192.168.1.16/29 macvlan-config
+# third worker node: 192.168.1.24 - 192.168.1.31
+# docker network create --config-only --subnet=192.168.1.0/24 --gateway=192.168.1.1 -o parent=eth0 \
+#   --ip-range=192.168.1.24/29 macvlan-config
+# ... and so on
+
+docker network create -d macvlan --scope swarm --config-from macvlan-config --attachable device-discovery
+
 
 $DIR/load-secrets $2
 

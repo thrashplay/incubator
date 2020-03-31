@@ -21,8 +21,8 @@ services:
     environment:
       - TZ=America/Chicago
     networks:
-      - proxy
       - device-discovery
+      - webgateway
     secrets:
       - homeassistant-secrets
     volumes:
@@ -47,12 +47,12 @@ configs:
     file: ./config/scripts.yaml
     
 networks:
-  proxy:
-    external: true
-    name: proxy
   device-discovery:
     external: true
     name: device-discovery
+  webgateway:
+    external: true
+    name: webgateway
 
 secrets:
   homeassistant-secrets:

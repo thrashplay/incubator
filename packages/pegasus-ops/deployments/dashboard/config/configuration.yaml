@@ -13,6 +13,11 @@ http:
 #   domain: !secret namecheap_dns_domain
 #   password: !secret namecheap_dns_password
 
+lifx:
+  light:
+    - broadcast: 192.168.1.255
+    - port: 56700
+
 # Text to speech
 tts:
   - platform: google_translate

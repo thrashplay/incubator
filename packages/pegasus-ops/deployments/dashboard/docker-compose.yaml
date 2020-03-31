@@ -22,8 +22,7 @@ services:
       - TZ=America/Chicago
     networks:
       - proxy
-    ports:
-      - "56700:56700/udp"
+      - device-discovery
     secrets:
       - homeassistant-secrets
     volumes:
@@ -32,25 +31,28 @@ services:
 
 configs:
   automations:
-    name: automations-config-${AUTOMATIONS_CONFIG_VERSION:-default}
+    name: automations-config-${AUTOMATIONS_VERSION:-default}
     file: ./config/automations.yaml
   configuration:
-    name: configuration-config-${CONFIGURATIONS_CONFIG_VERSION:-default}
+    name: configuration-config-${CONFIGURATION_VERSION:-default}
     file: ./config/configuration.yaml
   groups:
-    name: groups-config-${GROUPS_CONFIG_VERSION:-default}
+    name: groups-config-${GROUPS_VERSION:-default}
     file: ./config/groups.yaml
   scenes:
-    name: scenes-config-${SCENES_CONFIG_VERSION:-default}
+    name: scenes-config-${SCENES_VERSION:-default}
     file: ./config/scenes.yaml
   scripts:
-    name: scripts-config-${SCRIPTS_CONFIG_VERSION:-default}
+    name: scripts-config-${SCRIPTS_VERSION:-default}
     file: ./config/scripts.yaml
     
 networks:
   proxy:
     external: true
     name: proxy
+  device-discovery:
+    external: true
+    name: device-discovery
 
 secrets:
   homeassistant-secrets:

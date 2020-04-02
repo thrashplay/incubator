@@ -15,56 +15,22 @@ import {
 } from 'lodash/fp'
 import { mapIf } from '@thrashplay/fp'
 
-/**
- * Object mapping a version variable name for a stack's config to the version string 
- * for that config.
- */
-export interface ConfigVersionVariable {
-  name: string
-  version: string
-}
-
-export interface ConfigEntry {
-  id: string
-  name?: string
-  path: string
-}
-
-export interface ConfigEntryWithError extends ConfigEntry {
-  error: Error
-}
-
-export interface VersionedConfigEntry extends ConfigEntry {
-  version: string
-}
-
-export interface ConfigVersionsResult {
-  variables: ConfigVersionVariable[]
-  invalidConfigs: ConfigEntryWithError[]
-}
-
-export type StackDefinition = object
+import {
+  ConfigEntry,
+  StackDefinition,
+  ContentReader,
+  ConfigEntryWithError,
+  VersionGetter,
+  VersionedConfigEntry,
+  VariableNameCreator,
+  ConfigVersionsResult,
+} from '../types'
 
 type ConfigEntryWithOptionalPath = Omit<ConfigEntry, 'path'> & Partial<Pick<ConfigEntry, 'path'>>
 
 interface ConfigEntryWithContent extends ConfigEntry {
   content: string
 }
-
-/**
- * Reads the content for a config entry.
- */
-export type ContentReader = (configEntry: ConfigEntry) => string
-
-/**
- * Calculates the version to use for a config entry and its content.
- */
-export type VersionGetter = (content: string, configEntry: ConfigEntry) => string
-
-/**
- * Creates a variable name to use for the specified config entry.
- */
-export type VariableNameCreator = (configEntry: VersionedConfigEntry) => string
 
 /**
  * Create a ConfigEntry for every `config` in the StackDefinition that has a 'file' property.

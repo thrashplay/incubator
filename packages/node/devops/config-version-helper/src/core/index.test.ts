@@ -1,4 +1,5 @@
-import { baseStack, configsWithNoFile, validConfigs } from './__fixtures__'
+import { baseStack, configsWithNoFile, validConfigs } from '../__fixtures__'
+
 import { ConfigEntry, VersionedConfigEntry } from './helpers'
 
 import { getConfigVersionVariables } from './index'

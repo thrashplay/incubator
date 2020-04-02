@@ -1,18 +1,21 @@
 import { flow, map, has, negate } from 'lodash/fp'
 import { mapIf } from '@thrashplay/fp'
 
+import * as defaults from '../defaults'
+import {
+  StackDefinition,
+  ContentReader,
+  VersionGetter,
+  VariableNameCreator,
+  ConfigVersionsResult,
+} from '../types'
+
 import {
   addContent, 
   calculateVersion,
-  ConfigVersionsResult,
-  ContentReader,
   createResult,
   getFileConfigsFromStack,
-  StackDefinition,
-  VariableNameCreator,
-  VersionGetter,
 } from './helpers'
-import * as defaults from './defaults'
 
 /**
  * Options for controlling how version variables are created for a stack's `config` entries.

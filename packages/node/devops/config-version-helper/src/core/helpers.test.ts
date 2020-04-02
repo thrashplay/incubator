@@ -1,12 +1,12 @@
+import { baseStack, configsWithNoFile, validConfigs } from '../__fixtures__'
+import { StackDefinition, VersionedConfigEntry } from '../types'
+
 import {
   addContent,
   calculateVersion,
   createResult,
   getFileConfigsFromStack,
-  StackDefinition,
-  VersionedConfigEntry,
 } from './helpers'
-import { baseStack, configsWithNoFile, validConfigs } from './__fixtures__'
 
 describe('config-version-helper helper functions', () => {
   beforeEach(() => {

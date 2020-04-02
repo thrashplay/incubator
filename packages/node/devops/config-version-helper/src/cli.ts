@@ -7,9 +7,8 @@ import yaml from 'js-yaml'
 import yargs from 'yargs'
 import { forEach, flow, join, map } from 'lodash/fp'
 
-import { ConfigEntryWithError, ConfigVersionsResult } from './helpers'
-
-import { getConfigVersionVariables } from './index'
+import { ConfigEntryWithError, ConfigVersionsResult } from './types'
+import { getConfigVersionVariables } from './core/index'
 
 interface Arguments {
   stackYamlPath: string

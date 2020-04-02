@@ -1,8 +1,8 @@
 diff --git a/node_modules/metro-memory-fs/src/index.js b/node_modules/metro-memory-fs/src/index.js
-index ddc8906..f20f484 100644
+index ddc8906..1ac4375 100644
 --- a/node_modules/metro-memory-fs/src/index.js
 +++ b/node_modules/metro-memory-fs/src/index.js
-@@ -440,23 +440,89 @@ class MemoryFs {
+@@ -440,23 +440,90 @@ class MemoryFs {
        }
      });
  
@@ -59,6 +59,7 @@ index ddc8906..f20f484 100644
 +              break
 +
 +            case 'EEXIST':
++              let stat
 +              try {
 +                stat = this.statSync(dirPath)
 +              } catch (syncError) {
@@ -103,7 +104,7 @@ index ddc8906..f20f484 100644
      });
  
      _defineProperty(this, "rmdirSync", dirPath => {
-@@ -777,7 +843,12 @@ class MemoryFs {
+@@ -777,7 +844,12 @@ class MemoryFs {
      if (this._platform === "posix") {
        this._roots.set("", this._makeDir(0o777));
      } else if (this._platform === "win32") {

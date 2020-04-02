@@ -24,7 +24,7 @@ const defaultEnvFilePathProvider = (stackYamlPath: string) => getAbsolutePath(st
 export function createEnvFile(
   stackYamlPath: string,
   envFilePath: string,
-  options?: StackFileVersionVariableOptions): Promise<void>
+  options?: StackFileVersionVariableOptions): Promise<ConfigVersionsResult>
 
 /**
  * Reads a Docker Stack definition file and generates version identifier variables for the configs it
@@ -41,7 +41,7 @@ export function createEnvFile(
 export function createEnvFile(
   stackYamlPath: string,
   envFilePathProvider?: EnvFilePathProvider,
-  options?: StackFileVersionVariableOptions): Promise<void>
+  options?: StackFileVersionVariableOptions): Promise<ConfigVersionsResult>
 
 /**
  * Reads a Docker Stack definition Yaml file and generates version identifier variables for the configs it
@@ -53,13 +53,13 @@ export function createEnvFile(
  */
 export function createEnvFile(
   stackYamlPath: string,
-  options?: StackFileVersionVariableOptions): Promise<void>
+  options?: StackFileVersionVariableOptions): Promise<ConfigVersionsResult>
 
 export function createEnvFile(
   stackYamlPath: string,
   envFilePathOrProviderOrOptions: string | EnvFilePathProvider | StackFileVersionVariableOptions = defaultEnvFilePathProvider,
   options: StackFileVersionVariableOptions = {}
-): Promise<void> {
+): Promise<ConfigVersionsResult> {
 
   const getStackRelativePath = (configPath: string) => path.resolve(path.dirname(stackYamlPath), configPath)
   const getConfigContent = ({ path }: ConfigEntry) => fs.readFileSync(getStackRelativePath(path), 'utf8')
@@ -124,6 +124,7 @@ export function createEnvFile(
 
     return fs.promises.mkdir(path.dirname(outputPath), { recursive: true })
       .then(() => fs.promises.writeFile(outputPath, result, { encoding: 'utf8' }))
+      .then(() => versions)
   }
 
   return promiseToExist(stackYamlPath)

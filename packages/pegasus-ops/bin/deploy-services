@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+set -e
+
 SCRIPT=$(readlink -f "$0")
 DIR=$(dirname "$SCRIPT")
 
@@ -8,16 +10,14 @@ deploy_stack () {
   shift
   EXTRA_ARGS="$@"
 
-  # npx @pegasus-ops/config-version-helper "$DIR/../deployments/$STACK_NAME/docker-compose.yaml"
-  # set -a
-  # . "$DIR/../deployments/$STACK_NAME/config-versions.env"
-  # set +a
+  if [ -f "$DIR/../$STACK_NAME/.env" ]; then
+    set -a
+    . "$DIR/../$STACK_NAME/.env"
+    set +a
+  fi
 
   docker stack deploy $EXTRA_ARGS --compose-file "$DIR/../$STACK_NAME/docker-compose.yaml" $STACK_NAME
 }
-
-set -e
-set -x
 
 deploy_stack nginx-proxy
 deploy_stack hello-world

@@ -38,7 +38,7 @@ docker network create --config-only --subnet=192.168.1.0/24 --gateway=192.168.1.
 #   --ip-range=192.168.1.24/29 macvlan-config
 # ... and so on
 
-docker network create -d macvlan --scope swarm --config-from macvlan-config --attachable device-discovery
+docker network create -d macvlan --scope swarm --config-from macvlan-config device-discovery
 
 
 $DIR/load-secrets $2

@@ -2,6 +2,8 @@ import { promises as fs, Stats } from 'fs'
 
 import { isNil } from 'lodash'
 
+export * from './utils'
+
 /**
  * Returns a Promise that resolves to `true` if the given path exists, or false otherwise.
  * If provided, the second argument is a function to check the `fs.Stats` object. If that

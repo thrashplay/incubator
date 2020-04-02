@@ -27,13 +27,13 @@ services:
         target: /etc/samba/smb-local.conf
     secrets:
       - smb_users
-    deploy:
-      placement:
-        constraints: [node.labels.net.the-pegasus.storage == true]
+    # deploy:
+    #   placement:
+    #     constraints: [node.labels.com.thrashplay.resources.storage == true]
 
 configs:
   smb_conf:
-    name: smb_conf-${SETTINGS_VERSION:-default}
+    name: smb_conf-${SMB_CONF_VERSION:-default}
     file: ./config/smb.conf
 
 secrets:

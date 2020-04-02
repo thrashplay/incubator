@@ -7,12 +7,12 @@ platform:
   os: linux
 
 steps:
-  - name: build-git-client
+  - name: build-git-client`
     image: plugins/docker
     depends_on: [ clone ]
     settings:
-      context: packages/pegasus-ops/docker/git-client
-      dockerfile: packages/pegasus-ops/docker/git-client/Dockerfile
+      context: packages/docker/git-client
+      dockerfile: packages/docker/git-client/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
@@ -24,14 +24,14 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ .drone.yaml, packages/pegasus-ops/docker/git-client/** ]
+        includes: [ .drone.yaml, packages/docker/git-client/** ]
 
   - name: build-deployer
     image: plugins/docker
     depends_on: [ clone ]
     settings:
-      context: packages/pegasus-ops/docker/deployer
-      dockerfile: packages/pegasus-ops/docker/deployer/Dockerfile
+      context: packages/docker/deployer
+      dockerfile: packages/docker/deployer/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
@@ -43,14 +43,14 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ .drone.yaml, packages/pegasus-ops/docker/deployer/** ]
+        includes: [ .drone.yaml, packages/docker/deployer/** ]
 
   - name: build-ddns-sidecar
     image: plugins/docker
     depends_on: [ clone ]
     settings:
-      context: packages/pegasus-ops/docker/nginx-proxy/ddns-sidecar
-      dockerfile: packages/pegasus-ops/docker/nginx-proxy/ddns-sidecar/Dockerfile
+      context: packages/docker/nginx-proxy/ddns-sidecar
+      dockerfile: packages/docker/nginx-proxy/ddns-sidecar/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
@@ -62,14 +62,14 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ .drone.yaml, packages/pegasus-ops/docker/nginx-proxy/ddns-sidecar/** ]
+        includes: [ .drone.yaml, packages/docker/nginx-proxy/ddns-sidecar/** ]
 
   - name: build-nginx-with-certbot
     image: plugins/docker
     depends_on: [ clone ]
     settings:
-      context: packages/pegasus-ops/docker/nginx-proxy/nginx-with-certbot
-      dockerfile: packages/pegasus-ops/docker/nginx-proxy/nginx-with-certbot/Dockerfile
+      context: packages/docker/nginx-proxy/nginx-with-certbot
+      dockerfile: packages/docker/nginx-proxy/nginx-with-certbot/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
@@ -81,14 +81,14 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ .drone.yaml, packages/pegasus-ops/docker/nginx-proxy/nginx-with-certbot/** ]
+        includes: [ .drone.yaml, packages/docker/nginx-proxy/nginx-with-certbot/** ]
 
   - name: build-homeassistant
     image: plugins/docker
     depends_on: [ clone ]
     settings:
-      context: packages/pegasus-ops/docker/homeassistant
-      dockerfile: packages/pegasus-ops/docker/homeassistant/Dockerfile
+      context: packages/docker/homeassistant
+      dockerfile: packages/docker/homeassistant/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
@@ -100,11 +100,11 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ .drone.yaml, packages/pegasus-ops/docker/homeassistant/** ]
+        includes: [ .drone.yaml, packages/docker/homeassistant/** ]
 
 trigger:
   changeset:
-    includes: [ .drone.yaml, packages/pegasus-ops/docker/** ]
+    includes: [ .drone.yaml, packages/docker/** ]
   branch:
     - master
 
@@ -189,34 +189,33 @@ trigger:
       - 'tsconfig.json'
       - 'yarn.lock'
 
----
+# disabling deployment, because the deploy bin does not reference correct paths at the moment
+# ---
 
-kind: pipeline
-type: docker
-name: deploy-services
+# kind: pipeline
+# type: docker
+# name: deploy-services
 
-depends_on:
-  - build-arm-images
-  - build-npm-packages
+# depends_on:
+#   - build-arm-images
+#   - build-npm-packages
 
-platform:
-  arch: arm
-  os: linux
+# platform:
+#   arch: arm
+#   os: linux
 
-steps:
-  - name: deploy
-    image: thrashplay/sophia-deployer
-    settings:
-      docker_host: control.pegasus:2376
-      docker_cacert:
-        from_secret: DOCKER_CACERT
-      docker_cert:
-        from_secret: DOCKER_CERT
-      docker_key:
-        from_secret: DOCKER_KEY
+# steps:
+#   - name: deploy
+#     image: thrashplay/sophia-deployer
+#     settings:
+#       docker_host: control.pegasus:2376
+#       docker_cacert:
+#         from_secret: DOCKER_CACERT
+#       docker_cert:
+#         from_secret: DOCKER_CERT
+#       docker_key:
+#         from_secret: DOCKER_KEY
 
-  # - git tag -a builds/${DRONE_BUILD_NUMBER} -m "Tagging build"
-
-trigger:
-  branch:
-    - master
+# trigger:
+#   branch:
+#     - master

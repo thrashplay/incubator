@@ -155,7 +155,6 @@ steps:
   - name: authenticate-to-npm
     image: robertstettner/drone-npm-auth
     settings:
-      path: ~
       token:
         from_secret: NPM_PUBLISH_TOKEN
     when:

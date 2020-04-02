@@ -1,1 +1,0 @@
-{"version":3,"file":"project-factory.d.ts","sourceRoot":"","sources":["../../src/project-factory/project-factory.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,gBAAgB,EAAE,MAAM,qBAAqB,CAAA;AAEtD,qBAAa,cAAc;IAEvB,OAAO,CAAC,QAAQ,CAAC,2BAA2B;gBAA3B,2BAA2B,EAAE,gBAAgB,EAAE;IAOlE,SAAgB,aAAa,8DAU5B;CACF"}

@@ -5,7 +5,7 @@ config-versions.env
 
 # generated files
 dist
-packages/**/lib
+packages/node/**/lib
 
 # Logs
 logs
@@ -73,6 +73,9 @@ typings/
 
 # Output of 'npm pack'
 *.tgz
+
+# Local npm settings
+.npmrc
 
 # Yarn Integrity file
 .yarn-integrity

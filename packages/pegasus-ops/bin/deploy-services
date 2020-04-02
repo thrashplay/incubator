@@ -8,12 +8,12 @@ deploy_stack () {
   shift
   EXTRA_ARGS="$@"
 
-  npx @pegasus-ops/config-version-helper "$DIR/../deployments/$STACK_NAME/docker-compose.yaml"
-  set -a
-  . "$DIR/../deployments/$STACK_NAME/config-versions.env"
-  set +a
+  # npx @pegasus-ops/config-version-helper "$DIR/../deployments/$STACK_NAME/docker-compose.yaml"
+  # set -a
+  # . "$DIR/../deployments/$STACK_NAME/config-versions.env"
+  # set +a
 
-  docker stack deploy $EXTRA_ARGS --compose-file "$DIR/../deployments/$STACK_NAME/docker-compose.yaml" $STACK_NAME
+  docker stack deploy $EXTRA_ARGS --compose-file "$DIR/../$STACK_NAME/docker-compose.yaml" $STACK_NAME
 }
 
 set -e

@@ -45,6 +45,25 @@ steps:
       changeset:
         includes: [ .drone.yaml, packages/docker/deployer/** ]
 
+  - name: generate-versions
+    image: plugins/docker
+    depends_on: [ clone ]
+    settings:
+      context: packages/docker/generate-versions
+      dockerfile: packages/docker/generate-versions/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/generate-versions
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      username: thrashplay
+    when:
+      changeset:
+        includes: [ .drone.yaml, packages/docker/generate-versions/** ]
+
   - name: build-ddns-sidecar
     image: plugins/docker
     depends_on: [ clone ]
@@ -188,33 +207,40 @@ trigger:
       - 'tsconfig.json'
       - 'yarn.lock'
 
-# disabling deployment, because the deploy bin does not reference correct paths at the moment
-# ---
+---
 
-# kind: pipeline
-# type: docker
-# name: deploy-services
+kind: pipeline
+type: docker
+name: deploy-services
 
-# depends_on:
-#   - build-arm-images
-#   - build-npm-packages
+depends_on:
+  - build-arm-images
+  - build-npm-packages
 
-# platform:
-#   arch: arm
-#   os: linux
+platform:
+  arch: arm
+  os: linux
 
-# steps:
-#   - name: deploy
-#     image: thrashplay/sophia-deployer
-#     settings:
-#       docker_host: control.pegasus:2376
-#       docker_cacert:
-#         from_secret: DOCKER_CACERT
-#       docker_cert:
-#         from_secret: DOCKER_CERT
-#       docker_key:
-#         from_secret: DOCKER_KEY
+steps:
+  - name: generate-versions
+    image: thrashplay/generate-versions
+    settings:
+      stack_files:
+        - packages/pegasus-ops/nginx-proxy/docker-compose.yaml
+        - packages/pegasus-ops/hello-world/docker-compose.yaml
+        - packages/pegasus-ops/dashboard/docker-compose.yaml
 
-# trigger:
-#   branch:
-#     - master
+  - name: deploy
+    image: thrashplay/sophia-deployer
+    settings:
+      docker_host: control.pegasus:2376
+      docker_cacert:
+        from_secret: DOCKER_CACERT
+      docker_cert:
+        from_secret: DOCKER_CERT
+      docker_key:
+        from_secret: DOCKER_KEY
+
+trigger:
+  branch:
+    - master

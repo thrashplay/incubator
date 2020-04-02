@@ -146,7 +146,7 @@ steps:
     image: node:lts
     commands:
       # - sh .ci/amend-commit.sh
-      - yarn lerna version --conventional-prerelease --preid next --amend --no-changelog --yes
+      - yarn lerna version --conventional-prerelease --preid next --no-changelog --yes
       # - sh .ci/push-tags.sh
     when:
       branch:

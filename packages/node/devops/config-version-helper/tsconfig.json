@@ -15,6 +15,12 @@
   "references": [
     {
       "path": "../../thrashlib/fp"
+    },
+    {
+      "path": "../../thrashlib/fs-utils"
+    },
+    {
+      "path": "../../thrashlib/mock-fs"
     }
   ]
 }

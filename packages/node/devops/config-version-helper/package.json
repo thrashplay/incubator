@@ -1,5 +1,5 @@
 {
-  "name": "@pegasus-ops/config-version-helper",
+  "name": "@thrashplay/config-version-helper",
   "version": "0.1.0-next.15",
   "description": "Helper for generating Docker Swarm config versions.",
   "bugs": "https://github.com/thrashplay/incubator-node/issues",

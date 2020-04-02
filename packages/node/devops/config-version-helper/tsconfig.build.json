@@ -10,7 +10,13 @@
   ],
   "references": [
     {
-      "path": "../../thrashlib/fp"
+      "path": "../../thrashlib/fp/tsconfig.build.json"
+    },
+    {
+      "path": "../../thrashlib/fs-utils/tsconfig.build.json"
+    },
+    {
+      "path": "../../thrashlib/mock-fs/tsconfig.build.json"
     }
-  ]`s`
+  ]
 }

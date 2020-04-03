@@ -5,7 +5,7 @@ LABEL based-on="jwilder/nginx-proxy:alpine"
 
 # Install wget and install/updates certificates
 RUN apk add --no-cache --virtual .run-deps \
-    ca-certificates bash wget openssl \
+    ca-certificates bash git openssl wget \
     && update-ca-certificates
 
 # Configure Nginx and apply fix for very long server names

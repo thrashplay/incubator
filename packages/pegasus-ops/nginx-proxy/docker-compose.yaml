@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   nginx:
-    image: jwilder/nginx-proxy:alpine
+    image: thrashplay/nginx-proxy
     environment:
       - DHPARAM_GENERATION=false
     ports:
@@ -14,7 +14,7 @@ services:
       - html:/usr/share/nginx/html
 
   letsencrypt-companion:
-    image: jrcs/letsencrypt-nginx-proxy-companion
+    image: jrcs/letsencrypt-nginx-proxy-companion:v1.12.1
     environment:
       - DEFAULT_EMAIL=sean@thrashplay.com
     volumes:

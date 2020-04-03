@@ -4,5 +4,7 @@ RUN apk update && apk add --no-cache tini
 
 COPY scripts/entry-point.sh /usr/local/bin
 
+EXPOSE 8123
+
 ENTRYPOINT [ "/sbin/tini", "--" ]
 CMD [ "/usr/local/bin/entry-point.sh" ]

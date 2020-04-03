@@ -13,29 +13,37 @@ services:
       - USERID=0
       - WORKGROUP=CONCLAVE
     volumes:
-      - type: bind
-        source: /mnt/backup
-        target: /mount/backup
-      - type: bind
-        source: /mnt/samba/home
-        target: /mount/home
-      - type: bind
-        source: /mnt/samba/shared
-        target: /mount/shared
+      - backup:/mount/backup
+      - home:/mount/home
+      - shared:/mount/shared
     configs:
-      - source: smb_conf
+      - source: smb-conf
         target: /etc/samba/smb-local.conf
     secrets:
-      - smb_users
-    # deploy:
-    #   placement:
-    #     constraints: [node.labels.com.thrashplay.resources.storage == true]
+      - smb-users
 
 configs:
-  smb_conf:
+  smb-conf:
     name: smb_conf-${SMB_CONF_VERSION:-default}
     file: ./config/smb.conf
 
 secrets:
-  smb_users:
-    file: ../../secrets/samba/users
+  smb-users:
+    external: true
+
+volumes:
+  backup:
+    driver: nfs
+    name: samba.backup
+    driver_opts:
+      share: nfs.pegasus:/
+  home:
+    driver: nfs
+    name: samba.home
+    driver_opts:
+      share: nfs.pegasus:/
+  shared:
+    driver: nfs
+    name: samba.shared
+    driver_opts:
+      share: nfs.pegasus:/

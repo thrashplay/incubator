@@ -31,5 +31,12 @@ fi
 export DOCKER_HOST=${PLUGIN_DOCKER_HOST:-tcp://localhost:2376}
 CONFIGURATION_FILE=${PLUGIN_CONFIGURATION_FILE:-swarm.management.yml}
 
+# https://stackoverflow.com/a/52447899/517254
+CONFIGURATION_DIR_NAME="${CONFIGURATION_FILE%/*}"
+CONFIGURATION_FILE_NAME="${CONFIGURATION_FILE##*/}"
+
 set -x
-swm -start -f $CONFIGURATION_FILE
+
+# change to the direcotry containing the configuration_file
+cd "$CONFIGURATION_DIR_NAME"
+swm -start -f "$CONFIGURATION_FILE_NAME"

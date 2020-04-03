@@ -200,9 +200,10 @@ steps:
     image: thrashplay/generate-versions
     settings:
       stack_files:
-        - packages/pegasus-ops/nginx-proxy/docker-compose.yaml
-        - packages/pegasus-ops/hello-world/docker-compose.yaml
         - packages/pegasus-ops/dashboard/docker-compose.yaml
+        - packages/pegasus-ops/hello-world/docker-compose.yaml
+        - packages/pegasus-ops/nginx-proxy/docker-compose.yaml
+        - packages/pegasus-ops/samba/docker-compose.yaml
 
   - name: deploy
     image: thrashplay/swarm-management

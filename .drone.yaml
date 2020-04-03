@@ -64,16 +64,16 @@ steps:
       changeset:
         includes: [ .drone.yaml, packages/docker/nginx-proxy/ddns-sidecar/** ]
 
-  - name: build-nginx-with-certbot
+  - name: build-nginx-proxy
     image: plugins/docker
     depends_on: [ clone ]
     settings:
-      context: packages/docker/nginx-proxy/nginx-with-certbot
-      dockerfile: packages/docker/nginx-proxy/nginx-with-certbot/Dockerfile
+      context: packages/docker/nginx-proxy/nginx-proxy
+      dockerfile: packages/docker/nginx-proxy/nginx-proxy/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
-      repo: thrashplay/nginx-with-certbot
+      repo: thrashplay/nginx-proxy
       tags:
         - latest
         - ${DRONE_BRANCH}
@@ -81,7 +81,7 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ .drone.yaml, packages/docker/nginx-proxy/nginx-with-certbot/** ]
+        includes: [ .drone.yaml, packages/docker/nginx-proxy/nginx-proxy/** ]
 
   - name: build-homeassistant
     image: plugins/docker

@@ -1,21 +1,27 @@
 version: '3.7'
 services:
   nginx:
-    image: thrashplay/nginx-with-certbot:latest
-    configs:
-      - source: proxy-config
-        target: /proxy.conf
-        mode: 0440
-      - source: certificates-config
-        target: /etc/nginx/certificates.json
-        mode: 0440
+    image: jwilder/nginx-proxy:alpine
     environment:
-      - CERTBOT_EMAIL=sean@thrashplay.com
+      - DHPARAM_GENERATION=false
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - certs:/etc/letsencrypt
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - certs:/etc/nginx/certs
+      - vhost.d:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+
+  letsencrypt-companion:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    environment:
+      - DEFAULT_EMAIL=sean@thrashplay.com
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - certs:/etc/nginx/certs
+      - vhost.d:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
 
   ddns:
     image: thrashplay/ddns-sidecar:latest
@@ -36,12 +42,6 @@ configs:
   ddns-config:
     name: ddns-config-${DDNS_CONFIG_VERSION:-default}
     file: ./config/ddns.json
-  proxy-config:
-    name: proxy-config-${PROXY_CONFIG_VERSION:-default}
-    file: ./config/proxy.conf
-  certificates-config:
-    name: certificates-config-${CERTIFICATES_CONFIG_VERSION:-default}
-    file: ./config/certificates.json
 
 networks:
   default:
@@ -62,6 +62,18 @@ volumes:
   ddns-data:
     driver: nfs
     name: nginx-proxy.ddns-data
+    driver_opts:
+      share: nfs.pegasus:/
+      create: "true"
+  html:
+    driver: nfs
+    name: nginx-proxy.html
+    driver_opts:
+      share: nfs.pegasus:/
+      create: "true"
+  vhost.d:
+    driver: nfs
+    name: nginx-proxy.vhost.d
     driver_opts:
       share: nfs.pegasus:/
       create: "true"

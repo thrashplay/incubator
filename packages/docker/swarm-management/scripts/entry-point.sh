@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+set -e
+
 if [ "$PLUGIN_USE_TLS" = "true" ]; then
   VALID=true
 
@@ -29,4 +31,5 @@ fi
 export DOCKER_HOST=${PLUGIN_DOCKER_HOST:-tcp://localhost:2376}
 CONFIGURATION_FILE=${PLUGIN_CONFIGURATION_FILE:-swarm.management.yml}
 
+set -x
 swm -start -f $CONFIGURATION_FILE

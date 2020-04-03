@@ -7,44 +7,6 @@ platform:
   os: linux
 
 steps:
-  - name: build-git-client`
-    image: plugins/docker
-    depends_on: [ clone ]
-    settings:
-      context: packages/docker/git-client
-      dockerfile: packages/docker/git-client/Dockerfile
-      force_tag: true
-      password:
-        from_secret: DOCKER_PASSWORD
-      repo: thrashplay/git-client
-      tags:
-        - latest
-        - ${DRONE_BRANCH}
-        - ${DRONE_BRANCH}-${DRONE_COMMIT}
-      username: thrashplay
-    when:
-      changeset:
-        includes: [ .drone.yaml, packages/docker/git-client/** ]
-
-  - name: generate-versions
-    image: plugins/docker
-    depends_on: [ clone ]
-    settings:
-      context: packages/docker/generate-versions
-      dockerfile: packages/docker/generate-versions/Dockerfile
-      force_tag: true
-      password:
-        from_secret: DOCKER_PASSWORD
-      repo: thrashplay/generate-versions
-      tags:
-        - latest
-        - ${DRONE_BRANCH}
-        - ${DRONE_BRANCH}-${DRONE_COMMIT}
-      username: thrashplay
-    when:
-      changeset:
-        includes: [ .drone.yaml, packages/docker/generate-versions/** ]
-
   - name: build-ddns-sidecar
     image: plugins/docker
     depends_on: [ clone ]
@@ -64,16 +26,16 @@ steps:
       changeset:
         includes: [ .drone.yaml, packages/docker/nginx-proxy/ddns-sidecar/** ]
 
-  - name: build-nginx-proxy
+  - name: build-generate-versions
     image: plugins/docker
     depends_on: [ clone ]
     settings:
-      context: packages/docker/nginx-proxy/nginx-proxy
-      dockerfile: packages/docker/nginx-proxy/nginx-proxy/Dockerfile
+      context: packages/docker/generate-versions
+      dockerfile: packages/docker/generate-versions/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
-      repo: thrashplay/nginx-proxy
+      repo: thrashplay/generate-versions
       tags:
         - latest
         - ${DRONE_BRANCH}
@@ -81,7 +43,26 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ .drone.yaml, packages/docker/nginx-proxy/nginx-proxy/** ]
+        includes: [ .drone.yaml, packages/docker/generate-versions/** ]
+
+  - name: build-git-client
+    image: plugins/docker
+    depends_on: [ clone ]
+    settings:
+      context: packages/docker/git-client
+      dockerfile: packages/docker/git-client/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/git-client
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      username: thrashplay
+    when:
+      changeset:
+        includes: [ .drone.yaml, packages/docker/git-client/** ]
 
   - name: build-homeassistant
     image: plugins/docker
@@ -101,6 +82,44 @@ steps:
     when:
       changeset:
         includes: [ .drone.yaml, packages/docker/homeassistant/** ]
+    
+  - name: build-nginx-proxy
+    image: plugins/docker
+    depends_on: [ clone ]
+    settings:
+      context: packages/docker/nginx-proxy/nginx-proxy
+      dockerfile: packages/docker/nginx-proxy/nginx-proxy/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/nginx-proxy
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      username: thrashplay
+    when:
+      changeset:
+        includes: [ .drone.yaml, packages/docker/nginx-proxy/nginx-proxy/** ]
+
+  - name: build-swarm-management
+    image: plugins/docker
+    depends_on: [ clone ]
+    settings:
+      context: packages/docker/swarm-management
+      dockerfile: packages/docker/swarm-management/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/swarm-management
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      username: thrashplay
+    when:
+      changeset:
+        includes: [ .drone.yaml, packages/docker/swarm-management/** ]
 
 trigger:
   changeset:
@@ -208,7 +227,7 @@ steps:
   - name: deploy
     image: thrashplay/swarm-management
     settings:
-      configuration_file: pegasus-ops/swarm.production.yaml
+      configuration_file: packages/pegasus-ops/swarm.production.yaml
       docker_host: control.pegasus:2376
       docker_cacert:
         from_secret: DOCKER_CACERT

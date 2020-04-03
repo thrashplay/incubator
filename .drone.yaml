@@ -26,25 +26,6 @@ steps:
       changeset:
         includes: [ .drone.yaml, packages/docker/git-client/** ]
 
-  - name: build-deployer
-    image: plugins/docker
-    depends_on: [ clone ]
-    settings:
-      context: packages/docker/deployer
-      dockerfile: packages/docker/deployer/Dockerfile
-      force_tag: true
-      password:
-        from_secret: DOCKER_PASSWORD
-      repo: thrashplay/sophia-deployer
-      tags:
-        - latest
-        - ${DRONE_BRANCH}
-        - ${DRONE_BRANCH}-${DRONE_COMMIT}
-      username: thrashplay
-    when:
-      changeset:
-        includes: [ .drone.yaml, packages/docker/deployer/** ]
-
   - name: generate-versions
     image: plugins/docker
     depends_on: [ clone ]
@@ -156,17 +137,10 @@ steps:
     commands:
       - yarn test
 
-  # - name: fetch-tags
-  #   image: drone/git
-  #   commands:
-  #     - git fetch --tags
-
   - name: bump-versions
     image: node:lts
     commands:
-      # - sh .ci/amend-commit.sh
       - yarn lerna version --conventional-prerelease --preid next --no-changelog --yes
-      # - sh .ci/push-tags.sh
     when:
       branch:
         - master
@@ -231,8 +205,9 @@ steps:
         - packages/pegasus-ops/dashboard/docker-compose.yaml
 
   - name: deploy
-    image: thrashplay/sophia-deployer
+    image: thrashplay/swarm-management
     settings:
+      configuration_file: pegasus-ops/swarm.production.yaml
       docker_host: control.pegasus:2376
       docker_cacert:
         from_secret: DOCKER_CACERT
@@ -240,6 +215,7 @@ steps:
         from_secret: DOCKER_CERT
       docker_key:
         from_secret: DOCKER_KEY
+      use_tls: true
 
 trigger:
   branch:

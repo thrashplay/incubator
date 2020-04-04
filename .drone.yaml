@@ -6,8 +6,26 @@ platform:
   arch: arm
   os: linux
 
+services:
+  - name: docker
+    image: docker:19.03.8-dind
+    environment:
+      DOCKER_TLS_CERTDIR: /certs
+    privileged: true
+    volumes:
+      - name: docker-certs
+        path: /certs
+
 steps:
-  - name: build-ddns-sidecar
+  - name: docker-ready
+    image: thrashplay/wait-for-service
+    depends_on: [ wait-for-service ]
+    settings:
+      host: docker
+      port: 2376
+      retry_limit: 90
+
+  - name: ddns-sidecar
     image: plugins/docker
     depends_on: [ clone ]
     settings:
@@ -24,9 +42,9 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ .drone.yaml, packages/docker/nginx-proxy/ddns-sidecar/** ]
+        includes: [ packages/docker/nginx-proxy/ddns-sidecar/** ]
 
-  - name: build-generate-versions
+  - name: generate-versions
     image: plugins/docker
     depends_on: [ clone ]
     settings:
@@ -43,9 +61,9 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ .drone.yaml, packages/docker/generate-versions/** ]
+        includes: [ packages/docker/generate-versions/** ]
 
-  - name: build-git-client
+  - name: git-client
     image: plugins/docker
     depends_on: [ clone ]
     settings:
@@ -62,9 +80,9 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ .drone.yaml, packages/docker/git-client/** ]
+        includes: [ packages/docker/git-client/** ]
 
-  - name: build-homeassistant
+  - name: homeassistant
     image: plugins/docker
     depends_on: [ clone ]
     settings:
@@ -81,9 +99,9 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ .drone.yaml, packages/docker/homeassistant/** ]
-    
-  - name: build-nginx-proxy
+        includes: [ packages/docker/homeassistant/** ]
+
+  - name: nginx-proxy
     image: plugins/docker
     depends_on: [ clone ]
     settings:
@@ -100,9 +118,9 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ .drone.yaml, packages/docker/nginx-proxy/nginx-proxy/** ]
+        includes: [ .packages/docker/nginx-proxy/nginx-proxy/** ]
 
-  - name: build-swarm-management
+  - name: swarm-management
     image: plugins/docker
     depends_on: [ clone ]
     settings:
@@ -119,13 +137,36 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ .drone.yaml, packages/docker/swarm-management/** ]
+        includes: [ packages/docker/swarm-management/** ]
+
+  - name: wait-for-service
+    image: plugins/docker
+    depends_on: [ clone ]
+    settings:
+      context: packages/drone-plugins/wait-for-service
+      dockerfile: packages/drone-plugins/wait-for-service/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/wait-for-service
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      username: thrashplay
+    when:
+      changeset:
+        includes: [ packages/drone-plugins/wait-for-service/** ]
 
 trigger:
   changeset:
-    includes: [ .drone.yaml, packages/docker/** ]
+    includes: [ .drone.yaml, packages/docker/**, packages/drone-plugins/** ]
   branch:
     - master
+
+volumes:
+  - name: docker-certs
+    temp: {}
 
 ---
 
@@ -185,7 +226,6 @@ trigger:
   changeset:
     includes:
       - '.ci/**'
-      - '.drone.yaml'
       - '.eslintignore'
       - '.eslintrc.js'
       - '@types/**'

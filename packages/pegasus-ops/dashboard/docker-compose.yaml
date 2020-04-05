@@ -2,7 +2,7 @@ version: '3.7'
 services:
   homeassistant:
     image: "thrashplay/homeassistant"
-    configs: 
+    configs:
       - source: automations
         target: /config/automations.yaml
         mode: 0440
@@ -29,7 +29,7 @@ services:
       - homeassistant-secrets
     volumes:
       - /mnt/homeassistant/home-assistant_v2.db:/config/home-assistant_v2.db
-      - storage:/config/.storage 
+      - storage:/config/.storage
 
 configs:
   automations:
@@ -47,7 +47,7 @@ configs:
   scripts:
     name: scripts-config-${SCRIPTS_VERSION:-default}
     file: ./config/scripts.yaml
-    
+
 networks:
   device-discovery:
     external: true

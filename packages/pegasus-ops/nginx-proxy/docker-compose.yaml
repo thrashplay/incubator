@@ -2,6 +2,7 @@ version: '3.7'
 services:
   nginx:
     image: thrashplay/nginx-proxy
+    configs:
       - source: dashboard.the-pegasus.net-config
         target: /etc/nginx/vhost.d/dashboard.the-pegasus.net_location
         mode: 0440
@@ -52,7 +53,7 @@ configs:
     file: ./config/ddns.json
   dashboard.the-pegasus.net-config:
     name: dashboard.the-pegasus.net-config-${DASHBOARD_THE_PEGASUS_NET_CONFIG_VERSION:-default}
-    file: ./config/dashboard.thepegasus.net.conf
+    file: ./config/dashboard.the-pegasus.net.conf
 
 networks:
   default:

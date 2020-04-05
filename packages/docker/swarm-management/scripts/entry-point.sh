@@ -37,6 +37,6 @@ CONFIGURATION_FILE_NAME="${CONFIGURATION_FILE##*/}"
 
 set -x
 
-# change to the direcotry containing the configuration_file
+# change to the directory containing the configuration_file
 cd "$CONFIGURATION_DIR_NAME"
 swm -start -f "$CONFIGURATION_FILE_NAME"

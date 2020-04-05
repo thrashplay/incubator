@@ -22,10 +22,9 @@ services:
       - LETSENCRYPT_HOST=dashboard.the-pegasus.net,www.dashboard.the-pegasus.net
       - TZ=America/Chicago
       - VIRTUAL_HOST=dashboard.the-pegasus.net,www.dashboard.the-pegasus.net
-      - VIRTUAL_PORT=8123
     networks:
+      - default
       - device-discovery
-      - webgateway
     secrets:
       - homeassistant-secrets
     volumes:
@@ -53,7 +52,7 @@ networks:
   device-discovery:
     external: true
     name: device-discovery
-  webgateway:
+  default:
     external: true
     name: webgateway
 

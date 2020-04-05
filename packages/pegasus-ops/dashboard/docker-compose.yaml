@@ -62,8 +62,7 @@ secrets:
 
 volumes:
   storage:
-    driver: local
+    driver: nfs
+    name: dashboard.storage
     driver_opts:
-      type: none
-      device: /mnt/homeassistant/storage
-      o: bind
+      share: nfs.pegasus:/dashboard.storage

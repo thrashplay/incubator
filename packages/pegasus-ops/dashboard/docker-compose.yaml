@@ -19,9 +19,9 @@ services:
         target: /config/scripts.yaml
         mode: 0440
     environment:
-      - LETSENCRYPT_HOST=dashboard.the-pegasus.net
+      - LETSENCRYPT_HOST=dashboard.the-pegasus.net,www.dashboard.the-pegasus.net
       - TZ=America/Chicago
-      - VIRTUAL_HOST=dashboard.the-pegasus.net
+      - VIRTUAL_HOST=dashboard.the-pegasus.net,www.dashboard.the-pegasus.net
     networks:
       - device-discovery
       - webgateway

@@ -1,11 +1,11 @@
 version: '3.7'
 services:
   samba:
-    image: dperson/samba:armhf
+    image: thrashplay/samba-armhf:latest
     ports:
       - "139:139/tcp"
       - "445:445/tcp"
-    entrypoint: /sbin/tini -- /bin/bash -c "/usr/bin/samba.sh -r $$(< /run/secrets/smb_users)"
+    entrypoint: /sbin/tini -- /bin/bash -c "/usr/bin/samba.sh -r $$(< /run/secrets/smb-users)"
     environment:
       - GROUPID=0
       - INCLUDE=/etc/samba/smb-local.conf
@@ -24,7 +24,7 @@ services:
 
 configs:
   smb-conf:
-    name: smb_conf-${SMB_CONF_VERSION:-default}
+    name: smb-conf-${SMB_CONF_VERSION:-default}
     file: ./config/smb.conf
 
 secrets:
@@ -36,14 +36,14 @@ volumes:
     driver: nfs
     name: samba.backup
     driver_opts:
-      share: nfs.pegasus:/
+      share: nfs.pegasus:/samba.backup
   home:
     driver: nfs
     name: samba.home
     driver_opts:
-      share: nfs.pegasus:/
+      share: nfs.pegasus:/samba.home
   shared:
     driver: nfs
     name: samba.shared
     driver_opts:
-      share: nfs.pegasus:/
+      share: nfs.pegasus:/samba.shared

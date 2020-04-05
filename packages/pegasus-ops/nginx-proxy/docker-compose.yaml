@@ -59,23 +59,23 @@ volumes:
     driver: nfs
     name: nginx-proxy.certs
     driver_opts:
-      share: nfs.pegasus:/
+      share: nfs.pegasus:/nginx-proxy.certs
       create: "true"
   ddns-data:
     driver: nfs
     name: nginx-proxy.ddns-data
     driver_opts:
-      share: nfs.pegasus:/
+      share: nfs.pegasus:/nginx-proxy.ddns-data
       create: "true"
   html:
     driver: nfs
     name: nginx-proxy.html
     driver_opts:
-      share: nfs.pegasus:/
+      share: nfs.pegasus:/nginx-proxy.html
       create: "true"
   vhost.d:
     driver: nfs
     name: nginx-proxy.vhost.d
     driver_opts:
-      share: nfs.pegasus:/
+      share: nfs.pegasus:/nginx-proxy.vhost.d
       create: "true"

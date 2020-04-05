@@ -1,6 +1,105 @@
 kind: pipeline
 type: docker
+name: build-drone-plugins
+
+platform:
+  arch: arm
+  os: linux
+
+steps:
+  - name: docker-edit
+    image: plugins/docker
+    depends_on: [ clone ]
+    settings:
+      cache_from: 
+        - "thrashplay/docker-edit:master"
+        - "thrashplay/docker-edit:${DRONE_BRANCH}"
+      context: packages/drone-plugins/docker-edit
+      dockerfile: packages/drone-plugins/docker-edit/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/docker-edit
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      username: thrashplay
+    when:
+      changeset:
+        includes: [ .drone.yaml, packages/drone-plugins/docker-edit/** ]
+
+  - name: generate-versions
+    image: plugins/docker
+    depends_on: [ clone ]
+    settings:
+      context: packages/docker/generate-versions
+      dockerfile: packages/docker/generate-versions/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/generate-versions
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      username: thrashplay
+    when:
+      changeset:
+        includes: [ packages/docker/generate-versions/** ]
+
+  - name: swarm-management
+    image: plugins/docker
+    depends_on: [ clone ]
+    settings:
+      context: packages/docker/swarm-management
+      dockerfile: packages/docker/swarm-management/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/swarm-management
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      username: thrashplay
+    when:
+      changeset:
+        includes: [ packages/docker/swarm-management/** ]
+
+  - name: wait-for-service
+    image: plugins/docker
+    depends_on: [ clone ]
+    settings:
+      context: packages/drone-plugins/wait-for-service
+      dockerfile: packages/drone-plugins/wait-for-service/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/wait-for-service
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      username: thrashplay
+    when:
+      changeset:
+        includes: [ packages/drone-plugins/wait-for-service/** ]
+
+trigger:
+  changeset:
+    includes: [ .drone.yaml, packages/docker/**, packages/drone-plugins/** ]
+  branch:
+    - master
+
+---
+
+kind: pipeline
+type: docker
 name: build-arm-images
+
+depends_on:
+  - build-drone-plugins
 
 platform:
   arch: arm
@@ -17,9 +116,9 @@ services:
         path: /certs
 
 steps:
-  - name: docker-ready
+  - name: wait-for-docker
     image: thrashplay/wait-for-service
-    depends_on: [ wait-for-service ]
+    depends_on: [ clone ]
     settings:
       host: docker
       port: 2376
@@ -43,25 +142,6 @@ steps:
     when:
       changeset:
         includes: [ packages/docker/nginx-proxy/ddns-sidecar/** ]
-
-  - name: generate-versions
-    image: plugins/docker
-    depends_on: [ clone ]
-    settings:
-      context: packages/docker/generate-versions
-      dockerfile: packages/docker/generate-versions/Dockerfile
-      force_tag: true
-      password:
-        from_secret: DOCKER_PASSWORD
-      repo: thrashplay/generate-versions
-      tags:
-        - latest
-        - ${DRONE_BRANCH}
-        - ${DRONE_BRANCH}-${DRONE_COMMIT}
-      username: thrashplay
-    when:
-      changeset:
-        includes: [ packages/docker/generate-versions/** ]
 
   - name: git-client
     image: plugins/docker
@@ -118,49 +198,36 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ .packages/docker/nginx-proxy/nginx-proxy/** ]
+        includes: [ packages/docker/nginx-proxy/nginx-proxy/** ]
 
-  - name: swarm-management
-    image: plugins/docker
-    depends_on: [ clone ]
+  - name: samba
+    image: thrashplay/docker-edit
+    depends_on: [ wait-for-docker ]
+    environment:
+      DOCKER_CERT_PATH: /certs/client
+      DOCKER_HOST: tcp://docker:2376
+      DOCKER_TLS_VERIFY: true
     settings:
-      context: packages/docker/swarm-management
-      dockerfile: packages/docker/swarm-management/Dockerfile
-      force_tag: true
+      edit_command: set arch "arm"
       password:
         from_secret: DOCKER_PASSWORD
-      repo: thrashplay/swarm-management
-      tags:
-        - latest
-        - ${DRONE_BRANCH}
-        - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      source_image: "dperson/samba:armhf"
+      # tags:
+      #   - latest
+      #   - ${DRONE_BRANCH}
+      #   - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      target_image: "thrashplay/samba-armhf:latest"
       username: thrashplay
+    volumes:
+      - name: docker-certs
+        path: /certs
     when:
       changeset:
-        includes: [ packages/docker/swarm-management/** ]
-
-  - name: wait-for-service
-    image: plugins/docker
-    depends_on: [ clone ]
-    settings:
-      context: packages/drone-plugins/wait-for-service
-      dockerfile: packages/drone-plugins/wait-for-service/Dockerfile
-      force_tag: true
-      password:
-        from_secret: DOCKER_PASSWORD
-      repo: thrashplay/wait-for-service
-      tags:
-        - latest
-        - ${DRONE_BRANCH}
-        - ${DRONE_BRANCH}-${DRONE_COMMIT}
-      username: thrashplay
-    when:
-      changeset:
-        includes: [ packages/drone-plugins/wait-for-service/** ]
+        includes: [ .drone.yaml, packages/drone-plugins/docker-edit/** ]
 
 trigger:
   changeset:
-    includes: [ .drone.yaml, packages/docker/**, packages/drone-plugins/** ]
+    includes: [ .drone.yaml, packages/docker/** ]
   branch:
     - master
 

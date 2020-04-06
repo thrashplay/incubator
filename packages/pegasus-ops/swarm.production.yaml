@@ -1,4 +1,4 @@
 stacks:
-  nginx-proxy: nginx-proxy/docker-compose.yaml
+  traefik: traefik/docker-compose.yaml
   dashboard: dashboard/docker-compose.yaml
   samba: samba/docker-compose.yaml

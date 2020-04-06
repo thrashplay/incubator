@@ -1,0 +1,59 @@
+version: '3.7'
+
+services:
+  ddns:
+    image: thrashplay/ddns-sidecar:latest
+    configs:
+      - source: ddns-config
+        target: /ddns/config.json
+        mode: 0440
+    environment:
+      - CONFIG_SECRETS_FILE=/run/secrets/ddns-secrets
+    ports:
+      - "8000:8000"
+    secrets:
+      - ddns-secrets
+    volumes:
+      - ddns-data:/updater/data
+
+  reverse-proxy:
+    image: traefik:v2.2
+    configs:
+      - source: traefik-config
+        target: /etc/traefik/traefik.yaml
+        mode: 0440
+    deploy:
+      placement:
+        constraints:
+          - "node.role==manager"
+          - "node.labels.public==true"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+configs:
+  ddns-config:
+    name: ddns-config-${DDNS_CONFIG_VERSION:-default}
+    file: ./config/ddns.json
+  traefik-config:
+    name: traefik-config-${TRAEFIK_CONFIG_VERSION:-default}
+    file: ./config/traefik.yaml
+
+networks:
+  default:
+    external: true
+    name: webgateway
+
+secrets:
+  ddns-secrets:
+    external: true
+
+volumes:
+  ddns-data:
+    driver: nfs
+    name: traefik.ddns-data
+    driver_opts:
+      create: "true"
+      share: nfs.pegasus:/

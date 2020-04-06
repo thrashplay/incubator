@@ -1,5 +1,4 @@
-logLevel: "DEBUG"
-accessLog: {}
+logLevel: "INFO"
 
 api:
   insecure: true
@@ -25,35 +24,33 @@ entryPoints:
   websecure:
     address: ":443"
 
-http:
-  routers:
-
-# enable HSTS
-# frontend:
-#   headers:
-#     STSSeconds: 31536000
-#     STSIncludeSubdomains: true
-#     STSPreload: true
-
 providers:
   docker:
     exposedByDefault: false
     network: webgateway
     swarmMode: true
+  file:
+    filename: "/etc/traefik/common-configuration.yaml"
 
 # harden TLS
 tls:
   options:
     default:
       cipherSuites:
-        - TLS_ECDHE_ECDSA_AES256_GCM_SHA384
-        - TLS_ECDHE_RSA_AES256_GCM_SHA384
-        - TLS_ECDHE_ECDSA_CHACHA20_POLY1305
-        - TLS_ECDHE_RSA_CHACHA20_POLY1305
-        - TLS_ECDHE_ECDSA_AES128_GCM_SHA256
-        - TLS_ECDHE_RSA_AES128_GCM_SHA256
-        - TLS_ECDHE_ECDSA_AES256_SHA384
-        - TLS_ECDHE_RSA_AES256_SHA384
-        - TLS_ECDHE_ECDSA_AES128_SHA256
-        - TLS_ECDHE_RSA_AES128_SHA256
+        - "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384"
+        - "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+        - "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305"
+        - "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305"
+        - "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256"
+        - "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        # - TLS_ECDHE_ECDSA_AES256_GCM_SHA384
+        # - TLS_ECDHE_RSA_AES256_GCM_SHA384
+        # - TLS_ECDHE_ECDSA_CHACHA20_POLY1305
+        # - TLS_ECDHE_RSA_CHACHA20_POLY1305
+        # - TLS_ECDHE_ECDSA_AES128_GCM_SHA256
+        # - TLS_ECDHE_RSA_AES128_GCM_SHA256
+        # - TLS_ECDHE_ECDSA_AES256_SHA384
+        # - TLS_ECDHE_RSA_AES256_SHA384
+        # - TLS_ECDHE_ECDSA_AES128_SHA256
+        # - TLS_ECDHE_RSA_AES128_SHA256
       minVersion: VersionTLS12

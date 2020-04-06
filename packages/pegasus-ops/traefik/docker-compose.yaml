@@ -25,7 +25,15 @@ services:
       - source: traefik-config
         target: /etc/traefik/traefik.yaml
         mode: 0440
+      - source: common-config
+        target: /etc/traefik/common-configuration.yaml
+        mode: 0440
     deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:[a-z-.]+}`)"
+        - "traefik.http.routers.http-catchall.entrypoints=web"
+        - "traefik.http.routers.http-catchall.middlewares=https-only@file"
       placement:
         constraints:
           - "node.role==manager"
@@ -39,6 +47,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
 configs:
+  common-config:
+    name: traefik-config-${COMMON_CONFIG_VERSION:-default}
+    file: ./config/common-configuration.yaml
   ddns-config:
     name: ddns-config-${DDNS_CONFIG_VERSION:-default}
     file: ./config/ddns.json

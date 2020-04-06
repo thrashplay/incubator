@@ -1,0 +1,12 @@
+http:
+  middlewares:
+    https-redirect:
+      redirectScheme:
+        scheme: https
+        permanent: true
+    secure:
+      headers:
+        stsIncludeSubDomains: true
+        stsPreload: true
+        stsSeconds: 31536000
+        

@@ -21,11 +21,17 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.middlewares.homeassistant.headers.customrequestheaders.X-Forwarded-Proto=https"
-        - "traefik.http.services.homeassistant-service.loadbalancer.server.port=8123"
+        # http -> https configuration
+        - "traefik.http.routers.homeassistant-http.entrypoints=web"
+        - "traefik.http.routers.homeassistant-http.middlewares=https-redirect@file"
+        - "traefik.http.routers.homeassistant-http.rule=Host(`dashboard.the-pegasus.net`)"
+        # handle https
         - "traefik.http.routers.homeassistant.entrypoints=websecure"
+        - "traefik.http.routers.homeassistant.middlewares=secure@file"
         - "traefik.http.routers.homeassistant.rule=Host(`dashboard.the-pegasus.net`)"
         - "traefik.http.routers.homeassistant.tls.certresolver=production"
+        - "traefik.http.routers.homeassistant.tls.options=default"
+        - "traefik.http.services.homeassistant-service.loadbalancer.server.port=8123"
     environment:
       - TZ=America/Chicago
     networks:

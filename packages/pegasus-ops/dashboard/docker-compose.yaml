@@ -71,4 +71,5 @@ volumes:
     driver: nfs
     name: dashboard.storage
     driver_opts:
-      share: nfs.pegasus:/dashboard.storage
+      create: "true"
+      share: nfs.pegasus:/

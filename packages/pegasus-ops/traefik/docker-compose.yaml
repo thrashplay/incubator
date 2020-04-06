@@ -9,6 +9,7 @@ services:
         mode: 0440
     deploy:
       labels:
+        - traefik.enable=true
         - traefik.http.routers.ddns.rule=Host(`ddns.pegasus`)
         - traefik.http.services.ddns-service.loadbalancer.server.port=8000
     environment:

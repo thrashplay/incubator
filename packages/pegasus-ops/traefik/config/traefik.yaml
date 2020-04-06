@@ -7,5 +7,6 @@ entryPoints:
    
 providers:
   docker:
+    exposedByDefault: false
     network: webgateway
     swarmMode: true

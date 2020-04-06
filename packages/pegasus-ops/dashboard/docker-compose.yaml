@@ -20,6 +20,7 @@ services:
         mode: 0440
     deploy:
       labels:
+        - traefik.enable=true
         - traefik.http.routers.homeassistant.rule=Host(`dashboard.the-pegasus.net`, `www.dashboard.the-pegasus.net`)
         - traefik.http.services.homeassistant-service.loadbalancer.server.port=8123
     environment:

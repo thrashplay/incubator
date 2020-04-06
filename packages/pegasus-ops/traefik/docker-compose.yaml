@@ -7,16 +7,18 @@ services:
       - source: ddns-config
         target: /ddns/config.json
         mode: 0440
+    deploy:
+      labels:
+        - traefik.http.routers.ddns.rule=Host(`ddns.pegasus`)
+        - traefik.http.services.ddns-service.loadbalancer.server.port=8000
     environment:
       - CONFIG_SECRETS_FILE=/run/secrets/ddns-secrets
-    ports:
-      - "8000:8000"
     secrets:
       - ddns-secrets
     volumes:
       - ddns-data:/updater/data
 
-  reverse-proxy:
+  traefik:
     image: traefik:v2.2
     configs:
       - source: traefik-config

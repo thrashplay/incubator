@@ -20,9 +20,12 @@ services:
         mode: 0440
     deploy:
       labels:
-        - traefik.enable=true
-        - traefik.http.routers.homeassistant.rule=Host(`dashboard.the-pegasus.net`, `www.dashboard.the-pegasus.net`)
-        - traefik.http.services.homeassistant-service.loadbalancer.server.port=8123
+        - "traefik.enable=true"
+        - "traefik.http.middlewares.homeassistant.headers.customrequestheaders.X-Forwarded-Proto=https"
+        - "traefik.http.services.homeassistant-service.loadbalancer.server.port=8123"
+        - "traefik.http.routers.homeassistant.entrypoints=websecure"
+        - "traefik.http.routers.homeassistant.rule=Host(`dashboard.the-pegasus.net`)"
+        - "traefik.http.routers.homeassistant.tls.certresolver=production"
     environment:
       - TZ=America/Chicago
     networks:

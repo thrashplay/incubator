@@ -32,8 +32,10 @@ services:
           - "node.labels.public==true"
     ports:
       - "80:80"
+      - "443:443"
       - "8080:8080"
     volumes:
+      - certs:/etc/traefik/certs
       - /var/run/docker.sock:/var/run/docker.sock
 
 configs:
@@ -57,6 +59,12 @@ volumes:
   ddns-data:
     driver: nfs
     name: traefik.ddns-data
+    driver_opts:
+      create: "true"
+      share: nfs.pegasus:/
+  certs:
+    driver: nfs
+    name: traefik.certs
     driver_opts:
       create: "true"
       share: nfs.pegasus:/

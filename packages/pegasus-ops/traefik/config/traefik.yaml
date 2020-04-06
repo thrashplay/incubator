@@ -1,12 +1,59 @@
+logLevel: "DEBUG"
+accessLog: {}
+
 api:
   insecure: true
+
+certificatesResolvers:
+  production:
+    acme:
+      email: "sean@thrashplay.com"
+      storage: "/etc/traefik/certs/production.json"
+      tlsChallenge: {}
   
+  # staging:
+  #   acme:
+  #     caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+  #     email: "sean@thrashplay.com"
+  #     storage: "/etc/traefik/certs/staging.json"
+  #     httpChallenge:
+  #       entryPoint: web
+
 entryPoints:
   web:
    address: ":80"
-   
+  websecure:
+    address: ":443"
+
+http:
+  routers:
+
+# enable HSTS
+# frontend:
+#   headers:
+#     STSSeconds: 31536000
+#     STSIncludeSubdomains: true
+#     STSPreload: true
+
 providers:
   docker:
     exposedByDefault: false
     network: webgateway
     swarmMode: true
+
+# harden TLS
+tls:
+  options:
+    default:
+      cipherSuites:
+        - TLS_ECDHE_ECDSA_AES256_GCM_SHA384
+        - TLS_ECDHE_RSA_AES256_GCM_SHA384
+        - TLS_ECDHE_ECDSA_CHACHA20_POLY1305
+        - TLS_ECDHE_RSA_CHACHA20_POLY1305
+        - TLS_ECDHE_ECDSA_AES128_GCM_SHA256
+        - TLS_ECDHE_RSA_AES128_GCM_SHA256
+        - TLS_ECDHE_ECDSA_AES256_SHA384
+        - TLS_ECDHE_RSA_AES256_SHA384
+        - TLS_ECDHE_ECDSA_AES128_SHA256
+        - TLS_ECDHE_RSA_AES128_SHA256
+      minVersion: VersionTLS12

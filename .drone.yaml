@@ -27,7 +27,7 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ .drone.yaml, packages/drone-plugins/docker-edit/** ]
+        includes: [ packages/drone-plugins/docker-edit/** ]
 
   - name: generate-versions
     image: plugins/docker
@@ -223,8 +223,27 @@ steps:
         path: /certs
     when:
       changeset:
-        includes: [ .drone.yaml, packages/drone-plugins/docker-edit/** ]
+        includes: [ packages/drone-plugins/docker-edit/** ]
 
+  - name: service-wrapper
+    image: plugins/docker
+    depends_on: [ clone ]
+    settings:
+      context: packages/docker/service-wrapper
+      dockerfile: packages/docker/service-wrapper/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/service-wrapper
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      username: thrashplay
+    when:
+      changeset:
+        includes: [ packages/docker/service-wrapper/** ]
+    
 trigger:
   changeset:
     includes: [ .drone.yaml, packages/docker/** ]

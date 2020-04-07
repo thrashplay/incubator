@@ -2,7 +2,7 @@
 
 The Docker Service Wrapper acts as a Swarm-compatible wrapper for Docker images that require features
 not supported in Swarm mode (such as `privileged` status, or device access). It functions by simply
-deploying a docker-compose.yaml file directly to the host node's Docker daemon when starting, and
+deploying a Docker container directly to the host node's Docker daemon when starting, and
 removing it when the service is stopped.
 
 The idea came from [this comment](https://github.com/docker/swarmkit/issues/1244#issuecomment-394343097)

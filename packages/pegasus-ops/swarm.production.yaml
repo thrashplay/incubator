@@ -1,9 +1,11 @@
 env_files:
+  - audio-server/.env
   - traefik/.env
   - dashboard/.env
   - samba/.env
 
 stacks:
+  audio-server: audio-server/docker-compose.yaml
   traefik: traefik/docker-compose.yaml
   dashboard: dashboard/docker-compose.yaml
   samba: samba/docker-compose.yaml

@@ -11,7 +11,7 @@ steps:
     image: plugins/docker
     depends_on: [ clone ]
     settings:
-      cache_from: 
+      cache_from:
         - "thrashplay/docker-edit:master"
         - "thrashplay/docker-edit:${DRONE_BRANCH}"
       context: packages/drone-plugins/docker-edit
@@ -33,8 +33,8 @@ steps:
     image: plugins/docker
     depends_on: [ clone ]
     settings:
-      context: packages/docker/generate-versions
-      dockerfile: packages/docker/generate-versions/Dockerfile
+      context: packages/drone-plugins/generate-versions
+      dockerfile: packages/drone-plugins/generate-versions/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
@@ -46,14 +46,14 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ packages/docker/generate-versions/** ]
+        includes: [ packages/drone-plugins/generate-versions/** ]
 
   - name: swarm-management
     image: plugins/docker
     depends_on: [ clone ]
     settings:
-      context: packages/docker/swarm-management
-      dockerfile: packages/docker/swarm-management/Dockerfile
+      context: packages/drone-plugins/swarm-management
+      dockerfile: packages/drone-plugins/swarm-management/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
@@ -65,7 +65,7 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ packages/docker/swarm-management/** ]
+        includes: [ packages/drone-plugins/swarm-management/** ]
 
   - name: wait-for-service
     image: plugins/docker
@@ -88,7 +88,7 @@ steps:
 
 trigger:
   changeset:
-    includes: [ .drone.yaml, packages/docker/**, packages/drone-plugins/** ]
+    includes: [ packages/drone-plugins/** ]
   branch:
     - master
 
@@ -243,10 +243,10 @@ steps:
     when:
       changeset:
         includes: [ packages/docker/service-wrapper/** ]
-    
+
 trigger:
   changeset:
-    includes: [ .drone.yaml, packages/docker/** ]
+    includes: [ packages/docker/** ]
   branch:
     - master
 

@@ -244,6 +244,25 @@ steps:
       changeset:
         includes: [ packages/docker/service-wrapper/** ]
 
+  - name: sound-test
+    image: plugins/docker
+    depends_on: [ clone ]
+    settings:
+      context: packages/docker/sound-test
+      dockerfile: packages/docker/sound-test/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/sound-test
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      username: thrashplay
+    when:
+      changeset:
+        includes: [ packages/docker/sound-test/** ]
+
 trigger:
   changeset:
     includes: [ packages/docker/** ]

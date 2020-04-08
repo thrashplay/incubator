@@ -2,11 +2,6 @@
 
 TIMEOUT=${STOP_TIMEOUT:-10}
 
-start_container () {
-  echo "Starting container..."
-  docker run --cidfile /var/run/service-wrapper/cid "$@"
-}
-
 stop_container () {
   CID=`cat /var/run/service-wrapper/cid`
 
@@ -19,5 +14,7 @@ stop_container () {
 
 trap "stop_container" 15
 
-start_container
+echo "Starting container..."
+docker run --cidfile /var/run/service-wrapper/cid "$@"
+
 /usr/local/bin/pause

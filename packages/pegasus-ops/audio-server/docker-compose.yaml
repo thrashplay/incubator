@@ -2,5 +2,9 @@ version: '3.7'
 services:
   audio-server:
     image: thrashplay/service-wrapper
+    command:
+      - --device
+      - /dev/snd
+      - thrashplay/sound-test
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

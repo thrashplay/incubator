@@ -1,11 +1,19 @@
 #!/usr/bin/env sh
 
+TIMEOUT=${STOP_TIMEOUT:-10}
+
 start_container () {
-  echo "Starting container!"
+  echo "Starting container..."
+  docker run --cidfile /var/run/service-wrapper/cid "$@"
 }
 
 stop_container () {
-  echo "Stopping container!"
+  CID=`cat /var/run/service-wrapper/cid`
+
+  echo "Stopping container ${CID}..."
+  docker stop --time ${TIMEOUT} ${CID} || true
+  echo "Removing container ${CID}..."
+  docker rm ${CID} || true
   exit 0
 }
 

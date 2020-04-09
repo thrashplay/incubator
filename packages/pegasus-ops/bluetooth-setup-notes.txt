@@ -1,0 +1,82 @@
+###############################################################
+###############################################################
+###############################################################
+with pulseaudio
+###############################################################
+###############################################################
+###############################################################
+
+sudo apt-get install bluez bluez-firmware pulseaudio pulseaudio-module-bluetooth 
+
+
+sudo bluetoothctl
+
+FC:A8:9A:F5:9B:EF
+
+systemctl status bluetooth.service
+
+
+#####################
+add 'sean' user to 'pulse-access' group (for pactl)
+
+#####################
+add the following to /etc/pulse/daemon.conf:
+resample-method = trivial
+
+#####################
+add 'pulse' user to 'bluetooth' group then:
+sudo systemctl restart dbus
+sudo systemctl restart bluetooth.service
+
+
+
+#####################
+I also had to load in the bluez5 modules in my pulseaudio config (/etc/pulse/system.pa). Here is the relevant content:
+
+### Enable bluetooth support
+load-module module-bluetooth-discover
+load-module module-bluetooth-policy
+
+
+
+#####################
+sudo nano /etc/systemd/system/pulseaudio.service, then  ‘systemctl enable pulseaudio’ and ‘systemctl start pulseaudio’ 
+
+[Unit]
+Description=PulseAudio Daemon
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=simple
+PrivateTmp=true
+ExecStart=/usr/bin/pulseaudio --system --disallow-exit=true --no-cpu-limit=true --realtime=true
+
+
+###############################################################
+###############################################################
+###############################################################
+with alsa
+###############################################################
+###############################################################
+###############################################################
+
+sudo apt-get install bluez bluez-firmware bluez-tools bluealsa
+
+#####################
+add service
+#####################
+sudo nano /etc/systemd/system/bluealsa.service
+// contents: https://github.com/Arkq/bluez-alsa/wiki/Systemd-integration
+
+sudo nano /usr/share/dbus-1/system-services/org.bluealsa.service
+[D-BUS Service]
+Name=org.bluealsa
+Exec=/bin/false
+User=root
+SystemdService=bluealsa.service
+
+sudo systemctl enable bluealsa
+
+aplay -D bluealsa:SRV=org.bluealsa;DEV=FC:A8:9A:F5:9B:EF,profile=a2dp /mnt/samba/home/sean/test_piano.wav

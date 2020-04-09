@@ -1,0 +1,27 @@
+########################
+with debian buster
+########################
+
+apt-get update
+apt-get install -y software-properties-common
+apt-add-repository non-free
+apt-get update
+apt-get install -y bluez bluez-firmware bluez-tools bluealsa
+
+NOTE: bluealsa not available in debian buster
+
+########################
+with balena
+########################
+
+docker run -it --name bluetooth --privileged --network=host balenalib/raspberrypi3-debian /bin/bash
+docker run -it --name bluetooth --privileged --env DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" --volume /run/user/1001/bus:/run/user/1001/bus --user $(id -u):$(id -g) balenalib/raspberrypi3-debian /bin/bash
+
+apt-get update
+apt-get install -y bluez bluez-firmware bluez-tools bluealsa
+
+see https://github.com/balenalabs/balena-sound for an alternative, or at least a base os
+https://github.com/balenalabs/balena-sound/blob/master/bluetooth-audio/start.sh
+
+DBUS STUFF:
+https://github.com/mviereck/x11docker/wiki/How-to-connect-container-to-DBus-from-host

@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "node_modules/**",
+    "dist/**",
+    "lib/**",
+    "src/**/*.test.ts",
+    "src/**/__fixtures__/**",
+    "src/**/__tests__/**"
+  ],
+  "references": [
+    {
+      "path": "../components"
+    }
+  ]
+}

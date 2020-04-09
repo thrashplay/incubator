@@ -1,0 +1,40 @@
+{
+  "name": "@thrashplay/falcon-native",
+  "version": "0.0.1",
+  "description": "Falcon native applications component",
+  "bugs": "https://github.com/thrashplay/incubator-node/issues",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "homepage": "https://github.com/thrashplay/incubator-node",
+  "license": "MIT",
+  "scripts": {
+    "emulator:android:wait": "adb wait-for-device",
+    "install:android": "react-native run-android --no-packager",
+    "install:ios": "react-native run-ios --no-packager",
+    "bundle:android": "haul bundle --platform android",
+    "bundle:ios": "haul bundle --platform ios",
+    "haul": "haul start --eager android",
+    "start": "run-s emulator:android:wait install:android haul",
+    "start:android": "run-s emulator:android:wait install:android haul",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@babel/runtime": "7.7.2",
+    "@thrashplay/falcon-components": "^0.0.1",
+    "react-native": "0.61.5"
+  },
+  "devDependencies": {
+    "@haul-bundler/babel-preset-react-native": "^0.16.0",
+    "@haul-bundler/cli": "0.18.1",
+    "@haul-bundler/preset-0.60": "^0.18.0",
+    "@thrashplay/falcon-storybook": "^0.0.1",
+    "npm-run-all": "4.1.5",
+    "react-native-dev-menu": "4.0.0",
+    "tsconfig-paths-webpack-plugin": "3.2.0"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

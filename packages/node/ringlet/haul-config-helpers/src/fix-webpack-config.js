@@ -1,7 +1,7 @@
 import { castArray, concat, filter, flow, get, isNil, isRegExp, isString, map, negate, some, uniq } from 'lodash'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 
-const createTsconfigPathsPlugin = (config, options = {}) => {
+export const createTsconfigPathsPlugin = (config, options = {}) => {
   return new TsconfigPathsPlugin({
     extensions: get(config, 'resolve.extensions'),
     mainFields: get(config, 'resolve.mainFields'),

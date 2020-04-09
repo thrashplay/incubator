@@ -26,6 +26,7 @@
     "paths": {
       "@ringlet/*": ["ringlet/*/src"],
       "@pegasus-ops/*": ["sophia/*/src"],
+      "@thrashplay/falcon-*": ["falcon/*/src"],
       "@thrashplay/genotype-*": ["genotype/*/src"],
       "@thrashplay/*": ["thrashlib/*/src"]
     },

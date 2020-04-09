@@ -1,7 +1,7 @@
 {
-  "name": "@thrashplay/genotype-storybook",
-  "version": "0.1.0-next.25",
-  "description": "Storybook components for the Genotype application.",
+  "name": "@thrashplay/falcon-storybook",
+  "version": "0.0.1",
+  "description": "Storybook components for the Falcon application.",
   "bugs": "https://github.com/thrashplay/incubator-node/issues",
   "license": "MIT",
   "author": "Sean Kleinjung <sean@thrashplay.com>",
@@ -13,7 +13,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/thrashplay/incubator-node.git",
-    "directory": "packages/node/genotype/storybook"
+    "directory": "packages/node/falcon/storybook"
   },
   "scripts": {
     "emulator:android:wait": "adb wait-for-device",

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import Storybook from '@thrashplay/falcon-storybook'
-
-import App from './App'
+import { App } from '@thrashplay/falcon-components'
 
 const Root = () => {
   const [storybookActive, setStorybookActive] = useState(false)

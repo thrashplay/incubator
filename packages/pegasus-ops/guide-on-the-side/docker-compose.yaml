@@ -1,0 +1,50 @@
+version: '3.7'
+
+services:
+  db:
+    image: linuxserver/mariadb:110.4.12mariabionic-ls60
+    environment:
+      FILE__MYSQL_DATABASE: /run/secrets/guide-on-the-side.mariadb-database
+      FILE__MYSQL_PASSWORD: /run/secrets/guide-on-the-side.mariadb-password
+      FILE__MYSQL_ROOT_PASSWORD: /run/secrets/guide-on-the-side.mariadb-root-password
+      FILE__MYSQL_USER: /run/secrets/guide-on-the-side.mariadb-user
+      TZ: America/Chicago
+    ports:
+      - 3306:3306
+    secrets:
+      - guide-on-the-side.mariadb-database
+      - guide-on-the-side.mariadb-password
+      - guide-on-the-side.mariadb-root-password
+      - guide-on-the-side.mariadb-user
+    volumes:
+      - mariadb-data:/config
+  adminer:
+    image: adminer
+    ports:
+      - 8306:8080
+
+networks:
+  default:
+    external: true
+    name: apptier
+  webgateway:
+    external: true
+    name: webgateway
+
+secrets:
+  guide-on-the-side.mariadb-database:
+    external: true
+  guide-on-the-side.mariadb-root-password:
+    external: true
+  guide-on-the-side.mariadb-user:
+    external: true
+  guide-on-the-side.mariadb-password:
+    external: true
+
+volumes:
+  mariadb-data:
+    driver: nfs
+    name: guide-on-the-side.mariadb-data
+    driver_opts:
+      create: "true"
+      share: nfs.pegasus:/

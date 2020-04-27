@@ -9,3 +9,4 @@ stacks:
   traefik: traefik/docker-compose.yaml
   dashboard: dashboard/docker-compose.yaml
   samba: samba/docker-compose.yaml
+  guide-on-the-side: guide-on-the-side/docker-compose.yaml

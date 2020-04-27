@@ -26,6 +26,7 @@ docker swarm init --advertise-addr $1
 docker node update --label-add public $HOST
 
 docker network create -d overlay --attachable webgateway
+docker network create -d overlay --attachable apptier
 
 # first worker node: 192.168.1.8 - 192.168.1.15
 docker network create --config-only --subnet=192.168.1.0/24 --gateway=192.168.1.1 -o parent=eth0 \

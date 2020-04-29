@@ -22,6 +22,39 @@ services:
     image: adminer
     ports:
       - 8306:8080
+  web:
+    image: "thrashplay/guide-on-the-side"
+    configs:
+      - source: config.yml.tmpl
+        target: /var/www/html/config.yml.tmpl
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        # http -> https configuration
+        - "traefik.http.routers.guide-on-the-side-http.entrypoints=web"
+        - "traefik.http.routers.guide-on-the-side-http.middlewares=https-redirect@file"
+        - "traefik.http.routers.guide-on-the-side-http.rule=Host(`gots.the-pegasus.net`)"
+        # handle https
+        - "traefik.http.routers.guide-on-the-side.entrypoints=websecure"
+        - "traefik.http.routers.guide-on-the-side.middlewares=secure@file"
+        - "traefik.http.routers.guide-on-the-side.rule=Host(`gots.the-pegasus.net`)"
+        - "traefik.http.routers.guide-on-the-side.tls.certresolver=production"
+        - "traefik.http.routers.guide-on-the-side.tls.options=default"
+        - "traefik.http.services.guide-on-the-side-service.loadbalancer.server.port=80"
+    environment:
+      - CONFIG_SECRETS_FILE=/run/secrets/guide-on-the-side.credentials
+    networks:
+      - webgateway
+      - default
+    secrets:
+      - guide-on-the-side.credentials
+    volumes:
+      - uploads:/var/www/html/app/webroot/uploads
+
+configs:
+  config.yml.tmpl:
+    name: index-${CONFIG_YML_TMPL:-default}
+    file: ./config/config.yml.tmpl
 
 networks:
   default:
@@ -32,6 +65,8 @@ networks:
     name: webgateway
 
 secrets:
+  guide-on-the-side.credentials:
+    external: true
   guide-on-the-side.mariadb-database:
     external: true
   guide-on-the-side.mariadb-root-password:
@@ -45,6 +80,12 @@ volumes:
   mariadb-data:
     driver: nfs
     name: guide-on-the-side.mariadb-data
+    driver_opts:
+      create: "true"
+      share: nfs.pegasus:/
+  uploads:
+    driver: nfs
+    name: guide-on-the-side.uploads
     driver_opts:
       create: "true"
       share: nfs.pegasus:/

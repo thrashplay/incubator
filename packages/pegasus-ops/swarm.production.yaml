@@ -3,6 +3,7 @@ env_files:
   - traefik/.env
   - dashboard/.env
   - samba/.env
+  - guide-on-the-side/.env
 
 stacks:
   audio-server: audio-server/docker-compose.yaml

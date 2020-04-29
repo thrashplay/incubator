@@ -162,6 +162,25 @@ steps:
       changeset:
         includes: [ packages/docker/git-client/** ]
 
+  - name: guide-on-the-side
+    image: plugins/docker
+    depends_on: [ clone ]
+    settings:
+      context: packages/docker/guide-on-the-side
+      dockerfile: packages/docker/guide-on-the-side/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/guide-on-the-side
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      username: thrashplay
+    when:
+      changeset:
+        includes: [ packages/docker/guide-on-the-side/** ]
+
   - name: homeassistant
     image: plugins/docker
     depends_on: [ clone ]
@@ -365,6 +384,7 @@ steps:
     settings:
       stack_files:
         - packages/pegasus-ops/dashboard/docker-compose.yaml
+        - packages/pegasus-ops/guide-on-the-side/docker-compose.yaml
         - packages/pegasus-ops/samba/docker-compose.yaml
         - packages/pegasus-ops/traefik/docker-compose.yaml
 

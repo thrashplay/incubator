@@ -23,6 +23,8 @@ services:
     configs:
       - source: config.yml.tmpl
         target: /var/www/html/config.yml.tmpl
+      - source: php.ini
+        target: /usr/local/etc/php/php.ini
     deploy:
       labels:
         - "traefik.enable=true"
@@ -51,6 +53,9 @@ configs:
   config.yml.tmpl:
     name: index-${CONFIG_YML_TMPL:-default}
     file: ./config/config.yml.tmpl
+  php.ini:
+    name: php-ini-${PHP_INI:-default}
+    file: ./config/php.ini
 
 networks:
   default:

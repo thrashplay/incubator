@@ -1,13 +1,9 @@
 FROM arm32v7/php:5.6.40-apache
 
-# Use the default production configuration and set PHP timezone
-RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" && \
-    sed -i "s/;date.timezone =/date.timezone=America\/Chicago/g" "$PHP_INI_DIR/php.ini"
-
 # add needed extensions
 ADD https://raw.githubusercontent.com/mlocati/docker-php-extension-installer/master/install-php-extensions /usr/local/bin/
 RUN chmod uga+x /usr/local/bin/install-php-extensions && sync && \
-    install-php-extensions gd tidy
+    install-php-extensions gd pdo_mysql tidy
 
 # enable needed apache modules
 RUN ln -s /etc/apache2/mods-available/rewrite.load  /etc/apache2/mods-enabled/rewrite.load

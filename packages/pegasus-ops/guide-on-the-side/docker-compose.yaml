@@ -18,10 +18,6 @@ services:
       - guide-on-the-side.mariadb-user
     volumes:
       - mariadb-data:/config
-  adminer:
-    image: adminer
-    ports:
-      - 8306:8080
   web:
     image: "thrashplay/guide-on-the-side"
     configs:

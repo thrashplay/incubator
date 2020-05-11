@@ -2,8 +2,8 @@
 
 backup_folder_to_bucket () {
   rclone copy \
-    source:$1 \
-    pegasus-backups:$2 \
+    "source:$1" \
+    "pegasus-backups:$2" \
     --auto-confirm \
     --ignore-existing \
     --immutable \
@@ -23,23 +23,27 @@ backup_folder_to_bucket () {
 
 backup_folder () {
   case "$1" in
-    /data/backup-test/)
+    /data/archon/*)
+      FOLDER_NAME=/data/archon
       BUCKET_NAME=pegasus-backup-test
       ;;
     *)
       ;;
   esac
 
+  CURRENT_TIME=`date -u "+%Y-%m-%d %H:%M:%S"`
+
   if [ -z "$BUCKET_NAME" ]
   then
-    >&2 echo "`date -u "+%Y-%m-%d %H:%M:%S"` $1: Changes detected, but no backup bucket configured for directory"
+    >&2 echo "$CURRENT_TIME $1: Changes detected, but no backup bucket configured for directory"
   else
-    echo "`date -u "+%Y-%m-%d %H:%M:%S"` $1: Changes detected; backing up to bucket '${BUCKET_NAME}'"
-    backup_folder_to_bucket $1 $BUCKET_NAME
+    echo "$CURRENT_TIME $1: Changes detected; backing '${FOLDER_NAME}' up to bucket '${BUCKET_NAME}'"
+    backup_folder_to_bucket "${FOLDER_NAME}" "${BUCKET_NAME}"
   fi
 }
 
+# paths with @ are _excluded_
 inotifywait "@/data/archon/Sandbox Sync" --monitor --recursive /data -e close_write -e moved_to |
   while read dir action file; do
-    backup_folder $dir
+    backup_folder "$dir"
   done

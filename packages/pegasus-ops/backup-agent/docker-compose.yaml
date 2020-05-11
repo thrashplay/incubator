@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+  backup-agent:
+    image: thrashplay/backup-agent
+    configs:
+      - source: rclone.conf
+        target: /root/.config/rclone/rclone.conf
+    secrets:
+      - source: backup-agent-credentials
+        target: backup-agent-credentials.json
+    volumes:
+      - backup:/data
+
+configs:
+  rclone.conf:
+    name: rclone-${RCLONE_CONF:-default}
+    file: ./config/rclone.conf
+
+secrets:
+  backup-agent-credentials:
+    external: true
+
+volumes:
+  backup:
+    driver: nfs
+    name: samba.backup
+    driver_opts:
+      share: nfs.pegasus:/samba.backup

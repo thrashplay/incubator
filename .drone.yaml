@@ -124,6 +124,25 @@ steps:
       port: 2376
       retry_limit: 90
 
+  - name: backup-agent
+    image: plugins/docker
+    depends_on: [ clone ]
+    settings:
+      context: packages/docker/backup-agent
+      dockerfile: packages/docker/backup-agent/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/backup-agent
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      username: thrashplay
+    when:
+      changeset:
+        includes: [ packages/docker/backup-agent/** ]
+
   - name: ddns-sidecar
     image: plugins/docker
     depends_on: [ clone ]
@@ -383,6 +402,7 @@ steps:
     image: thrashplay/generate-versions
     settings:
       stack_files:
+        - packages/pegasus-ops/backup-agent/docker-compose.yaml
         - packages/pegasus-ops/dashboard/docker-compose.yaml
         - packages/pegasus-ops/guide-on-the-side/docker-compose.yaml
         - packages/pegasus-ops/samba/docker-compose.yaml

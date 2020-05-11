@@ -14,7 +14,7 @@ services:
 
 configs:
   rclone.conf:
-    name: rclone-${RCLONE_CONF:-default}
+    name: rclone-${RCLONE_CONF_VERSION:-default}
     file: ./config/rclone.conf
 
 secrets:

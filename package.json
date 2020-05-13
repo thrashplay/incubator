@@ -7,10 +7,9 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "packages/node/falcon/*",
-      "packages/node/genotype/*",
-      "packages/node/ringlet/haul-config-helpers",
       "packages/node/devops/config-version-helper",
+      "packages/node/ringlet/haul-config-helpers",
+      "packages/node/sophia/*",
       "packages/node/thrashlib/*"
     ]
   },
@@ -23,9 +22,6 @@
     "clean": "rm -rf packages/node/*/*/dist && rm -rf packages/node/*/*/lib && rm -rf packages/node/*/*/tsconfig.build.tsbuildinfo && rm -f tsconfig.build.tsbuildinfo",
     "clean:all": "yarn clean && yarn _clean:ts-config && yarn _clean:node_modules",
     "emulator:android": "bash -c \"emulator -avd $(emulator -list-avds | head -n 1)\"",
-    "falcon": "yarn falcon:android",
-    "falcon:android": "yarn stmux -- [ [ \"yarn emulator:android\" .. \"yarn workspace @thrashplay/falcon-storybook start\" ] : \"yarn workspace @thrashplay/falcon-native start\" ]",
-    "falcon:ios": "echo iOS support not implemented yet",
     "genotype": "yarn genotype:android",
     "genotype:android": "yarn stmux -- [ [ \"yarn emulator:android\" .. \"yarn workspace @thrashplay/genotype-storybook start\" ] : \"yarn workspace @thrashplay/genotype-native start\" ]",
     "genotype:ios": "echo iOS support not implemented yet",
@@ -33,6 +29,9 @@
     "lint:fix": "eslint . --fix --ext .ts,.js",
     "publish:tagged": "yarn lerna publish from-git",
     "reset": "yarn clean:all && yarn && yarn bootstrap && yarn build",
+    "sophia": "yarn sophia:android",
+    "sophia:android": "yarn stmux -- [ [ \"yarn emulator:android\" .. \"yarn workspace @thrashplay/sophia-storybook start\" ] : \"yarn workspace @thrashplay/sophia-native start\" ]",
+    "sophia:ios": "echo iOS support not implemented yet",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",

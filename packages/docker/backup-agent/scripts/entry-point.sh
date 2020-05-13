@@ -4,6 +4,8 @@ backup_folder_to_bucket () {
   rclone copy \
     "source:$1" \
     "pegasus-backups:$2" \
+    --verbose \
+    --bwlimit "08:00,125 12:00,off 13:00,125 18:00,315 23:59,off" \
     --auto-confirm \
     --ignore-existing \
     --immutable \

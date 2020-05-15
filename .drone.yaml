@@ -315,6 +315,44 @@ volumes:
 
 kind: pipeline
 type: docker
+name: build-amd64-images
+  
+depends_on:
+  - build-drone-plugins
+  
+platform:
+  arch: amd64
+  os: linux
+  
+steps:
+  - name: firebase
+    image: plugins/docker
+    settings:
+      context: packages/docker/firebase
+      dockerfile: packages/docker/firebase/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/firebase
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      username: thrashplay
+    when:
+      changeset:
+        includes: [ packages/docker/firebase/** ]
+  
+trigger:
+  changeset:
+    includes: [ packages/docker/** ]
+  branch:
+    - master
+      
+---
+
+kind: pipeline
+type: docker
 name: build-npm-packages
 
 steps:

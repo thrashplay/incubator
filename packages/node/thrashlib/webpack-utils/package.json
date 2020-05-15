@@ -1,0 +1,16 @@
+{
+  "name": "@thrashplay/webpack-utils",
+  "version": "0.1.0-next.1",
+  "description": "Utilities for building Webpack configurations",
+  "private": true,
+  "license": "MIT",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "files": [
+    "lib/**"
+  ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  }
+}

@@ -12,7 +12,7 @@
     "build": "yarn webpack --mode production",
     "clean": "rm -rf dist",
     "deploy": "echo Not yet implemented! && exit 1",
-    "start": "yarn webpack-dev-server --mode development"
+    "dev": "yarn webpack-dev-server --mode development"
   },
   "dependencies": {
     "@babel/runtime": "7.7.2",

@@ -30,7 +30,7 @@
     "sophia:android": "yarn _build:prepare-tools && yarn workspace @thrashplay/sophia-native dev:android",
     "sophia:install:android": "yarn workspace @thrashplay/sophia-native install:android",
     "sophia:ios": "yarn _build:prepare-tools && yarn workspace @thrashplay/sophia-native dev:ios",
-    "sophia:web": "yarn _build:prepare-tools && yarn workspace @thrashplay/sophia-native dev:web",
+    "sophia:web": "yarn _build:prepare-tools && yarn workspace @thrashplay/sophia-web dev",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
@@ -119,6 +119,7 @@
     "typescript": "3.8.3",
     "webpack": "4.42.1",
     "webpack-cli": "3.3.11",
+    "webpack-dev-server": "3.10.3",
     "webpack-merge": "4.2.2",
     "webpack-node-externals": "1.7.2"
   },

@@ -124,16 +124,16 @@ steps:
       port: 2376
       retry_limit: 90
 
-  - name: backup-agent
+  - name: backup-agent_rclone-ui
     image: plugins/docker
     depends_on: [ clone ]
     settings:
-      context: packages/docker/backup-agent
-      dockerfile: packages/docker/backup-agent/Dockerfile
+      context: packages/docker/backup-agent/rclone-ui
+      dockerfile: packages/docker/backup-agent/rclone-ui/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
-      repo: thrashplay/backup-agent
+      repo: thrashplay/rclone-ui
       tags:
         - latest
         - ${DRONE_BRANCH}
@@ -141,7 +141,7 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ packages/docker/backup-agent/** ]
+        includes: [ packages/docker/backup-agent/rclone-ui/** ]
 
   - name: ddns-sidecar
     image: plugins/docker

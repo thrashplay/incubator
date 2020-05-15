@@ -1,24 +1,55 @@
 version: '3.7'
 
 services:
-  backup-agent:
-    image: thrashplay/backup-agent
+  ui:
+    image: thrashplay/rclone-ui
     configs:
       - source: rclone.conf
         target: /root/.config/rclone/rclone.conf
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        # http -> https configuration
+        - "traefik.http.routers.backup-agent-http.entrypoints=web"
+        - "traefik.http.routers.backup-agent-http.middlewares=https-redirect@file"
+        - "traefik.http.routers.backup-agent-http.rule=Host(`backups.the-pegasus.net`)"
+        # handle https
+        - "traefik.http.routers.backup-agent.entrypoints=websecure"
+        - "traefik.http.routers.backup-agent.middlewares=secure@file"
+        - "traefik.http.routers.backup-agent.rule=Host(`backups.the-pegasus.net`)"
+        - "traefik.http.routers.backup-agent.tls.certresolver=production"
+        - "traefik.http.routers.backup-agent.tls.options=default"
+        - "traefik.http.services.backup-agent-service.loadbalancer.server.port=5572"
+    environment:
+      - HTPASSWD_FILE=/run/secrets/.htpasswd
+    networks:
+      - webgateway
+      - default
     secrets:
-      - source: backup-agent-credentials
+      - source: backup-agent.gcs-credentials
         target: backup-agent-credentials.json
+      - source: backup-agent.htpasswd
+        target: .htpasswd
     volumes:
       - backup:/data
 
 configs:
   rclone.conf:
-    name: rclone-${RCLONE_CONF_VERSION:-default}
+    name: rclone.conf-${RCLONE_CONF_VERSION:-default}
     file: ./config/rclone.conf
 
+networks:
+  default:
+    external: true
+    name: apptier
+  webgateway:
+    external: true
+    name: webgateway
+
 secrets:
-  backup-agent-credentials:
+  backup-agent.gcs-credentials:
+    external: true
+  backup-agent.htpasswd:
     external: true
 
 volumes:

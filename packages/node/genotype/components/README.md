@@ -1,1 +1,0 @@
-# @thrashplay/genotype-components

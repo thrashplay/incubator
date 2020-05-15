@@ -25,10 +25,9 @@
     "noUnusedLocals": true,
     "paths": {
       "@ringlet/*": ["ringlet/*/src"],
-      "@pegasus-ops/*": ["sophia/*/src"],
-      "@thrashplay/falcon-*": ["falcon/*/src"],
-      "@thrashplay/genotype-*": ["genotype/*/src"],
-      "@thrashplay/*": ["thrashlib/*/src"]
+      "@thrashplay/webpack-utils": ["thrashlib/webpack-utils/lib"],
+      "@thrashplay/*": ["thrashlib/*/src"],
+      "@thrashplay/sophia-*": ["sophia/*/src"]
     },
     "noUnusedParameters": true,
     "pretty": true,

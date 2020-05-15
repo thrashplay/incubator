@@ -1,0 +1,35 @@
+{
+  "name": "@thrashplay/sophia-storybook",
+  "version": "0.1.0-next.0",
+  "description": "Sophia: Storybook Components",
+  "private": true,
+  "license": "MIT",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "files": [
+    "lib/**"
+  ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "emulator:android:wait": "adb wait-for-device",
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "start": "run-s emulator:android:wait start:android",
+    "start:android": "(adb reverse tcp:7007 tcp:7007 || true) && start-storybook"
+  },
+  "dependencies": {
+    "@storybook/addon-actions": "5.3.18",
+    "@storybook/addon-links": "5.3.18",
+    "@storybook/addons": "5.3.18",
+    "@storybook/core": "5.3.18",
+    "@storybook/react-native": "5.3.18",
+    "@storybook/react-native-server": "5.3.18",
+    "@types/storybook__react": "5.2.1",
+    "react-dom": "16.13.1",
+    "regenerator-runtime": "0.13.3"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
+    "react-native-web": "*"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "name": "@thrashplay/sophia-storybook-web",
+  "version": "0.1.0-next.0",
+  "description": "Sophia: Storybook Components for Web",
+  "private": true,
+  "license": "MIT",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "files": [
+    "lib/**"
+  ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "start": "start-storybook -p 9001",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "dependencies": {
+    "@babel/core": "7.6.2",
+    "@storybook/addon-actions": "5.3.18",
+    "@storybook/addon-links": "5.3.18",
+    "@storybook/addons": "5.3.18",
+    "@storybook/core": "5.3.18",
+    "@storybook/react": "5.3.18",
+    "@storybook/preset-typescript": "3.0.0",
+    "@types/storybook__react": "5.2.1",
+    "babel-loader": "8.1.0",
+    "fork-ts-checker-webpack-plugin": "4.1.3",
+    "react-dom": "16.13.1",
+    "regenerator-runtime": "0.13.3",
+    "ts-loader": "7.0.1"
+  },
+  "peerDependencies": {
+    "react": "*"
+  },
+  "devDependencies": {
+    "@storybook/addon-actions": "^5.3.18",
+    "@storybook/addon-links": "^5.3.18",
+    "@storybook/addons": "^5.3.18",
+    "@storybook/react": "^5.3.18"
+  }
+}

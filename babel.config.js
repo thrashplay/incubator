@@ -1,64 +1,23 @@
-const { get, identity, isEmpty } = require('lodash')
-
-const { configurations, getOutputType } = require('./build-lib/index')
-
-const defaults = {
-  presets: {
-    '@babel/preset-env': {
-      corejs: 3,
-      modules: false,
-      debug: false,
-      targets: {
-        node: 'current',
-      },
-      useBuiltIns: 'usage',
-    },
-  },
-}
-
-module.exports = api => {
-  const outputType = getOutputType()
-  api.cache(() => outputType)
-
-  const createConfig = (name, defaultSet, customizers) => {
-    const defaultValues = get(defaultSet, name, {})
-    const customizer = get(customizers, name, identity)
-    const options = customizer(defaultValues)
-    return (isEmpty(options)) ? name : [name, options]
-  }
-  const createPluginConfig = (name) => {
-    return createConfig(name, get(defaults, 'plugins'), get(configurations, `${outputType}.babel.plugins`))
-  }
-  const createPresetConfig = (name) => {
-    return createConfig(name, get(defaults, 'presets'), get(configurations, `${outputType}.babel.presets`))
-  }
-
-  const presets = [
-    createPresetConfig('@babel/preset-env'),
-    createPresetConfig('@babel/preset-typescript'),
-  ]
-
-  const plugins = [
-    createPluginConfig('@babel/proposal-class-properties'),
-    createPluginConfig('@babel/proposal-object-rest-spread'),
-    createPluginConfig('@babel/proposal-export-default-from'),
-  ]
-
-  const sharedIgnoredFiles = [/node_modules/]
-  const productionIgnoredFies = [
-    /__fixtures__/,
-    /__mocks__/,
-    /__tests__/,
-    /.*\.test\..*/,
-  ]
-
+module.exports = (api) => {
   return {
-    babelrcRoots: [
-      '.',
-      'packages/node/*/*',
+    plugins: [
+      'dev-expression',
+      'react-native-paper/babel', // prod only?
     ],
-    ignore: [...sharedIgnoredFiles, ...(api.env('test') ? [] : productionIgnoredFies)],
-    plugins,
-    presets,
+    presets: [
+      [
+        '@babel/preset-env',
+        {
+          corejs: 3,
+          modules: api.env('test') ? 'commonjs' : false,
+          debug: false,
+          targets: {
+            node: 'current',
+          },
+          useBuiltIns: 'usage',
+        },
+      ],
+      '@haul-bundler/react-native',
+    ],
   }
-} 
+}

@@ -9,7 +9,7 @@ import com.android.build.OutputFile
  * cycle. By default, bundleDebugJsAndAssets is skipped, as in debug/dev mode we prefer to load the
  * bundle directly from the development server. Below you can see all the possible configurations
  * and their defaults. If you decide to add a configuration block, make sure to add it before the
- * `apply from: "../../../../node_modules/react-native/react.gradle"` line.
+ * `apply from: "../../../../../../node_modules/react-native/react.gradle"` line.
  *
  * project.ext.react = [
  *   // the name of the generated asset file containing your JS bundle
@@ -80,8 +80,8 @@ project.ext.react = [
     enableHermes: false,  // clean and rebuild if changing
 ]
 
-apply from: "../../../../node_modules/react-native/react.gradle"
-apply from: '../../../../node_modules/react-native-unimodules/gradle.groovy'
+apply from: "../../../../../../node_modules/react-native/react.gradle"
+apply from: '../../../../../../node_modules/react-native-unimodules/gradle.groovy'
 
 
 project.ext.vectoricons = [
@@ -89,9 +89,9 @@ project.ext.vectoricons = [
         'MaterialCommunityIcons.ttf',
         'MaterialIcons.ttf',
     ],
-    iconFontsDir: "../../../../node_modules/react-native-vector-icons/Fonts"
+    iconFontsDir: "../../../../../../node_modules/react-native-vector-icons/Fonts"
 ]
-apply from: "../../../../node_modules/react-native-vector-icons/fonts.gradle"
+apply from: "../../../../../../node_modules/react-native-vector-icons/fonts.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -195,14 +195,14 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     if (enableHermes) {
-        def hermesPath = "../../../../node_modules/hermes-engine/android/";
+        def hermesPath = "../../../../../../node_modules/hermes-engine/android/";
         debugImplementation files(hermesPath + "hermes-debug.aar")
         releaseImplementation files(hermesPath + "hermes-release.aar")
     } else {
         implementation jscFlavor
     }
 
-    addUnimodulesDependencies([modulesPaths: ['../../../../node_modules']])
+    addUnimodulesDependencies([modulesPaths: ['../../../../../../node_modules']])
 }
 
 // Run this once to be able to run the application with BUCK
@@ -212,6 +212,6 @@ task copyDownloadableDepsToLibs(type: Copy) {
     into 'libs'
 }
 
-apply from: file("../../../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+apply from: file("../../../../../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
 
 apply plugin: 'com.google.gms.google-services'

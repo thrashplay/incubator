@@ -1,18 +1,8 @@
-FROM alpine:3.11.6
+FROM thrashplay/rclone
 
 # install needed utilities
 RUN apk update && apk add --no-cache \
-  bash \
-  curl \
-  inotify-tools \
-  tini \
-  unzip
-
-# install rclone
-RUN cd /tmp && \
-  curl -O https://rclone.org/install.sh && \
-  bash install.sh && \
-  rm install.sh
+  tini
 
 # add entrypoint
 COPY scripts/entry-point.sh /usr/local/bin

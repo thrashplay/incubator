@@ -124,16 +124,16 @@ steps:
       port: 2376
       retry_limit: 90
 
-  - name: backup-agent_rclone-ui
+  - name: backup-agent_rclone
     image: plugins/docker
     depends_on: [ clone ]
     settings:
-      context: packages/docker/backup-agent/rclone-ui
-      dockerfile: packages/docker/backup-agent/rclone-ui/Dockerfile
+      context: packages/docker/backup-agent/rclone
+      dockerfile: packages/docker/backup-agent/rclone/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
-      repo: thrashplay/rclone-ui
+      repo: thrashplay/rclone
       tags:
         - latest
         - ${DRONE_BRANCH}
@@ -141,7 +141,45 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ packages/docker/backup-agent/rclone-ui/** ]
+        includes: [ packages/docker/backup-agent/rclone/** ]
+
+  - name: backup-agent_rclone-service
+    image: plugins/docker
+    depends_on: [ clone, backup-agent_rclone ]
+    settings:
+      context: packages/docker/backup-agent/rclone-service
+      dockerfile: packages/docker/backup-agent/rclone-service/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/rclone-service
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      username: thrashplay
+    when:
+      changeset:
+        includes: [ packages/docker/backup-agent/rclone-service/** ]
+
+  - name: backup-agent_rclone-trigger
+    image: plugins/docker
+    depends_on: [ clone, backup-agent_rclone ]
+    settings:
+      context: packages/docker/backup-agent/rclone-trigger
+      dockerfile: packages/docker/backup-agent/rclone-trigger/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/rclone-trigger
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      username: thrashplay
+    when:
+      changeset:
+        includes: [ packages/docker/backup-agent/rclone-trigger/** ]
 
   - name: ddns-sidecar
     image: plugins/docker

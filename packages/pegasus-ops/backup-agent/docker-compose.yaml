@@ -1,8 +1,16 @@
 version: '3.7'
 
 services:
-  ui:
-    image: thrashplay/rclone-ui
+  trigger:
+    image: thrashplay/rclone-trigger
+    configs:
+      - source: crontab
+        target: /etc/supercronic/crontab
+    networks:
+      - default
+
+  backend:
+    image: thrashplay/rclone-service
     configs:
       - source: rclone.conf
         target: /root/.config/rclone/rclone.conf
@@ -34,6 +42,9 @@ services:
       - backup:/data
 
 configs:
+  crontab:
+    name: crontab-${CRONTAB_VERSION:-default}
+    file: ./config/crontab
   rclone.conf:
     name: rclone.conf-${RCLONE_CONF_VERSION:-default}
     file: ./config/rclone.conf

@@ -9,14 +9,16 @@
     "lib/**"
   ],
   "scripts": {
+    "bundle:android": "haul bundle --platform android",
+    "bundle:ios": "haul bundle --platform ios",
+    "dev:android": "haul start --eager android",
+    "dev:ios": "haul start --eager ios",
+    "dev": "yarn dev:android",
     "emulator:android:wait": "adb wait-for-device",
     "install:android": "react-native run-android --no-packager",
     "install:ios": "react-native run-ios --no-packager",
-    "bundle:android": "haul bundle --platform android",
-    "bundle:ios": "haul bundle --platform ios",
-    "haul": "haul start --eager android",
-    "start": "run-s emulator:android:wait install:android haul",
     "start:android": "run-s emulator:android:wait install:android haul",
+    "start": "yarn start:android",
     "test": "jest"
   },
   "dependencies": {

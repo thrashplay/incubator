@@ -37,9 +37,9 @@ backup_folder () {
 
   if [ -z "$BUCKET_NAME" ]
   then
-    >&2 echo "$CURRENT_TIME $1: Changes detected, but no backup bucket configured for directory"
+    >&2 echo "$CURRENT_TIME ${FOLDER_NAME}: Changes detected, but no backup bucket configured for directory"
   else
-    echo "$CURRENT_TIME $1: Changes detected; backing '${FOLDER_NAME}' up to bucket '${BUCKET_NAME}'"
+    echo "$CURRENT_TIME ${FOLDER_NAME}: Changes detected; backing up to bucket '${BUCKET_NAME}'"
     backup_folder_to_bucket "${FOLDER_NAME}" "${BUCKET_NAME}"
   fi
 }

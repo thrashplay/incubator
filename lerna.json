@@ -17,7 +17,6 @@
   "npmClient": "yarn",
   "useWorkspaces": true,
   "packages": [ 
-    "packages/node/genotype/*",
     "packages/node/devops/config-version-helper",
     "packages/node/thrashlib/*"
   ],

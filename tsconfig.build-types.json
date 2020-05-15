@@ -3,7 +3,7 @@
   "files": [],
   "references": [
     {
-      "path": "packages/node/genotype/native/tsconfig.build.json"
+      "path": "packages/node/sophia/native/tsconfig.build.json"
     },
     {
       "path": "packages/node/thrashlib/logging/tsconfig.build.json"

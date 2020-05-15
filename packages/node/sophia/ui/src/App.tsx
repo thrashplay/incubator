@@ -4,7 +4,6 @@ import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper'
 import 'react-native-gesture-handler'
 // import { Provider } from 'react-redux'
 
-import { initialize } from '@thrashplay/falcon-firebase'
 
 // import { createApplicationStore } from './store'
 
@@ -21,7 +20,6 @@ const theme = {
 export class App extends Component {
   constructor (props: any) {
     super(props)
-    initialize()
   }
 
   public render () {

@@ -363,6 +363,24 @@ platform:
   os: linux
   
 steps:
+  - name: react-native-android
+    image: plugins/docker
+    settings:
+      context: packages/docker/react-native-android
+      dockerfile: packages/docker/react-native-android/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/react-native-android
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      username: thrashplay
+    when:
+      changeset:
+        includes: [ packages/docker/react-native-android/** ]
+
   - name: firebase
     image: plugins/docker
     settings:

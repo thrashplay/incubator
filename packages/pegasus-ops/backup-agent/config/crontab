@@ -1,6 +1,2 @@
 # Run every minute
-*/1 * * * * echo "world"
-
-# Run every 2 seconds
-*/2 * * * * * * echo "hello"
-*/2 * * * * * * echo "hello" 
+*/1 * * * * /usr/local/bin/rclone_copy source:/data/archon/test dstFs=pegasus-backups:pegasus-backup-test/rclone_copy

@@ -6,10 +6,16 @@ services:
     configs:
       - source: crontab
         target: /etc/supercronic/crontab
+      - source: filters.txt
+        target: /etc/rclone/filters.txt
+      - source: rclone-options.json
+        target: /etc/rclone/options.json
+    environment:
+      - RCLONE_OPTIONS_FILE=/etc/rclone/options.json
     networks:
       - default
 
-  backend:
+  rclone:
     image: thrashplay/rclone-service
     configs:
       - source: rclone.conf
@@ -45,9 +51,15 @@ configs:
   crontab:
     name: crontab-${CRONTAB_VERSION:-default}
     file: ./config/crontab
+  filters.txt:
+    name: filters.text-${FILTERS_TXT_VERSION:-default}
+    file: ./config/filters.txt
   rclone.conf:
     name: rclone.conf-${RCLONE_CONF_VERSION:-default}
     file: ./config/rclone.conf
+  rclone-options.json:
+    name: rclone-options.json-${RCLONE_OPTIONS_JSON_VERSION:-default}
+    file: ./config/rclone-options.json
 
 networks:
   default:

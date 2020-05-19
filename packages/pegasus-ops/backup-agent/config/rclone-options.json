@@ -1,0 +1,10 @@
+{ 
+  "filter": {
+    "FilterFrom": "/etc/rclone/filters.txt"
+  },
+  "main": {
+    "AutoConfirm": true,
+    "Immutable": true,
+    "LogLevel": 7
+  }
+}

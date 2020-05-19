@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+# Usage: rclone_exec <COMMAND> [RCLONE_ARGS]
+#
+# Executes an async rclone command, adding credentials and URL arguments from the environment.
+#
+# Arguments: 
+#   COMMAND: the rclone remote command (i.e. rc/noop, clone/copy, etc.)
+#   RCLONE_ARGS: additional arguments to pass to rclone (such as '--json')
+# Environment:
+#   RCLONE_CREDENTIALS_FILE: path to .env file with two values, 'USERNAME' and 'PASSWORD'
+#   RCLONE_URL: the URL of the rclone remote control server
+
+if [[ -z "${1}" ]]; then
+  echo "You must supply an rclone command!"
+  exit 1
+fi
+
+args=()
+
+if [[ -n "${RCLONE_CREDENTIALS_FILE}" ]]; then
+  set -o allexport
+  . ${RCLONE_CREDENTIALS_FILE}
+  set +o allexport
+
+  args+=( "--user=${USERNAME}" )
+  args+=( "--pass=${PASSWORD}" )
+fi
+
+if [[ -n "${RCLONE_URL}" ]]; then
+  args+=( "--url" )
+  args+=( "${RCLONE_URL}" )
+fi
+
+rclone rc "${1}" "${args[@]}" _async=true "${@:2}"

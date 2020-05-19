@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# Usage: rclone_copy <SOURCE> <DESTINATION> [RCLONE_ARGS]
+#
+# Executes an rclone "sync/copy" command to copy the source to the destination.
+#
+# Arguments: 
+#   SOURCE: a remote name string eg “drive:src” for the source
+#   DESTINATION: a remote name string eg “drive:dst” for the destination
+#   RCLONE_ARGS: additional arguments to pass to rclone
+
+if [[ -z "${1}" ]]; then
+  echo "You must supply a source to copy from."
+  exit 1
+fi
+
+if [[ -z "${2}" ]]; then
+  echo "You must supply a destination to copy to."
+  exit 1
+fi
+
+args=()
+args+=( "srcFs=${1}" )
+args+=( "dstFs=${2}" )
+
+./rclone_exec sync/copy "${args[@]}" "${@:3}"

@@ -11,5 +11,11 @@ RUN curl -fsSLO "$SUPERCRONIC_URL" \
  && mv "$SUPERCRONIC" "/usr/local/bin/${SUPERCRONIC}" \
  && ln -s "/usr/local/bin/${SUPERCRONIC}" /usr/local/bin/supercronic
 
-ENTRYPOINT [ "/usr/local/bin/supercronic" ]
-CMD [ "/etc/supercronic/crontab" ]
+# add rclone scripts
+COPY scripts/rclone_* /usr/local/bin/
+RUN chmod +x /usr/local/bin/rclone_*
+
+COPY scripts/entry-point.sh /usr/local/bin
+RUN chmod +x /usr/local/bin/entry-point.sh
+
+ENTRYPOINT [ "/usr/local/bin/entry-point.sh" ]

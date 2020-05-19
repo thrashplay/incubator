@@ -141,7 +141,7 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ packages/docker/backup-agent/rclone/** ]
+        includes: [ packages/docker/backup-agent/** ]
 
   - name: backup-agent_rclone-service
     image: plugins/docker
@@ -160,7 +160,7 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ packages/docker/backup-agent/rclone-service/** ]
+        includes: [ packages/docker/backup-agent/** ]
 
   - name: backup-agent_rclone-trigger
     image: plugins/docker
@@ -179,7 +179,7 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ packages/docker/backup-agent/rclone-trigger/** ]
+        includes: [ packages/docker/backup-agent/** ]
 
   - name: ddns-sidecar
     image: plugins/docker

@@ -162,16 +162,16 @@ steps:
       changeset:
         includes: [ packages/docker/backup-agent/** ]
 
-  - name: backup-agent_rclone-trigger
+  - name: backup-agent
     image: plugins/docker
     depends_on: [ clone, backup-agent_rclone ]
     settings:
-      context: packages/docker/backup-agent/rclone-trigger
-      dockerfile: packages/docker/backup-agent/rclone-trigger/Dockerfile
+      context: packages/docker/backup-agent/backup-agent
+      dockerfile: packages/docker/backup-agent/backup-agent/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
-      repo: thrashplay/rclone-trigger
+      repo: thrashplay/backup-agent
       tags:
         - latest
         - ${DRONE_BRANCH}

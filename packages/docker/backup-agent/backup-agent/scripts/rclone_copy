@@ -23,4 +23,4 @@ args=()
 args+=( "srcFs=${1}" )
 args+=( "dstFs=${2}" )
 
-rclone_exec sync/copy "${args[@]}" "${@:3}"
+rclone_exec sync/copy "${args[@]}" _async=true "${@:3}"

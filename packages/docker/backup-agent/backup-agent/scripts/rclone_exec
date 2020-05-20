@@ -19,12 +19,24 @@ fi
 args=()
 
 if [[ -n "${RCLONE_CREDENTIALS_FILE}" ]]; then
-  set -o allexport
-  . ${RCLONE_CREDENTIALS_FILE}
-  set +o allexport
+  while read -r line
+  do
+      key="${line%%=*}"
+      val="${line#*=}"
 
-  args+=( "--user=${USERNAME}" )
-  args+=( "--pass=${PASSWORD}" )
+      case "${key}" in
+        USERNAME)
+          args+=( "--user=${val}" )
+          ;;
+        PASSWORD)
+          args+=( "--pass=${val}" )
+          ;;
+        *)
+          echo "Unknown key in RCLONE_CREDENTIALS_FILE: ${key}"
+          exit 1
+          ;;
+      esac
+  done < "${RCLONE_CREDENTIALS_FILE}"
 fi
 
 if [[ -n "${RCLONE_URL}" ]]; then
@@ -32,4 +44,4 @@ if [[ -n "${RCLONE_URL}" ]]; then
   args+=( "${RCLONE_URL}" )
 fi
 
-rclone rc "${1}" "${args[@]}" _async=true "${@:2}"
+rclone rc "${1}" "${args[@]}" "${@:2}"

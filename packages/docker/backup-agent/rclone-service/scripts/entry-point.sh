@@ -5,10 +5,12 @@ cp /root/.config/rclone/rclone.conf.tmpl /root/.config/rclone/rclone.conf
 
 # update our config file with secrets, if a secret file is specified
 if [ ! -z $RCLONE_SECRETS_FILE ]; then
-  awk 1 $RCLONE_SECRETS_FILE | while IFS== read -r name value
+  while read -r line
   do
-    sed -i "s/\${$name}/$value/g" /root/.config/rclone/rclone.conf
-  done
+      key="${line%%=*}"
+      val="${line#*=}"
+      sed -i "s/\${$key}/${val}/g" /root/.config/rclone/rclone.conf
+  done < "${RCLONE_SECRETS_FILE}"
 fi
 
 args=()

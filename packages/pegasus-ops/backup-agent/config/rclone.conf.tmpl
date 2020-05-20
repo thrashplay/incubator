@@ -1,0 +1,17 @@
+[gcs]
+bucket_policy_only = true
+location = us
+service_account_file = /run/secrets/backup-agent-credentials.json
+storage_class = NEARLINE
+type = google cloud storage
+
+[gcs-secret]
+type = crypt
+remote = gcs:pegasus-backup-test
+filename_encryption = standard
+directory_name_encryption = true
+password = ${GCS_SECRET_PASSWORD}
+password2 = ${GCS_SECRET_PASSWORD2}
+
+[localfile]
+type = local

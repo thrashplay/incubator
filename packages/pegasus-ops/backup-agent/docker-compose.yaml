@@ -18,8 +18,8 @@ services:
   rclone:
     image: thrashplay/rclone-service
     configs:
-      - source: rclone.conf
-        target: /root/.config/rclone/rclone.conf
+      - source: rclone.conf.tmpl
+        target: /root/.config/rclone/rclone.conf.tmpl
     deploy:
       labels:
         - "traefik.enable=true"
@@ -36,10 +36,13 @@ services:
         - "traefik.http.services.backup-agent-service.loadbalancer.server.port=5572"
     environment:
       - HTPASSWD_FILE=/run/secrets/.htpasswd
+      - RCLONE_SECRETS_FILE=/run/secrets/encryption-passwords
     networks:
       - webgateway
       - default
     secrets:
+      - source: backup-agent.encryption-passwords
+        target: encryption-passwords
       - source: backup-agent.gcs-credentials
         target: backup-agent-credentials.json
       - source: backup-agent.htpasswd
@@ -54,9 +57,9 @@ configs:
   filters.txt:
     name: filters.text-${FILTERS_TXT_VERSION:-default}
     file: ./config/filters.txt
-  rclone.conf:
-    name: rclone.conf-${RCLONE_CONF_VERSION:-default}
-    file: ./config/rclone.conf
+  rclone.conf.tmpl:
+    name: rclone.conf-${RCLONE_CONF_TMPL_VERSION:-default}
+    file: ./config/rclone.conf.tmpl
   rclone-options.json:
     name: rclone-options.json-${RCLONE_OPTIONS_JSON_VERSION:-default}
     file: ./config/rclone-options.json
@@ -70,6 +73,8 @@ networks:
     name: webgateway
 
 secrets:
+  backup-agent.encryption-passwords:
+    external: true
   backup-agent.gcs-credentials:
     external: true
   backup-agent.htpasswd:

@@ -1,2 +1,2 @@
 # Run every minute
-*/1 * * * * /usr/local/bin/rclone_copy source:/data/archon/test dstFs=pegasus-backups:pegasus-backup-test/rclone_copy
+*/1 * * * * /usr/local/bin/rclone_copy localfile:/data/archon/test gcs-secret:

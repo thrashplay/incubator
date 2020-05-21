@@ -1,6 +1,8 @@
 { 
   "filter": {
-    "FilterFrom": "/etc/rclone/filters.txt"
+    "FilterFrom": [
+      "/etc/rclone/filters.txt"
+    ]
   },
   "main": {
     "AutoConfirm": true,

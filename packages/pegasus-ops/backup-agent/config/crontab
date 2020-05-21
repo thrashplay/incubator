@@ -1,2 +1,2 @@
 # Run every minute
-*/1 * * * * /usr/local/bin/rclone_copy localfile:/data/archon/test gcs-secret:
+*/1 * * * * /usr/local/bin/rclone_copy "localfile:/data/nfs/samba.backup/archon/Data Backup/Data Backup51.afi" gcs-secret:

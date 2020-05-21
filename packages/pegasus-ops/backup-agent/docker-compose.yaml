@@ -39,6 +39,9 @@ services:
         - "traefik.http.routers.backup-agent.tls.certresolver=production"
         - "traefik.http.routers.backup-agent.tls.options=default"
         - "traefik.http.services.backup-agent-service.loadbalancer.server.port=5572"
+      placement:
+        constraints:
+          - "node.labels.storage-attached==true"
     environment:
       - HTPASSWD_FILE=/run/secrets/.htpasswd
       - RCLONE_SECRETS_FILE=/run/secrets/encryption-passwords
@@ -53,7 +56,7 @@ services:
       - source: backup-agent.htpasswd
         target: .htpasswd
     volumes:
-      - backup:/data
+      - /mnt/nfs:/data/nfs
 
 configs:
   crontab:
@@ -87,9 +90,3 @@ secrets:
   backup-agent.rclone-client-credentials:
     external: true
 
-volumes:
-  backup:
-    driver: nfs
-    name: samba.backup
-    driver_opts:
-      share: nfs.pegasus:/samba.backup

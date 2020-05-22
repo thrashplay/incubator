@@ -6,8 +6,6 @@ services:
     configs:
       - source: crontab
         target: /etc/supercronic/crontab
-      - source: filters.txt
-        target: /etc/rclone/filters.txt
       - source: rclone-options.json
         target: /etc/rclone/options.json
     environment:
@@ -23,6 +21,8 @@ services:
   rclone-service:
     image: thrashplay/rclone-service
     configs:
+      - source: filters.txt
+        target: /etc/rclone/filters.txt
       - source: rclone.conf.tmpl
         target: /root/.config/rclone/rclone.conf.tmpl
     deploy:

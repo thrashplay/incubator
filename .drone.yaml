@@ -398,6 +398,24 @@ steps:
     when:
       changeset:
         includes: [ packages/docker/firebase/** ]
+
+  - name: firebase-emulator
+    image: plugins/docker
+    settings:
+      context: packages/docker/firebase-emulator
+      dockerfile: packages/docker/firebase-emulator/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/firebase-emulator
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      username: thrashplay
+    when:
+      changeset:
+        includes: [ packages/docker/firebase-emulator/** ]
   
 trigger:
   changeset:

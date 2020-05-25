@@ -82,11 +82,9 @@ volumes:
     driver: nfs
     name: guide-on-the-side.mariadb-data
     driver_opts:
-      create: "true"
-      share: nfs.pegasus:/
+      share: nfs.pegasus:/guide-on-the-side.mariadb-data
   uploads:
     driver: nfs
     name: guide-on-the-side.uploads
     driver_opts:
-      create: "true"
-      share: nfs.pegasus:/
+      share: nfs.pegasus:/guide-on-the-side.uploads

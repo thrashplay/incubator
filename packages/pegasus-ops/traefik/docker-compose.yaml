@@ -71,11 +71,9 @@ volumes:
     driver: nfs
     name: traefik.ddns-data
     driver_opts:
-      create: "true"
-      share: nfs.pegasus:/
+      share: nfs.pegasus:/traefik.ddns-data
   certs:
     driver: nfs
     name: traefik.certs
     driver_opts:
-      create: "true"
-      share: nfs.pegasus:/
+      share: nfs.pegasus:/traefik.certs

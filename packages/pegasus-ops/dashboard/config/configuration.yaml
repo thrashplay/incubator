@@ -4,8 +4,11 @@ default_config:
 
 http:
   base_url: !secret http_base_url
-  use_x_forwarded_for: true
+  cors_allowed_origins:
+    - http://localhost
+    - http://localhost:3000
   trusted_proxies: 192.168.1.0/24
+  use_x_forwarded_for: true
 
 lifx:
   light:

@@ -185,8 +185,8 @@ steps:
     image: plugins/docker
     depends_on: [ clone ]
     settings:
-      context: packages/docker/nginx-proxy/ddns-sidecar
-      dockerfile: packages/docker/nginx-proxy/ddns-sidecar/Dockerfile
+      context: packages/docker/ddns-sidecar
+      dockerfile: packages/docker/ddns-sidecar/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
@@ -198,7 +198,7 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ packages/docker/nginx-proxy/ddns-sidecar/** ]
+        includes: [ packages/docker/ddns-sidecar/** ]
 
   - name: git-client
     image: plugins/docker
@@ -256,25 +256,6 @@ steps:
     when:
       changeset:
         includes: [ packages/docker/homeassistant/** ]
-
-  - name: nginx-proxy
-    image: plugins/docker
-    depends_on: [ clone ]
-    settings:
-      context: packages/docker/nginx-proxy/nginx-proxy
-      dockerfile: packages/docker/nginx-proxy/nginx-proxy/Dockerfile
-      force_tag: true
-      password:
-        from_secret: DOCKER_PASSWORD
-      repo: thrashplay/nginx-proxy
-      tags:
-        - latest
-        - ${DRONE_BRANCH}
-        - ${DRONE_BRANCH}-${DRONE_COMMIT}
-      username: thrashplay
-    when:
-      changeset:
-        includes: [ packages/docker/nginx-proxy/nginx-proxy/** ]
 
   - name: samba
     image: thrashplay/docker-edit
@@ -354,14 +335,14 @@ volumes:
 kind: pipeline
 type: docker
 name: build-amd64-images
-  
+
 depends_on:
   - build-drone-plugins
-  
+
 platform:
   arch: amd64
   os: linux
-  
+
 steps:
   - name: react-native-android
     image: plugins/docker
@@ -416,13 +397,13 @@ steps:
     when:
       changeset:
         includes: [ packages/docker/firebase-emulator/** ]
-  
+
 trigger:
   changeset:
     includes: [ packages/docker/** ]
   branch:
     - master
-      
+
 ---
 
 kind: pipeline

@@ -1,0 +1,59 @@
+version: '3.7'
+
+services:
+  strapi:
+    image: strapi/strapi
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        # http -> https configuration
+        - "traefik.http.routers.strapi-http.entrypoints=web"
+        - "traefik.http.routers.strapi-http.middlewares=https-redirect@file"
+        - "traefik.http.routers.strapi-http.rule=Host(`cms.the-pegasus.net`)"
+        # handle https
+        - "traefik.http.routers.strapi.entrypoints=websecure"
+        - "traefik.http.routers.strapi.middlewares=secure@file"
+        - "traefik.http.routers.strapi.rule=Host(`cms.the-pegasus.net`)"
+        - "traefik.http.routers.strapi.tls.certresolver=production"
+        - "traefik.http.routers.strapi.tls.options=default"
+        - "traefik.http.services.strapi-service.loadbalancer.server.port=1337"
+    environment:
+      DATABASE_CLIENT: postgres
+      DATABASE_NAME: strapi
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: strapi
+      DATABASE_PASSWORD: strapi
+    networks:
+      - webgateway
+      - default
+    volumes:
+      - app-data:/srv/app
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: strapi
+      POSTGRES_PASSWORD: strapi
+    volumes:
+      - postgres-data:/data/postgres
+
+networks:
+  default:
+    external: true
+    name: apptier
+  webgateway:
+    external: true
+    name: webgateway
+
+volumes:
+  app-data:
+    driver: nfs
+    name: strapi.app-data
+    driver_opts:
+      share: nfs.pegasus:/strapi.app-data
+  postgres-data:
+    driver: nfs
+    name: strapi.postgres-data
+    driver_opts:
+      share: nfs.pegasus:/strapi.postgres-data

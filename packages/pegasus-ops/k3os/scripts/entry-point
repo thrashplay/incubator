@@ -1,0 +1,114 @@
+#!/usr/bin/env bash
+
+set -e
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+function assert_config ()
+{
+  if [ -z "${!1}" ]; then
+    echo "You must supply a value for the '${1}' enviroment variable."
+    exit 1
+  fi
+}
+
+# assert_valid_value <VARIABLE_NAME> [OPTION_1] [OPTION_2] ... [OPTION_n]
+function assert_valid_value ()
+{
+  local variable_name="$1"    
+  shift              
+  local valid_options=("$@")
+
+  assert_config "${variable_name}"
+
+  local value=${!variable_name}
+  if [[ ! " ${valid_options[*]} " == *"${!variable_name}"* ]];
+  then
+    echo "Invalid value for ${variable_name} (${value}). Expected one of: ${valid_options}"
+    exit 1
+  fi
+}
+
+function create_k3os_image ()
+{
+  assert_valid_value OS_ARCH arm64
+  assert_valid_value OS_VERSION 0.11.0-rc1
+
+  echo "Not implemented."
+  exit -1
+}
+
+function create_raspios_image ()
+{
+  source "${SCRIPT_DIR}/raspios-utils"
+  mkdir -p work/mnt/boot
+  mkdir -p work/mnt/root
+  get_image work/original.img
+
+  # calculate parition offests (eww)
+  fdisk -l -o start,type work/original.img
+  local boot_offset=$(get_boot_partition_offset work/original.img)
+  local root_offset=$(get_root_partition_offset work/original.img)
+
+  if [ -z "${boot_offset}" ]; then
+    echo "Could not calculate start of /boot partition."
+    exit 1
+  fi
+
+  if [ -z "${root_offset}" ]; then
+    echo "Could not calculate start of / partition."
+    exit 1
+  fi
+
+  echo "Using /boot offset: ${boot_offset}"
+  echo "Using / offset: ${root_offset}"
+
+  set -x
+  local boot_loop=$(losetup -f --show -o ${boot_offset} work/original.img)
+  local root_loop=$(losetup -f --show -o ${root_offset} work/original.img)
+  mount ${boot_loop} work/mnt/boot
+  mount ${root_loop} work/mnt/root
+  { set +x; } 2>/dev/null 
+
+  echo "Customizing raspios image..."
+  customize_raspios_image work/mnt/root work/mnt/boot
+
+  set -x
+  umount work/mnt/boot
+  umount work/mnt/root
+  losetup -d $boot_loop
+  losetup -d $root_loop
+  { set +x; } 2>/dev/null
+
+  mv work/original.img work/pegasus-os-${OS_TYPE}-${OS_VERSION}-${OS_ARCH}.img
+  rm -f output/pegasus-os-${OS_TYPE}-${OS_VERSION}-${OS_ARCH}.zip
+  (cd work && zip -m -T ../output/pegasus-os-${OS_TYPE}-${OS_VERSION}-${OS_ARCH}.zip pegasus-os-${OS_TYPE}-${OS_VERSION}-${OS_ARCH}.img)
+
+  echo "*** Created: pegasus-os-${OS_TYPE}-${OS_VERSION}-${OS_ARCH}.zip"
+}
+
+function create_ubuntu_image ()
+{
+  assert_valid_value OS_ARCH arm64+raspi
+  assert_valid_value OS_VERSION 20.04
+
+  echo "Not implemented."
+  exit -1
+}
+
+assert_valid_value OS_TYPE k3os raspios_lite ubuntu
+case "${OS_TYPE}" in
+  k3os)
+    create_k3os_image
+    ;;
+  raspios_lite)
+    create_raspios_image
+    ;;
+  ubuntu)
+    create_ubuntu_image
+    ;;
+  *)
+    echo "Unknown OS_TYPE: ${OS_TYPE}"
+    exit 1
+    ;;
+esac

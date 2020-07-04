@@ -1,0 +1,15 @@
+volid PEGASUS
+blank as_needed
+
+# update k3os configuration files
+map ./config/grub.cfg /boot/grub/grub.cfg
+map ./config/config.yaml /k3os/system/config.yaml
+
+# make image bootable
+boot_image "any" "replay"
+boot_image "any" "efi_path=/efi.img"
+boot_image "any"
+
+# commit and close
+commit  
+end

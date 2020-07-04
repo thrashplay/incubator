@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+
+set -x
+
+. /boot/pegasus/config
+
+patch_os ()
+{
+  echo "Patching Raspbian..."
+  sudo apt-get update
+  sudo apt-get full-upgrade -y
+}
+
+create_admin_account () 
+{
+  echo "Creating admin account..."
+  sudo adduser "${ADMIN_ACCOUNT_NAME}" --gecos "Pegasus Administrator,,," --disabled-password
+  echo -n "${ADMIN_ACCOUNT_NAME}:${ADMIN_ACCOUNT_PASSWORD}" | sudo chpasswd
+  sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,gpio,i2c,spi "${ADMIN_ACCOUNT_NAME}"
+}
+
+configure_sudo ()
+{
+  echo "Configuring sudo..."
+  sudo -- bash -c "echo -n \"${ADMIN_ACCOUNT_NAME} ALL=(ALL) PASSWD: ALL\" > \"/etc/sudoers.d/010_${ADMIN_ACCOUNT_NAME}\""
+  sudo chmod 0440 "/etc/sudoers.d/010_${ADMIN_ACCOUNT_NAME}"
+}
+
+set_ssh_option ()
+{
+  if sudo egrep --quiet --line-regexp "${OPTION_NAME} .*" /etc/ssh/sshd_config; then
+    # line exists, so set it to 'no'
+    sudo sed -i "s/^${OPTION_NAME} .*\$/${OPTION_NAME} ${OPTION_VALUE}/" /etc/ssh/sshd_config
+  else
+    # line doesn't exist, append to end
+    sudo -- bash -c "echo \"${OPTION_NAME} ${OPTION_VALUE}\" >> /etc/ssh/sshd_config"
+  fi
+}
+
+configure_ssh ()
+{
+  echo "Configuring SSH..."
+  SSH_SCRIPT=$(cat <<-SCRIPT
+  mkdir -p ~/.ssh && touch ~/.ssh/known_hosts && touch ~/.ssh/config
+  echo "${ADMIN_PUBLIC_KEY}" > ~/.ssh/authorized_keys
+  chmod 700 ~/.ssh
+  chmod 644 ~/.ssh/authorized_keys
+  chmod 644 ~/.ssh/known_hosts
+  chmod 644 ~/.ssh/config
+SCRIPT
+  )
+  echo "${SSH_SCRIPT}" | sudo -u "${ADMIN_ACCOUNT_NAME}" -H bash
+
+  set_ssh_option ChallengeResponseAuthentication no
+  set_ssh_option PasswordAuthentication no
+  set_ssh_option UsePAM no
+}
+
+install_setup_service ()
+{
+  echo "Installing setup service..."
+  SERVICE=$(cat <<-SERVICE
+[Unit]
+Description=Pegasus Bootstrap Service
+After=network.target
+ConditionPathExists=/boot/pegasus
+
+[Service]
+ExecStart=/bin/bash /boot/pegasus/finish-setup
+WorkingDirectory=/home/${ADMIN_ACCOUNT_NAME}
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
+SERVICE
+  )
+
+  sudo -- bash -c "echo \"${SERVICE}\" >> /etc/systemd/system/pegasus-bootstrap.service"
+  sudo systemctl enable pegasus-bootstrap.service
+}
+
+
+configure_network ()
+{
+  echo "Configuring network..."
+  # firewall
+  sudo apt-get install -y fail2ban ufw
+  sudo sh -c "yes | ufw enable"
+  # limit SSH connections
+  sudo ufw limit ssh/tcp
+  # setup fail2ban
+  sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+
+  # host name
+  sudo -- bash -c "echo -n \"${HOSTNAME}\" > /etc/hostname"
+  sudo sed -i "s/^127\.0\.1\.1.*raspberrypi\$/127.0.1.1\t${HOSTNAME}/" /etc/hosts
+}
+
+#############################################################################
+# Secure the OS
+# See https://www.raspberrypi.org/documentation/configuration/security.md)
+#############################################################################
+
+patch_os
+create_admin_account
+configure_sudo
+configure_ssh
+install_setup_service
+configure_network
+
+#############################################################################
+# Finish
+#############################################################################
+sudo shutdown -r now

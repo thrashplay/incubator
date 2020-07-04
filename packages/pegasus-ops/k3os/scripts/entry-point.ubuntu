@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+set -e
+set -x
+
+if [ -z "${UBUNTU_ARCH}" ]; then
+  echo "You must supply a value for the 'UBUNTU_ARCH' enviroment variable."
+  exit 1
+fi
+
+if [ -z "${UBUNTU_VERSION}" ]; then
+  echo "You must supply a value for the 'UBUNTU_VERSION' enviroment variable."
+  exit 1
+fi
+
+if [ -z "${HOSTNAME}" ]; then
+  echo "You must supply a value for the 'HOSTNAME' enviroment variable."
+  exit 1
+fi
+
+IMAGE_DIRECTORY="images/ubuntu/${UBUNTU_VERSION}"
+IMAGE_FILE="${IMAGE_DIRECTORY}/ubuntu-preinstalled-server-${UBUNTU_ARCH}.img.xz"
+XZ_FILE="${IMAGE_FILE}.xz"
+
+if [ ! -f "${ARCHIVE_FILE}" ]; then
+  mkdir -p "${IMAGE_DIRECTORY}"
+  curl "http://cdimage.ubuntu.com/releases/${UBUNTU_VERSION}/release/ubuntu-${UBUNTU_VERSION}-preinstalled-server-${UBUNTU_ARCH}.img.xz" \
+    --location \
+    --silent \
+    --output "${XZ_FILE}"
+  unxz "${XZ_FILE}"
+fi 
+
+

@@ -1,0 +1,99 @@
+set -e
+
+function get_image ()
+{
+  local filename_base
+  case "${OS_VERSION}" in
+    2020-05-28)
+      filename_base="2020-05-27-raspios-buster-lite-${OS_ARCH}"
+      ;;
+  esac
+  
+  local filename="${filename_base}.zip"
+  local local_image_directory="$(pwd)/images/raspios_lite/${OS_VERSION}/${OS_ARCH}"
+  local local_image_file="${local_image_directory}/${filename}"
+  local local_digest_file="${local_image_file}.sha256"
+
+  local download_url="http://downloads.raspberrypi.org/raspios_lite_${OS_ARCH}/images/raspios_lite_${OS_ARCH}-${OS_VERSION}/${filename}"
+  local digest_url="${download_url}.sha256"
+
+  if [ ! -f "${local_digest_file}" ] || ! (cd "${local_image_directory}" && sha256sum --quiet --check "${local_digest_file}"); then
+    rm -f "${local_image_file}"
+    rm -f "${local_digest_file}"
+
+    set -x
+    curl "${digest_url}" \
+      --location \
+      --silent \
+      --output "${local_digest_file}"
+
+    curl "${download_url}" \
+      --location \
+      --silent \
+       --output "${local_image_file}"
+
+    (cd "${local_image_directory}" && sha256sum --check "${local_digest_file}")
+    { set +x; } 2>/dev/null
+  else
+    echo "Using previously downloaded image."
+  fi
+
+  mkdir -p /tmp/raspios-work
+  unzip "${local_image_file}" -d /tmp/raspios-work
+  mv "/tmp/raspios-work/${filename_base}.img" "$1"
+  rm -rf /tmp/raspios-work
+}
+
+function get_sector_size ()
+{
+  local image_file="$1"
+
+  local sector_size=$( \
+    fdisk -l -o start,type "${image_file}" | \
+      egrep --only-matching --line-regexp "Units: sectors of [0-9]+ \* [0-9]+ = [0-9]+ bytes" | \
+      sed -e 's/.*= \([0-9]\+\) bytes/\1/g' )
+
+  if [ ! -z "${sector_size}" ]; then
+    echo $sector_size
+  fi
+}
+
+function get_partition_offset ()
+{
+  local image_file="$1"
+  local partition_type="$2"
+
+  local sector_size=$(get_sector_size "${image_file}")
+
+  if [ ! -z "${sector_size}" ]; then
+    local start=$( \
+      fdisk -l -o start,type work/original.img | \
+        egrep --only-matching --line-regexp "\s*[0-9]+\s+${partition_type}.*" |
+        awk '{print $1}' )
+    
+    if [ ! -z "${start}" ]; then
+      echo $((sector_size * start))
+    fi
+  fi
+}
+
+function get_boot_partition_offset ()
+{
+  local image_file="$1"
+  echo $(get_partition_offset "${image_file}" "W95 FAT32")
+}
+
+function get_root_partition_offset ()
+{
+  local image_file="$1"
+  echo $(get_partition_offset "${image_file}" "Linux")
+}
+
+function customize_raspios_image ()
+{
+  local root_path="$1"
+  local boot_path="$2"
+
+  cp config/wpa_supplicant.conf "${boot_path}"
+  touch "${boot_path}/ssh"
+}

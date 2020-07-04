@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+set -e
+set -x
+
+if [ -z "${K3OS_ARCH}" ]; then
+  echo "You must supply a value for the 'K3OS_ARCH' enviroment variable."
+  exit 1
+fi
+
+if [ -z "${K3OS_VERSION}" ]; then
+  echo "You must supply a value for the 'K3OS_VERSION' enviroment variable."
+  exit 1
+fi
+
+if [ -z "${HOSTNAME}" ]; then
+  echo "You must supply a value for the 'HOSTNAME' enviroment variable."
+  exit 1
+fi
+
+IMAGE_DIRECTORY="images/k3os/${K3OS_VERSION}"
+ISO_FILE="${IMAGE_DIRECTORY}/k3os-${K3OS_ARCH}.iso"
+
+if [ ! -f "${ISO_FILE}" ]; then
+  mkdir -p "${IMAGE_DIRECTORY}"
+  curl "https://github.com/rancher/k3os/releases/download/v${K3OS_VERSION}/k3os-${K3OS_ARCH}.iso" \
+    --location \
+    --silent \
+    --output "${ISO_FILE}"
+fi 
+
+echo "hostname: ${HOSTNAME}" > config/config.yaml
+
+# xorriso doesn't play nice with bind mounts, so we copy files before and after editing them
+mkdir -p work
+cp "${ISO_FILE}" work/source.iso
+
+# update system configuration in ISO
+xorriso \
+  -indev work/source.iso \
+  -outdev work/output.iso \
+  -options_from_file config/xorriso.opt
+
+# copy to destination
+cp work/output.iso "output/pegasus-os-${K3OS_VERSION}-${K3OS_ARCH}.iso"
+
+# clean up
+rm -rf work
+

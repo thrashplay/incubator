@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+set -x
+
+. /boot/pegasus/config
+
+remove_default_user ()
+{
+  echo "Remove 'pi' account..."
+  deluser -remove-home pi
+  rm -f /etc/sudoers.d/010_pi-nopasswd
+}
+
+install_docker ()
+{
+  echo "Installing Docker..."
+  apt-get remove docker docker-engine docker.io runc
+  curl -fsSL https://get.docker.com -o get-docker.sh
+  sh get-docker.sh
+  usermod -aG docker "${ADMIN_ACCOUNT_NAME}"
+  rm get-docker.sh
+}
+
+cleanup ()
+{
+  # remove bootstrap configuration
+  rm -rf /boot/pegasus
+}
+
+#############################################################################
+# Setup Docker
+#############################################################################
+remove_default_user
+install_docker
+cleanup

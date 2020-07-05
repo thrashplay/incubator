@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+set -e
+
+# info on enlarging a disk image: https://unix.stackexchange.com/questions/217013/enlarge-a-filesystem-image
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+source "${SCRIPT_DIR}/disk-image-utils"
+
+assert_config INPUT_DISK_IMAGE_PATH
+assert_valid_file "${INPUT_DISK_IMAGE_PATH}"
+
+assert_config SCRIPT
+assert_valid_file "${SCRIPT}"
+
+LOSETUP_ARGS=(-f --show)
+# add partition offset argument, if we have a valid PARTITION_NUMBER configuration
+if [ ! -z "${PARTITION_NUMBER}" ]; then
+  regex='^[0-9]+$'
+  if ! [[ "${PARTITION_NUMBER}" =~ $regex ]]; then
+    die "PARTITION_NUMBER must be a number."
+  fi
+  if [ ! "${PARTITION_NUMBER}" -gt 0 ]; then
+    die "PARTITION_NUMBER must be greater than zero."
+  fi
+
+  LOSETUP_ARGS+=(-o $(get_partition_offset "${INPUT_DISK_IMAGE_PATH}" "${PARTITION_NUMBER}"))
+fi
+LOSETUP_ARGS+=("${INPUT_DISK_IMAGE_PATH}")
+
+mkdir -p mnt
+set -x
+LOOP_DEVICE=$(losetup "${LOSETUP_ARGS[@]}")
+# we want to make sure we run the `umount` and `losetup -d` commands, even if previous commands fail
+# consider: http://redsymbol.net/articles/bash-exit-traps/
+set +e
+
+# mount the image and perform the edits
+mount "${LOOP_DEVICE}" mnt && \
+  cp "${SCRIPT}" mnt/tmp/edit-disk-image && \
+  chroot mnt /bin/bash /tmp/edit-disk-image && \
+  rm mnt/tmp/edit-disk-image
+
+# clean up
+umount mnt
+losetup -d "${LOOP_DEVICE}"
+
+set -e
+{ set +x; } 2>/dev/null

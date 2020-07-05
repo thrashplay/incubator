@@ -5,11 +5,6 @@ ARG DEFAULT_OS_TYPE=raspios_lite
 ARG DEFAULT_OS_ARCH=armhf
 ARG DEFAULT_OS_VERSION=2020-05-28
 
-ENV \
-  OS_TYPE="${DEFAULT_OS_TYPE}" \
-  OS_ARCH="${DEFAULT_OS_ARCH}" \
-  OS_VERSION="${DEFAULT_OS_VERSION}"
-
 VOLUME /osbuilder/images
 VOLUME /osbuilder/output
 
@@ -33,4 +28,9 @@ COPY scripts /usr/local/bin
 RUN chmod +x /usr/local/bin/*
 
 WORKDIR /osbuilder
+ENV \
+  OS_TYPE="${DEFAULT_OS_TYPE}" \
+  OS_ARCH="${DEFAULT_OS_ARCH}" \
+  OS_VERSION="${DEFAULT_OS_VERSION}"
+
 ENTRYPOINT [ "/usr/local/bin/entry-point" ]

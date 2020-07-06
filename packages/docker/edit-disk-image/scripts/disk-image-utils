@@ -114,6 +114,34 @@ function get_partition_start ()
   fi
 }
 
+# Gets the filesystem type for a specific partition within a multi-partition
+function get_partition_type ()
+{
+  local disk_image_file="$1"
+  local partition_number="$2"
+
+  if [ -z "${disk_image_file}" ]; then
+    die "You must supply an argument containing the disk image filename."
+  fi
+  if [ ! -f "${disk_image_file}" ]; then
+    die "Disk image file does not exist: ${disk_image_file}"
+  fi
+  if [ -z "${partition_number}" ] || [ ! "${partition_number}" -gt 0 ]; then
+    die "You must supply a partition number greater than 0."
+  fi
+  local partition_line_number=$((partition_number + 8))
+
+  local type=$( \
+    fdisk -l -o type "${disk_image_file}" | \
+      sed -n "${partition_line_number} p" )
+      
+  if [ ! -z "${type}" ]; then
+    echo "${type}"
+  else
+    die "Unable to read filesystem type for partition ${partition_number} from 'fdisk' result."
+  fi
+}
+
 # Gets the offset (suitable for use in `mount`) for a specific partition within a multi-partition
 # image
 function get_partition_offset ()

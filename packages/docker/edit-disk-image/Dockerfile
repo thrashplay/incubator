@@ -1,31 +1,21 @@
 FROM ubuntu:20.04
 
-# install dependencies
-# RUN apt-get update 
-# RUN apt-get --quiet --yes install \ 
-#       curl \
-#       nano \
-#       unzip \
-#       xorriso \
-#       xz-utils \
-#       zip \
-#     && \
-#     apt-get clean
-
 # copy scripts to image
 COPY scripts /usr/local/bin
 RUN chmod +x /usr/local/bin/*
 
 WORKDIR /app
 
-# Supported: k3os, raspios_lite, ubuntu
-ARG DEFAULT_INPUT_DISK_IMAGE_PATH=/app/images/original.img
+ARG DEFAULT_DISK_IMAGE_PATH=/app/data/disk.img
+ARG DEFAULT_FILES_TO_MOUNT=""
+ARG DEFAULT_MOUNT_PATH=/mnt
 ARG DEFAULT_PARTITION_NUMBER=""
-ARG DEFAULT_SCRIPT=/app/script/edit-disk-image
+ARG DEFAULT_SCRIPT=/app/scripts/edit-disk-image
 
 ENV \
-  CHROOT=false \
-  INPUT_DISK_IMAGE_PATH="${DEFAULT_INPUT_DISK_IMAGE_PATH}" \
+  DISK_IMAGE_PATH="${DEFAULT_DISK_IMAGE_PATH}" \
+  FILES_TO_MOUNT="${DEFAULT_FILES_TO_MOUNT}" \
+  MOUNT_PATH="${DEFAULT_MOUNT_PATH}" \
   PARTITION_NUMBER="${DEFAULT_PARTITION_NUMBER}" \
   SCRIPT="${DEFAULT_SCRIPT}"
 

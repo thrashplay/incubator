@@ -8,11 +8,31 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 source "${SCRIPT_DIR}/disk-image-utils"
 
-assert_config INPUT_DISK_IMAGE_PATH
-assert_valid_file "${INPUT_DISK_IMAGE_PATH}"
+assert_config DISK_IMAGE_PATH
+assert_valid_file "${DISK_IMAGE_PATH}"
 
 assert_config SCRIPT
 assert_valid_file "${SCRIPT}"
+
+MOUNT_POINT=
+if [ ! -z "${FILES_TO_MOUNT}" ]; then
+  if [ -z "${MOUNT_PATH}" ]; then
+    die "When specifying FILES_TO_MOUNT, you must also specify a MOUNT_PATH."
+  fi
+
+  regex='^/.*$'
+  if ! [[ "${MOUNT_PATH}" =~ $regex ]]; then
+    die "MOUNT_PATH must be an absolute path."
+  fi
+
+  MOUNT_POINT_REALPATH=$(realpath --canonicalize-missing --relative-base=image-root "image-root${MOUNT_PATH}")
+  # if this path is absolute, it means we moved up out of our intended base directory
+  # because this could be an attempt to do something nefarious, we keep the error generic
+  if [[ "${MOUNT_POINT_REALPATH}" =~ $regex ]]; then
+    die "MOUNT_PATH is invalid."
+  fi
+  MOUNT_POINT="image-root/${MOUNT_POINT_REALPATH}"
+fi
 
 LOSETUP_ARGS=(-f --show)
 # add partition offset argument, if we have a valid PARTITION_NUMBER configuration
@@ -25,26 +45,33 @@ if [ ! -z "${PARTITION_NUMBER}" ]; then
     die "PARTITION_NUMBER must be greater than zero."
   fi
 
-  LOSETUP_ARGS+=(-o $(get_partition_offset "${INPUT_DISK_IMAGE_PATH}" "${PARTITION_NUMBER}"))
-fi
-LOSETUP_ARGS+=("${INPUT_DISK_IMAGE_PATH}")
+  PARTITION_TYPE=$(get_partition_type "${DISK_IMAGE_PATH}" "${PARTITION_NUMBER}")
+  if [ "${PARTITION_TYPE}" != "Linux" ]; then
+    echo "Expected 'Linux' partition type, but found: ${PARTITION_TYPE}."
+    echo "This is probably not going to work as expected..."
+  fi
 
-mkdir -p mnt
-set -x
+  LOSETUP_ARGS+=(-o $(get_partition_offset "${DISK_IMAGE_PATH}" "${PARTITION_NUMBER}"))
+fi
+LOSETUP_ARGS+=("${DISK_IMAGE_PATH}")
+
+mkdir -p image-root
+# set -x
 LOOP_DEVICE=$(losetup "${LOSETUP_ARGS[@]}")
+
 # we want to make sure we run the `umount` and `losetup -d` commands, even if previous commands fail
 # consider: http://redsymbol.net/articles/bash-exit-traps/
 set +e
 
 # mount the image and perform the edits
-mount "${LOOP_DEVICE}" mnt && \
-  cp "${SCRIPT}" mnt/tmp/edit-disk-image && \
-  chroot mnt /bin/bash /tmp/edit-disk-image && \
-  rm mnt/tmp/edit-disk-image
+mount "${LOOP_DEVICE}" image-root && \
+  ([ ! -z "${FILES_TO_MOUNT}" ] && mkdir -p "${MOUNT_POINT}" && mount --bind "${FILES_TO_MOUNT}" "${MOUNT_POINT}") && \
+  cat "${SCRIPT}" | chroot image-root bash -
 
-# clean up
-umount mnt
+# clean up devices and mounts
+([ ! -z "${FILES_TO_MOUNT}" ] && umount "${MOUNT_POINT}")
+umount image-root
 losetup -d "${LOOP_DEVICE}"
 
 set -e
-{ set +x; } 2>/dev/null
+# { set +x; } 2>/dev/null

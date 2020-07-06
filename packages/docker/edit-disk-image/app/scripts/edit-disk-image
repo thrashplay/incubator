@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+adduser --disabled-password --gecos "" sean
+echo sean:thepass | chpasswd
+cat "/mnt/edit-config/blah.txt"

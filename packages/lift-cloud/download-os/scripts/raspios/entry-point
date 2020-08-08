@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+: ${IMAGE_PATH?You must supply a value for the 'IMAGE_PATH' enviroment variable.}
+: ${OS_ARCH?You must supply a value for the 'OS_ARCH' enviroment variable.}
+: ${OS_VERSION?You must supply a value for the 'OS_VERSION' enviroment variable.}
+
+# IMAGE_FILE="${IMAGE_DIRECTORY}/ubuntu-preinstalled-server-${UBUNTU_ARCH}.img.xz"
+# XZ_FILE="${IMAGE_FILE}.xz"
+
+# if [ ! -f "${ARCHIVE_FILE}" ]; then
+#   mkdir -p "${IMAGE_DIRECTORY}"
+#   curl "http://cdimage.ubuntu.com/releases/${UBUNTU_VERSION}/release/ubuntu-${UBUNTU_VERSION}-preinstalled-server-${UBUNTU_ARCH}.img.xz" \
+#     --location \
+#     --silent \
+#     --output "${XZ_FILE}"
+#   unxz "${XZ_FILE}"
+# fi 
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+source "${SCRIPT_DIR}/shared-utils"
+
+SUMS_FILE="/d/sandbox/incubator-node/packages/pegasus-ops/k3os/images-src/raspios_lite/2020-05-28/armhf/2020-05-27-raspios-buster-lite-armhf.zip.sha256"
+IMAGE_FILE="2020-05-27-raspios-buster-lite-armhf.zip"
+verify_sha256 "${SUMS_FILE}" "${IMAGE_FILE}" || echo "Image file verification failed."
+
+

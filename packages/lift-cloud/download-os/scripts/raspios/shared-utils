@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# Verifies that a file matches the SHA256 sum stored in a specified sums file
+#
+# Input:
+#   - the path to the sums file, as created by sha256sum
+#   - the name of the file to verify, which must be in the same directory as the sums file
+#
+# Returns:
+#   - 0 on successful verification
+#   - 1 on validation failure
+function verify_sha256 () 
+{
+  local sums_file_path="$1"
+  local directory=$(dirname "${sums_file_path}")
+  local file_to_verify="$2"
+
+  local argument_errors=$(
+    [[ -n "${sums_file_path}" ]] || echo "You must supply a path to the sums file."
+    [[ -n "${file_to_verify}" ]] || echo "You must supply the name of a file to verify."
+
+    [[ -n "${sums_file_path}" ]] && ([[ -f "${sums_file_path}" ]] || echo "Sums file path does not exist: ${sums_file_path}")
+    [[ -n "${file_to_verify}" ]] && ([[ -f "${directory}/${file_to_verify}" ]] || echo "File path does not exist: ${file_to_verify}")
+  )
+
+  if [[ -n "${argument_errors}" ]]; then
+    echo "${argument_errors}"
+    return 1
+  fi
+
+  sha256sum --ignore-missing --check "${sums_file_path}"
+}

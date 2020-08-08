@@ -1,4 +1,4 @@
-FROM homeassistant/home-assistant:stable
+FROM homeassistant/home-assistant:0.110.2
 
 RUN apk update && apk add --no-cache tini
 

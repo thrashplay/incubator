@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { Text } from 'react-native'
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper'
+
 import 'react-native-gesture-handler'
+import { LightControls } from './light-controls'
 // import { Provider } from 'react-redux'
 
 
@@ -26,7 +28,7 @@ export class App extends Component {
     return (
       // <Provider store={store}>
       <PaperProvider theme={theme}>
-        <Text>Hello, from Sophia!</Text>
+        <LightControls />
       </PaperProvider>
       // </Provider>
     )

@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+
+read -r -d '' HELP_TEXT <<-HELP
+Usage: get-extracted-image [OPTION]... 
+Downloads and extracts a Raspbian OS image
+
+If this command completes successfully, then the requested Raspbian image will be downloaded and
+unzipped to the path given by '--destination'. Additionally, a SHA256 checksum file for the unzipped
+image will be generated. If the image file already exists, and matches the saved checksum file, then 
+it will not be downloaded or extracted again. 
+
+Requires the verify-single-sha256 and download-and-verify utilities to be on the path.
+
+The following options are required:
+      --destination=<dest>  path at which to save the extracted image file
+
+The following additional arguments may be specified:
+  -h, --help                show this help message
+HELP
+
+function parse_args ()
+{
+  for i in "$@"; do
+    case $i in
+        --destination=*)
+        DESTINATION="${i#*=}"
+        shift
+        ;;
+        -h|--help)
+        SHOW_HELP=true
+        shift
+        ;;
+    esac
+  done
+}
+
+function verify_image ()
+{
+  [[ -f "${DESTINATION}" ]] || return 1
+  [[ -f "${DESTINATION}.sha256" ]] || return 1
+  (verify-single-sha256 --file="${DESTINATION_FILENAME}" --sums="${DESTINATION}.sha256" --quiet) || return 1
+}
+
+function download_image ()
+{
+  download-and-verify \
+    --destination="${DESTINATION}" \
+    --sha256-url="https://storage.googleapis.com/lift-cloud-download-test-1234/download-and-verify.sha256" \
+    --url="https://storage.googleapis.com/lift-cloud-download-test-1234/download-and-verify" || return 1
+}
+
+parse_args "$@"|| exit 1
+
+if [[ "${SHOW_HELP}" == "true" ]]; then
+  echo "${HELP_TEXT}"
+  exit 0
+fi
+
+: ${DESTINATION?You must supply a '--destination' argument.}
+DESTINATION_DIR=$(dirname "${DESTINATION}")
+DESTINATION_FILENAME=${DESTINATION##*/}
+
+verify_image || (
+  set -e
+  download_image
+  cd "${DESTINATION_DIR}"
+
+
+/d/sandbox/incubator-node/packages/pegasus-ops/k3os/images-src/raspios_lite/2020-05-28/armhf (wip/pi-init) $ unzip -l 2020-05-27-raspios-buster-lite-armhf.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+1853882368  2020-05-27 02:24   2020-05-27-raspios-buster-lite-armhf.img
+---------                     -------
+1853882368                     1 file
+
+
+
+/d/sandbox/incubator-node/packages/pegasus-ops/k3os/images-src/raspios_lite/2020-05-28/armhf (wip/pi-init) $ unzip -l -qq 2020-05-27-raspios-buster-lite-armhf.zip
+1853882368  2020-05-27 02:24   2020-05-27-raspios-buster-lite-armhf.img
+
+
+  unzip "${DESTINATION_FILENAME}" this needs to take zip file name, and file in zip to extract
+  sha256sum "${DESTINATION_FILENAME}" > "${DESTINATION_FILENAME}.sha256"
+  set +e
+)

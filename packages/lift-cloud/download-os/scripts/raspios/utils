@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+set -e
+
+function get_image ()
+{
+  local filename_base
+  case "${OS_VERSION}" in
+    2020-05-28)
+      filename_base="2020-05-27-raspios-buster-lite-${OS_ARCH}"
+      ;;
+  esac
+  
+  local filename="${filename_base}.zip"
+  local local_image_directory="$(pwd)/images/raspios_lite/${OS_VERSION}/${OS_ARCH}"
+  local local_image_file="${local_image_directory}/${filename}"
+  local local_digest_file="${local_image_file}.sha256"
+
+  local download_url="http://downloads.raspberrypi.org/raspios_lite_${OS_ARCH}/images/raspios_lite_${OS_ARCH}-${OS_VERSION}/${filename}"
+  local digest_url="${download_url}.sha256"
+
+  if [ ! -f "${local_digest_file}" ] || ! (cd "${local_image_directory}" && sha256sum --quiet --check "${local_digest_file}"); then
+    rm -f "${local_image_file}"
+    rm -f "${local_digest_file}"
+
+    set -x
+    curl "${digest_url}" \
+      --location \
+      --silent \
+      --output "${local_digest_file}"
+
+    curl "${download_url}" \
+      --location \
+      --silent \
+       --output "${local_image_file}"
+
+    (cd "${local_image_directory}" && sha256sum --check "${local_digest_file}")
+    { set +x; } 2>/dev/null
+  else
+    echo "Using previously downloaded image."
+  fi
+
+  mkdir -p /tmp/raspios-work
+  unzip "${local_image_file}" -d /tmp/raspios-work
+  mv "/tmp/raspios-work/${filename_base}.img" "$1"
+  rm -rf /tmp/raspios-work
+}

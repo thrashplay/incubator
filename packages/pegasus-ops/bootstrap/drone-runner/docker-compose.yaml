@@ -7,7 +7,7 @@ services:
       DRONE_RPC_HOST: drone.thrashplay.com
       DRONE_RPC_PROTO: https 
       DRONE_RUNNER_MAX_PROCS: 2
-      DRONE_RUNNER_NAME: control.pegasus
+      DRONE_RUNNER_NAME: pegasus
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     secrets:

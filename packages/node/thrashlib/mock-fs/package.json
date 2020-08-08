@@ -19,10 +19,6 @@
     "lodash": "4.17.15",
     "metro-memory-fs": "0.57.0"
   },
-  "devDependencies": {
-    "@types/lodash": "4.14.149",
-    "patch-package": "6.2.0"
-  },
   "publishConfig": {
     "access": "public"
   }

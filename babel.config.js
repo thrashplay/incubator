@@ -1,4 +1,6 @@
 module.exports = (api) => {
+  api.cache.forever()
+
   return {
     plugins: [
       'dev-expression',
@@ -9,7 +11,7 @@ module.exports = (api) => {
         '@babel/preset-env',
         {
           corejs: 3,
-          modules: api.env('test') ? 'commonjs' : false,
+          // modules: api.env('test') ? 'commonjs' : false,
           debug: false,
           targets: {
             node: 'current',

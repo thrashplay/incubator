@@ -23,9 +23,6 @@
     "typesafe-actions": "5.1.0",
     "yup": "0.28.5"
   },
-  "devDependencies": {
-    "redux-devtools": "3.5.0"
-  },
   "peerDependencies": {
     "@react-navigation/drawer": "5.x",
     "@react-navigation/material-bottom-tabs": "5.x",

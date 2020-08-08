@@ -1,6 +1,6 @@
 {
   "name": "@thrashplay/sophia-web",
-  "version": "0.1.0-next.1",
+  "version": "0.1.0-next.2",
   "description": "Sophia: Web Application",
   "private": true,
   "author": "Sean Kleinjung <sean@thrashplay.com>",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@babel/runtime": "7.7.2",
-    "@thrashplay/sophia-ui": "^0.1.0-next.1",
+    "@thrashplay/sophia-ui": "^0.1.0-next.2",
     "react-native": "0.61.5",
     "react-native-web": "0.12.2"
   },

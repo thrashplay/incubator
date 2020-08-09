@@ -1,0 +1,22 @@
+{
+  "name": "@thrashplay/icy-eye-core",
+  "version": "0.0.1",
+  "description": "Icy Eye: Core",
+  "private": true,
+  "license": "MIT",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "files": [
+    "lib/**"
+  ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "@babel/runtime": "7.6.2"
+  },
+  "devDependencies": {
+    "typed-emitter": "1.2.0"
+  }
+}

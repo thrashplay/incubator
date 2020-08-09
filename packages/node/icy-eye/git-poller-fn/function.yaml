@@ -1,0 +1,15 @@
+version: 1.0
+
+provider:
+  name: openfaas
+  gateway: https://fn.thrashplay.com
+
+functions:
+  git-poller:
+    lang: node12-thrashplay
+    handler: '.'
+    image: thrashplay/git-poller-fn:latest
+    build_args:
+      ADDITIONAL_PACKAGES: "git openssh-client"
+      
+

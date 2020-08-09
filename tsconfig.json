@@ -25,6 +25,7 @@
     "noUnusedLocals": true,
     "paths": {
       "@ringlet/*": ["ringlet/*/src"],
+      "@thrashplay/icy-eye-*": ["icy-eye/*/src"],
       "@thrashplay/webpack-utils": ["thrashlib/webpack-utils/lib"],
       "@thrashplay/*": ["thrashlib/*/src"],
       "@thrashplay/sophia-*": ["sophia/*/src"]

@@ -1,6 +1,6 @@
 import { Request } from 'express'
 
-import { handler } from './handler'
+import * as operations from './v1/routes'
 
 export interface FaasContext {
   fail: (err: Error) => void
@@ -21,4 +21,7 @@ type FaasHandler = (event: FaasEvent, context: FaasContext) => any
 type FaasHandlerOptions = {}
 export const createFaasHandler = (delegate: FaasHandler, options?: FaasHandlerOptions): FaasHandler => delegate
 
-module.exports = createFaasHandler(handler)
+// module.exports = createFaasHandler(handler)
+
+export const getApiDocPath = () => 'v1/openapi.yaml'
+export const getOperations = () => operations

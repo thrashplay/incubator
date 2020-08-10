@@ -1,0 +1,17 @@
+{
+  "plugins": {
+    "@dtsgenerator/replace-namespace": {
+        "map": [
+          {
+            "from": ["Components", "Responses"],
+            "to": ["SourceControlService", "API"]
+          },
+          {
+            "from": ["Components", "Schemas"],
+            "to": ["SourceControlService"]
+          }
+        ]
+    },
+    "@dtsgenerator/single-quote": true
+  }
+}

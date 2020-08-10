@@ -5,10 +5,10 @@ provider:
   gateway: https://fn.thrashplay.com
 
 functions:
-  git-poller:
-    lang: node12-thrashplay
+  source-control-api:
+    lang: node12-openapi-service
     handler: '.'
-    image: thrashplay/git-poller-fn:latest
+    image: thrashplay/source-control-api:latest
     build_args:
       ADDITIONAL_PACKAGES: "git openssh-client"
       

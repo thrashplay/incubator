@@ -4,7 +4,7 @@ import { isEmpty, split } from 'lodash'
 import simpleGit, { SimpleGit } from 'simple-git'
 import tmp from 'tmp'
 
-import { FaasEvent, FaasContext } from './index'
+import { FaasEvent, FaasContext } from '../index'
 
 export interface Parameters {
   branch: string
@@ -37,6 +37,7 @@ const getRemote = async (options: Parameters) => {
   }
 }
 
+type Response = SourceControlService.API.GetRepositoriesResponse
 export const handler = async (event: FaasEvent<Parameters>, context: FaasContext) => {
   const { branch, repositoryUrl } = event.body
 
@@ -49,5 +50,9 @@ export const handler = async (event: FaasEvent<Parameters>, context: FaasContext
   const lastCommit = split(remote, /\s/)[0]
   return context
     .status(200)
-    .succeed({ branch, lastCommit, repositoryUrl })
+    .succeed({ 
+      branch, 
+      lastCommit, 
+      repositoryUrl,
+    })
 }

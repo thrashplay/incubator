@@ -1,0 +1,110 @@
+openapi: '3.0.3'
+info:
+  title: 'Source Control Service'
+  version: '1.0.0'
+
+components:
+  responses:
+    BadRequest:
+      description: Error response caused by invalid inputs in the request.
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Error'
+              - type: object
+                properties:
+                  code:
+                    enum:
+                      - '0'
+                  status:
+                    enum:
+                      - 400
+
+    InternalServerError:
+      description: Error response caused by an unspecified error on the server.
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Error'
+              - type: object
+                properties:
+                  code:
+                    enum:
+                      - '0'
+                  status:
+                    enum:
+                      - 500
+
+  schemas:
+    Error:
+      description: Error response schema.
+      type: object
+      properties:
+        code:
+          description: Error code indicating the type of failure.
+          type: string
+        details:
+          description: Additional information about the error, if available.
+        status:
+          description: HTTP status code associated with the error.
+          type: number
+      required:
+        - code
+        - status
+
+    GitRepository:
+      description: A Git source code repository.
+      type: object
+      properties:
+        id:
+          type: string
+        repositoryType:
+          type: string
+          enum:
+            - git
+        url:
+          description: URL for this repository.
+          type: string
+      required:
+        - id
+        - repositoryType
+        - url
+
+    SourceCodeRepository:
+      discriminator:
+        propertyName: repositoryType
+        mapping:
+          git: '#/components/schemas/GitRepository'
+      oneOf:
+        - $ref: '#/components/schemas/GitRepository'
+
+paths:
+  /repositories:
+    get:
+      summary: Retrieves a list of all source code repositories known to the system.
+      operationId: getRepositories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+      responses:
+        400:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+        200:
+          description: Details for all source code repositories.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SourceCodeRepository'
+                required:
+                  - data

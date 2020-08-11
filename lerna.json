@@ -18,6 +18,7 @@
   "useWorkspaces": true,
   "packages": [ 
     "packages/node/devops/config-version-helper",
+    "packages/node/icy-eye/*",
     "packages/node/thrashlib/*"
   ],
   "version": "independent"

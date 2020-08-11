@@ -26,6 +26,8 @@
     "paths": {
       "@ringlet/*": ["ringlet/*/src"],
       "@thrashplay/icy-eye-*": ["icy-eye/*/src"],
+      "@thrashplay/source-control-service": ["icy-eye/source-control-service/src"],
+      "@thrashplay/source-control-api": ["icy-eye/source-control-api/src"],
       "@thrashplay/webpack-utils": ["thrashlib/webpack-utils/lib"],
       "@thrashplay/*": ["thrashlib/*/src"],
       "@thrashplay/sophia-*": ["sophia/*/src"]

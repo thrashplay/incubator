@@ -1,0 +1,7 @@
+{
+  "npmName": "@thrashplay/source-control-api",
+  "snapshot" : false,
+  "supportsES6": true,
+  "typescriptThreePlus": true,
+  "withInterfaces": true
+}

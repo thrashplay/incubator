@@ -1,22 +1,16 @@
 {
-  "extends": "../../../../tsconfig.json",
   "compilerOptions": {
     "declaration": true,
-    "declarationDir": "lib",
-    "jsx": "react-native",
-    "lib": ["DOM"],
-    "noUnusedLocals": false,
-    "outDir": "lib",
-    "rootDir": "src"
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "typeRoots": [
+      "node_modules/@types"
+    ]
   },
-  "include": [
-    "src/**/*.js",
-    "src/**/*.json",
-    "src/**/*.jsx",
-    "src/**/*.svg",
-    "src/**/*.ts",
-    "src/**/*.tsx"
-  ],
-  "references": [
+  "exclude": [
+    "dist",
+    "node_modules"
   ]
 }

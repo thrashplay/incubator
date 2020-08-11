@@ -1,32 +1,15 @@
 {
-  "name": "@thrashplay/icy-eye-source-control-api",
-  "version": "0.0.1",
-  "description": "Icy Eye: Source Control Management API",
-  "author": "Sean Kleinjung <sean@thrashplay.com>",
-  "files": [
-    "lib/**"
-  ],
-  "license": "MIT",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "private": true,
+  "name": "@thrashplay/source-control-api",
+  "version": "1.0.0",
+  "description": "OpenAPI client for @thrashplay/source-control-api",
+  "author": "OpenAPI-Generator",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
   "scripts": {
-    "build": "run-s build:generate build:js",
-    "build:generate": "yarn dtsgen --out src/v1/types.d.ts src/v1/openapi.yaml",
-    "build:js": "yarn babel --root-mode upward src --out-dir lib --copy-files --extensions .ts,.tsx,.js.jsx",
-    "clean": "rm -rf lib",
-    "deploy": "run-s faas:build faas:push faas:deploy",
-    "faas:build": "yarn build && faas-cli template pull https://github.com/thrashplay/openfaas-templates --overwrite && faas-cli build -f function.yaml",
-    "faas:deploy": "faas-cli deploy -f function.yaml",
-    "faas:push": "faas-cli push -f function.yaml",
-    "get-pod-name": "kubectl -n openfaas-fn get pod --no-headers --output custom-columns=:{.metadata.name} --sort-by={.status.startTime} -l faas_function=source-control-api | tail -1",
-    "logs": "yarn run --silent get-pod-name | xargs kubectl -n openfaas-fn logs -f",
-    "test": "echo \"Package does not have any tests!\" && exit 0"
+    "build": "tsc",
+    "prepare": "npm run build"
   },
-  "dependencies": {
-    "lodash": "4.17.19",
-    "openapi-backend": "3.5.1",
-    "simple-git": "2.17.0",
-    "tmp": "0.2.1"
+  "devDependencies": {
+    "typescript": "^3.6"
   }
 }

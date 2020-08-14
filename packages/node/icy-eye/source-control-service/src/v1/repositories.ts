@@ -1,10 +1,11 @@
-type Response = InlineResponse200
-export const getRepositories = async (_c: any, _: any, res: any): Promise<Response> => {
+import { RepositoryArrayResponse, RepositoryTypeEnum } from '@thrashplay/source-control-api'
+
+export const getRepositories = async (_c: any, _: any, _res: any): Promise<RepositoryArrayResponse> => {
   const result = {
     data: [
       {
         id: '12345',
-        repositoryType: 'git' as const,
+        repositoryType: RepositoryTypeEnum.Git,
         url: 'https://blah',
       },
     ],

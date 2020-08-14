@@ -3,5 +3,7 @@
   "snapshot" : false,
   "supportsES6": true,
   "typescriptThreePlus": true,
-  "withInterfaces": true
+  "useSingleRequestParameter": true,
+  "withInterfaces": true,
+  "withoutPrefixEnums": true
 }

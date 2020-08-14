@@ -3,6 +3,9 @@
   "files": [],
   "references": [
     {
+      "path": "packages/node/icy-eye/source-control-service/tsconfig.build.json"
+    },
+    {
       "path": "packages/node/sophia/native/tsconfig.build.json"
     },
     {

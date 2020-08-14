@@ -11,26 +11,28 @@
   "types": "./lib/index.d.ts",
   "private": true,
   "scripts": {
-    "build": "run-s build:generate build:js",
-    "build:generate": "bash -c 'docker run --rm -v \"$(pwd):/local\" -v \"$(pwd)/../source-control-api:/output\" openapitools/openapi-generator-cli:v4.3.1 generate -i /local/src/v1/openapi.yaml -g typescript-fetch -o /output --enable-post-process-file --config /local/openapi-generator.json'",
+    "build": "npm-run-all build:pre --parallel build:types build:js",
     "build:js": "yarn babel --root-mode upward src --out-dir lib --copy-files --extensions .ts,.tsx,.js.jsx",
+    "build:pre": "(yarn generate:clean || echo 'Clean failed, continuing...') && yarn generate && yarn workspace @thrashplay/source-control-api build",
+    "build:types": "tsc -b",
     "clean": "rm -rf lib",
     "deploy": "run-s faas:build faas:push faas:deploy",
-    "faas:build": "yarn build && faas-cli template pull https://github.com/thrashplay/openfaas-templates --overwrite && faas-cli build -f function.yaml",
+    "faas:build": "yarn build && yarn faas:prepare && faas-cli template pull https://github.com/thrashplay/openfaas-templates --overwrite && faas-cli build -f function.yaml",
     "faas:deploy": "faas-cli deploy -f function.yaml",
+    "faas:prepare": "rm -rf .build-deps && bash -c 'mkdir -p ./.build-deps/@thrashplay' && cp -R ../source-control-api .build-deps/\\@thrashplay/source-control-api",
     "faas:push": "faas-cli push -f function.yaml",
+    "generate": "bash -c 'docker run --rm -v \"$(pwd):/local\" -v \"$(pwd)/../source-control-api:/output\" openapitools/openapi-generator-cli generate -i /local/src/v1/openapi.yaml -g typescript-axios -o /output --package-name generated --enable-post-process-file --config /local/openapi-generator.json'",
+    "generate:clean": "cd ../source-control-api && cat .openapi-generator/FILES | xargs rm && rm -rf .openapi-generator",
     "get-pod-name": "kubectl -n openfaas-fn get pod --no-headers --output custom-columns=:{.metadata.name} --sort-by={.status.startTime} -l faas_function=source-control-api | tail -1",
     "logs": "yarn logs:wait && yarn run --silent get-pod-name | xargs kubectl -n openfaas-fn logs -f",
     "logs:wait": "yarn run --silent get-pod-name | xargs kubectl wait -n openfaas-fn --for condition=ContainersReady pod",
     "test": "echo \"Package does not have any tests!\" && exit 0"
   },
   "dependencies": {
+    "@thrashplay/source-control-api": "1.0.0",
     "lodash": "4.17.19",
     "openapi-backend": "3.5.1",
     "simple-git": "2.17.0",
     "tmp": "0.2.1"
-  },
-  "devDependencies": {
-    "@thrashplay/source-control-api": "file:../source-control-api"
   }
 }

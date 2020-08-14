@@ -1,13 +1,15 @@
 {
+  "extends": "../../../../tsconfig.json",
   "compilerOptions": {
     "declaration": true,
+    "declarationDir": "dist",
+    "emitDeclarationOnly": false,
     "target": "es6",
+    "lib": ["dom"],
     "module": "commonjs",
-    "moduleResolution": "node",
+    "noImplicitAny": true,
     "outDir": "dist",
-    "typeRoots": [
-      "node_modules/@types"
-    ]
+    "rootDir": "."
   },
   "exclude": [
     "dist",

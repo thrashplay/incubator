@@ -37,20 +37,6 @@ components:
                     enum:
                       - 500
 
-    RepositoryArrayResponse:
-      description: Details for an array of source code repositories.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              data:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SourceCodeRepository'
-            required:
-              - data
-
   schemas:
     ErrorResult:
       description: Error response schema.
@@ -86,6 +72,17 @@ components:
         - repositoryType
         - url
 
+    RepositoryArrayResponse:
+      description: Details for an array of source code repositories.
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SourceCodeRepository'
+      required:
+        - data
+
     SourceCodeRepository:
       discriminator:
         propertyName: repositoryType
@@ -105,9 +102,13 @@ paths:
             schema:
               additionalProperties: false
       responses:
-        400:
+        "400":
           $ref: '#/components/responses/BadRequest'
-        500:
+        "500":
           $ref: '#/components/responses/InternalServerError'
-        200:
-          $ref: '#/components/responses/RepositoryArrayResponse'
+        "200":
+          description: Details for an array of source code repositories.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepositoryArrayResponse'

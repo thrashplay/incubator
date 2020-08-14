@@ -22,7 +22,7 @@
   ],
   "references": [
     {
-      "path": "../source-control-api"
+      "path": "../source-control-api/tsconfig.json"
     }
   ]
 }

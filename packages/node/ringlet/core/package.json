@@ -22,6 +22,6 @@
     "@thrashplay/logging": "^0.0.1",
     "@thrashplay/mock-fs": "^0.0.1",
     "@thrashplay/project-utils": "^0.0.1",
-    "lodash": "4.17.15"
+    "lodash": "4.17.19"
   }
 }

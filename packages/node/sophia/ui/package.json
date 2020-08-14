@@ -21,7 +21,7 @@
     "redux-thunk": "2.3.0",
     "reselect": "4.0.0",
     "typesafe-actions": "5.1.0",
-    "yup": "0.28.5"
+    "yup": "0.29.1"
   },
   "peerDependencies": {
     "@react-navigation/drawer": "5.x",

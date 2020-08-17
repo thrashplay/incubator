@@ -410,6 +410,9 @@ kind: pipeline
 type: kubernetes
 name: build-npm-packages
 
+metadata:
+  namespace: drone
+
 steps:
   - name: initialize
     image: alpine/git

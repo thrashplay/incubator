@@ -1,4 +1,5 @@
 # @thrashplay/config-version-helper
+
 This library can be used to generate hash-based version strings for Docker Swarm
 configs and secrets. These version strings can then be used to generate unique-enough names for
 these resources, allowing them to be rotated in an automated fashion.

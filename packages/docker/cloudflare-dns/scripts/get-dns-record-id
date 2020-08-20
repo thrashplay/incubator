@@ -1,0 +1,28 @@
+#!/usr/bin/env sh
+
+###
+### Gets the Cloudflare ID for a DNS record, given the following input arguments: 
+###
+###   $1: the Cloudflare zone ID
+###   $2: the the DNS name ('blah.example.com')
+###
+
+set -e
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+ZONE_ID=${1:?You must provide the following arguments: <zone_id> <dns_name>}
+DNS_NAME=${2:?You must provide the following arguments: <zone_id> <dns_name>}
+
+if RESPONSE=$("${SCRIPT_DIR}/call-cloudflare" GET "/zones/${ZONE_ID}/dns_records?name=${DNS_NAME}"); then
+  RESULT_COUNT=$(echo "${RESPONSE}" | jq -r '.result_info.count')
+  if [ ${RESULT_COUNT} -ne 1 ]; then
+    echo >&2 "${RESPONSE}"
+    echo >&2 "Expected exactly 1 result, got ${RESULT_COUNT}"
+    exit 1
+  fi
+  
+  echo $(echo "${RESPONSE}" | jq -r '.result[0].id')
+else
+  echo >&2 "${RESPONSE}"
+  exit 1
+fi

@@ -1,0 +1,38 @@
+#!/usr/bin/env sh 
+
+###
+### Calls the Cloudflare API, given the following input arguments: 
+###
+###   $1: the HTTP request method
+###   $2: the Cloudflare API request path and query string (i.e. /zones/12345/dns_records?name=blah)
+###       this MUST begin with a slash
+###   $3: the request body (optional)
+###
+### The response content from Cloudflare is written to standard out. If the request is successful,
+### then zero is returned. Otherwise, 1 is returned.
+###
+
+: ${CLOUDFLARE_API_TOKEN:?The CLOUDFLARE_API_TOKEN environment variable must be set.}
+HTTP_METHOD=${1:?You must provide the following arguments: <http_method> <request_path> [<request_body>]}
+REQUEST=${2:?You must provide the following arguments: <http_method> <request_path> [<request_body>]}
+REQUEST_BODY=${3}
+
+CLOUDFLARE_API_VERSION=v4
+CLOUDFLARE_API_BASE="https://api.cloudflare.com/client/${CLOUDFLARE_API_VERSION}"
+
+args=()
+args+=( "-X" "${HTTP_METHOD}" )
+args+=( "--silent" "--show-error" )
+args+=( "-H" "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" )
+args+=( "-H" "Content-Type: application/json" )
+
+if [ -n "${REQUEST_BODY}" ]; then
+  args+=( "--data" "${REQUEST_BODY}" )
+fi
+
+RESPONSE=$(curl "${args[@]}" "${CLOUDFLARE_API_BASE}${REQUEST}")
+
+SUCCESS=$(echo "${RESPONSE}" | jq '.success')
+
+echo "${RESPONSE}"
+[ "${SUCCESS}" = "true" ] || exit 1

@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+
+###
+### Gets the Cloudflare ID for a DNS Zone, given the following input arguments: 
+###
+###   $1: the domain name, or HTTP/HTTPS URL
+###
+
+set -e
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+INPUT=${1:?You must provide a domain or URL as the argument.}
+
+# extract the domain from a URL, if that's what we were given
+# From: https://stackoverflow.com/a/37140816
+DOMAIN=$(echo "${INPUT}" | cut -d'/' -f3 | cut -d':' -f1)
+
+# extract the domain, without any subdomains
+# From: https://stackoverflow.com/a/25204365
+ZONE_NAME=$(expr match "${DOMAIN}" '.*\.\(.*\..*\)') || ZONE_NAME="${DOMAIN}"
+
+if RESPONSE=$("${SCRIPT_DIR}/call-cloudflare" "GET" "/zones?name=${ZONE_NAME}"); then
+  echo $(echo "${RESPONSE}" | jq -r '.result[0].id')
+else
+  echo >&2 "${RESPONSE}"
+  exit 1
+fi

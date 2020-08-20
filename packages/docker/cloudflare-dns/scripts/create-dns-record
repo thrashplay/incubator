@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+
+###
+### Updates a Cloudflare DNS record, given the following input arguments: 
+###
+###   $1: the Cloudflare zone ID
+###   $2: the DNS record name (i.e. foo.example.com)
+###   $3: the new DNS record content (i.e. IP address)
+###
+
+set -e
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+ZONE_ID=${1:?You must provide the following arguments: <zone_id> <dns_record_name> <new_ip_address>}
+DNS_RECORD_NAME=${2:?You must provide the following arguments: <zone_id> <dns_record_name> <new_ip_address>}
+DNS_RECORD_CONTENT=${3:?You must provide the following arguments: <zone_id> <dns_record_name> <new_ip_address>}
+
+if RESPONSE=$("${SCRIPT_DIR}/call-cloudflare" \
+  POST \
+  "/zones/${ZONE_ID}/dns_records" \
+  "{ \"type\": \"A\", \"name\": \"${DNS_RECORD_NAME}\", \"content\": \"${DNS_RECORD_CONTENT}\", \"ttl\": 120 }")
+then
+  exit 0
+else
+  echo >&2 "${RESPONSE}"
+  exit 1
+fi

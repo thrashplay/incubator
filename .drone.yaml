@@ -365,8 +365,8 @@ steps:
   - name: cloudflare-dns
     image: plugins/docker
     settings:
-      context: packages/docker/cloudflare-dns
-      dockerfile: packages/docker/cloudflare-dns/Dockerfile
+      context: packages/docker/dns-updater/cloudflare-dns
+      dockerfile: packages/docker/dns-updater/cloudflare-dns/Dockerfile
       force_tag: true
       password:
         from_secret: DOCKER_PASSWORD
@@ -378,7 +378,25 @@ steps:
       username: thrashplay
     when:
       changeset:
-        includes: [ packages/docker/cloudflare-dns/** ]
+        includes: [ packages/docker/dns-updater/cloudflare-dns/** ]
+
+  - name: clusterip-dns-updater
+    image: plugins/docker
+    settings:
+      context: packages/docker/dns-updater/clusterip-dns-updater
+      dockerfile: packages/docker/dns-updater/clusterip-dns-updater/Dockerfile
+      force_tag: true
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: thrashplay/clusterip-dns-updater
+      tags:
+        - latest
+        - ${DRONE_BRANCH}
+        - ${DRONE_BRANCH}-${DRONE_COMMIT}
+      username: thrashplay
+    when:
+      changeset:
+        includes: [ packages/docker/dns-updater/clusterip-dns-updater/** ]
 
   - name: firebase
     image: plugins/docker

@@ -1,4 +1,4 @@
-#!/usr/bin/env sh 
+#!/usr/bin/env bash 
 
 ###
 ### Updates a Cloudflare DNS record, creating it if it does not already exist. Takes the following
@@ -10,17 +10,16 @@
 
 set -e
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 DNS_RECORD_NAME=${1:?You must provide the following arguments: <dns_record_name> <new_ip_address>}
 DNS_RECORD_CONTENT=${2:?You must provide the following arguments: <dns_record_name> <new_ip_address>}
 
-ZONE_ID=$("${SCRIPT_DIR}/get-zone-id" "${DNS_RECORD_NAME}")
-DNS_RECORD_ID=$("${SCRIPT_DIR}/get-dns-record-id" "${ZONE_ID}" "${DNS_RECORD_NAME}" 2>/dev/null || echo "")
+ZONE_ID=$(get-zone-id "${DNS_RECORD_NAME}")
+DNS_RECORD_ID=$(get-dns-record-id "${ZONE_ID}" "${DNS_RECORD_NAME}" 2>/dev/null || echo "")
 
 if [ -n "${DNS_RECORD_ID}" ]; then
   echo "Updating DNS record: ${DNS_RECORD_NAME} > ${DNS_RECORD_CONTENT}"
-  "${SCRIPT_DIR}/update-dns-record" "${ZONE_ID}" "${DNS_RECORD_ID}" "${DNS_RECORD_CONTENT}"
+  update-dns-record "${ZONE_ID}" "${DNS_RECORD_ID}" "${DNS_RECORD_CONTENT}"
 else
   echo "Creating DNS record: ${DNS_RECORD_NAME} > ${DNS_RECORD_CONTENT}"
-  "${SCRIPT_DIR}/create-dns-record" "${ZONE_ID}" "${DNS_RECORD_NAME}" "${DNS_RECORD_CONTENT}"
+  create-dns-record "${ZONE_ID}" "${DNS_RECORD_NAME}" "${DNS_RECORD_CONTENT}"
 fi

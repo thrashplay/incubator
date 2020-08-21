@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 ###
 ### Gets the Cloudflare ID for a DNS Zone, given the following input arguments: 
@@ -8,7 +8,6 @@
 
 set -e
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 INPUT=${1:?You must provide a domain or URL as the argument.}
 
 # extract the domain from a URL, if that's what we were given
@@ -19,7 +18,7 @@ DOMAIN=$(echo "${INPUT}" | cut -d'/' -f3 | cut -d':' -f1)
 # From: https://stackoverflow.com/a/25204365
 ZONE_NAME=$(expr match "${DOMAIN}" '.*\.\(.*\..*\)') || ZONE_NAME="${DOMAIN}"
 
-if RESPONSE=$("${SCRIPT_DIR}/call-cloudflare" "GET" "/zones?name=${ZONE_NAME}"); then
+if RESPONSE=$(call-cloudflare "GET" "/zones?name=${ZONE_NAME}"); then
   echo $(echo "${RESPONSE}" | jq -r '.result[0].id')
 else
   echo >&2 "${RESPONSE}"

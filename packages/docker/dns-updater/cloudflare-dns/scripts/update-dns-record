@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 ###
 ### Updates a Cloudflare DNS record, given the following input arguments: 
@@ -10,12 +10,11 @@
 
 set -e
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 ZONE_ID=${1:?You must provide the following arguments: <zone_id> <dns_record_id> <new_ip_address>}
 DNS_RECORD_ID=${2:?You must provide the following arguments: <zone_id> <dns_record_id> <new_ip_address>}
 DNS_RECORD_CONTENT=${3:?You must provide the following arguments: <zone_id> <dns_record_id> <new_ip_address>}
 
-if RESPONSE=$("${SCRIPT_DIR}/call-cloudflare" \
+if RESPONSE=$(call-cloudflare \
   PATCH \
   "/zones/${ZONE_ID}/dns_records/${DNS_RECORD_ID}" \
   "{ \"type\": \"A\", \"content\": \"${DNS_RECORD_CONTENT}\" }")

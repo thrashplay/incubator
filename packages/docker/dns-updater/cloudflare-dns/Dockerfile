@@ -1,8 +1,4 @@
-FROM alpine
-
-RUN apk add --no-cache --no-progress \
-  curl \
-  jq
+FROM thrashplay/kubectl-shell:latest
 
 COPY scripts /usr/local/bin
 RUN chmod +x /usr/local/bin/*

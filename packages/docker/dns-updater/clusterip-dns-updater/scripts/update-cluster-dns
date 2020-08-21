@@ -1,0 +1,80 @@
+#!/bin/bash
+
+set -e
+
+if [ "${DEBUG}" = "true" ]; then
+  set -x
+fi
+
+OWN_NAMESPACE=${POD_NAMESPACE:-dns-updater}
+CONFIG=$(kubectl get -n "${OWN_NAMESPACE}" cm dns-updater-cm --output=go-template --template='{{ .data.configuration }}')
+
+# retrieve IPs from the cluster's first node
+EXTERNAL_IP=$(kubectl get nodes -o json | jq -r '.items[0].status.addresses | map(select(.type == "ExternalIP"))[0].address')
+INTERNAL_IP=$(kubectl get nodes -o json | jq -r '.items[0].status.addresses | map(select(.type == "InternalIP"))[0].address')
+
+# Update services with internal IP
+INTERNAL_UP_TO_DATE=false
+if LAST_VALUE=$(echo "${CONFIG}" | yq -e -r '.internalIp'); then
+  if [ "${LAST_VALUE}" = "${INTERNAL_IP}" ]; then
+    INTERNAL_UP_TO_DATE=true
+    echo "Internal IP is up to date."
+  else
+    echo "Previous internalIp '${LAST_VALUE}' is out of date, updating to: ${INTERNAL_IP}"
+  fi
+else
+  echo "No previous internalIp, updating to: ${INTERNAL_IP}"
+fi
+
+if [ "${INTERNAL_UP_TO_DATE}" = "false" ]; then
+  readarray -t NAMESPACES <<< $(echo "${CONFIG}" | yq -r '.services | keys | .[]')
+  for namespace in "${NAMESPACES[@]}"; do
+    namespace=$(echo "${namespace}" | tr -d [:space:])  # trim space characters
+    readarray -t SERVICES <<< $(echo "${CONFIG}" | yq -r ".services.${namespace} | .[]")
+    for service in "${SERVICES[@]}"; do
+      service=$(echo "${service}" | tr -d [:space:])
+
+      echo "Updating service: ${namespace}/${service}..."
+      kubectl patch -n "${namespace}" service "${service}" --patch "{ \"spec\": { \"externalIPs\": [ \"${INTERNAL_IP}\" ] } }"
+    done 
+  done
+fi
+
+# Update cloudflare with external IP
+EXTERNAL_UP_TO_DATE=false
+if LAST_VALUE=$(echo "${CONFIG}" | yq -e -r '.externalIp'); then
+  if [ "${LAST_VALUE}" = "${EXTERNAL_IP}" ]; then
+    EXTERNAL_UP_TO_DATE=true
+    echo "External IP is up to date."
+  else
+    echo "Previous externalIp '${LAST_VALUE}' is out of date, updating to: ${EXTERNAL_IP}"
+  fi
+else
+  echo "No previous externalIp, updating to: ${EXTERNAL_IP}"
+fi
+
+if [ "${EXTERNAL_UP_TO_DATE}" = "false" ]; then
+  readarray -t HOSTS <<< $(echo "${CONFIG}" |  yq -r '.hosts | .[]')
+  for host in "${HOSTS[@]}"; do
+    host=$(echo "${host}" | tr -d [:space:])  # trim space characters
+
+    echo "Updating DNS for host: ${host}..."
+    update-dns "${host}" "${EXTERNAL_IP}"
+  done
+fi
+
+# update config map with latest IPs
+if [ "${INTERNAL_UP_TO_DATE}" = "false" ] || [ "${EXTERNAL_UP_TO_DATE}" = "false" ]; then
+  echo "Saving latest IP in config map..."
+
+  NEW_CONFIG=$(echo "${CONFIG}" | \
+    yq '.internalIp |= $INTERNAL_IP | .externalIp |= $EXTERNAL_IP' \
+      --yaml-output \
+      --arg EXTERNAL_IP "${EXTERNAL_IP}" \
+      --arg INTERNAL_IP "${INTERNAL_IP}"
+  )
+  PATCH=$(jq -n '{ "data": { "configuration": $NEW_CONFIG } }' --arg NEW_CONFIG "${NEW_CONFIG}")
+  kubectl patch -n "${OWN_NAMESPACE}" configmap dns-updater-cm --patch "${PATCH}"
+fi
+
+echo "DNS update complete."

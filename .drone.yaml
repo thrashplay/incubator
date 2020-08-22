@@ -1,5 +1,5 @@
 kind: pipeline
-type: docker
+type: kubernetes
 name: build-drone-plugins
 
 platform:
@@ -95,7 +95,7 @@ trigger:
 ---
 
 kind: pipeline
-type: docker
+type: kubernetes
 name: build-arm-images
 
 depends_on:
@@ -333,7 +333,7 @@ volumes:
 ---
 
 kind: pipeline
-type: docker
+type: kubernetes
 name: build-amd64-images
 
 depends_on:
@@ -536,7 +536,7 @@ trigger:
 ---
 
 kind: pipeline
-type: docker
+type: kubernetes
 name: deploy-services
 
 depends_on:

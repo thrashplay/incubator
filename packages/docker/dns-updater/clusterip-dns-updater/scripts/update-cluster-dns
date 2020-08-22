@@ -8,6 +8,7 @@ fi
 
 OWN_NAMESPACE=${POD_NAMESPACE:-dns-updater}
 CONFIG=$(kubectl get -n "${OWN_NAMESPACE}" cm dns-updater-cm --output=go-template --template='{{ .data.configuration }}')
+STATUS=$(kubectl get -n "${OWN_NAMESPACE}" cm dns-updater-cm --output=go-template --template='{{ .data.status }}')
 
 # retrieve IPs from the cluster's first node
 EXTERNAL_IP=$(kubectl get nodes -o json | jq -r '.items[0].status.addresses | map(select(.type == "ExternalIP"))[0].address')
@@ -15,7 +16,7 @@ INTERNAL_IP=$(kubectl get nodes -o json | jq -r '.items[0].status.addresses | ma
 
 # Update services with internal IP
 INTERNAL_UP_TO_DATE=false
-if LAST_VALUE=$(echo "${CONFIG}" | yq -e -r '.internalIp'); then
+if LAST_VALUE=$(echo "${STATUS}" | yq -e -r '.internalIp'); then
   if [ "${LAST_VALUE}" = "${INTERNAL_IP}" ]; then
     INTERNAL_UP_TO_DATE=true
     echo "Internal IP is up to date."
@@ -42,7 +43,7 @@ fi
 
 # Update cloudflare with external IP
 EXTERNAL_UP_TO_DATE=false
-if LAST_VALUE=$(echo "${CONFIG}" | yq -e -r '.externalIp'); then
+if LAST_VALUE=$(echo "${STATUS}" | yq -e -r '.externalIp'); then
   if [ "${LAST_VALUE}" = "${EXTERNAL_IP}" ]; then
     EXTERNAL_UP_TO_DATE=true
     echo "External IP is up to date."
@@ -67,13 +68,13 @@ fi
 if [ "${INTERNAL_UP_TO_DATE}" = "false" ] || [ "${EXTERNAL_UP_TO_DATE}" = "false" ]; then
   echo "Saving latest IP in config map..."
 
-  NEW_CONFIG=$(echo "${CONFIG}" | \
+  NEW_STATUS=$(echo "${STATUS}" | \
     yq '.internalIp |= $INTERNAL_IP | .externalIp |= $EXTERNAL_IP' \
       --yaml-output \
       --arg EXTERNAL_IP "${EXTERNAL_IP}" \
       --arg INTERNAL_IP "${INTERNAL_IP}"
   )
-  PATCH=$(jq -n '{ "data": { "configuration": $NEW_CONFIG } }' --arg NEW_CONFIG "${NEW_CONFIG}")
+  PATCH=$(jq -n '{ "data": { "status": $NEW_STATUS } }' --arg NEW_STATUS "${NEW_STATUS}")
   kubectl patch -n "${OWN_NAMESPACE}" configmap dns-updater-cm --patch "${PATCH}"
 fi
 

@@ -33,6 +33,7 @@
     "hexmarch:android": "yarn _build:prepare-tools && yarn workspace @thrashplay/hexmarch-native dev:android",
     "hexmarch:install:android": "yarn workspace @thrashplay/hexmarch-native install:android",
     "hexmarch:storybook": "yarn workspace @thrashplay/hexmarch-storybook-web start",
+    "hexmarch:web": "yarn _build:prepare-tools && yarn workspace @thrashplay/hexmarch-web dev",
     "lint": "eslint . --ext .ts,.js",
     "lint:fix": "eslint . --fix --ext .ts,.js",
     "publish:tagged": "yarn lerna publish from-git",
@@ -94,10 +95,10 @@
     "@react-navigation/material-bottom-tabs": "5.1.8",
     "@react-navigation/native": "5.1.5",
     "@react-navigation/stack": "5.2.10",
-    "@storybook/addon-actions": "5.3.19",
-    "@storybook/addon-links": "5.3.19",
-    "@storybook/addons": "5.3.19",
-    "@storybook/react": "5.3.19",
+    "@storybook/addon-actions": "5.3.18",
+    "@storybook/addon-links": "5.3.18",
+    "@storybook/addons": "5.3.18",
+    "@storybook/react": "5.3.18",
     "@svgr/webpack": "5.4.0",
     "@types/color": "3.0.1",
     "@types/html-to-text": "5.1.2",
@@ -138,7 +139,7 @@
     "patch-package": "6.2.0",
     "react-dom": "16.13.1",
     "react-native-dev-menu": "4.0.0",
-    "react-native-gesture-handler": "1.6.1",
+    "react-native-gesture-handler": "1.7.0",
     "react-native-reanimated": "1.8.0",
     "react-native-safe-area-context": "0.7.3",
     "react-native-screens": "2.4.0",
@@ -179,6 +180,6 @@
     "react": "16.9.0",
     "react-dom": "16.13.1",
     "react-native": "0.61.5",
-    "typescript": "3.8.3"
+    "typescript": "4.0.2"
   }
 }

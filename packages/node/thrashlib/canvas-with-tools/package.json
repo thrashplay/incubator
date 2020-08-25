@@ -1,0 +1,26 @@
+{
+  "name": "@thrashplay/canvas-with-tools",
+  "version": "0.1.0-next.2",
+  "description": "Thrashplay UI: Zoomable/Pannable Canvas with Tool Support",
+  "private": true,
+  "license": "MIT",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "files": [
+    "lib/**"
+  ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "@babel/runtime": "7.6.2",
+    "lodash": "4.17.20",
+    "transformation-matrix": "2.4.0"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
+    "react-native-gesture-handler": "^1.7.0"
+  }
+}

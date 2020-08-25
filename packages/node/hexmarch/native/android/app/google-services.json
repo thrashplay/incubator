@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "951358646205",
+    "firebase_url": "https://pegasus-hexmarch.firebaseio.com",
+    "project_id": "pegasus-hexmarch",
+    "storage_bucket": "pegasus-hexmarch.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:951358646205:android:bb98dc2ac85da9b16014d4",
+        "android_client_info": {
+          "package_name": "com.thrashplay.hexmarch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "951358646205-74o5kahoeospi2n43v8ufi50gkukh1oo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuonH10tT30xBj0DVKdSdywWtZxytLp3s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "951358646205-74o5kahoeospi2n43v8ufi50gkukh1oo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

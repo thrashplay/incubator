@@ -1,7 +1,7 @@
 {
-  "name": "@thrashplay/sophia-storybook-web",
+  "name": "@thrashplay/hexmarch-storybook-web",
   "version": "0.1.0-next.2",
-  "description": "Sophia: Storybook Components for Web",
+  "description": "Hexmarch: Storybook Components for Web",
   "private": true,
   "license": "MIT",
   "author": "Sean Kleinjung <sean@thrashplay.com>",

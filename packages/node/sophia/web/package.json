@@ -15,7 +15,7 @@
     "dev": "yarn webpack-dev-server --mode development"
   },
   "dependencies": {
-    "@babel/runtime": "7.7.2",
+    "@babel/runtime": "7.11.1",
     "@thrashplay/sophia-ui": "^0.1.0-next.2",
     "react-native": "0.61.5",
     "react-native-web": "0.12.2"

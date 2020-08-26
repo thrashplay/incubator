@@ -28,7 +28,7 @@
     "babel-loader": "8.1.0",
     "fork-ts-checker-webpack-plugin": "4.1.6",
     "react-dom": "16.13.1",
-    "regenerator-runtime": "0.13.3",
+    "regenerator-runtime": "0.13.7",
     "ts-loader": "7.0.5"
   },
   "peerDependencies": {

@@ -1,0 +1,21 @@
+{
+  "name": "@thrashplay/hex-utils",
+  "version": "0.1.0-next.2",
+  "description": "Utility classes and functions for working with Hexagon grids based on Red Blob Games' tutorial.",
+  "private": true,
+  "license": "MIT",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "files": [
+    "lib/**"
+  ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "@babel/runtime": "7.6.2",
+    "lodash": "4.17.20",
+    "transformation-matrix": "2.4.0"
+  }
+}

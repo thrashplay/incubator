@@ -1,2 +1,3 @@
 export * from './App'
-export * from './grid'
+// export * from './hex-grid'
+export * from './map'

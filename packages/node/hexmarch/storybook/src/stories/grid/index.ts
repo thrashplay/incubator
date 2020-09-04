@@ -1,1 +1,1 @@
-export * from './hex-test.story'
+export * from './map-view.story'

@@ -8,5 +8,14 @@
     "src/**/__fixtures__/**"
   ],
   "references": [
+    {
+      "path": "../model/tsconfig.build.json"
+    },
+    {
+      "path": "../../thrashlib/canvas-with-tools/tsconfig.build.json"
+    },
+    {
+      "path": "../../thrashlib/hex-utils/tsconfig.build.json"
+    }
   ]
 }

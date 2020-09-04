@@ -2,6 +2,12 @@ import { applyToPoint, compose, inverse, Matrix, scale, translate } from 'transf
 
 import { Dimensions, Extents, Point } from './types'
 
+export const calculateScale = (extents: Extents, viewport: Dimensions) => {
+  const scaleX = viewport.width / extents.width
+  const scaleY = viewport.height / extents.height
+  return Math.min(scaleX, scaleY)
+}
+
 /**
  * Utility class providing methods for converting between viewport coordinates and world coordinates.
  */
@@ -13,9 +19,7 @@ export class CoordinateConverter {
     extents: Extents,
     viewport: Dimensions
   ) {
-    const scaleX = viewport.width / extents.width
-    const scaleY = viewport.height / extents.height
-    const scaleFactor = Math.min(scaleX, scaleY)
+    const scaleFactor = calculateScale(extents, viewport)
 
     this._toViewport = compose(
       scale(scaleFactor, scaleFactor),

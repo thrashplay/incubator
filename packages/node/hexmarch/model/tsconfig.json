@@ -18,12 +18,6 @@
   ],
   "references": [
     {
-      "path": "../model/tsconfig.json"
-    },
-    {
-      "path": "../../thrashlib/canvas-with-tools/tsconfig.json"
-    },
-    {
       "path": "../../thrashlib/hex-utils/tsconfig.json"
     }
   ]

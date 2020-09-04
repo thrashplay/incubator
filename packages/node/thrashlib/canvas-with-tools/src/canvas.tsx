@@ -24,6 +24,7 @@ export type CanvasProps<
   Partial<Pick<ToolProps<TToolEvent, TData>, 'onToolEvent'>> & {
     children: React.ComponentType<ContentViewProps<TData>>
     extents: Extents
+    onViewportChange?: (viewport: Dimensions) => void
     selectedTool?: (props: ToolProps<any, TData>) => ReactElement | null
     style?: StyleProp<ViewStyle>
   }
@@ -38,21 +39,27 @@ export const Canvas = <
   data,
   extents,
   onToolEvent = noop,
+  onViewportChange = noop,
   selectedTool,
   style,
 }: CanvasProps<TData, TToolEvent>) => {
   const ChildContent = children
   const ActiveTool = selectedTool
 
+  // console.log('newC', extents)
+
   const eventEmitter = useRef(new EventEmitter() as CanvasEventEmitter)
 
   const [viewport, setViewport] = useState({ width: 0, height: 0 } as Dimensions)
 
   const handleLayout = (event: LayoutChangeEvent) => {
-    setViewport({
+    const newViewport = {
       width: event.nativeEvent.layout.width,
       height: event.nativeEvent.layout.height,
-    })
+    }
+
+    setViewport(newViewport)
+    onViewportChange(newViewport)
   }
 
   const handleDrag = useCallback((event: DragEvent) => eventEmitter.current.emit('drag', event), [])
@@ -86,11 +93,12 @@ export const Canvas = <
         {ActiveTool && viewport.width > 0 && viewport.height > 0 && !isNil(extents) && (
           <CanvasEventContext.Provider value={eventEmitter.current}>
             <ToolGestureHandler
+              extents={extents}
               onDrag={handleDrag}
               onTap={handleTap}
               onZoom={handleZoom}
+              viewport={viewport}
             />
-
             <ActiveTool
               canvasEvents={eventEmitter.current}
               data={data}

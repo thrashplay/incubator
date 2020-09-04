@@ -15,11 +15,16 @@
   },
   "dependencies": {
     "@babel/runtime": "7.6.2",
+    "@thrashplay/canvas-with-tools": "0.1.0-next.2",
+    "@thrashplay/hex-utils": "0.1.0-next.2",
+    "@thrashplay/hexmarch-model": "0.1.0-next.2",
+    "array-keyed-map": "2.0.1",
     "react-native-paper": "3.8.0",
     "react-redux": "7.2.0",
     "redux": "4.0.5",
     "redux-thunk": "2.3.0",
     "reselect": "4.0.0",
+    "transformation-matrix": "2.4.0",
     "typesafe-actions": "5.1.0",
     "yup": "0.28.5"
   },

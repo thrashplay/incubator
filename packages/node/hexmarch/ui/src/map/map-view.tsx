@@ -2,14 +2,14 @@ import { isNil, map } from 'lodash'
 import React, { useCallback, useMemo, useReducer } from 'react'
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 import { ToggleButton } from 'react-native-paper'
-import Svg from 'react-native-svg'
+import Svg, { Circle, Line, Rect } from 'react-native-svg'
 
-import { Canvas, ContentViewProps } from '@thrashplay/canvas-with-tools'
+import { Canvas, ContentViewProps, Dimensions } from '@thrashplay/canvas-with-tools'
 import { MapData } from '@thrashplay/hexmarch-model'
 
 import { LookAndFeel } from './look-and-feel'
 import { DefaultLookAndFeel } from './look-and-feels'
-import { INITIAL_STATE, MapViewAction, MapViewState, reducer } from './state'
+import { INITIAL_STATE, MapViewAction, reducer } from './state'
 import { BasicPointerTool } from './tools'
 import { ToolName } from './types'
 
@@ -33,6 +33,7 @@ export const MapView = ({
   }))
 
   const { extents, selectedTile, selectedToolName } = state
+  console.log('newM', extents)
 
   const selectTool = useCallback((toolName?: string) => {
     dispatch({
@@ -53,6 +54,13 @@ export const MapView = ({
 
   const handleToolEvent = useCallback((event: MapViewAction) => {
     dispatch(event)
+  }, [])
+
+  const handleViewportChange = useCallback((viewport: Dimensions) => {
+    dispatch({
+      type: 'set-viewport',
+      payload: viewport,
+    })
   }, [])
 
   const mapShapes = useMemo(() => {
@@ -98,6 +106,27 @@ export const MapView = ({
     return (
       <Svg viewBox={`${extents.x} ${extents.y} ${extents.width} ${extents.height}`}>
         {mapShapes}
+        <Circle
+          cx={0}
+          cy={0}
+          r={1}
+        />
+        <Line
+          x1={0}
+          y1={0}
+          x2={0}
+          y2={-6}
+          strokeWidth={1}
+          stroke="red"
+        />
+        <Line
+          x1={0}
+          y1={0}
+          x2={0}
+          y2={6}
+          strokeWidth={1}
+          stroke="green"
+        />
       </Svg>
     )
   }, [mapShapes])
@@ -118,6 +147,7 @@ export const MapView = ({
         data={mapData}
         extents={extents}
         onToolEvent={handleToolEvent}
+        onViewportChange={handleViewportChange}
         style={style}
         selectedTool={ActiveTool}
       >

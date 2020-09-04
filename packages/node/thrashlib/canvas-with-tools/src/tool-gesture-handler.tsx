@@ -1,4 +1,4 @@
-import { debounce, noop } from 'lodash'
+import { debounce, isNil, noop } from 'lodash'
 import React, { PropsWithChildren, SyntheticEvent, useCallback, useRef } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 import {
@@ -13,7 +13,7 @@ import {
   TapGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler'
 
-import { DragEvent, TapEvent, ZoomEvent } from './types'
+import { DragEvent, Extents, TapEvent, XY, ZoomEvent } from './types'
 
 export interface ToolGestureHandlerProps {
   onDrag?: (event: DragEvent) => void
@@ -49,6 +49,7 @@ export const ToolGestureHandlerComponent: React.FC<PropsWithChildren<ToolGesture
   // we use the accumulator to get the delta since the last event
   const dragAccumulator = useRef(NO_DRAG)
   const zoomAccumulator = useRef(1)
+  const mouseDownPosition = useRef(null as null | XY)
   const isMouseZooming = useRef(false)
   const panRef = useRef<PanGestureHandler>(null)
 
@@ -82,7 +83,7 @@ export const ToolGestureHandlerComponent: React.FC<PropsWithChildren<ToolGesture
     dragAccumulator.current = { x: translationX, y: translationY }
 
     handler({
-      dx: translationX - previous.x,
+      dx: -25,
       dy: translationY - previous.y,
       x,
       y,
@@ -98,13 +99,47 @@ export const ToolGestureHandlerComponent: React.FC<PropsWithChildren<ToolGesture
       state,
       oldState,
     } = nativeEvent
+
     if (oldState === State.ACTIVE) {
       handleDrag(onDragComplete, nativeEvent)
       dragAccumulator.current = NO_DRAG
+      mouseDownPosition.current = null
     } else if (state === State.ACTIVE) {
-      handleDrag(onDragStart, nativeEvent)
+      // we want more accurate drag handling on web when a mouse is involved
+      // so we fire an initial 'dragStart' event from where the mouse originally went down,
+      // instead of starting where the pan gesture handler activates
+      if (!isNil(mouseDownPosition.current)) {
+        const { translationX, translationY, x, y } = nativeEvent
+        handleDrag(onDragStart, {
+          translationX: 0,
+          translationY: 0,
+          ...mouseDownPosition.current,
+        })
+        handleDrag(onDrag, {
+          ...nativeEvent,
+          translationX: translationX + (x - mouseDownPosition.current.x),
+          translationY: translationY + (y - mouseDownPosition.current.y),
+        })
+      } else {
+        // start
+        handleDrag(onDragStart, nativeEvent)
+      }
     }
-  }, [handleDrag, onDragComplete, onDragStart])
+
+    // const {
+    //   x, y,
+    //   state,
+    //   oldState,
+    // } = nativeEvent
+    // if (oldState === State.ACTIVE) {
+    //   handleDrag(onDragComplete, nativeEvent)
+    //   dragAccumulator.current = NO_DRAG
+    // } else if (state === State.ACTIVE) {
+    //   console.log('start')
+    //   dragAccumulator.current = { x, y }
+    //   handleDrag(onDragStart, nativeEvent)
+    // }
+  }, [handleDrag, onDrag, onDragComplete, onDragStart])
 
   // ////////////////////////
   // Shared Zoom Handling
@@ -162,7 +197,9 @@ export const ToolGestureHandlerComponent: React.FC<PropsWithChildren<ToolGesture
   }, [onZoomComplete])
   const stopMousewheelZooming = useRef(debounce(rawStopMousewheelZooming, WHEEL_DEBOUNCE_DELAY)).current
 
-  const handleWheel = useCallback(({ nativeEvent: { deltaY, x, y } }: SyntheticEvent<Element, WheelEvent>) => {
+  const handleWheel = useCallback(({
+    nativeEvent: { deltaY, offsetX: x, offsetY: y },
+  }: SyntheticEvent<Element, WheelEvent>) => {
     const zoomFactor = deltaY < 0
       ? 1.1
       : deltaY > 0

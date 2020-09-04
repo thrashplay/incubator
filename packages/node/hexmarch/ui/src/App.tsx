@@ -17,7 +17,7 @@ const theme = {
 }
 
 const world: World = {
-  map: new Map('Test Map', 12),
+  map: new Map('Test Map', 120),
   name: 'Test World',
 }
 
@@ -30,9 +30,9 @@ const createTile = (q: number, r: number, terrain: string) => ({
 })
 
 world.map.tiles.set([0, 0], createTile(0, 0, 'water'))
-world.map.tiles.set([-1, 1], createTile(-1, 1, 'mountain'))
-world.map.tiles.set([0, 1], createTile(0, 1, 'mountain'))
-world.map.tiles.set([1, 0], createTile(1, 0, 'grass'))
+// world.map.tiles.set([-1, 1], createTile(-1, 1, 'mountain'))
+// world.map.tiles.set([0, 1], createTile(0, 1, 'mountain'))
+// world.map.tiles.set([1, 0], createTile(1, 0, 'grass'))
 
 export class App extends Component {
   public render () {

@@ -72,34 +72,40 @@ export class Map implements MapData {
           height: 0,
         }
       } else {
+        const halfWidth = this.layout.metrics.width / 2
+        const halfHeight = this.layout.metrics.height / 2
+
         // calculate minimum q and r values for populated tiles
-        let minQ = Number.MAX_VALUE
-        let minR = Number.MAX_VALUE
-        let maxQ = Number.MIN_VALUE
-        let maxR = Number.MIN_VALUE
+        let minX = Number.MAX_VALUE
+        let minY = Number.MAX_VALUE
+        let maxX = Number.MIN_VALUE
+        let maxY = Number.MIN_VALUE
         forEach([...this._tiles.keys()], ([q, r]) => {
-          if (q < minQ) {
-            minQ = q
+          const xy = this.layout.hexToPixel({ q, r })
+          const left = xy.x - halfWidth
+          const right = xy.x + halfWidth
+          const top = xy.y - halfHeight
+          const bottom = xy.y + halfHeight
+
+          if (left < minX) {
+            minX = left
           }
-          if (q > maxQ) {
-            maxQ = q
+          if (right > maxX) {
+            maxX = right
           }
-          if (r < minR) {
-            minR = r
+          if (top < minY) {
+            minY = top
           }
-          if (r > maxR) {
-            maxR = r
+          if (bottom > maxY) {
+            maxY = bottom
           }
         })
 
-        const topLeft = this._layout.hexToPixel({ q: minQ, r: minR })
-        const bottomRight = this._layout.hexToPixel({ q: maxQ, r: maxR })
-
         this._extents = {
-          x: topLeft.x,
-          y: topLeft.x,
-          width: bottomRight.x - topLeft.x,
-          height: bottomRight.y - topLeft.x,
+          x: minX,
+          y: minY,
+          width: maxX - minX,
+          height: maxY - minY,
         }
       }
     }

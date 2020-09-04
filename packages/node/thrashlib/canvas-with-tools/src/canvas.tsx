@@ -93,11 +93,12 @@ export const Canvas = <
         {ActiveTool && viewport.width > 0 && viewport.height > 0 && !isNil(extents) && (
           <CanvasEventContext.Provider value={eventEmitter.current}>
             <ToolGestureHandler
+              extents={extents}
               onDrag={handleDrag}
               onTap={handleTap}
               onZoom={handleZoom}
+              viewport={viewport}
             />
-
             <ActiveTool
               canvasEvents={eventEmitter.current}
               data={data}

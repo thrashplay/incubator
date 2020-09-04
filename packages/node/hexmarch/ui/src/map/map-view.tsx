@@ -33,7 +33,6 @@ export const MapView = ({
   }))
 
   const { extents, selectedTile, selectedToolName } = state
-  console.log('newM', extents)
 
   const selectTool = useCallback((toolName?: string) => {
     dispatch({

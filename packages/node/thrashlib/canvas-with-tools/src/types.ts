@@ -24,19 +24,24 @@ export type Dimensions = {
 export type Extents = Point & Dimensions
 
 /* Canvas event types */
-export interface DragEvent {
+export interface CanvasEvent {
+  extents: Extents
+  viewport: Dimensions
+}
+
+export interface DragEvent extends CanvasEvent {
   dx: number
   dy: number
   x: number
   y: number
 }
 
-export interface TapEvent {
+export interface TapEvent extends CanvasEvent {
   x: number
   y: number
 }
 
-export interface ZoomEvent {
+export interface ZoomEvent extends CanvasEvent {
   zoomFactor: number
   x: number
   y: number

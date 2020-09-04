@@ -7,27 +7,22 @@ services:
       - remote-workspace:/workspace
     ports:
     - "8081:8081"
+    - "3000:3000"
 
-  web:
-    image: nginx
-    ports:
-      - "80:80"
-      - "8080:8080"
-
-  emulator:
-    build:
-      context: emulator
-      args:
-        AVD_SYSTEM_IMAGE: "system-images;android-30;google_apis;x86_64"
-    image: thrashplay/android-emulator-vnc:dev
-    environment:
-      AVD_DEVICE: "22"
-      GROUP_ID: "108"
-      USER_ID: "997"
-    devices:
-    - "/dev/kvm:/dev/kvm"
-    ports:
-    - "5901:5901"
+  # emulator:
+  #   build:
+  #     context: emulator
+  #     args:
+  #       AVD_SYSTEM_IMAGE: "system-images;android-30;google_apis;x86_64"
+  #   image: thrashplay/android-emulator-vnc:dev
+  #   environment:
+  #     AVD_DEVICE: "22"
+  #     GROUP_ID: "108"
+  #     USER_ID: "997"
+  #   devices:
+  #   - "/dev/kvm:/dev/kvm"
+  #   ports:
+  #   - "5901:5901"
 
 volumes:
   remote-workspace:

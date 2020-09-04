@@ -21,7 +21,7 @@ const flatHexToPixelValues = {
   c: 0,
   d: Math.sqrt(3),
   e: 0,
-  f: 1,
+  f: 0,
 }
 const pointyHexToPixelValues = {
   a: Math.sqrt(3),
@@ -29,7 +29,7 @@ const pointyHexToPixelValues = {
   c: Math.sqrt(3) / 2,
   d: 3 / 2,
   e: 0,
-  f: 1,
+  f: 0,
 }
 
 export const HexOrientations: { [k in HexOrientationType]: HexOrientation } = {
@@ -108,6 +108,8 @@ export class HexLayout {
       scale(this._size.width, this._size.height),
       translate(this._origin.x, this._origin.y)
     )
+
+    console.log('ITTTTTTTTTTT', applyToPoint(this._hexToPixelTransform, { x: 0, y: 0 }))
 
     this._pixelToHexTransform = inverse(this._hexToPixelTransform)
     this._metrics = createMetrics(this._orientation.type, this._size.width)

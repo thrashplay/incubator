@@ -120,3 +120,7 @@ dist
 
 # vscode-react-native temporary files
 .vscode/.react
+/gradle/wrapper/
+/gradlew
+/gradlew.bat
+/local.properties

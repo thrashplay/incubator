@@ -2,10 +2,13 @@ import { ComponentType } from 'react'
 import TypedEmitter from 'typed-emitter'
 
 /** tool types */
-export interface ToolEvent<TType extends string = string, TPayload extends any = any> {
-  payload: TPayload
-  type: TType
-}
+export type ToolEvent<TType extends string = string, TPayload extends any = any> = [TPayload] extends [undefined]
+  ? {
+    type: TType
+  } : {
+    payload: TPayload
+    type: TType
+  }
 
 export type ToolEventHandler<TEvent extends ToolEvent> = (event: TEvent) => void
 
@@ -21,19 +24,24 @@ export type Dimensions = {
 export type Extents = Point & Dimensions
 
 /* Canvas event types */
-export interface DragEvent {
+export interface CanvasEvent {
+  extents: Extents
+  viewport: Dimensions
+}
+
+export interface DragEvent extends CanvasEvent {
   dx: number
   dy: number
   x: number
   y: number
 }
 
-export interface TapEvent {
+export interface TapEvent extends CanvasEvent {
   x: number
   y: number
 }
 
-export interface ZoomEvent {
+export interface ZoomEvent extends CanvasEvent {
   zoomFactor: number
   x: number
   y: number
@@ -55,12 +63,6 @@ export type ContentViewProps<TData extends any> = Record<string, unknown> & TDat
     /** current canvas extents, in world coordinates */
     extents: Extents
 
-    /** the current pan values for the canvas */
-    // pan: { x: number; y: number }
-
-    /** the current scale value for the canvas */
-    // scale: number
-
     /** the size of the canvas viewport, in screen coordinates */
     viewport: Dimensions
   }
@@ -71,18 +73,12 @@ export type ContentViewProps<TData extends any> = Record<string, unknown> & TDat
     /** current canvas extents, in world coordinates */
     extents: Extents
 
-    /** the current pan values for the canvas */
-    // pan: { x: number; y: number }
-
-    /** the current scale value for the canvas */
-    // scale: number
-
     /** the size of the canvas viewport, in screen coordinates */
     viewport: Dimensions
   }
 
 export type ToolProps<TEvent extends ToolEvent, TData extends any = any> = ContentViewProps<TData> & {
-  /** emitter for all canvas interacton events */
+  /** emitter for all canvas interaction events */
   canvasEvents: CanvasEventEmitter
 
   /** a function used by tools to trigger app-specific updates to the canvas data */

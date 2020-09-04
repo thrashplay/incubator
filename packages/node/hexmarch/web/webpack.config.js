@@ -32,7 +32,7 @@ module.exports = (env, options) => {
     devServer: {
       contentBase: path.join(__dirname, 'dev/'),
       port: 3000,
-      publicPath: 'http://localhost:3000/dist/',
+      publicPath: '/',
       hotOnly: true,
     },
     // see https://webpack.js.org/configuration/devtool/ for options

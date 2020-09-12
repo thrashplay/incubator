@@ -1,0 +1,22 @@
+#!/bin/sh
+
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+
+# #startxfce4 &
+# #export XKL_XMODMAP_DISABLE=1
+
+
+# [ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup
+# [ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
+# xsetroot -solid grey
+
+# x-terminal-emulator -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop" &
+# #/etc/xdg/xfce4/xinitrc
+# #exec /usr/bin/xfce4-session &
+# exec /etc/X11/xinit/xinitrc
+
+# exec /usr/bin/startxfce4 &
+# exec emulator &
+
+exec xeyes &

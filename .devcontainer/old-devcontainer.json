@@ -1,22 +1,19 @@
 {
 	"name": "Node.js & TypeScript",
-	"dockerComposeFile": [ "docker-compose.yml" ],
-	"service": "development",
-	
-	// "build": {
-	// 	"dockerfile": "Dockerfile",
-	// 	// Update 'VARIANT' to pick a Node version: 10, 12, 14
-	// 	"args": { "VARIANT": "12" }
-	// },
+	"build": {
+		"dockerfile": "Dockerfile",
+		// Update 'VARIANT' to pick a Node version: 10, 12, 14
+		"args": { "VARIANT": "12" }
+	},
 
-	// "mounts": [ "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind" ],
+	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind" ],
 
 	"workspaceFolder": "/workspace",
-	// "workspaceMount": "source=remote-workspace,target=/workspace,type=volume",
+	"workspaceMount": "source=remote-workspace,target=/workspace,type=volume",
 
 	// Set *default* container specific settings.json values on container create.
 	"settings": { 
-		"terminal.integrated.shell.linux": "/bin/sh"
+		"terminal.integrated.shell.linux": "/bin/bash"
 	},
 
 	// Add the IDs of extensions you want installed when the container is created.
@@ -28,9 +25,7 @@
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [ 5900, 6900, 8081 ],
 
-	// "postCreateCommand": "yarn install",
-
-	// "shutdownAction": "stopCompose"
+	"postCreateCommand": "yarn install",
 
 	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
 	// "remoteUser": "node"

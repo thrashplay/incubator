@@ -9,8 +9,14 @@ services:
     - "8081:8081"
 
   emulator:
-    build: vnc:tmp
-    privileged: true
+    build:
+      context: emulator
+      args:
+        GROUP_ID: "108"
+        USER_ID: "997"
+    image: vnc:fvwm
+    devices:
+    - "/dev/kvm:/dev/kvm"
     ports:
     - "5900:5900"
 

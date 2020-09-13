@@ -1,5 +1,6 @@
 #!/bin/bash
 
+mkdir -p ~/.vnc
 if [ ! -f ~/.vnc/passwd ]; then
     mkdir -p ~/.vnc
     x11vnc -storepasswd "${VNC_PASSWORD}" ~/.vnc/passwd
@@ -11,7 +12,7 @@ sleep 5
 export DISPLAY=:0.0
 x11vnc -rfbauth ~/.vnc/passwd -noxrecord -noxfixes -noxdamage -forever -display :0 &
 # xfce4-session &
-fvwm 2> ~/.vnc/fvwm.log &
+fvwm 2> ~/fvwm.log &
 
 set -e
 emulator -avd defaultAVD &
@@ -38,7 +39,7 @@ case $i in
     # if option `-t` or `--tail-log` block the execution and tail the VNC log
     -t|--tail-log)
     echo -e "\n------------------ /home/android/*$DISPLAY.log ------------------"
-    tail -f /home/android/.vnc/fvwm.log
+    tail -f ~/fvwm.log
     # tail -f /dev/null
     ;;
     *)

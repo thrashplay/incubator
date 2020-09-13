@@ -5,9 +5,12 @@ services:
     entrypoint: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
       - remote-workspace:/workspace
+    ports:
+    - "8081:8081"
 
   emulator:
-    build: ../packages/docker/android/emulator-vnc
+    build: vnc:tmp
+    privileged: true
     ports:
     - "5900:5900"
 

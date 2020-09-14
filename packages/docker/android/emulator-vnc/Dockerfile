@@ -2,11 +2,19 @@ FROM thrashplay/android-sdk:30.0.2
 
 USER root
 
-ENV DEBIAN_FRONTEND noninteractive
-ENV NO_VNC_HOME /root/noVNC
+ENV DEBIAN_FRONTEND=noninteractive \
+  HOME=/home/emulator \
+  NO_VNC_HOME=/root/noVNC \
+  PATH=${PATH}:${ANDROID_HOME}/emulator
+
+# vnc configuration
+ENV DISPLAY=:0 \
+  VNC_COL_DEPTH=24 \
+  VNC_RESOLUTION=1280x1024 \
+  VNC_PASSWORD=abcd
 
 RUN set -x \
-  && : Install xvnc / xfce and support packages \
+  && : Install vnc and support packages \
   && apt-get update \
   && apt-get upgrade -y \
   && apt-get install -y --no-install-recommends \
@@ -15,34 +23,29 @@ RUN set -x \
     tightvncserver \
     x11vnc \
     x11-apps \
-    xvfb
-
-RUN apt-get install -y xfce4
-
-RUN apt-get install -y software-properties-common \
+    xvfb \
+  && : Install emulator acceleration support \
+  && apt-get install -y software-properties-common \
   && add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) universe" \
   && apt-get update \
   && apt-get install -y \
     qemu-kvm \
     libvirt-daemon-system \
     libvirt-clients \
-    bridge-utils
-    # ubuntu-vm-builder \
+    bridge-utils \
+  && : Install gosu \
+	&& apt-get install -y gosu \ 
+	&& gosu nobody true \ 
+  && : Install Android emulator \ 
+  && sdkmanager "emulator" \
+  && : Cleanup \
+	&& rm -rf /var/lib/apt/lists/*
 
-RUN apt-get install -y xfce4-session
+COPY scripts/* /usr/local/bin/
+RUN chmod +x /usr/local/bin/*.sh
 
-COPY scripts/start-vnc.sh /usr/local/bin/start-vnc.sh
-RUN chmod +x /usr/local/bin/start-vnc.sh
-
-# xvnc server port, if $DISPLAY=:1 port will be 5901
+# xvnc server port, if $DISPLAY=:0 port will be 590
 EXPOSE 5900
-# novnc web port
-EXPOSE 6901
 
-# vnc configuration
-ENV DISPLAY :0
-ENV VNC_COL_DEPTH 24
-ENV VNC_RESOLUTION 1280x1024
-ENV VNC_PASSWORD abcd
-
-CMD [ "/usr/local/bin/start-vnc.sh", "--tail-log" ] 
+ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
+CMD [ "--tail-log" ]

@@ -9,12 +9,12 @@ services:
     - "8081:8081"
 
   emulator:
-    build:
-      context: emulator
-      args:
-        GROUP_ID: "108"
-        USER_ID: "997"
-    image: vnc:fvwm
+    image: thrashplay/android-emulator-vnc:dev
+    environment:
+      AVD_DEVICE: "22"
+      AVD_SYSTEM_IMAGE: "system-images;android-30;google_apis;x86_64"
+      GROUP_ID: "108"
+      USER_ID: "997"
     devices:
     - "/dev/kvm:/dev/kvm"
     ports:

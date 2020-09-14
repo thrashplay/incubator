@@ -1,18 +1,21 @@
 #!/bin/bash
 
+# create our AVD
+avdmanager create avd --force -n defaultAVD -k "${AVD_SYSTEM_IMAGE}" --device "${AVD_DEVICE}"
+
 mkdir -p ~/.vnc
 if [ ! -f ~/.vnc/passwd ]; then
-    mkdir -p ~/.vnc
-    x11vnc -storepasswd "${VNC_PASSWORD}" ~/.vnc/passwd
+    mkdir -p ${HOME}/.vnc
+    x11vnc -storepasswd "${VNC_PASSWORD}" ${HOME}/.vnc/passwd
 fi
 
 Xvfb -screen 0 "${VNC_RESOLUTION}x${VNC_COL_DEPTH}" -ac -nolisten unix &
 sleep 5
 
 export DISPLAY=:0.0
-x11vnc -rfbauth ~/.vnc/passwd -noxrecord -noxfixes -noxdamage -forever -display :0 &
+x11vnc -rfbauth ${HOME}/.vnc/passwd -noxrecord -noxfixes -noxdamage -forever -display :0 &
 # xfce4-session &
-fvwm 2> ~/fvwm.log &
+fvwm 2> ${HOME}/fvwm.log &
 
 set -e
 emulator -avd defaultAVD &
@@ -39,7 +42,7 @@ case $i in
     # if option `-t` or `--tail-log` block the execution and tail the VNC log
     -t|--tail-log)
     echo -e "\n------------------ /home/android/*$DISPLAY.log ------------------"
-    tail -f ~/fvwm.log
+    tail -f ${HOME}/fvwm.log
     # tail -f /dev/null
     ;;
     *)

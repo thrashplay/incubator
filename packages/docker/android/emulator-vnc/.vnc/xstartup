@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup
+
+exec /etc/X11/xinit/xinitrc
+
+fvwm 2> ~/fvwm.log &
+emulator -avd defaultAVD &

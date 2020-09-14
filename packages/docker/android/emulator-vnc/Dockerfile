@@ -3,7 +3,7 @@ FROM thrashplay/android-sdk:30.0.2
 USER root
 
 ENV DEBIAN_FRONTEND=noninteractive \
-  HOME=/home/emulator \
+  EMULATOR_HOME=/home/emulator \
   NO_VNC_HOME=/root/noVNC \
   PATH=${PATH}:${ANDROID_HOME}/emulator
 
@@ -44,8 +44,10 @@ RUN set -x \
 COPY scripts/* /usr/local/bin/
 RUN chmod +x /usr/local/bin/*.sh
 
-# xvnc server port, if $DISPLAY=:0 port will be 590
-EXPOSE 5900
+COPY .vnc/xstartup /usr/local/bin/xstartup
+
+# xvnc server port, if $DISPLAY=:1 port will be 5901
+EXPOSE 5901
 
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
 CMD [ "--tail-log" ]

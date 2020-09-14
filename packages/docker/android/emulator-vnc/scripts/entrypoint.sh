@@ -5,11 +5,13 @@ set -e
 FINAL_UID=${USER_ID:-9999}
 FINAL_GID=${GROUP_ID:-9999}
 
-# install sdk components as root
-echo "y" | sdkmanager "${AVD_SYSTEM_IMAGE}"
-# set home direcotry to have correct permissions
-mkdir -p "${HOME}"
-chown -hR "${FINAL_UID}:${FINAL_GID}" "${HOME}"
+adduser \
+  --home "${EMULATOR_HOME}" \
+  --uid "${FINAL_UID}" \
+  --gid "${FINAL_GID}" \
+  --gecos '' \
+  --disabled-login \
+  emulator
 
 # change to non-privileged user
-exec gosu "${FINAL_UID}:${FINAL_GID}" /usr/local/bin/start-emulator.sh "$@"
+exec gosu "${FINAL_UID}:${FINAL_GID}" sh -c "/usr/local/bin/start-emulator.sh $@"

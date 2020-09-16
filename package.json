@@ -24,6 +24,8 @@
     "clean:all": "yarn clean && yarn _clean:ts-config && yarn _clean:node_modules",
     "emulator:android": "docker-compose -f docker/emulator/docker-compose.yml up",
     "emulator:android:nondocker": "bash -c \"emulator -avd $(emulator -list-avds | head -n 1)\"",
+    "hexmarch:android": "yarn _build:prepare-tools && yarn workspace @thrashplay/hexmarch-native dev:android",
+    "hexmarch:install:android": "yarn workspace @thrashplay/hexmarch-native install:android",
     "hexmarch:storybook": "yarn workspace @thrashplay/hexmarch-storybook-web start",
     "hexmarch:web": "yarn _build:prepare-tools && yarn workspace @thrashplay/hexmarch-web dev",
     "lint": "eslint . --ext .ts,.js",

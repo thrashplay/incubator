@@ -26,7 +26,7 @@ export class App extends Component {
     return (
       // <Provider store={store}>
       <PaperProvider theme={theme}>
-        <Text>Hello, from Sophia!</Text>
+        <Text>Hello, from Sophia! Yay.</Text>
       </PaperProvider>
       // </Provider>
     )

@@ -15,7 +15,7 @@
     "dev:ios": "haul start --eager ios",
     "dev": "yarn dev:android",
     "emulator:android:wait": "adb wait-for-device",
-    "install:android": "react-native run-android --no-packager --host=development:8081",
+    "install:android": "react-native run-android --no-packager",
     "install:ios": "react-native run-ios --no-packager",
     "start:android": "run-s emulator:android:wait install:android haul",
     "start": "yarn start:android",

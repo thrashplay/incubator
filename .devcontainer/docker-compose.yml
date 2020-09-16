@@ -5,13 +5,13 @@ services:
     depends_on:
       - android-emulator
     entrypoint: /bin/sh -c "while sleep 1000; do :; done"
-    volumes:
-      - remote-workspace:/workspace
-      - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "3000:3000"
       - "8081:8081"
       - "9001:9001"
+    volumes:
+      - remote-workspace:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
 
   android-emulator:
     build:

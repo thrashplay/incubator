@@ -1,6 +1,7 @@
-FROM thrashplay/android-emulator-vnc:dev
+FROM budtmo/docker-android-x86-10.0
 
-ARG AVD_SYSTEM_IMAGE
-ENV AVD_SYSTEM_IMAGE=${AVD_SYSTEM_IMAGE}
-
-RUN echo "y" | sdkmanager "${AVD_SYSTEM_IMAGE}"
+COPY proxy_supervisor_config.conf /root
+RUN : Adding debug proxy port forwarding... \
+  && cat /root/proxy_supervisor_config.conf >> /root/supervisord.conf \
+  && : Enabling hardware keyboard... \
+  && echo "" >> /root/.android/avd/nexus_5_10.0.ini && echo "hw.keyboard=yes" >> /root/.android/avd/nexus_5_10.0.ini

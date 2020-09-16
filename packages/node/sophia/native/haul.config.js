@@ -134,4 +134,7 @@ export default makeConfig({
         )(config),
     },
   },
+  server: {
+    host: '0.0.0.0',
+  },
 })

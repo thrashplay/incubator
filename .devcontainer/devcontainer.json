@@ -9,14 +9,14 @@
 	// 	"args": { "VARIANT": "12" }
 	// },
 
-	// "mounts": [ "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind" ],
-
+	// "mounts": [ ],
+	
 	"workspaceFolder": "/workspace",
 	// "workspaceMount": "source=remote-workspace,target=/workspace,type=volume",
 
 	// Set *default* container specific settings.json values on container create.
 	"settings": { 
-		"terminal.integrated.shell.linux": "/bin/sh"
+		"terminal.integrated.shell.linux": "/bin/bash"
 	},
 
 	// Add the IDs of extensions you want installed when the container is created.
@@ -26,9 +26,10 @@
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [ 3000, 5901, 6900, 80, 8081 ],
+	"forwardPorts": [ 3000 ],
 
-	// "postCreateCommand": "yarn install",
+	// run yarn install, and try to connect to emulator -- but don't fail container creation if we can't
+	"postCreateCommand": "yarn install && (adb connect android-emulator:5555 || echo Failed to connect adb to emulator.)",
 
 	// "shutdownAction": "stopCompose"
 

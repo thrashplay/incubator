@@ -1,0 +1,13 @@
+version: '3'
+services:
+  android-emulator:
+    image: budtmo/docker-android-x86-10.0
+    privileged: true
+    ports:
+    - "4723:4723"
+    - "5554:5554"
+    - "5555:5555"
+    - "6080:6080"
+
+volumes:
+  remote-workspace:

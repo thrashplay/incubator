@@ -28,3 +28,7 @@ RUN set -x \
 # Install Android SDK
 COPY --from=android-sdk /usr/lib/android-sdk /usr/lib/android-sdk
 ENV PATH ${PATH}:${ANDROID_HOME}/cmdline-tools/tools/bin:${ANDROID_HOME}/platform-tools
+
+# Resolve 'Visual Studio Code cannot watch all files in this large workspace.' error
+# https://code.visualstudio.com/docs/setup/linux#_visual-studio-code-is-unable-to-watch-for-file-changes-in-this-large-workspace-error-enospc
+RUN echo "" >> /etc/sysctl.conf && echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf

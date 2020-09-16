@@ -1,13 +1,18 @@
-version: '3'
+version: '3.7'
 services:
   android-emulator:
-    image: budtmo/docker-android-x86-10.0
+    build:
+      context: .
+      args:
+        DOCKER_ANDROID_VERSION: "${DOCKER_ANDROID_VERSION}"
     privileged: true
     ports:
-    - "4723:4723"
-    - "5554:5554"
-    - "5555:5555"
-    - "6080:6080"
+      - "4723:4723"
+      - "5554:5554"
+      - "5555:5555"
+      - "6080:6080"
 
-volumes:
-  remote-workspace:
+networks:
+  default:
+    external:
+      name: android-development

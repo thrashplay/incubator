@@ -2,6 +2,16 @@
 	"name": "Node.js & TypeScript",
 	"dockerComposeFile": [ "docker-compose.yml" ],
 	"service": "development",
+
+	// "build": {
+	// 	"dockerfile": "Dockerfile",
+	// 	"args": {
+	// 		// select docker-android version, see https://github.com/budtmo/docker-android#list-of-docker-images
+	// 		"DOCKER_ANDROID_VERSION": "10.0",
+	// 		// Update 'NODE_VERSION' to pick a Node version: 10, 12, 14
+	// 		"VARIANT": "12"
+	// 	}
+	// },
 	
 	// "build": {
 	// 	"dockerfile": "Dockerfile",
@@ -9,7 +19,9 @@
 	// 	"args": { "VARIANT": "12" }
 	// },
 
-	// "mounts": [ ],
+	// "mounts": [ 
+	// 	"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind" 
+	// ],
 	
 	"workspaceFolder": "/workspace",
 	// "workspaceMount": "source=remote-workspace,target=/workspace,type=volume",
@@ -26,10 +38,11 @@
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [ 3000 ],
+	"forwardPorts": [ 3000, 8081, 9001 ],
 
 	// run yarn install, and try to connect to emulator -- but don't fail container creation if we can't
-	"postCreateCommand": "yarn install && (adb connect android-emulator:5555 || echo Failed to connect adb to emulator.)",
+	"postCreateCommand": "yarn install"
+	// && (adb connect android-emulator:5555 || echo Failed to connect adb to emulator.)",
 
 	// "shutdownAction": "stopCompose"
 

@@ -1,10 +1,14 @@
-version: '3'
+version: '3.7'
 services:
   development:
-    build: .
-    depends_on:
-      - android-emulator
+    build:
+      context: .
+      args:
+        DOCKER_ANDROID_VERSION: "10.0"
+        NODE_VERSION: "12"
     entrypoint: /bin/sh -c "while sleep 1000; do :; done"
+    networks:
+      - android-development
     ports:
       - "3000:3000"
       - "8081:8081"
@@ -13,30 +17,10 @@ services:
       - remote-workspace:/workspace
       - /var/run/docker.sock:/var/run/docker.sock
 
-  android-emulator:
-    build:
-      context: emulator
-    privileged: true
-    ports:
-      - "4723:4723"
-      - "5554:5554"
-      - "5555:5555"
-      - "6080:6080"
-
-  # emulator:
-  #   build:
-  #     context: emulator
-  #     args:
-  #       AVD_SYSTEM_IMAGE: "system-images;android-30;google_apis;x86_64"
-  #   image: thrashplay/android-emulator-vnc:dev
-  #   environment:
-  #     AVD_DEVICE: "22"
-  #     GROUP_ID: "108"
-  #     USER_ID: "997"
-  #   devices:
-  #   - "/dev/kvm:/dev/kvm"
-  #   ports:
-  #   - "5901:5901"
+networks:
+  android-development:
+    name: android-development
+    driver: bridge
 
 volumes:
   remote-workspace:

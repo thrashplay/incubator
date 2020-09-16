@@ -10,12 +10,12 @@ const Root = () => {
     []
   )
 
-  // useEffect(() => {
-  //   if (__DEV__) {
-  //     const DevMenu = require('react-native-dev-menu')
-  //     // DevMenu.addItem('Toggle Storybook', toggleStorybook)
-  //   }
-  // }, [toggleStorybook])
+  useEffect(() => {
+    if (__DEV__) {
+      const DevMenu = require('react-native-dev-menu')
+      DevMenu.addItem('Toggle Storybook', toggleStorybook)
+    }
+  }, [toggleStorybook])
 
   return storybookActive ? <Storybook /> : <App />
 }

@@ -1,10 +1,12 @@
-FROM thrashplay/android-sdk:30.0.2 as android-sdk
+ARG DOCKER_ANDROID_VERSION=10.0
+ARG NODE_VERSION=12
+FROM budtmo/docker-android-x86-${DOCKER_ANDROID_VERSION}:latest as android-docker
 
-FROM mcr.microsoft.com/vscode/devcontainers/typescript-node:12
+ARG DOCKER_ANDROID_VERSION
+ARG NODE_VERSION
+FROM mcr.microsoft.com/vscode/devcontainers/typescript-node:${NODE_VERSION}
 
-ARG BUILD_TOOLS_VERSION=30.0.2
-ENV BUILD_TOOLS_VERSION=${BUILD_TOOLS_VERSION}
-ENV ANDROID_HOME /usr/lib/android-sdk
+ARG DOCKER_ANDROID_VERSION
 
 # Install Docker CE CLI
 RUN apt-get update \
@@ -26,9 +28,18 @@ RUN set -x \
     openjdk-11-jdk
 
 # Install Android SDK
-COPY --from=android-sdk /usr/lib/android-sdk /usr/lib/android-sdk
-ENV PATH ${PATH}:${ANDROID_HOME}/cmdline-tools/tools/bin:${ANDROID_HOME}/platform-tools
+COPY --from=android-docker /root/build-tools /usr/lib/android-sdk/build-tools
+COPY --from=android-docker /root/licenses /usr/lib/android-sdk/licenses
+COPY --from=android-docker /root/platform-tools /usr/lib/android-sdk/platform-tools
+COPY --from=android-docker /root/platforms /usr/lib/android-sdk/platforms
+COPY --from=android-docker /root/system-images /usr/lib/android-sdk/system-images
+COPY --from=android-docker /root/tools /usr/lib/android-sdk/tools
 
 # Resolve 'Visual Studio Code cannot watch all files in this large workspace.' error
 # https://code.visualstudio.com/docs/setup/linux#_visual-studio-code-is-unable-to-watch-for-file-changes-in-this-large-workspace-error-enospc
-RUN echo "" >> /etc/sysctl.conf && echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf
+# RUN echo "" >> /etc/sysctl.conf && echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf \
+#   && sudo sysctl -p
+
+ENV ANDROID_HOME=/usr/lib/android-sdk \
+  PATH=${PATH}:/usr/lib/android-sdk/tools/bin:/usr/lib/android-sdk/platform-tools \
+  DOCKER_ANDROID_VERSION=${DOCKER_ANDROID_VERSION}

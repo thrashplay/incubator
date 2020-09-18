@@ -1,1 +1,1 @@
-export const placeholder = null
+export * from './placeholder'

@@ -1,0 +1,56 @@
+#!/bin/bash
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+function do_start ()
+{
+  if ! adb devices | egrep -q "$android-emulator:5555\\s"; then
+    docker-compose \
+      -f "${SCRIPT_DIR}/../docker/emulator/docker-compose.yml" \
+      up \
+      --detach
+
+    echo "Waiting for adb..."
+    yarn wait-on tcp:android-emulator:5555
+
+    adb disconnect
+    adb connect android-emulator:5555
+
+    echo "Waiting for emulator to boot..."
+    while [ "`adb shell getprop sys.boot_completed | tr -d '\r' `" != "1" ] ; do sleep 1; done
+
+    # set time to match host machine's
+    adb shell 'date `date +%m%d%H%M%G.%S` ; am broadcast -a android.intent.action.TIME_SET'
+
+    # reverse forward the Haul port
+    adb reverse tcp:8081 tcp:8081
+    # reverse forward storybook native's port
+    adb reverse tcp:7007 tcp:7007
+  else
+    echo "Emulator already connected."
+  fi
+}
+
+function do_stop ()
+{
+  adb disconnect
+
+  docker-compose \
+    -f "${SCRIPT_DIR}/../docker/emulator/docker-compose.yml" \
+    down
+}
+
+case "$1" in
+  start)
+  do_start
+  ;;
+
+  stop)
+  do_stop
+  ;;
+
+  *)
+  echo "Usage: android-emulator [start|stop]"
+  exit 1
+esac
+

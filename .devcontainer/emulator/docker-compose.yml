@@ -1,0 +1,18 @@
+version: '3.7'
+services:
+  android-emulator:
+    build:
+      context: .
+      args:
+        DOCKER_ANDROID_VERSION: "${DOCKER_ANDROID_VERSION}"
+    privileged: true
+    ports:
+      - "4723:4723"
+      - "5554:5554"
+      - "5555:5555"
+      - "6080:6080"
+
+networks:
+  default:
+    external:
+      name: android-development

@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+  development:
+    build:
+      context: .
+      args:
+        DOCKER_ANDROID_VERSION: "10.0"
+        NODE_VERSION: "12"
+    entrypoint: /bin/sh -c "while sleep 1000; do :; done"
+    networks:
+      - android-development
+    ports:
+      - "3000:3000"
+      - "8081:8081"
+      - "9001:9001"
+    volumes:
+      - remote-workspace:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  android-development:
+    name: android-development
+    driver: bridge
+
+volumes:
+  remote-workspace:

@@ -19,9 +19,6 @@ function do_start ()
     echo "Waiting for emulator to boot..."
     while [ "`adb shell getprop sys.boot_completed | tr -d '\r' `" != "1" ] ; do sleep 1; done
 
-    # set time to match host machine's
-    adb shell 'date `date +%m%d%H%M%G.%S` ; am broadcast -a android.intent.action.TIME_SET'
-
     # reverse forward the Haul port
     adb reverse tcp:8081 tcp:8081
     # reverse forward storybook native's port

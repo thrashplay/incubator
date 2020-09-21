@@ -27,6 +27,7 @@
       "@ringlet/*": ["ringlet/*/src"],
       "@thrashplay/webpack-utils": ["thrashlib/webpack-utils/lib"],
       "@thrashplay/*": ["thrashlib/*/src"],
+      "@thrashplay/gemstone-*": ["gemstone/*/src"],
       "@thrashplay/hexmarch-*": ["hexmarch/*/src"],
       "@thrashplay/sophia-*": ["sophia/*/src"]
     },

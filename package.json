@@ -8,6 +8,7 @@
   "workspaces": {
     "packages": [
       "packages/node/devops/config-version-helper",
+      "packages/node/gemstone/*",
       "packages/node/hexmarch/*",
       "packages/node/ringlet/haul-config-helpers",
       "packages/node/sophia/*",
@@ -25,6 +26,10 @@
     "emulator:android": "android-emulator start",
     "emulator:android:local": "bash -c \"emulator -avd $(emulator -list-avds | head -n 1)\"",
     "emulator:android:stop": "android-emulator stop",
+    "gemstone:android": "yarn _build:prepare-tools && yarn workspace @thrashplay/gemstone-native dev:android",
+    "gemstone:install:android": "yarn workspace @thrashplay/gemstone-native install:android",
+    "gemstone:storybook": "yarn workspace @thrashplay/gemstone-storybook-web start",
+    "gemstone:web": "yarn workspace @thrashplay/gemstone-web dev",
     "hexmarch:android": "yarn _build:prepare-tools && yarn workspace @thrashplay/hexmarch-native dev:android",
     "hexmarch:install:android": "yarn workspace @thrashplay/hexmarch-native install:android",
     "hexmarch:storybook": "yarn workspace @thrashplay/hexmarch-storybook-web start",

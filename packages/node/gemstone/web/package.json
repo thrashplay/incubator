@@ -1,0 +1,26 @@
+{
+  "name": "@thrashplay/gemstone-web",
+  "version": "0.1.0-next.2",
+  "description": "Gemstone: Web Application",
+  "private": true,
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "license": "UNLICENSED",
+  "files": [
+    "lib/**"
+  ],
+  "scripts": {
+    "build": "yarn webpack --mode production",
+    "clean": "rm -rf dist",
+    "deploy": "echo Not yet implemented! && exit 1",
+    "dev": "yarn webpack-dev-server --mode development"
+  },
+  "dependencies": {
+    "@babel/runtime": "7.7.2",
+    "@thrashplay/gemstone-ui": "^0.1.0-next.2",
+    "react-native": "0.61.5",
+    "react-native-web": "0.12.2"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}

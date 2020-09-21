@@ -1,0 +1,21 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "lib",
+    "jsx": "react-native",
+    "lib": ["DOM"],
+    "outDir": "lib",
+    "rootDir": "src"
+  },
+  "include": [
+    "src/**/*.js",
+    "src/**/*.json",
+    "src/**/*.jsx",
+    "src/**/*.svg",
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "references": [
+  ]
+}

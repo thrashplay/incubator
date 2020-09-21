@@ -1,0 +1,38 @@
+{
+  "name": "@thrashplay/gemstone-native",
+  "version": "0.1.0-next.2",
+  "description": "Gemstone: Native Application",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "license": "MIT",
+  "private": true,
+  "files": [
+    "lib/**"
+  ],
+  "scripts": {
+    "bundle:android": "haul bundle --platform android",
+    "bundle:ios": "haul bundle --platform ios",
+    "dev:android": "haul start --eager android",
+    "dev:ios": "haul start --eager ios",
+    "dev": "yarn dev:android",
+    "emulator:android:wait": "adb wait-for-device",
+    "install:android": "react-native run-android --no-packager",
+    "install:ios": "react-native run-ios --no-packager",
+    "start:android": "run-s emulator:android:wait install:android haul",
+    "start": "yarn start:android",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@babel/runtime": "7.6.2",
+    "@thrashplay/gemstone-ui": "^0.1.0-next.2",
+    "react": "16.9.0",
+    "react-native": "0.61.5",
+    "react-native-gesture-handler": "1.6.1",
+    "react-native-unimodules": "0.9.0"
+  },
+  "devDependencies": {
+    "react-native-dev-menu": "4.0.2"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}

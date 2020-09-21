@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "dist/**",
+    "lib/**",
+    "node_modules/**",
+    "src/**/*.test.ts",
+    "src/**/__fixtures__/**"
+  ],
+  "references": [
+    {
+      "path": "../ui/tsconfig.build.json"
+    }
+  ]
+}

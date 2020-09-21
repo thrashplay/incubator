@@ -1,0 +1,25 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "lib",
+    "jsx": "react-native",
+    "outDir": "lib",
+    "rootDir": "src"
+  },
+  "include": [
+    "src/**/*.js",
+    "src/**/*.json",
+    "src/**/*.jsx",
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "references": [
+    {
+      "path": "../storybook/tsconfig.json"
+    },
+    {
+      "path": "../ui/tsconfig.json"
+    }
+  ]
+}

@@ -28,6 +28,7 @@
       "@thrashplay/webpack-utils": ["thrashlib/webpack-utils/lib"],
       "@thrashplay/*": ["thrashlib/*/src"],
       "@thrashplay/hexmarch-*": ["hexmarch/*/src"],
+      "@thrashplay/openbook-*": ["openbook/*/src"],
       "@thrashplay/sophia-*": ["sophia/*/src"]
     },
     "noUnusedParameters": true,

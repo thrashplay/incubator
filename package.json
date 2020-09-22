@@ -9,6 +9,7 @@
     "packages": [
       "packages/node/devops/config-version-helper",
       "packages/node/hexmarch/*",
+      "packages/node/openbook/*",
       "packages/node/ringlet/haul-config-helpers",
       "packages/node/sophia/*",
       "packages/node/thrashlib/*"
@@ -94,7 +95,9 @@
     "@storybook/addons": "5.3.19",
     "@storybook/react": "5.3.19",
     "@svgr/webpack": "5.4.0",
+    "@types/cheerio": "0.22.21",
     "@types/color": "3.0.1",
+    "@types/dinero.js": "1.6.5",
     "@types/jest": "24.0.23",
     "@types/js-yaml": "3.12.3",
     "@types/lodash": "4.14.149",

@@ -1,0 +1,29 @@
+{
+  "name": "@thrashplay/openbook-core",
+  "version": "0.0.1",
+  "description": "Core code for the OpenBook app.",
+  "bugs": "https://github.com/thrashplay/incubator-node/issues",
+  "license": "MIT",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "files": [
+    "lib/**"
+  ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thrashplay/incubator-node.git",
+    "directory": "packages/node/openbook/intake"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "cheerio": "1.0.0-rc.3",
+    "dinero.js": "1.8.1",
+    "lodash": "4.17.19"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

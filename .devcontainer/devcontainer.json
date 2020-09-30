@@ -4,8 +4,13 @@
 	"service": "development",
 
 	// "mounts": [ 
-	// 	"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind" 
+	// 	"source=remote-workspace,target=/workspace,type=volume
 	// ],
+
+	"containerEnv": {
+		"DOCKER_HOST": "/var/run/docker.sock",
+		"DOCKER_TLS_VERIFY": "false"
+	},
 	
 	"workspaceFolder": "/workspace",
 	"workspaceMount": "source=remote-workspace,target=/workspace,type=volume",

@@ -23,7 +23,7 @@
   "dependencies": {
     "@thrashplay/fs-utils": "^0.1.0-next.30",
     "@thrashplay/mock-fs": "^0.1.0-next.30",
-    "ajv": "6.11.0",
+    "ajv": "6.12.5",
     "lodash": "4.17.19",
     "snyk": "^1.370.0"
   },

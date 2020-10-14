@@ -130,7 +130,7 @@ export default makeConfig({
           excludeSvgFromAssetLoader,
           addLoaderConfigs(WebpackHelpers.getLoaderConfigs()),
           addNodeModulesExclusion(WebpackHelpers.getNodeModulesExclusion()),
-          tap((config) => console.log('Final Webpack config:', JSON.stringify(config, null, 2)))
+          tap((config) => console.log('Final Webpack config:', JSON.stringify(config, null, 2))),
         )(config),
     },
   },

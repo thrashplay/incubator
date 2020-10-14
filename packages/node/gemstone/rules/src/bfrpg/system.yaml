@@ -1,0 +1,53 @@
+abilities:  
+  minimum: 3
+  maximum: 18
+  bonusRanges:
+    - max: 3
+      bonus: -3
+    - min: 4
+      max: 5
+      bonus: -2
+    - min: 6
+      max: 8
+      bonus: -1
+    - min: 9
+      max: 12
+      bonus: 0
+    - min: 13
+      max: 15
+      bonus: 1
+    - min: 16
+      max: 17
+      bonus: 2
+    - min: 18
+      bonus: 3
+  scores:
+    - name: Charisma
+      abbreviation: CHA
+      description: This is the ability to influence or even lead people; those with high Charisma are well-liked, or at least highly respected. Apply the Charisma bonus or penalty to reaction rolls. Also, the number of retainers a character may hire, and the loyalty of those retainers, is affected by Charisma.
+    - name: Constitution
+      abbreviation: CON
+      description: A combination of general health and vitality. Apply the Constitution bonus or penalty to each hit die rolled by the character. Note that a penalty here will not reduce any hit die roll to less than 1 point.
+    - name: Dexterity
+      abbreviation: DEX
+      description: This ability measures the character's quickness and balance as well as aptitude with tools. Dexterity is the Prime Requisite for Thieves. The Dexterity bonus or penalty is applied to all attack rolls with missile (ranged) weapons, to the character's Armor Class value, and to the character's Initiative die roll.
+    - name: Intelligence
+      abbreviation: INT
+      description: This is the ability to learn and apply knowledge. Intelligence is the Prime Requisite for Magic-Users. The ability bonus for Intelligence is added to the number of languages the character is able to learn to read and write; if the character has an Intelligence penalty, he or she cannot read more than a word or two, and will only know his or her native language.
+    - name: Strength
+      abbreviation: STR
+      description: As the name implies, this ability measures the character's raw physical power. Strength is the Prime Requisite for Fighters. Apply the ability bonus or penalty for Strength to all attack and damage rolls in melee (hand to hand) combat. Note that a penalty here will not reduce damage from a successful attack below one point in any case (see the Combat section for details).
+    - name: Wisdom
+      abbreviation: WIS
+      description: This is the ability to influence or even lead people; those with high Charisma are well-liked, or at least highly respected. Apply the Charisma bonus or penalty to reaction rolls. Also, the number of retainers a character may hire, and the loyalty of those retainers, is affected by Charisma.
+races:
+  - name: Dwarf
+    language: Dwarvish
+    requirements:
+      - type: ability
+        name: Constitution
+        minimum: 9
+    limits:
+      - type: ability
+        name: charisma
+        maximum: 17

@@ -18,7 +18,10 @@
   "useWorkspaces": true,
   "packages": [ 
     "packages/node/devops/config-version-helper",
+    "packages/node/gemstone/*",
     "packages/node/hexmarch/*",
+    "packages/node/ringlet/haul-config-helpers",
+    "packages/node/sophia/*",
     "packages/node/thrashlib/*"
   ],
   "version": "independent"

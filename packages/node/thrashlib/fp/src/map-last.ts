@@ -1,6 +1,5 @@
 import { initial, last } from 'lodash'
 
-
 /**
  * Maps the last value in an array to a new value, by passing it to the given 'mapFunc'.
  * This returns a new array, with all values the same and the last item mapped. If the array is empty,

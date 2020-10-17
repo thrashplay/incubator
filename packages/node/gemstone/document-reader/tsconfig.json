@@ -18,7 +18,7 @@
   ],
   "references": [
     {
-      "path": "../document-reader/tsconfig.json"
+      "path": "../../thrashlib/fp/tsconfig.json"
     }
   ]
 }

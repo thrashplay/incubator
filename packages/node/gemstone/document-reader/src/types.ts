@@ -1,21 +1,3 @@
-import MarkdownIt from 'markdown-it'
-
-import { Heading } from './blocks/heading'
-
-export type Token = ReturnType<ReturnType<typeof MarkdownIt>['parse']>[number]
-
-export interface ProcessingContext {
-  /** section currently being processed, or undefined if we are not in a section yet */
-  currentSection: Section
-
-  remainingTokens: Token[]
-
-  /** sections that have already been successfully parsed */
-  sections: Section[]
-}
-
-export type TokenProcessorFunction = (context: ProcessingContext) => void
-
 /**
  * A logical block of Markdown tokens that make up a single section of meaningful content in a document.
  * A content block may combine multiple tokens that, on their own, aren't meaningful (such as open and close
@@ -24,8 +6,11 @@ export type TokenProcessorFunction = (context: ProcessingContext) => void
  * Example content blocks could be headings, paragraphs, data tables, etc.
  */
 export interface ContentBlock {
-  /** Markdown tokens comprising this block */
-  tokens: Token[]
+  /** gets this block's content as an HTML string */
+  getHtml: () => string
+
+  /** gets this block's content as a plain text string */
+  getText: () => string
 }
 
 /**
@@ -54,4 +39,20 @@ export interface Section extends ContentBlock {
 
   /** the title of this section, which is derived from it's heading */
   title?: string
+}
+
+/**
+ * Content block representing a Heading in a document.
+ */
+export interface Heading extends ContentBlock {
+  /** the numeric level of the heading (1-6) */
+  level: number
+
+  /** the text contents of this heading */
+  text: string
+}
+
+export interface Document {
+  /** array of sectins, in the order they appeared in the source */
+  sections: Section[]
 }

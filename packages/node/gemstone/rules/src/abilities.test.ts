@@ -1,15 +1,13 @@
 import fs from 'fs'
 import path from 'path'
 
-import MarkdownIt from 'markdown-it'
+import { parseMarkdownDocument } from '@thrashplay/gemstone-document-reader'
 
 describe('abilities', () => {
   describe('parsing', () => {
-    it('parses', () => {
-      const markdown = new MarkdownIt()
-      const tokens = markdown.parse(fs.readFileSync(path.resolve(__dirname, 'tables', 'abilities.md'), 'utf8'), {})
-
-      console.log('tokens', JSON.stringify(tokens, null, 2))
+    it('parses', async () => {
+      const rules = await parseMarkdownDocument(fs.readFileSync(path.resolve(__dirname, 'osric', 'abilities.md'), 'utf8'))
+      console.log('rules', JSON.stringify(rules, null, 2))
     })
   })
 })

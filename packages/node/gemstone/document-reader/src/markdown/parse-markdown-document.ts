@@ -1,8 +1,9 @@
 import { isEmpty } from 'lodash'
 import MarkdownIt from 'markdown-it'
 
-import { ProcessingContext, Section, Token } from './types'
-import { parseSection } from './blocks/section'
+import { ProcessingContext, Token } from './types'
+import { parseSection } from './parse-section'
+import { Section } from '../types'
 
 export type Document = Section[]
 
@@ -24,7 +25,7 @@ const parseTokens = (tokens: Token[], callback: (document: Section[]) => void) =
   }
 }
 
-export const parse = (content: string): Promise<Document> => {
+export const parseMarkdownDocument = (content: string): Promise<Document> => {
   return new Promise<Document>((resolve) => {
     const markdown = new MarkdownIt()
     const tokens = markdown.parse(content, {})

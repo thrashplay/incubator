@@ -25,7 +25,7 @@ const mapPackageJsonToDirectory = (packageJsonPath: string) => path.dirname(pack
  */
 export class LernaProjectStructure implements ProjectStructure {
   public constructor(
-    private readonly packageConfigFactory = createPackageConfig
+    private readonly packageConfigFactory = createPackageConfig,
   ) { }
 
   get name() {

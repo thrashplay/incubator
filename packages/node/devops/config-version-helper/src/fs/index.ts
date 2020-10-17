@@ -58,7 +58,7 @@ export function createEnvFile(
 export function createEnvFile(
   stackYamlPath: string,
   envFilePathOrProviderOrOptions: string | EnvFilePathProvider | StackFileVersionVariableOptions = defaultEnvFilePathProvider,
-  options: StackFileVersionVariableOptions = {}
+  options: StackFileVersionVariableOptions = {},
 ): Promise<ConfigVersionsResult> {
 
   const getStackRelativePath = (configPath: string) => path.resolve(path.dirname(stackYamlPath), configPath)
@@ -119,7 +119,7 @@ export function createEnvFile(
 
     const result = flow(
       map(({ name, version }) => `${name}=${version}`),
-      join('\n')
+      join('\n'),
     )(versions.variables)
 
     return fs.promises.mkdir(path.dirname(outputPath), { recursive: true })

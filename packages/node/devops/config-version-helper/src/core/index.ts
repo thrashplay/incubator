@@ -65,7 +65,7 @@ export const getConfigVersionVariables = (
     getConfigContent = (configEntry) => configEntry.path,
     getVariableName = defaults.getVariableName,
     getVersion = defaults.getVersion,
-  }: ConfigVersionVariableOptions = {}
+  }: ConfigVersionVariableOptions = {},
 ) => {
   const isValid = negate(has('error'))
 

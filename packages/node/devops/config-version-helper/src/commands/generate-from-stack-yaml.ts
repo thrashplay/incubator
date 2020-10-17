@@ -16,7 +16,7 @@ export interface Arguments {
 
 export const execute = (
   { output, stackFiles }: Arguments,
-  log: (message?: any, ...optionalParams: any[]) => void = console.log
+  log: (message?: any, ...optionalParams: any[]) => void = console.log,
 ) => {
   const logVersion = (version: ConfigVersionVariable) => {
     log(`  ${version.name}=${version.version}`)

@@ -100,7 +100,7 @@ export const calculateVersion = (getVersion: VersionGetter) => (configEntry: Con
 export const createResult = (getVariableName: VariableNameCreator) => (configEntries: (VersionedConfigEntry | ConfigEntryWithError)[]): ConfigVersionsResult => {
   const hasError = (configEntry: VersionedConfigEntry | ConfigEntryWithError): configEntry is ConfigEntryWithError => flow(
     get('error'),
-    negate(isUndefined)
+    negate(isUndefined),
   )(configEntry)
 
   const createVariableInfo = (configEntry: VersionedConfigEntry) => ({

@@ -13,7 +13,7 @@ import { createPackageConfig } from './create-package-config'
  */
 export class StandaloneProjectStructure implements ProjectStructure {
   public constructor(
-    private readonly packageConfigFactory = createPackageConfig
+    private readonly packageConfigFactory = createPackageConfig,
   ) { }
 
   get name() {

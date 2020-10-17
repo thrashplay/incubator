@@ -9,7 +9,7 @@
   ],
   "references": [
     {
-      "path": "../document-reader/tsconfig.build.json"
+      "path": "../../thrashlib/fp/tsconfig.build.json"
     }
   ]
 }

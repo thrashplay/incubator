@@ -1,19 +1,8 @@
 import { concat, drop, findIndex, isEmpty, size, take } from 'lodash/fp'
 import { assign } from 'markdown-it/lib/common/utils'
 
-import { ContentBlock, ProcessingContext, Token, TokenProcessorFunction } from '../types'
-import { getText, tokenOfType } from '../utils'
-
-/**
- * Content block representing a Heading in a document.
- */
-export interface Heading extends ContentBlock {
-  /** the numeric level of the heading (1-6) */
-  level: number
-
-  /** the text contents of this heading */
-  text: string
-}
+import { ProcessingContext, Token, TokenProcessorFunction } from './types'
+import { getText, tokenOfType } from './utils'
 
 const getHeadingDepth = (token: Token) => {
   switch (token.tag) {

@@ -1,26 +1,18 @@
 import fs from 'fs'
 import path from 'path'
 
-import Renderer from 'markdown-it/lib/renderer'
 import { map } from 'lodash/fp'
 
-import { Document, parse } from './parse'
-import { Section, Token } from './types'
-import { renderText } from './render'
-
-const getTestContent = (fixtureName: string) => {
-  return fs.readFileSync(path.resolve(__dirname, '__fixtures__', fixtureName), 'utf8')
-}
+import { Document, parseMarkdownDocument } from './parse-markdown-document'
+import { Section } from '../types'
 
 const readFixture = (fixtureName: string) => {
   return fs.readFileSync(path.resolve(__dirname, '__fixtures__', fixtureName), 'utf8')
 }
 
 const doParse = (fixtureName: string) => {
-  return parse(readFixture(fixtureName))
+  return parseMarkdownDocument(readFixture(fixtureName))
 }
-
-const renderTokens = (tokens: Token[]) => new Renderer().render(tokens, {}, {}).trim()
 
 describe('markdown parsing', () => {
   describe('when there are no headings', () => {
@@ -48,7 +40,7 @@ Some more content, but we have no headings yet.
 This is marked up, isn't that cool?`
 
       const section = document[0]
-      expect(renderText(section)).toEqual(expectedBody)
+      expect(section.getText()).toEqual(expectedBody)
     })
 
     it('creates single section with correct depth', () => {
@@ -58,7 +50,7 @@ This is marked up, isn't that cool?`
 
     it('creates single section with correct text', () => {
       const section = document[0]
-      expect(renderTokens(section.tokens)).toEqual(
+      expect(section.getHtml()).toEqual(
         `<p>First section of test content.</p>
 <p>Some more content, but we have no headings yet.</p>
 <p>This is <em>marked up</em>, isn't that cool?</p>`,
@@ -78,7 +70,7 @@ This is marked up, isn't that cool?`
     })
 
     it('extracts body without markup', () => {
-      expect(renderText(document[0].body)).toBe('Section 1 is boring.')
+      expect(document[0].body.getText()).toBe('Section 1 is boring.')
     })
 
     it('removes non-nested markup from titles', () => {
@@ -86,7 +78,7 @@ This is marked up, isn't that cool?`
     })
 
     it('removes non-nested markup from body', () => {
-      expect(renderText(document[1].body)).toBe('Now this section is more interesting')
+      expect(document[1].body.getText()).toBe('Now this section is more interesting')
     })
 
     it('removes nested markup from titles', () => {
@@ -94,7 +86,7 @@ This is marked up, isn't that cool?`
     })
 
     it('removes nested markup from body', () => {
-      expect(renderText(document[2].body)).toBe('Wow, there is so much markup in this here section.')
+      expect(document[2].body.getText()).toBe('Wow, there is so much markup in this here section.')
     })
 
     describe('block element handling', () => {
@@ -103,7 +95,7 @@ This is marked up, isn't that cool?`
       })
 
       it('correctly handles basic paragraphs', () => {
-        expect(renderText(document[0].body)).toBe(
+        expect(document[0].body.getText()).toBe(
           `This is the first paragraph.
 
 This is the second paragraph.`,
@@ -111,7 +103,7 @@ This is the second paragraph.`,
       })
 
       it('correctly handles Newlines In Same Paragraph', () => {
-        expect(renderText(document[1].body)).toBe(
+        expect(document[1].body.getText()).toBe(
           `This is the first paragraph. Still the first.
 
 And we now return to complete sentences in the final paragraph.`,
@@ -119,7 +111,7 @@ And we now return to complete sentences in the final paragraph.`,
       })
 
       it('correctly handles Ending Lines with Spaces to Force Newlines', () => {
-        expect(renderText(document[2].body)).toBe(
+        expect(document[2].body.getText()).toBe(
           `This is the first paragraph.
 
 Just some spaces
@@ -166,7 +158,7 @@ This is the end.`,
       [2, '<h1>Section 3 with <em>some <strong>nested</strong> text</em> markup</h1>'],
     ])('creates section with correct content: section %p', (index, expectedContent) => {
       const section = document[index]
-      expect(renderTokens(section.tokens)).toBe(expectedContent)
+      expect(section.getHtml()).toBe(expectedContent)
     })
   })
 
@@ -234,7 +226,7 @@ This is the end.`,
 <p>Section 2.1's content</p>`],
       ])('creates section with correct content: section %p', (index, expectedContent) => {
         const section = document[index]
-        expect(renderTokens(section.tokens)).toBe(expectedContent)
+        expect(section.getHtml()).toBe(expectedContent)
       })
     })
 
@@ -283,7 +275,7 @@ This is the end.`,
         [5, '<h1>Sixth, h1</h1>'],
       ])('creates section with correct content: section %p', (index, expectedContent) => {
         const section = document[index]
-        expect(renderTokens(section.tokens)).toBe(expectedContent)
+        expect(section.getHtml()).toBe(expectedContent)
       })
     })
   })

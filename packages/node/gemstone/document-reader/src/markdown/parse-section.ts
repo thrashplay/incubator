@@ -2,20 +2,21 @@ import { get } from 'lodash'
 import { concat, drop, findLastIndex, negate, size, takeWhile } from 'lodash/fp'
 import { mapAt } from '@thrashplay/fp'
 
-import { ProcessingContext, Section, Token, TokenProcessorFunction } from '../types'
-import { tokenOfType } from '../utils'
+import { MarkdownSection, ProcessingContext, Token, TokenProcessorFunction } from './types'
+import { tokenOfType } from './utils'
 
-import { parseHeading } from './heading'
+import { parseHeading } from './parse-heading'
+import { withRenderers } from './render'
 
-const createSection = () => ({
-  body: { tokens: [] },
+const createSection = (): MarkdownSection => withRenderers({
+  body: withRenderers({ tokens: [] }),
   children: [],
   depth: 1,
   title: undefined,
   tokens: [],
 })
 
-const addTokens = (section: Section) => (tokens: Token[]) => ({
+const addTokens = (section: MarkdownSection) => (tokens: Token[]) => ({
   ...section,
   body: {
     ...(section.body ?? []),
@@ -30,8 +31,8 @@ const addTokens = (section: Section) => (tokens: Token[]) => ({
  * if there is no higher-level section.
  */
 const addCurrentSectionToParent = (next: TokenProcessorFunction) => (context: ProcessingContext) => {
-  const depthLessThan = (section: Section) => (item: Section) => item.depth < section.depth
-  const addChild = (child: Section) => (parent: Section) => ({
+  const depthLessThan = (section: MarkdownSection) => (item: MarkdownSection) => item.depth < section.depth
+  const addChild = (child: MarkdownSection) => (parent: MarkdownSection) => ({
     ...parent,
     children: [...parent.children, child],
   })
@@ -56,7 +57,7 @@ const parseSectionBody = (next: TokenProcessorFunction) => (context: ProcessingC
   })
 }
 
-export const parseSection = (remainingTokens: Token[], sections: Section[], next: TokenProcessorFunction) => {
+export const parseSection = (remainingTokens: Token[], sections: MarkdownSection[], next: TokenProcessorFunction) => {
   parseHeading(parseSectionBody(addCurrentSectionToParent(next)))(
     {
       currentSection: createSection(),

@@ -1,4 +1,5 @@
 export * from './map-last'
 export * from './mapIf'
+export * from './map-at'
 export * from './take-middle'
 export * from './transformIf'

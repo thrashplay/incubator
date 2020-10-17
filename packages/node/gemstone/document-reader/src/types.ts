@@ -53,6 +53,6 @@ export interface Heading extends ContentBlock {
 }
 
 export interface Document {
-  /** array of sectins, in the order they appeared in the source */
+  /** array of sections, in the order they appeared in the source */
   sections: Section[]
 }

@@ -1,19 +1,22 @@
 import MarkdownIt from 'markdown-it'
+
 import { ContentBlock, Section } from '../types'
 
 export type Token = ReturnType<ReturnType<typeof MarkdownIt>['parse']>[number]
 
-export interface ProcessingContext {
-  /** section currently being processed, or undefined if we are not in a section yet */
-  currentSection: MarkdownSection
-
+export type TokenProcessingContextSharedFields = {
+  complete: boolean
   remainingTokens: Token[]
-
-  /** sections that have already been successfully parsed */
-  sections: MarkdownSection[]
 }
 
-export type TokenProcessorFunction = (context: ProcessingContext) => void
+export type TokenProcessingContext<TState extends any = any> = 
+  TokenProcessingContextSharedFields & 
+  {
+    [k in keyof TState]: TState[k]
+  }
+
+export type TokenStreamHandler<TState extends any = any> =
+  (context: TokenProcessingContext<TState>) => TokenProcessingContext<TState>
 
 /**
  * A logical block of Markdown tokens that make up a single section of meaningful content in a document.

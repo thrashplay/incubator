@@ -16,7 +16,7 @@
     "directory": "packages/node/thrashlib/mock-fs"
   },
   "dependencies": {
-    "lodash": "4.17.19",
+    "lodash": "4.17.20",
     "metro-memory-fs": "0.57.0"
   },
   "publishConfig": {

@@ -1,24 +1,17 @@
-import { assign, concat, drop, findIndex, flow, isEmpty, negate, size, take, takeWhile } from 'lodash/fp'
+import { assign, concat, drop, findIndex, flow, isEmpty, size, take } from 'lodash/fp'
 
 import { MarkdownSection, Token, TokenProcessingContext } from './types'
-import { consumeTokens, getNextTokenType, getText, tokenOfType, tokenOneOf } from './utils'
+import { consumeTokens, getText, nextTokenOfType, tokenOfType } from './utils'
 import { withRenderers } from './render'
 import { createTokenProcessor } from './create-token-processor'
+import { parseTable } from './parse-table'
+import { Table } from '../types'
 
 export type SectionProcessingContext = TokenProcessingContext<{
   /** section currently being processed, or undefined if we are not in a section yet */
   currentSection: MarkdownSection
 }>
 
-/**
- * Handler functions for special tokens.
- * When a token type matching a key in this record is found, the specified handler function is called to create
- * a new context state, and optionally consume one or more tokens.
- */
-const HANDLED_TOKENS = [
-  'heading_open',
-  'table_open',
-]
 
 const getHeadingDepth = (token: Token) => {
   switch (token.tag) {
@@ -64,32 +57,27 @@ export const addTokensToCurrentSection = (tokens: Token[]) => (context: TokenPro
  * Consumes tokens from a context's remaining tokens until one is encountered that has a configured handler.
  * Consumed tokens will be added to the current section via the "addTokensToCurrentSection" method.
  */
-const consumeUnhandledTokens = (handledTokens = HANDLED_TOKENS) => (context: SectionProcessingContext) => {
-  const { remainingTokens } = context
-
-  // take all tokens until we encounter one with a handler
-  const unhandledTokens = takeWhile(negate(tokenOneOf(...handledTokens)))(remainingTokens)
+const consumeUnhandledTokens = (context: SectionProcessingContext, tokens: Token[]) => {
   return flow(
-    consumeTokens(unhandledTokens),
-    addTokensToCurrentSection(unhandledTokens),
+    consumeTokens(tokens),
+    addTokensToCurrentSection(tokens),
   )(context)
 }
 
-// Processes a heading token
+// Handlers a heading token
 // When a heading is encountered, we create a new section and append it to the document
-export const parseHeading = (context: SectionProcessingContext) => {
+// This handler is valid when the next token has a type of 'heading_open'
+export const handleHeading = (context: SectionProcessingContext) => {
   const { currentSection, remainingTokens } = context
 
   const getHeadingTokens = (context: SectionProcessingContext) => {
     const { remainingTokens } = context
   
-    return getNextTokenType(context) !== 'heading_open'
-      ? []
-      : take(
-        findIndex(tokenOfType('heading_close'))(remainingTokens) + 1,
-      )(remainingTokens)
+    return take(
+      findIndex(tokenOfType('heading_close'))(remainingTokens) + 1,
+    )(remainingTokens)
   }
-  
+
   const headingTokens = getHeadingTokens(context)
 
   if (isEmpty(headingTokens)) {
@@ -114,34 +102,61 @@ export const parseHeading = (context: SectionProcessingContext) => {
   }
 }
 
-export const parseBody = (context: SectionProcessingContext) => {
-  return context.complete
-    ? context
-    : flow(
-      consumeUnhandledTokens(HANDLED_TOKENS),
-      // parseTable,
-    )(context)
+const handleTableOpen = (context: SectionProcessingContext) => {
+  /**
+   * Adds a table to the 'tables' array in the section.
+   */
+  const addTableToCurrentSection = (table: Table) => (context: SectionProcessingContext) => {
+    return {
+      ...context,
+      currentSection: {
+        ...context.currentSection,
+        tables: [...(context.currentSection?.tables ?? []), table],
+      },
+    }
+  }
+
+  const table = parseTable(context.currentSection)(context.remainingTokens).table
+  return flow(
+    addTokensToCurrentSection(table.tokens),
+    addTableToCurrentSection(table)
+  )(context)
 }
 
-export const completeSectionIfHeadingFound = (context: SectionProcessingContext) => ({
+/**
+ * If we find a heading token (and it isn't the first token we see), consider it the start of 
+ * the NEXT section, and complete this one.
+ * 
+ * his handler is valid when the next token has a type of 'heading_open'
+ */
+export const markSectionComplete = (context: SectionProcessingContext) => ({
   ...context,
-  complete: getNextTokenType(context) === 'heading_open',
+  complete: true,
 })
 
-const createSection = () => withRenderers({
-  body: withRenderers({ tokens: [] }),
-  children: [],
-  depth: 1,
-  title: undefined,
-  tables: [],
-  tokens: [],
-})
+export const isStartOfNewSection = (context: SectionProcessingContext) => 
+  nextTokenOfType('heading_open')(context) && !isEmpty(context?.currentSection?.tokens)
 
-export const parseSection = createTokenProcessor(
-  [
-    parseHeading,
-    parseBody,
-    completeSectionIfHeadingFound,
+export const parseSection = createTokenProcessor({
+  handlers: [
+    {
+      handleTokens: markSectionComplete,
+      matches: isStartOfNewSection,
+    },
+    {
+      handleTokens: handleHeading,
+      matches: nextTokenOfType('heading_open')
+    },
   ],
-  () => ({ currentSection: createSection() }),
-)
+  unhandledTokenProcessor: consumeUnhandledTokens,
+  initialContextFactory: () => ({ 
+    currentSection: withRenderers({
+      body: withRenderers({ tokens: [] }),
+      children: [],
+      depth: 1,
+      title: undefined,
+      tables: [],
+      tokens: [],
+   }),
+  })
+})

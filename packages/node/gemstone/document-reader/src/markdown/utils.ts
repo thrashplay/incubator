@@ -21,8 +21,16 @@ export const getText = (input: Token | Token[] | string): string => {
   return htmlToText.fromString(html, htmlToTextOptions)
 }
 
-export const tokenOfType = (type: string) => (token: Token) => token.type === type
+/** predicate to determine if a token has a given type */
+export const tokenOfType = (type: string) => (token?: Token) => token?.type === type
+
+/** predicate to determine if a token has one of the given types */
 export const tokenOneOf = (...types: string[]) => (token: Token) => contains(token.type)(types)
+
+/** predicate to determine if a context's next token has the given type */
+export const nextTokenOfType = (type: string) => (
+  { remainingTokens }: TokenProcessingContext
+) => tokenOfType(type)(head(remainingTokens))
 
 /**
  * Consumes a set of tokens by removing them from the context's "remainingTokens" array

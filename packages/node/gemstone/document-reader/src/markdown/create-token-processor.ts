@@ -22,7 +22,7 @@ export type UnhandledTokenProcessor<TContext extends TokenProcessingContext = To
  */
 export const DISCARD = <TContext extends TokenProcessingContext = TokenProcessingContext>(
   context: TContext,
-  tokens: Token[] | Token
+  tokens: Token[] | Token,
 ) => consumeTokens(castArray(tokens))(context)
 
 /**
@@ -38,8 +38,8 @@ export interface TokenHandler<TContext extends TokenProcessingContext = TokenPro
 }
 
 export interface TokenProcessorOptions<
-TContextState extends any = any,
-TContext extends TokenProcessingContext = TokenProcessingContext<TContextState>,
+  TContextState extends any = any,
+  TContext extends TokenProcessingContext = TokenProcessingContext<TContextState>,
 > {
   handlers?: TokenHandler<TContext>[]
   initialContextFactory: (tokens: Token[]) => Optional<TContext, keyof TokenProcessingContextSharedFields>
@@ -62,7 +62,7 @@ export const createTokenProcessor = <
   }
 
   const getHandlerFunction = (context: TContext) => find(
-    (handler: TokenHandler<TContext>) => handler.matches(context)
+    (handler: TokenHandler<TContext>) => handler.matches(context),
   )(handlers)?.handleTokens ?? handleUnrecognizedTokens
      
   const processRecursively = (context: TContext): TContext => {
@@ -70,7 +70,7 @@ export const createTokenProcessor = <
       ? context
       : flow(
         getHandlerFunction(context),
-        processRecursively
+        processRecursively,
       )(context)
   }
 

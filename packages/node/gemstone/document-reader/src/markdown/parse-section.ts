@@ -1,14 +1,15 @@
 import { assign, concat, drop, findIndex, flow, isEmpty, size, take } from 'lodash/fp'
 
+import { Table } from '../types'
+
 import { MarkdownSection, Token, TokenProcessingContext } from './types'
 import { consumeTokens, getText, nextTokenOfType, tokenOfType } from './utils'
 import { withRenderers } from './render'
 import { createTokenProcessor } from './create-token-processor'
 import { parseTable } from './parse-table'
-import { Table } from '../types'
 
 export type SectionProcessingContext = TokenProcessingContext<{
-  /** section currently being processed, or undefined if we are not in a section yet */
+  /** section currently being processed */
   currentSection: MarkdownSection
 }>
 
@@ -36,7 +37,7 @@ const getHeadingDepth = (token: Token) => {
  * Adds tokens a Markdown section.
  * This method adds the tokens to both the body, and the section's "tokens" list.
  */
-export const addTokensToSection = (tokens: Token[]) => (section: MarkdownSection) =>  ({
+const addTokensToSection = (tokens: Token[]) => (section: MarkdownSection) =>  ({
   ...section,
   body: {
     ...(section.body ?? []),
@@ -48,7 +49,7 @@ export const addTokensToSection = (tokens: Token[]) => (section: MarkdownSection
 /**
  * Adds a set of tokens to the context's 'currentSection', using the addTokensToSection method.
  */
-export const addTokensToCurrentSection = (tokens: Token[]) => (context: TokenProcessingContext) => ({
+const addTokensToCurrentSection = (tokens: Token[]) => (context: TokenProcessingContext) => ({
   ...context,
   currentSection: addTokensToSection(tokens)(context.currentSection),
 })
@@ -64,7 +65,7 @@ const consumeUnhandledTokens = (context: SectionProcessingContext, tokens: Token
   )(context)
 }
 
-// Handlers a heading token
+// Handles a heading token
 // When a heading is encountered, we create a new section and append it to the document
 // This handler is valid when the next token has a type of 'heading_open'
 export const handleHeading = (context: SectionProcessingContext) => {
@@ -102,7 +103,7 @@ export const handleHeading = (context: SectionProcessingContext) => {
   }
 }
 
-const handleTableOpen = (context: SectionProcessingContext) => {
+const handleTable = (context: SectionProcessingContext) => {
   /**
    * Adds a table to the 'tables' array in the section.
    */
@@ -116,10 +117,14 @@ const handleTableOpen = (context: SectionProcessingContext) => {
     }
   }
 
-  const table = parseTable(context.currentSection)(context.remainingTokens).table
+  const { remainingTokens, table } = parseTable(context.currentSection)(context.remainingTokens)
   return flow(
     addTokensToCurrentSection(table.tokens),
-    addTableToCurrentSection(table)
+    addTableToCurrentSection(table),
+    (context: SectionProcessingContext) => ({
+      ...context,
+      remainingTokens,
+    }),
   )(context)
 }
 
@@ -145,7 +150,11 @@ export const parseSection = createTokenProcessor({
     },
     {
       handleTokens: handleHeading,
-      matches: nextTokenOfType('heading_open')
+      matches: nextTokenOfType('heading_open'),
+    },
+    {
+      handleTokens: handleTable,
+      matches: nextTokenOfType('table_open'),
     },
   ],
   unhandledTokenProcessor: consumeUnhandledTokens,
@@ -157,6 +166,6 @@ export const parseSection = createTokenProcessor({
       title: undefined,
       tables: [],
       tokens: [],
-   }),
-  })
+    }),
+  }),
 })

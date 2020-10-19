@@ -15,8 +15,8 @@ export type TokenProcessingContext<TState extends any = any> =
     [k in keyof TState]: TState[k]
   }
 
-export type TokenStreamHandler<TState extends any = any> =
-  (context: TokenProcessingContext<TState>) => TokenProcessingContext<TState>
+export type TokenStreamHandler<TContext extends TokenProcessingContext = TokenProcessingContext> =
+  (context: TContext) => TContext
 
 /**
  * A logical block of Markdown tokens that make up a single section of meaningful content in a document.

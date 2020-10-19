@@ -15,6 +15,7 @@ export const renderText = (content: MarkdownContentBlock) => {
   const html = renderHtml(content)
 
   const htmlToTextOptions = {
+    tables: true,
     uppercaseHeadings: false,
     wordwrap: null,
   }
@@ -25,8 +26,10 @@ export const renderText = (content: MarkdownContentBlock) => {
 export const getHtmlRenderer = (content: MarkdownContentBlock) => renderHtml(content)
 export const getTextRenderer = (content: MarkdownContentBlock) => renderText(content)
 
-type ContentBlockWithoutRenders = Omit<MarkdownContentBlock, 'getHtml' | 'getText'>
-export const withRenderers = <T extends ContentBlockWithoutRenders>(content: T) => ({
+export const withRenderers = <
+  TBase extends MarkdownContentBlock = any,
+  T extends Omit<TBase, 'getHtml' | 'getText'> = any
+>(content: T) => ({
   ...content,
   getHtml: function () {
     return renderHtml(this)

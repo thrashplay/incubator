@@ -15,7 +15,7 @@ const doParse = (fixtureName: string) => {
   return parseMarkdownDocument(readFixture(fixtureName))
 }
 
-describe('markdown parsing', () => {
+describe('markdown document parsing', () => {
   describe('when there are no headings', () => {
     let document: Document
     

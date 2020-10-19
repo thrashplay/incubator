@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`markdown table parsing section content has correct HTML representation 1`] = `
+"<h1>Section with Table</h1>
+<p>Lorem ipsum dolor sit amet.</p>
+<table>
+<thead>
+<tr>
+<th>Column A</th>
+<th>B</th>
+<th>Last</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Two word</td>
+<td>2</td>
+<td>Lorem</td>
+</tr>
+<tr>
+<td>Row 2</td>
+<td>4</td>
+<td>Ipsum</td>
+</tr>
+</tbody>
+</table>
+<p>Consectitur, adspicing elit.</p>"
+`;
+
+exports[`markdown table parsing section content has correct plain text representation 1`] = `
+"Section with Table
+Lorem ipsum dolor sit amet.
+
+Column A   B   Last    
+Two word   2   Lorem   
+Row 2      4   Ipsum   
+
+Consectitur, adspicing elit."
+`;
+
+exports[`markdown table parsing with no other content has correct HTML representation 1`] = `
+"<table>
+<thead>
+<tr>
+<th>Column A</th>
+<th>B</th>
+<th>Last</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Two <strong>bold</strong> words</td>
+<td>2</td>
+<td>Lorem</td>
+</tr>
+<tr>
+<td>Row 2</td>
+<td>4</td>
+<td>Ipsum</td>
+</tr>
+</tbody>
+</table>"
+`;
+
+exports[`markdown table parsing with no other content has correct cell contents in row: 0 1`] = `
+Object {
+  "B": "<td>2</td>",
+  "Column A": "<td>Two <strong>bold</strong> words</td>",
+  "Last": "<td>Lorem</td>",
+}
+`;
+
+exports[`markdown table parsing with no other content has correct cell contents in row: 1 1`] = `
+Object {
+  "B": "<td>4</td>",
+  "Column A": "<td>Row 2</td>",
+  "Last": "<td>Ipsum</td>",
+}
+`;
+
+exports[`markdown table parsing with no other content has correct plain text representation 1`] = `
+"Column A         B   Last    
+Two bold words   2   Lorem   
+Row 2            4   Ipsum"
+`;

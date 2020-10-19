@@ -1,6 +1,6 @@
 import MarkdownIt from 'markdown-it'
 
-import { ContentBlock, Section } from '../types'
+import { ContentBlock, Section, Table } from '../types'
 
 export type Token = ReturnType<ReturnType<typeof MarkdownIt>['parse']>[number]
 
@@ -33,3 +33,5 @@ export interface MarkdownContentBlock extends ContentBlock {
 export interface MarkdownSection extends Section, MarkdownContentBlock {
   body: MarkdownContentBlock
 }
+
+export type MarkdownTable = Table & MarkdownContentBlock

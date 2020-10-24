@@ -1,12 +1,13 @@
 import MarkdownIt from 'markdown-it'
 import { mapAt } from '@thrashplay/fp'
-import { findLastIndex, flow, stubTrue } from 'lodash/fp'
+import { findLastIndex, flow, map, stubTrue } from 'lodash/fp'
 
-import { Document } from '../types'
+import { Document, Section } from '../types'
 
 import { MarkdownSection, TokenProcessingContext } from './types'
 import { parseSection } from './parse-section'
 import { createTokenProcessor } from './create-token-processor'
+import { withRenderers } from './render'
 
 type DocumentProcessingContext = TokenProcessingContext<{
   /** sections that have already been successfully parsed */
@@ -61,7 +62,17 @@ const parseDocument = createTokenProcessor({
       handleTokens: parseNextSection,
     },
   ],
-  initialContextFactory: () => ({ sections: [] }),
+  initialContextFactory: () => ({ 
+    sections: [
+      withRenderers({
+        body: withRenderers({ tokens: [] }),
+        children: [],
+        depth: 0,
+        tables: [],
+        tokens: [],
+      }),
+    ],
+  }),
 })
 
 export const parseMarkdownDocument = (content: string): Promise<Document> => {

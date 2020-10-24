@@ -1,0 +1,23 @@
+{
+  "name": "@thrashplay/gemstone-document",
+  "version": "0.0.1",
+  "description": "Gemstone: Structured document utilities",
+  "private": true,
+  "license": "MIT",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "files": [
+    "lib/**"
+  ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "@babel/runtime": "7.6.2",
+    "@thrashplay/fp": "0.1.0-next.24",
+    "html-to-text": "5.1.1",
+    "lodash": "4.17.20",
+    "markdown-it": "12.0.0"
+  }
+}

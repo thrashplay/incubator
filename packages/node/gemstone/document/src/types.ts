@@ -13,8 +13,8 @@ export interface Content {
 export type DocumentNodeType = 
   'generic' | 
   'heading' | 
-  'section' | 
   'root' |
+  'section' | 
   'table' |
   'table-body' |
   'table-footer' |

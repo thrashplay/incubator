@@ -1,7 +1,5 @@
-import * as document from './document'
-import * as section from './section'
+import { Q as documentQ } from './document'
+import { Q as sectionQ } from './section'
 
-export const Q = {
-  document: document.Q,
-  section: section.Q,
-}
+export const document = documentQ
+export const section = sectionQ

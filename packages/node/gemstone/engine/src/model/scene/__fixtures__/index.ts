@@ -1,4 +1,4 @@
-import { IntentionState } from '../state'
+import { IntentionState, SceneState, SceneStateContainer } from '../state'
 
 export const CharacterFixtures = {
   Trogdor: {
@@ -16,6 +16,11 @@ export const CharacterFixtures = {
 export const CharacterStateFixtures = {
   Default: {
     pcs: {},
+  },
+  GimliOnly: {
+    pcs: {
+      gimli: CharacterFixtures.Gimli,
+    },
   },
   GimliAndTrogdor: {
     pcs: {
@@ -123,3 +128,16 @@ export const SceneStateFixtures = {
     frames: [FrameFixtures.TypicalIntentions],
   },
 }
+
+export const defaultDependencies = {
+  characters: CharacterStateFixtures.GimliAndTrogdor,
+  rules: RulesStateFixtures.Minimal,
+}
+
+export const createStateWithDependencies = (
+  scene: SceneState,
+  dependencies: Omit<SceneStateContainer, 'scene'> = defaultDependencies
+): SceneStateContainer => ({
+  ...dependencies,
+  scene,
+})

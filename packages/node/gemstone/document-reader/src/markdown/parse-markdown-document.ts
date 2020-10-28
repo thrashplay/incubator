@@ -1,12 +1,13 @@
-import MarkdownIt from 'markdown-it'
-import { mapAt } from '@thrashplay/fp'
 import { findLastIndex, flow, stubTrue } from 'lodash/fp'
+import MarkdownIt from 'markdown-it'
+
+import { mapAt } from '@thrashplay/fp'
 
 import { Document } from '../types'
 
-import { MarkdownSection, TokenProcessingContext } from './types'
-import { parseSection } from './parse-section'
 import { createTokenProcessor } from './create-token-processor'
+import { parseSection } from './parse-section'
+import { MarkdownSection, TokenProcessingContext } from './types'
 
 type DocumentProcessingContext = TokenProcessingContext<{
   /** sections that have already been successfully parsed */
@@ -15,7 +16,7 @@ type DocumentProcessingContext = TokenProcessingContext<{
 
 const parseNextSection = (context: DocumentProcessingContext) => {
   /**
-   * Adds a section as a child to the most recently parsed section with a depth that is lower (that is, a higher 
+   * Adds a section as a child to the most recently parsed section with a depth that is lower (that is, a higher
    * level section in the document hierarchy). Does not modify any sections if there is no higher-level section.
    */
   const addSectionToParent = (section: MarkdownSection) => (context: DocumentProcessingContext) => {
@@ -50,7 +51,7 @@ const parseNextSection = (context: DocumentProcessingContext) => {
     (context: DocumentProcessingContext) => ({
       ...context,
       remainingTokens,
-    }),
+    })
   )(context)
 }
 

@@ -2,10 +2,10 @@ import htmlToText from 'html-to-text'
 import { isEmpty } from 'lodash/fp'
 import MarkdownIt from 'markdown-it'
 
+import { MarkdownContentBlock } from './types'
+
 const markdown = new MarkdownIt()
 const renderer = markdown.renderer
-
-import { MarkdownContentBlock } from './types'
 
 export const renderHtml = (content: MarkdownContentBlock) => {
   return isEmpty(content?.tokens) ? '' : renderer.render(content.tokens, {}, {}).trim()
@@ -33,7 +33,7 @@ export const withRenderers = <
   ...content,
   getHtml: function () {
     return renderHtml(this)
-  },  
+  },
   getText: function () {
     return renderText(this)
   },

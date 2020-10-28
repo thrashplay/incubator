@@ -91,9 +91,6 @@ export const ToolGestureHandlerComponent: React.FC<PropsWithChildren<ToolGesture
     const previous = dragAccumulator.current
     dragAccumulator.current = { x: translationX, y: translationY }
 
-    console.log('prev', previous)
-    console.log('drag:', translationX, translationY)
-
     handler({
       dx: translationX - previous.x,
       dy: translationY - previous.y,
@@ -115,18 +112,14 @@ export const ToolGestureHandlerComponent: React.FC<PropsWithChildren<ToolGesture
     } = nativeEvent
 
     if (oldState === State.ACTIVE) {
-      console.log('activa')
       handleDrag(onDragComplete, nativeEvent)
       dragAccumulator.current = NO_DRAG
       mouseDownPosition.current = null
     } else if (state === State.ACTIVE) {
-      console.log('now activa')
       // we want more accurate drag handling on web when a mouse is involved
       // so we fire an initial 'dragStart' event from where the mouse originally went down,
       // instead of starting where the pan gesture handler activates
       if (!isNil(mouseDownPosition.current)) {
-        console.log('start from', mouseDownPosition.current)
-        console.log('current:', nativeEvent.x, ',', nativeEvent.y)
         const { translationX, translationY, x, y } = nativeEvent
         handleDrag(onDragStart, {
           translationX: 0,
@@ -139,7 +132,6 @@ export const ToolGestureHandlerComponent: React.FC<PropsWithChildren<ToolGesture
           x: nativeEvent.x,
           y: nativeEvent.y,
         })
-        console.log('start:', onDragStart)
       } else {
         // start
         const { x, y } = nativeEvent
@@ -150,7 +142,6 @@ export const ToolGestureHandlerComponent: React.FC<PropsWithChildren<ToolGesture
   }, [handleDrag, onDrag, onDragComplete, onDragStart])
 
   const handleMouseDown = useCallback(({ nativeEvent: { offsetX, offsetY } }: SyntheticEvent<Element, MouseEvent>) => {
-    console.log('down:', offsetX, offsetY)
     mouseDownPosition.current = { x: offsetX, y: offsetY }
   }, [mouseDownPosition])
 

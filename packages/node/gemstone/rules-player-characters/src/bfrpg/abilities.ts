@@ -6,7 +6,7 @@ export const AbilityScoreNames = [
   'Dexterity',
   'Intelligence',
   'Strength',
-  'Wisdom', 
+  'Wisdom',
 ] as const
 export type AbilityScoreName = typeof AbilityScoreNames[number]
 

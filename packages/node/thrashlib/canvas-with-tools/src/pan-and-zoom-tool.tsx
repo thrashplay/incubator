@@ -42,8 +42,6 @@ export const PanAndZoomTool = ({ onToolEvent }: ToolProps<PanAndZoom>) => {
   }: DragEvent) => {
     const scale = calculateScale(extents, viewport)
 
-    console.log('dragoomie:', dx, dy)
-
     onToolEvent({
       type: 'canvas/pan-and-zoom',
       payload: {

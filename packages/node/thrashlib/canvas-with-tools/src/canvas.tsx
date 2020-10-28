@@ -87,6 +87,7 @@ export const Canvas = <
             data={data}
             extents={extents}
             viewport={viewport}
+            {...data}
           />
         )}
 

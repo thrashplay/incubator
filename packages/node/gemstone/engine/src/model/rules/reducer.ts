@@ -29,6 +29,7 @@ export const reduceRulesState = (state: RulesState, action: RulesAction | Common
             },
           },
         },
+        segmentDuration: 5,
       }
 
     default:

@@ -37,6 +37,7 @@ export const RulesStateFixtures = {
         },
       },
     },
+    segmentDuration: 5,
   },
 }
 

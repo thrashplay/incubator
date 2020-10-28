@@ -1,0 +1,23 @@
+{
+  "name": "@thrashplay/gemstone-engine",
+  "version": "0.0.1",
+  "description": "Gemstone: 'Intentions' Engine",
+  "private": true,
+  "license": "MIT",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "files": [
+    "lib/**"
+  ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "@babel/runtime": "7.6.2",
+    "@thrashplay/fp": "0.1.0-next.24",
+    "lodash": "4.17.20",
+    "reselect": "4.0.0",
+    "typesafe-actions": "5.1.0"
+  }
+}

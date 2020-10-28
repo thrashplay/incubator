@@ -1,3 +1,5 @@
+import { take } from 'lodash/fp'
+
 import { CommonActions } from '../common/action'
 
 import { IntentionFixtures, SceneStateFixtures } from './__fixtures__'
@@ -5,7 +7,7 @@ import { SceneActions } from './actions'
 import { reduceSceneState } from './reducer'
 import { SceneState } from './state'
 
-const { Default, IdleBeforeTypicalIntentions, SingleTypicalFrame } = SceneStateFixtures
+const { Default, FiveIdleFrames, IdleBeforeTypicalIntentions, SingleTypicalFrame } = SceneStateFixtures
 const { Grumbling, Idle } = IntentionFixtures
 
 describe('reduceSceneState', () => {
@@ -58,6 +60,32 @@ describe('reduceSceneState', () => {
           type: 'idle',
         })
       })
+    })
+  })
+
+  describe('SceneActions.frameAdded', () => {
+    it('appends the new frame to the frame list', () => {
+      const newFrame = { actors: {} }
+      const result = reduceSceneState(IdleBeforeTypicalIntentions, SceneActions.frameAdded(newFrame))
+      expect(result.frames).toHaveLength(IdleBeforeTypicalIntentions.frames.length + 1)
+      expect(result.frames).toContain(newFrame)
+    })
+  })
+
+  describe('SceneActions.frameReverted', () => {
+    it('does nothing if the scene index is negative', () => {
+      const result = reduceSceneState(FiveIdleFrames, SceneActions.frameReverted(-1))
+      expect(result.frames).toStrictEqual(FiveIdleFrames.frames)
+    })
+
+    it.each([4, 5])('does nothing if the scene is not in the past: %p', (frame) => {
+      const result = reduceSceneState(FiveIdleFrames, SceneActions.frameReverted(frame))
+      expect(result.frames).toStrictEqual(FiveIdleFrames.frames)
+    })
+
+    it.each([0, 1, 2, 3])('truncates frames after the specified index: %p', (frame) => {
+      const result = reduceSceneState(FiveIdleFrames, SceneActions.frameReverted(frame))
+      expect(result.frames).toStrictEqual(take(frame + 1)(FiveIdleFrames.frames))
     })
   })
 

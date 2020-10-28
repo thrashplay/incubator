@@ -24,12 +24,6 @@ export const getFrames = createSelector(
   (scene) => scene.frames ?? []
 )
 
-// Get the scene's frame offset
-export const getFrameOffset = createSelector(
-  [getScene],
-  (scene) => scene.frameOffset ?? 0
-)
-
 // Get the number of frames in this scene
 export const getFrameCount = createSelector(
   [getFrames],
@@ -38,9 +32,9 @@ export const getFrameCount = createSelector(
 
 // Gets the number of the current frame
 export const getCurrentFrameNumber = createSelector(
-  [getFrames, getFrameOffset],
-  (frames, offset) => {
-    return offset + Math.max(size(frames), 1) - 1
+  [getFrames],
+  (frames) => {
+    return Math.max(size(frames), 1) - 1
   }
 )
 

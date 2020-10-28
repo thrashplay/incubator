@@ -40,9 +40,6 @@ export interface SceneState {
   /** IDs of the characters in this scene */
   characters: CharacterId[]
 
-  /** the frame number corresponding to the first entry in the frames array */
-  frameOffset: number
-
   /** array of frames comprising this scene */
   frames: Frame[]
 }

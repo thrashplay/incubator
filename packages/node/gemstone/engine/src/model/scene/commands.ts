@@ -8,10 +8,6 @@ import { SceneActions } from './actions'
 import { createMoveIntention } from './intentions'
 import { SceneStateContainer } from './state'
 
-/********************************************/
-// Scene Actions
-/********************************************/
-
 /** starts a new scene that includes all the player characters by default */
 export const startNewScene = () => (state: SceneStateContainer) => [
   SceneActions.sceneStarted(),
@@ -33,3 +29,6 @@ export const move = (characterId: CharacterId, position: Point) => () => {
     position,
   })
 }
+
+export * from './commands/calculate-frames'
+export * from './commands/calculate-next-frame'

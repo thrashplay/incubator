@@ -1,4 +1,4 @@
-import { concat, contains, flow, get, initial, map, takeRight, uniq } from 'lodash/fp'
+import { concat, contains, flow, get, initial, map, take, takeRight, uniq } from 'lodash/fp'
 import { getType } from 'typesafe-actions'
 
 import { CharacterId } from '../character'
@@ -17,7 +17,6 @@ export const reduceSceneState = (state: SceneState, action: SceneAction | Common
     case getType(SceneActions.sceneStarted):
       return {
         characters: [],
-        frameOffset: 0,
         frames: [EMPTY_FRAME],
       }
 
@@ -26,6 +25,18 @@ export const reduceSceneState = (state: SceneState, action: SceneAction | Common
         addCharacter(action.payload),
         setActorStatus(action.payload, createDefaultActorStatus(action.payload))
       )(state)
+
+    case getType(SceneActions.frameAdded):
+      return {
+        ...state,
+        frames: concat(state.frames, action.payload),
+      }
+
+    case getType(SceneActions.frameReverted):
+      return (action.payload < 0 || action.payload >= state.frames.length - 1) ? state : {
+        ...state,
+        frames: take(action.payload + 1)(state.frames),
+      }
 
     case getType(SceneActions.intentionDeclared):
       return contains(action.payload.characterId)(state.characters)

@@ -36,7 +36,6 @@ const defaultState: SceneStateContainer = createStateWithDependencies(IdleBefore
 // this is an impossible state, but can be used to test what happens if 'frames' is somehow empty
 const emptyState: SceneStateContainer = createStateWithDependencies({
   characters: [],
-  frameOffset: 0,
   frames: [],
 })
 
@@ -49,20 +48,11 @@ describe('scene selectors', () => {
       expect(result).toBe(0)
     })
 
-    it('returns frameOffset if scene state has no frames', () => {
-      const result = getCurrentFrameNumber(createStateWithDependencies({
-        ...IdleBeforeTypicalIntentions,
-        frames: [],
-      }))
-
-      expect(result).toBe(42)
-    })
-
     it.each<[string, SceneState, number]>([
       ['Default', Default, 0],
-      ['SingleTypicalFrame', SingleTypicalFrame, 10],
-      ['IdleBeforeTypicalIntentions', IdleBeforeTypicalIntentions, 43],
-    ])('returns frameOffset + current frame index: %p', (_fixture, state, expectedResult) => {
+      ['SingleTypicalFrame', SingleTypicalFrame, 0],
+      ['IdleBeforeTypicalIntentions', IdleBeforeTypicalIntentions, 1],
+    ])('returns current frame index: %p', (_fixture, state, expectedResult) => {
       const result = getCurrentFrameNumber(createStateWithDependencies(state))
       expect(result).toBe(expectedResult)
     })

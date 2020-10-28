@@ -13,6 +13,11 @@ const getMovementModeIdParam = createParameterSelector((params: RulesSelectorPar
 /** rules selectors */
 export const getRules = (state: RulesStateContainer) => state.rules ?? {}
 
+export const getSegmentDuration = createSelector(
+  [getRules],
+  (rules) => rules.segmentDuration
+)
+
 export const getMovementRules = createSelector(
   [getRules],
   (rules) => rules.movement ?? {}

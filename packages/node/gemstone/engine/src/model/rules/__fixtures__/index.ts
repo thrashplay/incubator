@@ -38,6 +38,7 @@ export const RulesStateFixtures = {
         },
       },
     },
+    segmentDuration: 5,
   },
   RiddleOfTheSphinx: {
     movement: {
@@ -48,5 +49,6 @@ export const RulesStateFixtures = {
         'with-cane': MovementModeFixtures.WithCane,
       },
     },
+    segmentDuration: 5,
   },
 }

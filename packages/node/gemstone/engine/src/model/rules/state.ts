@@ -11,6 +11,7 @@ export interface RulesState {
     defaultMode: MovementModeId
     modes: Record<MovementModeId, MovementMode>
   }
+  segmentDuration: number
 }
 
 export interface RulesStateContainer {

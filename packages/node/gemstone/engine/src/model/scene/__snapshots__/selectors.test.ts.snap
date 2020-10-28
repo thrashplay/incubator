@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`scene selectors getActorCollection matches snapshot 1`] = `
+Object {
+  "gimli": Object {
+    "id": "gimli",
+    "name": "Gimli, son of Glóin",
+    "speed": 60,
+    "status": Object {
+      "intention": Object {
+        "data": "Legolas Greenleaf",
+        "type": "befriending-elves",
+      },
+      "position": Object {
+        "x": 100,
+        "y": 100,
+      },
+    },
+  },
+  "trogdor": Object {
+    "id": "trogdor",
+    "name": "Trogdor, the Burninator",
+    "speed": 120,
+    "status": Object {
+      "intention": Object {
+        "data": Object {
+          "location": "The Countryside",
+          "target": "The Peasants",
+        },
+        "type": "burninating",
+      },
+      "position": Object {
+        "x": 7,
+        "y": 7,
+      },
+    },
+  },
+}
+`;
+
+exports[`scene selectors getActorStatusCollection matches snapshot 1`] = `
+Object {
+  "gimli": Object {
+    "id": "gimli",
+    "intention": Object {
+      "data": "Legolas Greenleaf",
+      "type": "befriending-elves",
+    },
+    "position": Object {
+      "x": 100,
+      "y": 100,
+    },
+  },
+  "trogdor": Object {
+    "id": "trogdor",
+    "intention": Object {
+      "data": Object {
+        "location": "The Countryside",
+        "target": "The Peasants",
+      },
+      "type": "burninating",
+    },
+    "position": Object {
+      "x": 7,
+      "y": 7,
+    },
+  },
+}
+`;

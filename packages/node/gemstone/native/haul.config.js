@@ -2,7 +2,7 @@ import path from 'path'
 
 import { makeConfig, withPolyfills } from '@haul-bundler/preset-0.60'
 import { get } from 'lodash'
-import { castArray, concat, flow, isString, map, some, tap } from 'lodash/fp'
+import { castArray, concat, flow, isString, map, some } from 'lodash/fp'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 
 const WebpackHelpers = require('@thrashplay/webpack-utils').WebpackHelpers
@@ -67,7 +67,7 @@ const addNodeModulesExclusion = (exclusion) => (config) => {
       rules: map(addExclusionIfBabelRule)(originalRules),
     },
   }
-} 
+}
 
 const excludeSvgFromAssetLoader = (config) => {
   const isAssetLoaderRule = (rule) => {
@@ -129,8 +129,8 @@ export default makeConfig({
           })),
           excludeSvgFromAssetLoader,
           addLoaderConfigs(WebpackHelpers.getLoaderConfigs()),
-          addNodeModulesExclusion(WebpackHelpers.getNodeModulesExclusion()),
-          tap((config) => console.log('Final Webpack config:', JSON.stringify(config, null, 2))),
+          addNodeModulesExclusion(WebpackHelpers.getNodeModulesExclusion())
+          // tap((config) => console.log('Final Webpack config:', JSON.stringify(config, null, 2)))
         )(config),
     },
   },

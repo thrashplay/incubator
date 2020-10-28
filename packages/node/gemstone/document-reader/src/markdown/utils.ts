@@ -1,15 +1,14 @@
-import { castArray, concat, contains, drop, head, size } from 'lodash/fp'
-import { isString } from 'lodash/fp'
-import MarkdownIt from 'markdown-it'
 import htmlToText from 'html-to-text'
 import { get } from 'lodash'
+import { castArray, concat, contains, drop, head, isString, size } from 'lodash/fp'
+import MarkdownIt from 'markdown-it'
 
 import { MarkdownSection, Token, TokenProcessingContext } from './types'
 
 const markdown = new MarkdownIt()
 const renderer = markdown.renderer
 
-export const addTokens = (tokens: Token[]) => (section: MarkdownSection) =>  ({
+export const addTokens = (tokens: Token[]) => (section: MarkdownSection) => ({
   ...section,
   body: {
     ...(section.body ?? []),
@@ -31,7 +30,6 @@ export const getText = (input: Token | Token[] | string): string => {
   return htmlToText.fromString(html, htmlToTextOptions)
 }
 
-
 /** predicate to determine if a token has one of the given types */
 export const tokenOneOf = (...types: string[]) => (token: Token | undefined) => contains(token?.type)(types)
 
@@ -40,7 +38,7 @@ export const tokenOfType = (type: string) => (token?: Token) => tokenOneOf(type)
 
 /** predicate to determine if a context's next token has one of the given types */
 export const nextTokenOneOf = (...types: string[]) => (
-  { remainingTokens }: TokenProcessingContext,
+  { remainingTokens }: TokenProcessingContext
 ) => tokenOneOf(...types)(head(remainingTokens))
 
 /** predicate to determine if a context's next token has the given type */

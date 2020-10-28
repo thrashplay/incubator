@@ -4,7 +4,7 @@ import { ValuesType } from 'utility-types'
  * A logical block of Markdown tokens that make up a single section of meaningful content in a document.
  * A content block may combine multiple tokens that, on their own, aren't meaningful (such as open and close
  * tokens around a container of text) and combine them into a higher-order group.
- * 
+ *
  * Example content blocks could be headings, paragraphs, data tables, etc.
  */
 export interface ContentBlock {
@@ -30,22 +30,22 @@ export interface Table extends ContentBlock {
   /** the names of the columns in the table */
   columnNames: string[]
 
-  /** 
-   * The table's data, represented as an array of Records 
+  /**
+   * The table's data, represented as an array of Records
    * Each record holds the data for a single table row. The record's keys are the column names, and the
    * values are the string contents of the corresponding cells.
    **/
   data: Record<string, string>[]
 
-  /** 
+  /**
    * The table header's content blocks
-   * The value is a record whose keys are the column names, and the values are the ContentBlocks 
+   * The value is a record whose keys are the column names, and the values are the ContentBlocks
    * containing the contents of the corresponding header cells.
    **/
   headerContent: Record<string, ContentBlock>
 
-  /** 
-   * The table body's content blocks, represented as an array of Records 
+  /**
+   * The table body's content blocks, represented as an array of Records
    * Each record holds the content for a single table row. The record's keys are the column names, and the
    * values are the ContentBlocks containing the contents of the corresponding cells.
    **/
@@ -63,8 +63,8 @@ export type TableRowData = ValuesType<Table['data']>
  * hierarchical document structure.
  */
 export interface Section extends ContentBlock {
-  /** 
-   * Block representing all of the section's body content, including sub-sections. 
+  /**
+   * Block representing all of the section's body content, including sub-sections.
    * The section heading is not included.
    **/
   body: ContentBlock

@@ -19,10 +19,9 @@ describe('markdown table parsing', () => {
   describe('section content', () => {
     let document: Document
     let section: Section
-    
+
     beforeEach(async () => {
       document = await doParse('with-other-content.md')
-      expect(document.sections.length).toBe(1)
       section = document.sections[0]
     })
 
@@ -38,10 +37,9 @@ describe('markdown table parsing', () => {
   describe('with no other content', () => {
     let document: Document
     let section: Section
-    
+
     beforeEach(async () => {
       document = await doParse('with-no-other-content.md')
-      expect(document.sections.length).toBe(1)
       section = document.sections[0]
     })
 
@@ -74,8 +72,8 @@ describe('markdown table parsing', () => {
     })
 
     it.each<[number, Record<string, string>]>([
-      [0, { 'Column A': 'Two bold words', 'B': '2', 'Last': 'Lorem' }],
-      [1, { 'Column A': 'Row 2', 'B': '4', 'Last': 'Ipsum' }],
+      [0, { 'Column A': 'Two bold words', B: '2', Last: 'Lorem' }],
+      [1, { 'Column A': 'Row 2', B: '4', Last: 'Ipsum' }],
     ])('has correct data in row: %p', (row, expectedData) => {
       const table = section.tables[0]
       expect(table.data[row]).toStrictEqual(expectedData)

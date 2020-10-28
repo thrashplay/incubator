@@ -22,7 +22,7 @@ export type UnhandledTokenProcessor<TContext extends TokenProcessingContext = To
  */
 export const DISCARD = <TContext extends TokenProcessingContext = TokenProcessingContext>(
   context: TContext,
-  tokens: Token[] | Token,
+  tokens: Token[] | Token
 ) => consumeTokens(castArray(tokens))(context)
 
 /**
@@ -30,7 +30,7 @@ export const DISCARD = <TContext extends TokenProcessingContext = TokenProcessin
  * If the 'matches' method returns true for a given context, then this token handler is able to handle
  * the token currently at the front of the token stream. The 'handleTokens' function performs this
  * handling, returning the new context after handling is complete (which may or not involve modifying
- * the context's remaining tokens). 
+ * the context's remaining tokens).
  */
 export interface TokenHandler<TContext extends TokenProcessingContext = TokenProcessingContext> {
   matches: (context: TContext) => boolean
@@ -62,15 +62,15 @@ export const createTokenProcessor = <
   }
 
   const getHandlerFunction = (context: TContext) => find(
-    (handler: TokenHandler<TContext>) => handler.matches(context),
+    (handler: TokenHandler<TContext>) => handler.matches(context)
   )(handlers)?.handleTokens ?? handleUnrecognizedTokens
-     
+
   const processRecursively = (context: TContext): TContext => {
     return (context.complete || isEmpty(context.remainingTokens))
       ? context
       : flow(
         getHandlerFunction(context),
-        processRecursively,
+        processRecursively
       )(context)
   }
 
@@ -79,6 +79,6 @@ export const createTokenProcessor = <
       complete: false,
       remainingTokens: tokens,
       ...initialContextFactory(tokens),
-    } as TContext,
+    } as TContext
   )
 }

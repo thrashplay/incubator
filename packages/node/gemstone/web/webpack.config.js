@@ -1,6 +1,7 @@
 const path = require('path')
 
 const HtmlWebPackPlugin = require('html-webpack-plugin')
+
 const createWebpackBase = require('@thrashplay/webpack-utils').createWebpackBase
 
 const htmlPlugin = new HtmlWebPackPlugin({

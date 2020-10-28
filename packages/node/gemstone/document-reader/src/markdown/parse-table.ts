@@ -1,5 +1,4 @@
-import { isEmpty } from 'lodash'
-import { reduce } from 'lodash'
+import { isEmpty, reduce } from 'lodash'
 import { concat, findIndex, flow, map, take } from 'lodash/fp'
 
 import { ContentBlock, TableRowContent, TableRowData } from '../types'
@@ -7,7 +6,7 @@ import { ContentBlock, TableRowContent, TableRowData } from '../types'
 import { createTokenProcessor } from './create-token-processor'
 import { withRenderers } from './render'
 import { MarkdownContentBlock, MarkdownSection, MarkdownTable, Token, TokenProcessingContext } from './types'
-import { discardNextToken, consumeTokens, nextTokenOfType, tokenOneOf, nextTokenOneOf } from './utils'
+import { consumeTokens, discardNextToken, nextTokenOfType, nextTokenOneOf, tokenOneOf } from './utils'
 
 interface RowProgress {
   cells: MarkdownContentBlock[]
@@ -44,9 +43,9 @@ const addRowContent = (context: TableProcessingContext) => {
   }
 
   const rowContent = reduce(
-    context.currentRow?.cells ?? [], 
-    reducer, 
-    {},
+    context.currentRow?.cells ?? [],
+    reducer,
+    {}
   )
 
   return {
@@ -68,9 +67,9 @@ const addRowData = (context: TableProcessingContext) => {
   }
 
   const rowData = reduce(
-    context.currentRow?.cells ?? [], 
-    reducer, 
-    {},
+    context.currentRow?.cells ?? [],
+    reducer,
+    {}
   )
 
   return {
@@ -95,7 +94,7 @@ const completeBodyRow = (context: TableProcessingContext) => {
   return flow(
     addRowContent,
     addRowData,
-    finishRow,
+    finishRow
   )(context)
 }
 
@@ -118,7 +117,7 @@ const completeHeaderRow = (context: TableProcessingContext) => {
 }
 
 const completeCurrentRow = (context: TableProcessingContext) => {
-  const completeRow  = (context: TableProcessingContext) => {
+  const completeRow = (context: TableProcessingContext) => {
     switch (context.tableSection) {
       case 'Footer':
         return completeFooterRow(context)
@@ -129,7 +128,7 @@ const completeCurrentRow = (context: TableProcessingContext) => {
     }
   }
 
-  return context.currentRow === undefined 
+  return context.currentRow === undefined
     ? context
     : completeRow(context)
 }
@@ -145,23 +144,23 @@ const handleRowStart = (context: TableProcessingContext) => {
   return flow(
     completeCurrentRow,
     createNewRow,
-    consumeNextToken,
+    consumeNextToken
   )(context)
 }
 
 const handleRowEnd = (context: TableProcessingContext) => {
   return flow(
     completeCurrentRow,
-    consumeNextToken,
+    consumeNextToken
   )(context)
 }
 
 const handleCell = (context: TableProcessingContext) => {
   const getCellTokens = (context: TableProcessingContext) => {
     const { remainingTokens } = context
-  
+
     return take(
-      findIndex(tokenOneOf('td_close', 'th_close'))(remainingTokens) + 1,
+      findIndex(tokenOneOf('td_close', 'th_close'))(remainingTokens) + 1
     )(remainingTokens)
   }
 
@@ -190,7 +189,7 @@ const handleCell = (context: TableProcessingContext) => {
   return flow(
     addCell(cellTokens),
     addTokensToTable(cellTokens),
-    consumeTokens(cellTokens),
+    consumeTokens(cellTokens)
   )(context)
 }
 
@@ -200,7 +199,7 @@ const setTableSection = (tableSection: TableSection) => flow(
     ...context,
     tableSection,
   }),
-  consumeNextToken,
+  consumeNextToken
 )
 
 /**
@@ -216,7 +215,7 @@ const addTokensToTable = (tokens: Token[]) => (context: TableProcessingContext) 
 
 export const consumeNextToken = (context: TableProcessingContext) => flow(
   addTokensToTable(take(1)(context.remainingTokens)),
-  discardNextToken,
+  discardNextToken
 )(context)
 
 /**
@@ -226,11 +225,12 @@ export const consumeNextToken = (context: TableProcessingContext) => flow(
 const consumeUnhandledTokens = (context: TableProcessingContext, tokens: Token[]) => {
   return flow(
     consumeTokens(tokens),
-    addTokensToTable(tokens),
+    addTokensToTable(tokens)
   )(context)
 }
 
-// todo: generalize the 'TOKEN_HANDLERS' patterns with consuming unrecognized/handling recognized tokens, and reuse in section and document
+// todo: generalize the 'TOKEN_HANDLERS' patterns with consuming unrecognized/handling recognized tokens,
+// and reuse in section and document
 export const parseTable = (section: MarkdownSection) => createTokenProcessor({
   handlers: [
     {

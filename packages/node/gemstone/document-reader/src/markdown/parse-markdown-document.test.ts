@@ -18,7 +18,7 @@ const doParse = (fixtureName: string) => {
 describe('markdown document parsing', () => {
   describe('when there are no headings', () => {
     let document: Document
-    
+
     beforeEach(async () => {
       document = await doParse('no-headings.md')
     })
@@ -33,7 +33,7 @@ describe('markdown document parsing', () => {
     })
 
     it('creates single section with correct body', () => {
-      const expectedBody = 
+      const expectedBody =
 `First section of test content.
 
 Some more content, but we have no headings yet.
@@ -54,14 +54,14 @@ This is marked up, isn't that cool?`
       expect(section.getHtml()).toEqual(
         `<p>First section of test content.</p>
 <p>Some more content, but we have no headings yet.</p>
-<p>This is <em>marked up</em>, isn't that cool?</p>`,
+<p>This is <em>marked up</em>, isn't that cool?</p>`
       )
     })
   })
 
   describe('text extraction and markup removal', () => {
     let document: Document
-    
+
     beforeEach(async () => {
       document = await doParse('inline-markup.md')
     })
@@ -99,7 +99,7 @@ This is marked up, isn't that cool?`
         expect(document.sections[0].body.getText()).toBe(
           `This is the first paragraph.
 
-This is the second paragraph.`,
+This is the second paragraph.`
         )
       })
 
@@ -107,7 +107,7 @@ This is the second paragraph.`,
         expect(document.sections[1].body.getText()).toBe(
           `This is the first paragraph. Still the first.
 
-And we now return to complete sentences in the final paragraph.`,
+And we now return to complete sentences in the final paragraph.`
         )
       })
 
@@ -118,7 +118,7 @@ And we now return to complete sentences in the final paragraph.`,
 Just some spaces
 to mark this this newline
 
-This is the end.`,
+This is the end.`
         )
       })
     })
@@ -126,7 +126,7 @@ This is the end.`,
 
   describe('with top level headings only', () => {
     let document: Document
-    
+
     beforeEach(async () => {
       document = await doParse('top-level-headings-only.md')
     })
@@ -166,7 +166,7 @@ This is the end.`,
   describe('nested sections', () => {
     describe('simple', () => {
       let document: Document
-      
+
       beforeEach(async () => {
         document = await doParse('nested-sections.md')
       })
@@ -233,7 +233,7 @@ This is the end.`,
 
     describe('irregular', () => {
       let document: Document
-      
+
       beforeEach(async () => {
         document = await doParse('nested-sections-irregular.md')
       })
@@ -281,47 +281,3 @@ This is the end.`,
     })
   })
 })
-
-// describe('basic text and heading parsing', () => {
-//   describe('simple input', () => {
-//     const expectedResult: RulesContent = {
-//       '/': {
-//         children: [
-//           '/Chapter I: Creating a Character',
-//           '/Chapter II: Spells',
-//         ],
-//         title: 'OSRIC'
-//       },
-//       '/Chapter I: Creating a Character': {
-//         children: [
-//           '/Chapter I: Creating a Character/Ability Scores'
-//         ],
-//         parent: '/',
-//         title: 'Chapter I: Creating a Character'
-//       },
-//       // '/Chapter I: Creating a Character/Ability Scores': {
-//       //   children: [
-//       //     '/Chapter I: Creating a Character/Ability Scores/Strength'
-//       //   ],
-//       //   content: 'This content describes ability scores in general.',
-//       //   parent: '/Chapter I: Creating a Character',
-//       //   title: 'Ability Scores'
-//       // },
-//       // '/Chapter I: Creating a Character/Ability Scores/Strength': {
-//       //   children: [],
-//       //   parent: '/Chapter I: Creating a Character/Ability Scores',
-//       //   title: 'Strength'
-//       // },
-//       // '/Chapter II: Spells': {
-//       //   children: [],
-//       //   content: 'This is some stuff about spells.',
-//       //   parent: '/',
-//       //   title: 'Chapter II: Spells'
-//       // },
-//     }
-
-//     it('parses correctly', () => {
-//       expect(parseTextAndHeadings(getTestContent('basic.md'))).toEqual(expectedResult)
-//     })
-//   })
-// })

@@ -6,8 +6,10 @@ import { parseMarkdownDocument } from '@thrashplay/gemstone-document-reader'
 describe('abilities', () => {
   describe('parsing', () => {
     it('parses', async () => {
-      const rules = await parseMarkdownDocument(fs.readFileSync(path.resolve(__dirname, 'osric', 'abilities.md'), 'utf8'))
-      console.log('rules', JSON.stringify(rules, null, 2))
+      const rules = await parseMarkdownDocument(
+        fs.readFileSync(path.resolve(__dirname, 'osric', 'abilities.md'), 'utf8')
+      )
+      expect(rules).toBeDefined()
     })
   })
 })

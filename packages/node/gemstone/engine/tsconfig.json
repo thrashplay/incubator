@@ -18,10 +18,7 @@
   ],
   "references": [
     {
-      "path": "../../thrashlib/canvas-with-tools/tsconfig.json"
-    },
-    {
-      "path": "../engine/tsconfig.json"
+      "path": "../../thrashlib/fp/tsconfig.json"
     }
   ]
 }

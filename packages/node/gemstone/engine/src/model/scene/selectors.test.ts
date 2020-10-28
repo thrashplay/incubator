@@ -1,7 +1,10 @@
+import { keys, omit } from 'lodash/fp'
+
 import { Point } from '../types'
 
 import {
   CharacterStateFixtures,
+  createStateWithDependencies,
   FrameFixtures,
   IntentionFixtures,
   RulesStateFixtures,
@@ -21,24 +24,17 @@ import {
   getCurrentStatus,
 } from './selectors'
 import { ActorStatus, Frame, IntentionState, SceneState, SceneStateContainer } from './state'
-import { keys, omit } from 'lodash/fp'
 
-const { GimliAndTrogdor } = CharacterStateFixtures
+const { GimliAndTrogdor, GimliOnly } = CharacterStateFixtures
 const { AllIdle, Empty, TypicalIntentions } = FrameFixtures
 const { BefriendingElves, Burninating } = IntentionFixtures
 const { Minimal } = RulesStateFixtures
 const { Default, IdleBeforeTypicalIntentions, SingleTypicalFrame, SingleIdleFrame } = SceneStateFixtures
 
-const createContainer = (scene: SceneState): SceneStateContainer => ({
-  characters: GimliAndTrogdor,
-  rules: Minimal,
-  scene,
-})
-
-const defaultState: SceneStateContainer = createContainer(IdleBeforeTypicalIntentions)
+const defaultState: SceneStateContainer = createStateWithDependencies(IdleBeforeTypicalIntentions)
 
 // this is an impossible state, but can be used to test what happens if 'frames' is somehow empty
-const emptyState: SceneStateContainer = createContainer({
+const emptyState: SceneStateContainer = createStateWithDependencies({
   characters: [],
   frameOffset: 0,
   frames: [],
@@ -54,7 +50,7 @@ describe('scene selectors', () => {
     })
 
     it('returns frameOffset if scene state has no frames', () => {
-      const result = getCurrentFrameNumber(createContainer({
+      const result = getCurrentFrameNumber(createStateWithDependencies({
         ...IdleBeforeTypicalIntentions,
         frames: [],
       }))
@@ -67,7 +63,7 @@ describe('scene selectors', () => {
       ['SingleTypicalFrame', SingleTypicalFrame, 10],
       ['IdleBeforeTypicalIntentions', IdleBeforeTypicalIntentions, 43],
     ])('returns frameOffset + current frame index: %p', (_fixture, state, expectedResult) => {
-      const result = getCurrentFrameNumber(createContainer(state))
+      const result = getCurrentFrameNumber(createStateWithDependencies(state))
       expect(result).toBe(expectedResult)
     })
   })
@@ -87,7 +83,7 @@ describe('scene selectors', () => {
       ['SingleIdleFrame', SingleIdleFrame, AllIdle],
       ['IdleBeforeTypicalIntentions', IdleBeforeTypicalIntentions, TypicalIntentions],
     ])('returns correct frame for: %p', (_fixture, state, expectedFrame) => {
-      const result = getCurrentFrame(createContainer(state))
+      const result = getCurrentFrame(createStateWithDependencies(state))
       expect(result).toStrictEqual(expectedFrame)
     })
   })
@@ -123,7 +119,7 @@ describe('scene selectors', () => {
     })
 
     it('returns correct status objects from last frame', () => {
-      const result = getActorStatuses(createContainer(IdleBeforeTypicalIntentions))
+      const result = getActorStatuses(createStateWithDependencies(IdleBeforeTypicalIntentions))
       expect(result).toHaveLength(2)
       expect(result).toContain(TypicalIntentions.actors.gimli)
       expect(result).toContain(TypicalIntentions.actors.trogdor)
@@ -251,58 +247,44 @@ describe('scene selectors', () => {
   })
 
   describe('getActors', () => {
+    const stateWithoutTrogdor = ({
+      characters: GimliOnly,
+      rules: Minimal,
+      scene: IdleBeforeTypicalIntentions,
+    })
+
+    const gimli = {
+      id: 'gimli',
+      name: 'Gimli, son of Glóin',
+      speed: 60,
+      status: {
+        intention: IntentionFixtures.BefriendingElves,
+        position: { x: 100, y: 100 },
+      },
+    }
+
+    const trogdor = {
+      id: 'trogdor',
+      name: 'Trogdor, the Burninator',
+      speed: 120,
+      status: {
+        intention: IntentionFixtures.Burninating,
+        position: { x: 7, y: 7 },
+      },
+    }
+
     it('returns undefined if scene state is invalid', () => {
       const result = getActors(invalidState)
       expect(result).toStrictEqual([])
     })
 
-    it('returns status details if character state is missing', () => {
-      const gimliStatusDetailsOnly = {
-        id: 'gimli',
-        status: {
-          intention: IntentionFixtures.BefriendingElves,
-          position: { x: 100, y: 100 },
-        },
-      }
-      const trogdorStatusDetailsOnly = {
-        id: 'trogdor',
-        status: {
-          intention: IntentionFixtures.Burninating,
-          position: { x: 7, y: 7 },
-        },
-      }
-
-      const stateWithoutCharacters = ({
-        rules: Minimal,
-        scene: IdleBeforeTypicalIntentions,
-      }) as unknown as SceneStateContainer
-
-      const result = getActors(stateWithoutCharacters)
-      expect(result).toHaveLength(2)
-      expect(result).toContainEqual(gimliStatusDetailsOnly)
-      expect(result).toContainEqual(trogdorStatusDetailsOnly)
+    it('omits actors if character state is missing', () => {
+      const result = getActors(stateWithoutTrogdor)
+      expect(result).toHaveLength(1)
+      expect(result).toContainEqual(gimli)
     })
 
     it('returns actors when all data is available', () => {
-      const gimli = {
-        id: 'gimli',
-        name: 'Gimli, son of Glóin',
-        speed: 60,
-        status: {
-          intention: IntentionFixtures.BefriendingElves,
-          position: { x: 100, y: 100 },
-        },
-      }
-      const trogdor = {
-        id: 'trogdor',
-        name: 'Trogdor, the Burninator',
-        speed: 120,
-        status: {
-          intention: IntentionFixtures.Burninating,
-          position: { x: 7, y: 7 },
-        },
-      }
-
       const result = getActors(defaultState)
       expect(result).toHaveLength(2)
       expect(result).toContainEqual(gimli)
@@ -311,29 +293,30 @@ describe('scene selectors', () => {
   })
 
   describe('getActor', () => {
+    const stateWithoutTrogdor = ({
+      characters: GimliOnly,
+      rules: Minimal,
+      scene: IdleBeforeTypicalIntentions,
+    })
+
+    const gimli = {
+      id: 'gimli',
+      name: 'Gimli, son of Glóin',
+      speed: 60,
+      status: {
+        intention: IntentionFixtures.BefriendingElves,
+        position: { x: 100, y: 100 },
+      },
+    }
+
     it('returns undefined if character ID is invalid', () => {
       const result = getActor(invalidState, { characterId: 'invalid-id' })
       expect(result).toBeUndefined()
     })
 
-    describe('character data missing', () => {
-      const statusDetailsOnly = {
-        id: 'gimli',
-        status: {
-          intention: IntentionFixtures.BefriendingElves,
-          position: { x: 100, y: 100 },
-        },
-      }
-
-      it('returns status details if character state is missing', () => {
-        const stateWithoutCharacters = ({
-          rules: Minimal,
-          scene: IdleBeforeTypicalIntentions,
-        }) as unknown as SceneStateContainer
-
-        const result = getActor(stateWithoutCharacters, { characterId: 'gimli' })
-        expect(result).toStrictEqual(statusDetailsOnly)
-      })
+    it('returns undefined when character data missing', () => {
+      const result = getActor(stateWithoutTrogdor, { characterId: 'trogdor' })
+      expect(result).toBeUndefined()
     })
 
     describe('status data missing', () => {
@@ -356,15 +339,7 @@ describe('scene selectors', () => {
     describe('all data available', () => {
       it('returns correct data', () => {
         const result = getActor(defaultState, { characterId: 'gimli' })
-        expect(result).toStrictEqual({
-          id: 'gimli',
-          name: 'Gimli, son of Glóin',
-          speed: 60,
-          status: {
-            intention: IntentionFixtures.BefriendingElves,
-            position: { x: 100, y: 100 },
-          },
-        })
+        expect(result).toStrictEqual(gimli)
       })
     })
   })

@@ -27,8 +27,7 @@ export interface ActorStatus {
 }
 
 /** combined data structure, merging full character info with the associated scene status */
-export type Actor = Partial<Character> & {
-  id: CharacterId,
+export type Actor = Character & {
   status: ActorStatus
 }
 

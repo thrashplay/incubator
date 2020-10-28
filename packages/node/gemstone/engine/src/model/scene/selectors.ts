@@ -1,9 +1,10 @@
-import { get, isEmpty, last, mapValues, omit, size, values } from 'lodash/fp'
+import { filter, get, isEmpty, isUndefined, last, mapValues, negate, omit, size, values } from 'lodash/fp'
 import { createSelector } from 'reselect'
 
 import { getPlayerCharactersCollection } from '../character'
 import { CharacterId } from '../character/state'
 import { createParameterSelector } from '../common'
+import { getSegmentDuration } from '../rules'
 
 import { EMPTY_FRAME } from './reducer'
 import { Actor, ActorStatus, SceneStateContainer } from './state'
@@ -38,7 +39,15 @@ export const getFrameCount = createSelector(
 // Gets the number of the current frame
 export const getCurrentFrameNumber = createSelector(
   [getFrames, getFrameOffset],
-  (frames, offset) => offset + Math.max(size(frames), 1) - 1
+  (frames, offset) => {
+    return offset + Math.max(size(frames), 1) - 1
+  }
+)
+
+// Gets the current scene time, in seconds
+export const getCurrentTime = createSelector(
+  [getCurrentFrameNumber, getSegmentDuration],
+  (frameNumber, segmentDuration) => frameNumber * segmentDuration
 )
 
 /** retrieves the current frame (i.e. the last one in the list) */
@@ -84,11 +93,14 @@ export const getCurrentIntention = createSelector(
 export const getActorCollection = createSelector(
   [getActorStatusCollection, getPlayerCharactersCollection],
   (statuses, characters) => {
-    const createActor = (status: ActorStatus): Actor => ({
-      ...(get(status.id)(characters) ?? {}),
-      status: omit('id')(status),
-      id: status.id,
-    })
+    const createActor = (status: ActorStatus): Actor => {
+      const character = get(status.id)(characters)
+      return character === undefined ? undefined : ({
+        ...character,
+        status: omit('id')(status),
+        id: status.id,
+      })
+    }
 
     return mapValues(createActor)(statuses)
   }
@@ -96,7 +108,7 @@ export const getActorCollection = createSelector(
 
 export const getActors = createSelector(
   [getActorCollection],
-  (actors) => values(actors)
+  (actors) => filter<Actor>(negate(isUndefined))(values(actors))
 )
 
 /** gets a hydrated actor+character object by ID */

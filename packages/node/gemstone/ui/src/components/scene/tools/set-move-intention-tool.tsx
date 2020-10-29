@@ -10,7 +10,6 @@ import {
   useCanvasEvent,
   XY,
 } from '@thrashplay/canvas-with-tools'
-import { useGame } from 'gemstone/ui/src/game-context'
 
 export type SetMoveIntention = ToolEvent<'set-move-intention', XY>
 

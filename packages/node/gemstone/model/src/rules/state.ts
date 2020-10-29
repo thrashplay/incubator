@@ -7,6 +7,8 @@ export interface MovementMode {
 }
 
 export interface RulesState {
+  /** distance, in feet, that is considered "in melee" */
+  meleeRange: number
   movement: {
     defaultMode: MovementModeId
     modes: Record<MovementModeId, MovementMode>

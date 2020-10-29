@@ -18,6 +18,11 @@ export const getSegmentDuration = createSelector(
   (rules) => rules.segmentDuration
 )
 
+export const getMeleeRange = createSelector(
+  [getRules],
+  (rules) => rules.meleeRange
+)
+
 export const getMovementRules = createSelector(
   [getRules],
   (rules) => rules.movement ?? {}

@@ -16,8 +16,14 @@ export const MovementModeFixtures = {
   },
 }
 
+const baseRules = {
+  meleeRange: 10,
+  segmentDuration: 5,
+}
+
 export const RulesStateFixtures = {
   Default: {
+    ...baseRules,
     movement: {
       defaultMode: 'hustle',
       modes: {
@@ -38,9 +44,9 @@ export const RulesStateFixtures = {
         },
       },
     },
-    segmentDuration: 5,
   },
   RiddleOfTheSphinx: {
+    ...baseRules,
     movement: {
       defaultMode: 'walk',
       modes: {
@@ -49,6 +55,5 @@ export const RulesStateFixtures = {
         'with-cane': MovementModeFixtures.WithCane,
       },
     },
-    segmentDuration: 5,
   },
 }

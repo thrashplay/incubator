@@ -7,21 +7,26 @@ import { SimulationContext } from '../types'
 
 const ARRIVAL_DISTANCE = 3
 
-/** handles the outcome of a move intention, once time has advanced to the endSegment */
-export const move = (actor: ActorStatus, context: SimulationContext<GameState>, destination: Point) => {
-  const speed = getBaseSpeed(context.state, { characterId: actor.id })
+export const moveTowardsDestination = (actor: ActorStatus, destination: Point, state: GameState) => {
+  const speed = getBaseSpeed(state, { characterId: actor.id })
   const newPosition = getNewPosition(actor.position, destination, speed, 1)
 
-  const move = SimulationActions.moved({
+  return SimulationActions.moved({
     characterId: actor.id,
     position: newPosition,
   })
-  const stop = SimulationActions.intentionDeclared({
+}
+
+/** handles the outcome of a move intention, once time has advanced to the endSegment */
+export const move = (actor: ActorStatus, context: SimulationContext<GameState>, destination: Point) => {
+  const moveAction = moveTowardsDestination(actor, destination, context.state)
+
+  const beginIdlingAction = SimulationActions.intentionDeclared({
     characterId: actor.id,
     intention: createIntention('idle'),
   })
 
-  return (calculateDistance(newPosition, destination) < ARRIVAL_DISTANCE)
-    ? [move, stop]
-    : move
+  return (calculateDistance(moveAction.payload.position, destination) < ARRIVAL_DISTANCE)
+    ? [moveAction, beginIdlingAction]
+    : moveAction
 }

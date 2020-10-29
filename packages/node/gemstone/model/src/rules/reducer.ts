@@ -9,6 +9,7 @@ export const reduceRulesState = (state: RulesState, action: RulesAction | Common
   switch (action.type) {
     case getType(CommonActions.initialized):
       return {
+        meleeRange: 10,
         movement: {
           defaultMode: 'hustle',
           modes: {

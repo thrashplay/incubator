@@ -11,7 +11,7 @@ import {
   createIntention,
   declareMoveIntention,
   GameState,
-  move,
+  moveTo,
   startNewScene,
 } from '@thrashplay/gemstone-engine'
 import {
@@ -57,10 +57,10 @@ const initializeTestScene = () => (_state: GameState) => {
     startNewScene(),
 
     // move PCs to random starting positions
-    move('dan', createRandomPosition()),
-    move('nate', createRandomPosition()),
-    move('seth', createRandomPosition()),
-    move('tom', createRandomPosition()),
+    moveTo('dan', createRandomPosition()),
+    moveTo('nate', createRandomPosition()),
+    moveTo('seth', createRandomPosition()),
+    moveTo('tom', createRandomPosition()),
   ]
 }
 

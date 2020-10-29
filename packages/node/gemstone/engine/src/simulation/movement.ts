@@ -1,6 +1,4 @@
-import { CharacterId, Point, SceneStateContainer } from '@thrashplay/gemstone-model'
-
-import { Intention } from '../intentions/intentions'
+import { Point } from '@thrashplay/gemstone-model'
 
 /** calculates a point that is 'distance' feet away from the start point, in the direction of destination */
 export const calculateLocationAlongVector = (start: Point, destination: Point) => (distance: number) => {
@@ -21,86 +19,34 @@ export const calculateDistance = (p1: Point, p2: Point) => Math.sqrt(
   (p2.x - p1.x) * (p2.x - p1.x)
 )
 
+/**
+ * Calculates how far a character with the given speed could move towards a goal in one segment
+ * This function accounts for reaching the goal, and so the result is the lesser of the character's
+ * fastest possible movement, and the distance between the origin and the destination.
+ */
+export const getNextSegmentDistance = (start: Point, destination: Point, speed: number) => {
+  return Math.min(getMaxDistance(speed, 1), calculateDistance(start, destination))
+}
+
 /** given a speed (in feet per round), and time (in segments), return the maximum allowed movement */
 export const getMaxDistance = (speed: number, segments: number) => speed * (segments / 12)
 
-export const getNewPosition = (origin: Point, destination: Point, speed: number, segments: number) => {
+export const getNewPosition = (origin: Point, destination: Point, speed: number, _ignored?: any) => {
   const requestedDistance = calculateDistance(origin, destination)
 
-  const maxDistance = getMaxDistance(speed, segments)
+  const maxDistance = getNextSegmentDistance(origin, destination, speed)
   const distance = Math.min(maxDistance, requestedDistance)
 
   return calculateLocationAlongVector(origin, destination)(distance)
 }
 
-/** updates an actor by setting their position to the specified coordinates */
-export const setPosition = (
-  actorId: CharacterId,
-  position: Point
-) => (state: SceneStateContainer): SceneStateContainer => {
-  const actor = Q.actor(state, { characterId: actorId })
-
-  return actor === undefined ? state : {
-    ...state,
-    scene: state.scene === undefined ? undefined : {
-      ...state.scene,
-      currentFrame: {
-        ...state.scene.currentFrame,
-        actors: {
-          ...state.scene.currentFrame.actors,
-          [actor.id]: {
-            ...actor,
-            position,
-          },
-        },
-      },
-    },
-  }
-}
-
-/** updates an actor by moving them towards a destination at max speed for the given number of segments */
-export const moveTowards = (
-  actorId: CharacterId,
-  destination: Point,
-  duration: number
-) => (state: SceneStateContainer): SceneStateContainer => {
-  const actor = Q.actor(state, { characterId: actorId })
-
-  const newPosition = getNewPosition(
-    Q.position(state, { characterId: actor!.id }),
-    destination,
-    Q.effectiveSpeed(state, { characterId: actor!.id }),
-    duration
-  )
-
-  return actor === undefined ? state : setPosition(actorId, newPosition)(state)
-}
-
-/** clears a move intention if the actor reaches a location whthin 'maxDistance' (in feet) of the destination */
-export const handleArrival = (
-  actorId: CharacterId,
-  destination: Point,
-  nextIntention: Intention,
-  maxDistance = 2
-) => (state: SceneStateContainer): SceneStateContainer => {
-  const actor = Q.actor(state, { characterId: actorId })
-
-  return actor === undefined ? state : {
-    ...state,
-    scene: state.scene === undefined ? undefined : {
-      ...state.scene,
-      currentFrame: {
-        ...state.scene.currentFrame,
-        actors: {
-          ...state.scene.currentFrame.actors,
-          [actor.id]: {
-            ...actor,
-            intention: calculateDistance(Q.position(state, { characterId: actorId }), destination) <= maxDistance
-              ? nextIntention
-              : actor.intention,
-          },
-        },
-      },
-    },
-  }
+/**
+ * When starting at 'start', and approaching 'end' at the given speed, calculate the end point for a single
+ * segment's worth of movement. If specified, the approach will not intentionally get any closer than the
+ * 'minDistance' value.
+ */
+export const getNextPositionOnApproach = (start: Point, end: Point, speed: number, minDistance = 0) => {
+  // this helper is written to get distance from the start point, so we reverse our argument order
+  const trueDestination = calculateLocationAlongVector(end, start)(minDistance)
+  return getNewPosition(start, trueDestination, speed)
 }

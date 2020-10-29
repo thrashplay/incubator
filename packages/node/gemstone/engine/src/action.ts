@@ -11,12 +11,15 @@ import {
 
 import { GameState } from './state'
 
+export const NOOP = { type: 'noop' } as const
+
 export const AllActions = {
   ...CharacterActions,
   ...CommonActions,
   ...RulesActions,
   ...SceneActions,
   ...SimulationActions,
+  NOOP,
 }
 
 export type Action = ActionType<typeof AllActions>

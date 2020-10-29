@@ -3,7 +3,10 @@ import { map } from 'lodash/fp'
 import {
   Character,
   CharacterId,
+  getBaseSpeed,
+  getCurrentPosition,
   getPlayerCharacters,
+  isValidPoint,
   Point,
   SceneActions,
   SceneStateContainer,
@@ -11,6 +14,9 @@ import {
 } from '@thrashplay/gemstone-model'
 
 import { createIntention } from '../intentions'
+import { GameState } from '../state'
+
+import { getNextPositionOnApproach } from './movement'
 
 /** starts a new scene that includes all the player characters by default */
 export const startNewScene = () => (state: SceneStateContainer) => [
@@ -26,12 +32,41 @@ export const declareMoveIntention = (characterId: CharacterId, x: number, y: num
   })
 }
 
-/** the actor's position has been moved to the specified location */
-export const move = (characterId: CharacterId, position: Point) => () => {
+/** move the actor to the specified location */
+export const moveTo = (characterId: CharacterId, position: Point) => () => {
   return SimulationActions.moved({
     characterId,
     position,
   })
+}
+
+/** move the actor as fast as possible towards destination, but keep the given minimum distance */
+export const approachLocation = (
+  characterId: CharacterId,
+  destination: Point,
+  minDistance: number
+) => (state: GameState) => {
+  const position = getCurrentPosition(state, { characterId })
+  const speed = getBaseSpeed(state, { characterId })
+
+  return !isValidPoint(position) || !isValidPoint(destination)
+    ? []
+    : [moveTo(characterId, getNextPositionOnApproach(position, destination, speed, minDistance))()]
+}
+
+/**
+ * Move the actor with the given characterId as fast as possible towards the actor with the given
+ * targetId, but keep the given minimum distance between them while approaching.
+ **/
+export const approachActor = (
+  characterId: CharacterId,
+  targetId: CharacterId,
+  minDistance: number
+) => (state: GameState) => {
+  const targetPosition = getCurrentPosition(state, { characterId: targetId })
+  return !isValidPoint(targetPosition)
+    ? []
+    : [approachLocation(characterId, targetPosition, minDistance)]
 }
 
 export * from './calculate-frames'

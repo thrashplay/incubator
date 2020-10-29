@@ -123,7 +123,7 @@ const MapContent = ({
       viewBox={`${extents.x} ${extents.y} ${extents.width} ${extents.height}`}
     >
       <Grid
-        gridSpacing={12.5}
+        gridSpacing={10}
         mapHeight={500}
         mapWidth={500}
       />

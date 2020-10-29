@@ -31,7 +31,7 @@ import {
 import { useStateQuery } from '../game-context'
 import { useGame } from '../game-context/use-game'
 
-import { CharacterList } from './character-list'
+import { ActorList } from './actor-list'
 import { SceneMap } from './scene/scene-map'
 
 const initializeTestScene = () => (_state: GameState) => {
@@ -123,8 +123,8 @@ export const TestScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <CharacterList
-          characters={actors}
+        <ActorList
+          actors={actors}
           onSelect={handleSelectActor}
           style={styles.actorList}
           title="Combatants"

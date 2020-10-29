@@ -25,6 +25,18 @@ export const getPlayerCharacter = createSelector(
   (characters, id) => id === undefined ? undefined : characters[id]
 )
 
+/** gets a character's actual name */
+export const getPlayerCharacterName = createSelector(
+  [getPlayerCharacter],
+  (character) => character?.name ?? 'an unknown character'
+)
+
+/** gets a character's public-facing name for players (may or may not be their actual name) */
+export const getPublicCharacterName = createSelector(
+  [getPlayerCharacter],
+  (character) => character?.name ?? 'an unknown character'
+)
+
 export const getBaseSpeed = createSelector(
   [getPlayerCharactersCollection, getCharacterIdParam],
   (characters, id) => id === undefined ? 0 : characters[id]?.speed ?? 0

@@ -1,18 +1,20 @@
 import { map, noop } from 'lodash/fp'
 import React, { useState } from 'react'
-import { StyleProp, StyleSheet, TextStyle, ViewStyle } from 'react-native'
+import { StyleProp, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native'
 import { List } from 'react-native-paper'
 
-import { Character, CharacterId } from '@thrashplay/gemstone-engine'
+import { getPublicActionDescription } from '@thrashplay/gemstone-engine'
+import { Actor, CharacterId } from '@thrashplay/gemstone-model'
 
+import { useGame } from '../game-context'
 const NO_STYLES = {}
 
-export interface CharacterListProps {
+export interface ActorListProps {
   /** list of actors to include in the list */
-  characters?: Character[]
+  actors?: Actor[]
 
   /** the actor to initially select (onSelect is not called for this initial selection) */
-  initialSelection?: Character
+  initialSelection?: Actor
 
   /** callback notified when an actor is selected */
   onSelect?: (id: CharacterId) => void
@@ -27,45 +29,47 @@ export interface CharacterListProps {
   titleStyle?: StyleProp<TextStyle>
 }
 
-export const CharacterList = ({
-  characters = [],
+export const ActorList = ({
+  actors = [],
   initialSelection,
   onSelect = noop,
   style,
   title,
   titleStyle,
-}: CharacterListProps) => {
-  const [selectedCharacter, setSelectedCharacter] = useState<Character | undefined>(initialSelection)
+}: ActorListProps) => {
+  const { state } = useGame()
+  const [selectedActor, setSelectedActor] = useState<Actor | undefined>(initialSelection)
 
-  const handleListPress = (character: Character) => () => {
-    onSelect(character.id)
-    setSelectedCharacter(character)
+  const handleListPress = (actor: Actor) => () => {
+    onSelect(actor.id)
+    setSelectedActor(actor)
   }
 
-  const isSelected = (character: Character) => character.id === selectedCharacter?.id
+  const isSelected = (actor: Actor) => actor.id === selectedActor?.id
 
-  const getListItemContainerStyle = (character: Character) => isSelected(character)
+  const getListItemContainerStyle = (actor: Actor) => isSelected(actor)
     ? styles.selectedItemContainer
     : NO_STYLES
 
-  const getListItemTextStyle = (character: Character) => isSelected(character)
+  const getListItemTextStyle = (actor: Actor) => isSelected(actor)
     ? styles.selectedItemText
     : NO_STYLES
 
-  const createListItem = (character: Character) => (
+  const createListItem = (actor: Actor) => (
     <List.Item
-      key={character.id}
-      onPress={handleListPress(character)}
-      style={getListItemContainerStyle(character)}
-      title={character.name}
-      titleStyle={getListItemTextStyle(character)}
+      key={actor.id}
+      description={() => <Text>is {getPublicActionDescription(state, { characterId: actor.id })}</Text> }
+      onPress={handleListPress(actor)}
+      style={getListItemContainerStyle(actor)}
+      title={actor.name}
+      titleStyle={getListItemTextStyle(actor)}
     />
   )
 
   return (
     <List.Section style={[styles.container, style]}>
       {title && <List.Subheader style={[styles.title, titleStyle]}>{title}</List.Subheader>}
-      {map(createListItem)(characters)}
+      {map(createListItem)(actors)}
     </List.Section>
   )
 }

@@ -1,6 +1,6 @@
 import { getType } from 'typesafe-actions'
 
-import { CommonAction, CommonActions } from '../common/action'
+import { CommonAction, CommonActions } from '../common'
 
 import { RulesAction } from './actions'
 import { RulesState } from './state'

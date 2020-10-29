@@ -1,30 +1,22 @@
-import { Character, CharacterId, CharacterStateContainer } from '../model/character/state'
-import { RulesStateContainer } from '../model/rules/state'
-import { Point } from '../model/types'
+import { Character, CharacterId, CharacterStateContainer } from '../character'
+import { RulesStateContainer } from '../rules'
+import { Point } from '../types'
 
 export const EMPTY_FRAME: Frame = {
   actors: {},
 }
 
-export interface BaseIntention<TType extends string = string> {
+export interface IntentionType<TType extends string = string, TData extends any = any> {
   type: TType
+  data?: TData
 }
-
-export type IntentionState<
-  TType extends string = string,
-  TData extends unknown = never
-> = ([TData] extends [never] ? unknown : {
-  data: TData
-}) & BaseIntention<TType>
-
-export type Idle = IntentionState<'idle'>
 
 /** scene-specific status for the actor */
 export interface ActorStatus {
   id: CharacterId
 
   /** the actor's current intention (that is, selected game action) */
-  intention: IntentionState
+  intention: IntentionType
 
   /** the current position of the actor, in world coordinates */
   position: Point

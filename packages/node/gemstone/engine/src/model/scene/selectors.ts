@@ -1,10 +1,9 @@
 import { filter, get, isEmpty, isUndefined, last, mapValues, negate, omit, size, values } from 'lodash/fp'
 import { createSelector } from 'reselect'
 
-import { Actor, ActorStatus, EMPTY_FRAME } from '../../simulation/state'
-import { getPlayerCharactersCollection } from '../character'
-import { CharacterId } from '../character/state'
+import { CharacterId, getPlayerCharactersCollection } from '../character'
 import { createParameterSelector } from '../common'
+import { Actor, ActorStatus, EMPTY_FRAME } from '../frame'
 import { getSegmentDuration } from '../rules'
 
 import { SceneStateContainer } from './state'

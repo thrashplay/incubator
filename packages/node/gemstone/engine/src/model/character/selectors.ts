@@ -25,6 +25,11 @@ export const getPlayerCharacter = createSelector(
   (characters, id) => id === undefined ? undefined : characters[id]
 )
 
+export const getBaseSpeed = createSelector(
+  [getPlayerCharactersCollection, getCharacterIdParam],
+  (characters, id) => id === undefined ? 0 : characters[id]?.speed ?? 0
+)
+
 /** retrieves an unsorted array of all player characters */
 export const getPlayerCharacters = createSelector(
   [getPlayerCharactersCollection],

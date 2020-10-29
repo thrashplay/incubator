@@ -1,4 +1,5 @@
-import { IntentionState, SceneState, SceneStateContainer } from '../state'
+import { IntentionType } from '../../frame'
+import { SceneState, SceneStateContainer } from '../state'
 
 export const CharacterFixtures = {
   Trogdor: {
@@ -50,14 +51,14 @@ export const IntentionFixtures = {
   BefriendingElves: {
     type: 'befriending-elves',
     data: 'Legolas Greenleaf',
-  } as IntentionState<'befriending-elves', string>,
+  } as IntentionType<'befriending-elves', string>,
   Burninating: {
     type: 'burninating',
     data: {
       location: 'The Countryside',
       target: 'The Peasants',
     },
-  } as IntentionState<'burninating', { location: string; target: string }>,
+  } as IntentionType<'burninating', { location: string; target: string }>,
   Grumbling: { type: 'grumbling' },
   Idle: { type: 'idle' },
 }

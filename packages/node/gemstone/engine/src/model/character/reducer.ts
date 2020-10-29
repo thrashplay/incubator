@@ -1,7 +1,7 @@
 import { pickBy } from 'lodash/fp'
 import { getType } from 'typesafe-actions'
 
-import { CommonAction, CommonActions } from '../common/action'
+import { CommonAction, CommonActions } from '../common'
 
 import { CharacterAction, CharacterActions } from './actions'
 import { CharacterState } from './state'

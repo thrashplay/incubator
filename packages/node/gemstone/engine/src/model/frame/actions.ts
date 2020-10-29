@@ -1,9 +1,9 @@
 import { ActionType, createAction } from 'typesafe-actions'
 
-import { CharacterId } from '../model/character'
-import { Point } from '../model/types'
+import { CharacterId } from '../character'
+import { Point } from '../types'
 
-import { IntentionState } from './state'
+import { IntentionType } from './state'
 
 export const SimulationActions = {
   /** character added to the simulation */
@@ -12,7 +12,7 @@ export const SimulationActions = {
   /** actor has set an intention */
   intentionDeclared: createAction('simulation/actor-declared-intention')<{
     characterId: CharacterId
-    intention: IntentionState
+    intention: IntentionType
   }>(),
 
   /** actor has moved to a specified position */

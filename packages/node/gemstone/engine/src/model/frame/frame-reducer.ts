@@ -1,10 +1,9 @@
 import { flow, has } from 'lodash/fp'
 import { getType } from 'typesafe-actions'
 
-import { CharacterId } from '../model/character'
-
-import { SimulationAction, SimulationActions } from './actions'
-import { ActorStatus, Frame } from './state'
+import { CharacterId } from '../character'
+import { ActorStatus, Frame } from '../frame'
+import { SimulationAction, SimulationActions } from '../frame/actions'
 
 export const frameReducer = (frame: Frame, action: SimulationAction): Frame => {
   switch (action.type) {

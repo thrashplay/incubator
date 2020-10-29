@@ -1,13 +1,11 @@
 import { map } from 'lodash/fp'
 
-import { createIntention } from '../../intentions'
-import { SimulationActions } from '../../simulation/actions'
-import { getPlayerCharacters } from '../character'
-import { Character, CharacterId } from '../character/state'
-import { Point } from '../types'
-
-import { SceneActions } from './actions'
-import { SceneStateContainer } from './state'
+import { createIntention } from '../intentions'
+import { Character, CharacterId, getPlayerCharacters } from '../model/character'
+import { SimulationActions } from '../model/frame'
+import { SceneActions } from '../model/scene/actions'
+import { SceneStateContainer } from '../model/scene/state'
+import { Point } from '../model/types'
 
 /** starts a new scene that includes all the player characters by default */
 export const startNewScene = () => (state: SceneStateContainer) => [
@@ -30,6 +28,3 @@ export const move = (characterId: CharacterId, position: Point) => () => {
     position,
   })
 }
-
-export * from './commands/calculate-frames'
-export * from './commands/calculate-next-frame'

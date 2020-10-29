@@ -1,4 +1,4 @@
-import { CommonActions } from '../common/action'
+import { CommonActions } from '../common'
 
 import { CharacterFixtures, CharacterStateFixtures, stateWithCharacters } from './__fixtures__'
 import { CharacterActions } from './actions'

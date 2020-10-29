@@ -1,9 +1,9 @@
 import { concat, contains, flow, initial, last, take, uniq } from 'lodash/fp'
 import { getType } from 'typesafe-actions'
 
-import { EMPTY_FRAME, frameReducer, SimulationAction, SimulationActions } from '../../simulation'
 import { CharacterId } from '../character'
 import { CommonAction, CommonActions } from '../common'
+import { EMPTY_FRAME, frameReducer, SimulationAction, SimulationActions } from '../frame'
 
 import { SceneAction, SceneActions } from './actions'
 import { SceneState } from './state'

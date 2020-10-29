@@ -25,10 +25,10 @@ export const calculateDistance = (p1: Point, p2: Point) => Math.sqrt(
 /** given a speed (in feet per round), and time (in segments), return the maximum allowed movement */
 export const getMaxDistance = (speed: number, segments: number) => speed * (segments / 12)
 
-export const getNewPosition = (origin: Point, destination: Point, speed: number, time: number) => {
+export const getNewPosition = (origin: Point, destination: Point, speed: number, segments: number) => {
   const requestedDistance = calculateDistance(origin, destination)
 
-  const maxDistance = getMaxDistance(speed, time)
+  const maxDistance = getMaxDistance(speed, segments)
   const distance = Math.min(maxDistance, requestedDistance)
 
   return calculateLocationAlongVector(origin, destination)(distance)

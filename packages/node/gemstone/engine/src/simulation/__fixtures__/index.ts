@@ -1,4 +1,5 @@
-import { IntentionState } from '../state'
+import { IntentionType } from '../../model/frame'
+import { SceneState, SceneStateContainer } from '../../model/scene'
 
 export const CharacterFixtures = {
   Trogdor: {
@@ -13,18 +14,51 @@ export const CharacterFixtures = {
   },
 }
 
+export const CharacterStateFixtures = {
+  Default: {
+    pcs: {},
+  },
+  GimliOnly: {
+    pcs: {
+      gimli: CharacterFixtures.Gimli,
+    },
+  },
+  GimliAndTrogdor: {
+    pcs: {
+      gimli: CharacterFixtures.Gimli,
+      trogdor: CharacterFixtures.Trogdor,
+    },
+  },
+}
+
+export const RulesStateFixtures = {
+  Minimal: {
+    movement: {
+      defaultMode: 'standard',
+      modes: {
+        hustle: {
+          id: 'standard',
+          name: 'Standard',
+          multiplier: 1,
+        },
+      },
+    },
+    segmentDuration: 5,
+  },
+}
+
 export const IntentionFixtures = {
   BefriendingElves: {
     type: 'befriending-elves',
     data: 'Legolas Greenleaf',
-  } as IntentionState<'befriending-elves', string>,
+  } as IntentionType<'befriending-elves', string>,
   Burninating: {
     type: 'burninating',
     data: {
       location: 'The Countryside',
       target: 'The Peasants',
     },
-  } as IntentionState<'burninating', { location: string; target: string }>,
+  } as IntentionType<'burninating', { location: string; target: string }>,
   Grumbling: { type: 'grumbling' },
   Idle: { type: 'idle' },
 }
@@ -67,3 +101,33 @@ export const FrameFixtures = {
     },
   },
 }
+
+export const SceneStateFixtures = {
+  FiveIdleFrames: {
+    characters: ['gimli', 'trogdor'],
+    frames: [
+      FrameFixtures.AllIdle,
+      FrameFixtures.AllIdle,
+      FrameFixtures.AllIdle,
+      FrameFixtures.AllIdle,
+      FrameFixtures.AllIdle,
+    ],
+  },
+  SingleIdleFrame: {
+    characters: ['gimli', 'trogdor'],
+    frames: [FrameFixtures.AllIdle],
+  },
+}
+
+export const defaultDependencies = {
+  characters: CharacterStateFixtures.GimliAndTrogdor,
+  rules: RulesStateFixtures.Minimal,
+}
+
+export const createStateWithDependencies = (
+  scene: SceneState,
+  dependencies: Omit<SceneStateContainer, 'scene'> = defaultDependencies
+): SceneStateContainer => ({
+  ...dependencies,
+  scene,
+})

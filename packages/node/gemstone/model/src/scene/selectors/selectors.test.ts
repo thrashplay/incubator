@@ -1,8 +1,7 @@
 import { keys, omit } from 'lodash/fp'
 
-import { Point } from '../common'
-import { ActorStatus, Frame, IntentionType } from '../frame'
-
+import { Point } from '../../common'
+import { ActorStatus, Frame, IntentionType } from '../../frame'
 import {
   CharacterStateFixtures,
   createStateWithDependencies,
@@ -10,7 +9,9 @@ import {
   IntentionFixtures,
   RulesStateFixtures,
   SceneStateFixtures,
-} from './__fixtures__'
+} from '../__fixtures__'
+import { SceneState, SceneStateContainer } from '../state'
+
 import {
   getActor,
   getActorCollection,
@@ -23,8 +24,7 @@ import {
   getCurrentIntention,
   getCurrentPosition,
   getCurrentStatus,
-} from './selectors'
-import { SceneState, SceneStateContainer } from './state'
+} from '.'
 
 const { GimliAndTrogdor, GimliOnly } = CharacterStateFixtures
 const { AllIdle, Empty, TypicalIntentions } = FrameFixtures

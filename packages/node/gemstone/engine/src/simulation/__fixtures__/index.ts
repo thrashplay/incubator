@@ -1,5 +1,4 @@
-import { IntentionType } from '../../model/frame'
-import { SceneState, SceneStateContainer } from '../../model/scene'
+import { IntentionType, SceneState, SceneStateContainer } from '@thrashplay/gemstone-model'
 
 export const CharacterFixtures = {
   Trogdor: {

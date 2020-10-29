@@ -4,22 +4,17 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 import { Button } from 'react-native-paper'
 
+import { calculateNextFrame, declareMoveIntention, GameState, move, startNewScene } from '@thrashplay/gemstone-engine'
 import {
   addCharacter,
-  calculateNextFrame,
   Character,
   CharacterId,
-  declareMoveIntention,
-  GameState,
   getActor,
   getActors,
   getCurrentTime,
-  getFrameCount,
   getSegmentDuration,
-  move,
   SceneActions,
-  startNewScene,
-} from '@thrashplay/gemstone-engine'
+} from '@thrashplay/gemstone-model'
 
 import { useStateQuery } from '../game-context'
 import { useGame } from '../game-context/use-game'

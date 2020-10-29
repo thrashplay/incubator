@@ -23,7 +23,7 @@ export const reduceSceneState = (
     case getType(SceneActions.characterAdded):
       return contains(action.payload)(state.characters) ? state : flow(
         addCharacter(action.payload),
-        reduceCurrentFrame(SimulationActions.characterAdded(action.payload))
+        reduceCurrentFrame(SimulationActions.actorAdded(action.payload))
       )(state)
 
     case getType(SceneActions.frameAdded):

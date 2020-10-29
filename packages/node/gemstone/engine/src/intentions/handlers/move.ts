@@ -1,20 +1,27 @@
-import { GameState, Point } from '../../model'
-import { getBaseSpeed } from '../../model/character'
-import { ActorStatus } from '../../model/frame'
-import { getNewPosition, SimulationActions } from '../../simulation'
+import { ActorStatus, getBaseSpeed, Point, SimulationActions } from '@thrashplay/gemstone-model'
+
+import { calculateDistance, getNewPosition } from '../../simulation'
+import { GameState } from '../../state'
+import { createIntention } from '../intentions'
 import { SimulationContext } from '../types'
+
+const ARRIVAL_DISTANCE = 3
 
 /** handles the outcome of a move intention, once time has advanced to the endSegment */
 export const move = (actor: ActorStatus, context: SimulationContext<GameState>, destination: Point) => {
-  // return flow(
-  //   moveTowards(actor.id, move.destination, endSegment - (state.scene?.currentSegment ?? 0)),
-  //   handleArrival(actor.id, move.destination, createWaitIntention())
-  // )(state)
-
   const speed = getBaseSpeed(context.state, { characterId: actor.id })
+  const newPosition = getNewPosition(actor.position, destination, speed, 1)
 
-  return SimulationActions.moved({
+  const move = SimulationActions.moved({
     characterId: actor.id,
-    position: getNewPosition(actor.position, destination, speed, 1),
+    position: newPosition,
   })
+  const stop = SimulationActions.intentionDeclared({
+    characterId: actor.id,
+    intention: createIntention('idle'),
+  })
+
+  return (calculateDistance(newPosition, destination) < ARRIVAL_DISTANCE)
+    ? [move, stop]
+    : move
 }

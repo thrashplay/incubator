@@ -1,6 +1,6 @@
 import { times } from 'lodash/fp'
 
-import { getCurrentFrameNumber, SceneActions, SceneStateContainer } from '../../model/scene'
+import { getCurrentFrameNumber, SceneActions, SceneStateContainer } from '@thrashplay/gemstone-model'
 
 import { calculateNextFrame } from './calculate-next-frame'
 

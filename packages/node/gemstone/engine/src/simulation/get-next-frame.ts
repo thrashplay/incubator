@@ -1,15 +1,14 @@
 import { flatten, flow, map, reduce, values } from 'lodash/fp'
 
-import { createIntentionHandler } from '../intentions/intentions'
-import { ActorStatus, Frame, frameReducer } from '../model/frame'
-import { SimulationAction } from '../model/frame/actions'
-import { GameState } from '../model/state'
+import { ActorStatus, Frame, frameReducer, SimulationAction } from '@thrashplay/gemstone-model'
 
-export const getNextFrame = (frame: Frame) => {
+import { createIntentionHandler } from '../intentions/intentions'
+import { GameState } from '../state'
+
+export const getNextFrame = (frame: Frame, state: GameState) => {
   const handler = createIntentionHandler({
     frame,
-    // TODO: populate this
-    state: 'not real value' as unknown as GameState,
+    state,
   })
 
   const handleIntention = (actor: ActorStatus) => handler(actor, actor.intention)

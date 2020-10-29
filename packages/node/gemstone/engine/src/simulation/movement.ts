@@ -1,7 +1,6 @@
+import { CharacterId, Point, SceneStateContainer } from '@thrashplay/gemstone-model'
+
 import { Intention } from '../intentions/intentions'
-import { CharacterId } from '../model'
-import { SceneStateContainer } from '../model/scene/state'
-import { Point } from '../model/types'
 
 /** calculates a point that is 'distance' feet away from the start point, in the direction of destination */
 export const calculateLocationAlongVector = (start: Point, destination: Point) => (distance: number) => {

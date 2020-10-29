@@ -1,8 +1,6 @@
 import { get, head } from 'lodash/fp'
 
-import { GameState } from '../model'
-import { ActorStatus } from '../model/frame'
-import { SimulationAction } from '../model/frame/actions'
+import { ActorStatus, IntentionType, SimulationAction } from '@thrashplay/gemstone-model'
 
 import { IntentionHandlers } from './handlers'
 import { OptionalRestParameter, TypeOfIntention } from './helper-types'
@@ -18,10 +16,10 @@ export const createIntention = <
 
 export const createIntentionHandler = <TState extends any = any>(
   context: SimulationContext<TState>
-) => (actor: ActorStatus, intention: Intention): SimulationAction | SimulationAction[] => {
+) => (actor: ActorStatus, intention: IntentionType): SimulationAction | SimulationAction[] => {
   const NOOP = () => []
 
-  const handler = IntentionHandlers[intention.type] ?? NOOP
+  const handler = get(intention.type)(IntentionHandlers) ?? NOOP
   return handler(actor, context, get('data')(intention))
 }
 

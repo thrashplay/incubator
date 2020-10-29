@@ -1,6 +1,6 @@
 import { keys } from 'lodash/fp'
 
-import { FrameFixtures, IntentionFixtures } from '../../simulation/__fixtures__'
+import { FrameFixtures, IntentionFixtures } from '../scene/__fixtures__'
 
 import { SimulationActions } from './actions'
 import { frameReducer } from './frame-reducer'
@@ -11,7 +11,7 @@ const { Empty, TypicalIntentions } = FrameFixtures
 describe('frameReducer', () => {
   describe('SimulationActions.characterAdded', () => {
     it('adds actor if not already present', () => {
-      const result = frameReducer(Empty, SimulationActions.characterAdded('gimli'))
+      const result = frameReducer(Empty, SimulationActions.actorAdded('gimli'))
 
       const ids = keys(result.actors)
       expect(ids).toHaveLength(1)
@@ -19,7 +19,7 @@ describe('frameReducer', () => {
     })
 
     it('does NOT add actor if already present', () => {
-      const result = frameReducer(TypicalIntentions, SimulationActions.characterAdded('gimli'))
+      const result = frameReducer(TypicalIntentions, SimulationActions.actorAdded('gimli'))
 
       const ids = keys(result.actors)
       expect(ids).toHaveLength(2)
@@ -30,7 +30,7 @@ describe('frameReducer', () => {
     it.todo('does NOT add actor if character ID is invalid')
 
     describe('initial actor status', () => {
-      const result = frameReducer(Empty, SimulationActions.characterAdded('gimli'))
+      const result = frameReducer(Empty, SimulationActions.actorAdded('gimli'))
       const status = result.actors.gimli
 
       it('is created in current frame', () => {

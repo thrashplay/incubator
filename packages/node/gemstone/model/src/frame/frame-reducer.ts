@@ -2,12 +2,13 @@ import { flow, has } from 'lodash/fp'
 import { getType } from 'typesafe-actions'
 
 import { CharacterId } from '../character'
-import { ActorStatus, Frame } from '../frame'
-import { SimulationAction, SimulationActions } from '../frame/actions'
+
+import { ActorStatus, Frame } from '.'
+import { SimulationAction, SimulationActions } from './actions'
 
 export const frameReducer = (frame: Frame, action: SimulationAction): Frame => {
   switch (action.type) {
-    case getType(SimulationActions.characterAdded):
+    case getType(SimulationActions.actorAdded):
       return has(action.payload)(frame.actors) ? frame : flow(
         setActorStatus(action.payload, createDefaultActorStatus(action.payload))
       )(frame)

@@ -1,8 +1,6 @@
-import { Action } from './action'
-import { reduceCharacterState } from './character'
-import { reduceRulesState } from './rules'
-import { reduceSceneState } from './scene'
-import { GameState } from './state'
+import { Action } from '@thrashplay/gemstone-engine/src/action'
+import { GameState } from '@thrashplay/gemstone-engine/src/state'
+import { reduceCharacterState, reduceRulesState, reduceSceneState } from '@thrashplay/gemstone-model'
 
 export const reducer = (state: GameState, action: Action): GameState => {
   // cast to any, because reducers should ignore invalid input and I am lazy

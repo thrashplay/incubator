@@ -22,6 +22,9 @@
     },
     {
       "path": "../engine/tsconfig.json"
+    },
+    {
+      "path": "../model/tsconfig.json"
     }
   ]
 }

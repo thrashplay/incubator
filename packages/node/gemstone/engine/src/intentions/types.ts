@@ -1,6 +1,6 @@
 import { ActionCreator } from 'typesafe-actions'
 
-import { ActorStatus, Frame } from '../model/frame'
+import { ActorStatus, Frame } from '@thrashplay/gemstone-model'
 
 /** signature for functions that handle player (and AI) intentions */
 export type IntentionHandler<TData extends unknown = never, TState extends unknown = any> = (

@@ -1,7 +1,7 @@
 import { keys, omit } from 'lodash/fp'
 
+import { Point } from '../common'
 import { ActorStatus, Frame, IntentionType } from '../frame'
-import { Point } from '../types'
 
 import {
   CharacterStateFixtures,

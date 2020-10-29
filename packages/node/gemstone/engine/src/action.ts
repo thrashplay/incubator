@@ -1,10 +1,14 @@
 import { castArray, isFunction, reduce } from 'lodash/fp'
 import { ActionType } from 'typesafe-actions'
 
-import { CharacterActions } from './character'
-import { CommonActions } from './common'
-import { RulesActions } from './rules'
-import { SceneActions } from './scene'
+import {
+  CharacterActions,
+  CommonActions,
+  RulesActions,
+  SceneActions,
+  SimulationActions,
+} from '@thrashplay/gemstone-model'
+
 import { GameState } from './state'
 
 export const AllActions = {
@@ -12,6 +16,7 @@ export const AllActions = {
   ...CommonActions,
   ...RulesActions,
   ...SceneActions,
+  ...SimulationActions,
 }
 
 export type Action = ActionType<typeof AllActions>

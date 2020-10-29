@@ -1,4 +1,4 @@
-import { GameState, SelectorParameters } from '@thrashplay/gemstone-engine'
+import { GameState, SelectorParameters } from '@thrashplay/gemstone-model'
 
 import { useGame } from './use-game'
 

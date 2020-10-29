@@ -1,14 +1,10 @@
 import { identity, noop } from 'lodash/fp'
 import React, { PropsWithChildren, useCallback, useState } from 'react'
 
+import { Action, Command, createExecutor, GameState, reducer } from '@thrashplay/gemstone-engine'
 import {
-  Action,
-  Command,
   CommonActions,
-  createExecutor,
-  GameState,
-  reducer,
-} from '@thrashplay/gemstone-engine'
+} from '@thrashplay/gemstone-model'
 
 export type GemstoneContextType = {
   dispatch: (action: Action) => void

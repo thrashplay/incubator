@@ -1,5 +1,6 @@
 import { keys, omit } from 'lodash/fp'
 
+import { ActorStatus, Frame, IntentionState } from '../../simulation/state'
 import { Point } from '../types'
 
 import {
@@ -23,7 +24,7 @@ import {
   getCurrentPosition,
   getCurrentStatus,
 } from './selectors'
-import { ActorStatus, Frame, IntentionState, SceneState, SceneStateContainer } from './state'
+import { SceneState, SceneStateContainer } from './state'
 
 const { GimliAndTrogdor, GimliOnly } = CharacterStateFixtures
 const { AllIdle, Empty, TypicalIntentions } = FrameFixtures

@@ -1,8 +1,8 @@
-import { Point } from '../types'
+import { CharacterId } from '../model'
+import { SceneStateContainer } from '../model/scene/state'
+import { Point } from '../model/types'
 
 import { Intention } from './intentions'
-import { Q } from './selectors'
-import { ActorId, SceneStateContainer } from './state'
 
 /** calculates a point that is 'distance' feet away from the start point, in the direction of destination */
 export const calculateLocationAlongVector = (start: Point, destination: Point) => (distance: number) => {
@@ -37,7 +37,7 @@ export const getNewPosition = (origin: Point, destination: Point, speed: number,
 
 /** updates an actor by setting their position to the specified coordinates */
 export const setPosition = (
-  actorId: ActorId,
+  actorId: CharacterId,
   position: Point
 ) => (state: SceneStateContainer): SceneStateContainer => {
   const actor = Q.actor(state, { characterId: actorId })
@@ -62,7 +62,7 @@ export const setPosition = (
 
 /** updates an actor by moving them towards a destination at max speed for the given number of segments */
 export const moveTowards = (
-  actorId: ActorId,
+  actorId: CharacterId,
   destination: Point,
   duration: number
 ) => (state: SceneStateContainer): SceneStateContainer => {
@@ -80,7 +80,7 @@ export const moveTowards = (
 
 /** clears a move intention if the actor reaches a location whthin 'maxDistance' (in feet) of the destination */
 export const handleArrival = (
-  actorId: ActorId,
+  actorId: CharacterId,
   destination: Point,
   nextIntention: Intention,
   maxDistance = 2

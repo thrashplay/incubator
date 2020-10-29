@@ -1,16 +1,23 @@
+import Slider from '@react-native-community/slider'
 import { toLower } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, Text, View, ViewStyle } from 'react-native'
+import { Button } from 'react-native-paper'
 
 import {
-  addCharacter, 
-  Character, 
-  CharacterId, 
+  addCharacter,
+  calculateNextFrame,
+  Character,
+  CharacterId,
   declareMoveIntention,
-  GameState, 
+  GameState,
   getActor,
-  getActors, 
+  getActors,
+  getCurrentTime,
+  getFrameCount,
+  getSegmentDuration,
   move,
+  SceneActions,
   startNewScene,
 } from '@thrashplay/gemstone-engine'
 
@@ -19,8 +26,6 @@ import { useGame } from '../game-context/use-game'
 
 import { CharacterList } from './character-list'
 import { SceneMap } from './scene/scene-map'
-import { Button } from 'react-native-paper'
-import Slider from '@react-native-community/slider'
 
 const initializeTestScene = () => (_state: GameState) => {
   const createCharacter = (name: string, speed = 90): Character => ({
@@ -57,11 +62,14 @@ export const TestScreen = () => {
 
   useEffect(() => {
     execute(initializeTestScene())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const [selectedActorId, setSelectedActorId] = useState<CharacterId | undefined>(undefined)
 
   const actors = useStateQuery(getActors)
+  const currentTime = useStateQuery(getCurrentTime)
+  const segmentDuration = useStateQuery(getSegmentDuration)
   const selectedActor = useStateQuery(getActor, { characterId: selectedActorId })
 
   const handleSelectActor = (id: CharacterId) => setSelectedActorId(id)
@@ -70,15 +78,15 @@ export const TestScreen = () => {
     if (selectedActorId !== undefined) {
       execute(declareMoveIntention(selectedActorId, x, y))
     }
-  }, [dispatch, selectedActorId])
+  }, [execute, selectedActorId])
 
   const handleAdvanceClock = useCallback(() => {
-    dispatch(timeAdvanced(3))
-  }, [dispatch])
+    execute(calculateNextFrame())
+  }, [execute])
 
-  const handleSliderChange = useCallback((value: number) => {
-    dispatch(timeChanged(value / 5))
-  }, [dispatch])
+  const handleRewindClock = useCallback(() => {
+    dispatch(SceneActions.frameReverted((currentTime / segmentDuration) - 1))
+  }, [dispatch, currentTime, segmentDuration])
 
   return (
     <View style={styles.container}>
@@ -96,26 +104,34 @@ export const TestScreen = () => {
           style={styles.locationMap}
         />
       </View>
-      {/* <View style={styles.timeBar}>
+      <View style={styles.timeBar}>
+        <Button
+          mode="contained"
+          onPress={handleRewindClock}
+          style={{ width: 32 }}
+        >
+          &lt;
+        </Button>
+        <View style={styles.timeTextContainer}>
+          <Text>{currentTime}s</Text>
+        </View>
         <Button
           mode="contained"
           onPress={handleAdvanceClock}
-          style={{ width: 180 }}
+          style={{ width: 32 }}
         >
-          Advance Clock
+          &gt;
         </Button>
-        <View style={styles.timeTextContainer}>
-          <Text>{currentSegment * 5}s</Text>
-        </View>
+
         <Slider
-          maximumValue={1000}
+          disabled={true}
+          maximumValue={currentTime + 60}
           minimumValue={0}
-          onValueChange={handleSliderChange}
-          step={5}
+          step={segmentDuration}
           style={{ marginLeft: 16 }}
-          value={currentSegment * 5}
+          value={currentTime}
         />
-      </View> */}
+      </View>
     </View>
   )
 }
@@ -155,6 +171,7 @@ const timeBar: ViewStyle = {
 
 const timeTextContainer: ViewStyle = {
   marginLeft: 16,
+  marginRight: 16,
 }
 
 const styles = StyleSheet.create({

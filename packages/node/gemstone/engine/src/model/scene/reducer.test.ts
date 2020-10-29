@@ -1,5 +1,6 @@
 import { take } from 'lodash/fp'
 
+import { SimulationActions } from '../../simulation'
 import { CommonActions } from '../common/action'
 
 import { IntentionFixtures, SceneStateFixtures } from './__fixtures__'
@@ -90,7 +91,7 @@ describe('reduceSceneState', () => {
   })
 
   describe('SceneActions.intentionDeclared', () => {
-    const result = reduceSceneState(IdleBeforeTypicalIntentions, SceneActions.intentionDeclared({
+    const result = reduceSceneState(IdleBeforeTypicalIntentions, SimulationActions.intentionDeclared({
       characterId: 'trogdor',
       intention: Grumbling,
     }))
@@ -99,7 +100,7 @@ describe('reduceSceneState', () => {
     const trogdorInCurrentFrame = result.frames[1].actors.trogdor
 
     it('does nothing if the character is not present', () => {
-      const result = reduceSceneState(IdleBeforeTypicalIntentions, SceneActions.intentionDeclared({
+      const result = reduceSceneState(IdleBeforeTypicalIntentions, SimulationActions.intentionDeclared({
         characterId: 'invalid-id',
         intention: Grumbling,
       }))
@@ -118,7 +119,7 @@ describe('reduceSceneState', () => {
   })
 
   describe('SceneActions.moved', () => {
-    const result = reduceSceneState(IdleBeforeTypicalIntentions, SceneActions.moved({
+    const result = reduceSceneState(IdleBeforeTypicalIntentions, SimulationActions.moved({
       characterId: 'trogdor',
       position: { x: 47, y: 111 },
     }))
@@ -127,7 +128,7 @@ describe('reduceSceneState', () => {
     const trogdorInCurrentFrame = result.frames[1].actors.trogdor
 
     it('does nothing if the character is not present', () => {
-      const result = reduceSceneState(IdleBeforeTypicalIntentions, SceneActions.moved({
+      const result = reduceSceneState(IdleBeforeTypicalIntentions, SimulationActions.moved({
         characterId: 'invalid-id',
         position: { x: 47, y: 111 },
       }))

@@ -1,17 +1,12 @@
 import { concat, contains, flow, initial, last, take, uniq } from 'lodash/fp'
 import { getType } from 'typesafe-actions'
 
-import { frameReducer, SimulationAction, SimulationActions } from '../../simulation'
-import { Frame } from '../../simulation/state'
+import { EMPTY_FRAME, frameReducer, SimulationAction, SimulationActions } from '../../simulation'
 import { CharacterId } from '../character'
 import { CommonAction, CommonActions } from '../common'
 
 import { SceneAction, SceneActions } from './actions'
 import { SceneState } from './state'
-
-export const EMPTY_FRAME: Frame = {
-  actors: {},
-}
 
 export const reduceSceneState = (
   state: SceneState,

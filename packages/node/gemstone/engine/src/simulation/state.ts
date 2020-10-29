@@ -2,6 +2,10 @@ import { Character, CharacterId, CharacterStateContainer } from '../model/charac
 import { RulesStateContainer } from '../model/rules/state'
 import { Point } from '../model/types'
 
+export const EMPTY_FRAME: Frame = {
+  actors: {},
+}
+
 export interface BaseIntention<TType extends string = string> {
   type: TType
 }

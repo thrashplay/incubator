@@ -73,7 +73,7 @@ const renderIntention = ({
         ? (
           <SegmentedVector
             breakpoints={map(feetToPixels)([10, getMaxDistance(speed, 3)])}
-            destination={get('destination')(intention)}
+            destination={get('data')(intention)}
             segmentStyles={map(setColor(selected))([NO_LINE, SOLID_LINE, DASHED_LINE])}
             start={position}
           />
@@ -81,7 +81,7 @@ const renderIntention = ({
         : (
           <SegmentedVector
             breakpoints={map(feetToPixels)([10, getMaxDistance(speed, 3)])}
-            destination={get('destination')(intention)}
+            destination={get('data')(intention)}
             segmentStyles={map(setColor(selected))([NO_LINE, SOLID_LINE, NO_LINE])}
             start={position}
           />

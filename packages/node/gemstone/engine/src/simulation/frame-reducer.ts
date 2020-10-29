@@ -6,10 +6,6 @@ import { CharacterId } from '../model/character'
 import { SimulationAction, SimulationActions } from './actions'
 import { ActorStatus, Frame } from './state'
 
-export const EMPTY_FRAME: Frame = {
-  actors: {},
-}
-
 export const frameReducer = (frame: Frame, action: SimulationAction): Frame => {
   switch (action.type) {
     case getType(SimulationActions.characterAdded):

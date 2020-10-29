@@ -1,7 +1,8 @@
+import { getNextFrame } from '../../../simulation/get-next-frame'
 import { SceneAction, SceneActions } from '../actions'
-import { EMPTY_FRAME } from '../reducer'
+import { getCurrentFrame } from '../selectors'
 import { SceneStateContainer } from '../state'
 
-export const calculateNextFrame = () => (_state: SceneStateContainer): SceneAction | SceneAction[] => {
-  return SceneActions.frameAdded(EMPTY_FRAME)
+export const calculateNextFrame = () => (state: SceneStateContainer): SceneAction | SceneAction[] => {
+  return SceneActions.frameAdded(getNextFrame(getCurrentFrame(state)))
 }

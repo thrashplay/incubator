@@ -1,7 +1,7 @@
 import { map } from 'lodash/fp'
 
-import { SimulationActions } from '../../simulation'
-import { createMoveIntention } from '../../simulation/intentions'
+import { createIntention } from '../../intentions'
+import { SimulationActions } from '../../simulation/actions'
 import { getPlayerCharacters } from '../character'
 import { Character, CharacterId } from '../character/state'
 import { Point } from '../types'
@@ -19,7 +19,7 @@ export const startNewScene = () => (state: SceneStateContainer) => [
 export const declareMoveIntention = (characterId: CharacterId, x: number, y: number) => () => {
   return SimulationActions.intentionDeclared({
     characterId,
-    intention: createMoveIntention(x, y),
+    intention: createIntention('move', { x, y }),
   })
 }
 

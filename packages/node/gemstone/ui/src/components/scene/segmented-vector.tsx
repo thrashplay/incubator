@@ -3,7 +3,7 @@ import { filter, flow, last, map, size, tail } from 'lodash/fp'
 import React from 'react'
 import { G, Line, LineProps } from 'react-native-svg'
 
-import { Point } from '@thrashplay/gemstone-engine'
+import { Point } from '@thrashplay/gemstone-model'
 
 // segment style to use if we are given an empty array
 const DEFAULT_SEGMENT_STYLE = {

@@ -1,5 +1,6 @@
 import { get, map, take } from 'lodash/fp'
 import React from 'react'
+import { Animated } from 'react-native'
 import { Circle, CircleProps, G, LineProps, Text, TextProps } from 'react-native-svg'
 
 import { getMaxDistance } from '@thrashplay/gemstone-engine'
@@ -13,6 +14,9 @@ const PIXELS_PER_FOOT = 1
 
 export interface AvatarProps {
   actor: Actor
+  animatedX: Animated.Value
+  animatedY: Animated.Value
+  isAnimating: boolean
   selected: boolean
   x: number
   y: number
@@ -120,29 +124,36 @@ const RenderIntention = ({
 export const DefaultAvatar = (props: AvatarProps) => {
   const {
     actor,
+    animatedX,
+    animatedY,
+    isAnimating,
     selected,
   } = props
-
-  const { position } = actor.status
-
   return (
     <G key={actor.id}>
-      <Text
-        fontSize={8}
-        textAnchor="middle"
-        x={position.x}
-        y={position.y + 3}
-        {...getTextProps(selected)}
+      <AnimatedG
+        x={animatedX}
+        y={animatedY}
       >
-        {take(1)(actor.name)}
-      </Text>
-      <Circle
-        cx={position.x}
-        cy={position.y}
-        r={feetToPixels(10)}
-        {...getCircleProps(selected)}
-      />
-      <RenderIntention {...props} />
+        <Text
+          fontSize={8}
+          textAnchor="middle"
+          x={0}
+          y={3}
+          {...getTextProps(selected)}
+        >
+          {take(1)(actor.name)}
+        </Text>
+        <Circle
+          cx={0}
+          cy={0}
+          r={feetToPixels(10)}
+          {...getCircleProps(selected)}
+        />
+      </AnimatedG>
+      {!isAnimating && <RenderIntention {...props} />}
     </G>
   )
 }
+
+const AnimatedG = Animated.createAnimatedComponent(G)

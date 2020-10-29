@@ -23,6 +23,12 @@ export const frameReducer = (frame: Frame, action: SimulationAction): Frame => {
         ? setActorStatus(action.payload.characterId, { position: action.payload.position })(frame)
         : frame
 
+    case getType(SimulationActions.timeOffsetChanged):
+      return action.payload < 0 ? frame : {
+        ...frame,
+        timeOffset: action.payload,
+      }
+
     default:
       return frame
   }

@@ -21,6 +21,7 @@ import {
   CharacterId,
   getActor,
   getActors,
+  getCurrentFrameNumber,
   getCurrentTime,
   getSegmentDuration,
   SceneActions,
@@ -49,8 +50,8 @@ const initializeTestScene = () => (_state: GameState) => {
     // add the PCs
     addCharacter(createCharacter('Dan', 60)),
     addCharacter(createCharacter('Nate', 120)),
-    addCharacter(createCharacter('Seth')),
-    addCharacter(createCharacter('Tom')),
+    // addCharacter(createCharacter('Seth')),
+    // addCharacter(createCharacter('Tom')),
 
     // start the scene
     startNewScene(),
@@ -75,6 +76,7 @@ export const TestScreen = () => {
 
   const actors = useStateQuery(getActors)
   const currentTime = useStateQuery(getCurrentTime)
+  const frameNumber = useStateQuery(getCurrentFrameNumber)
   const segmentDuration = useStateQuery(getSegmentDuration)
   const selectedActor = useStateQuery(getActor, { characterId: selectedActorId })
 
@@ -115,8 +117,8 @@ export const TestScreen = () => {
   }, [execute])
 
   const handleRewindClock = useCallback(() => {
-    dispatch(SceneActions.frameReverted((currentTime / segmentDuration) - 1))
-  }, [dispatch, currentTime, segmentDuration])
+    dispatch(SceneActions.frameReverted(frameNumber - 1))
+  }, [dispatch, frameNumber])
 
   return (
     <View style={styles.container}>
@@ -132,6 +134,7 @@ export const TestScreen = () => {
           onSetMoveIntention={handleSetMoveIntention}
           selectedActor={selectedActor as any}
           style={styles.locationMap}
+          timeOffset={currentTime}
         />
       </View>
       <View style={styles.timeBar}>

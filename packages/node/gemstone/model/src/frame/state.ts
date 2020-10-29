@@ -5,6 +5,7 @@ import { RulesStateContainer } from '../rules'
 
 export const EMPTY_FRAME: Frame = {
   actors: {},
+  timeOffset: 0,
 }
 
 export interface IntentionType<TType extends string = string, TData extends any = any> {
@@ -31,6 +32,9 @@ export type Actor = Character & {
 /** a single frame, containing the status of all actors at a single point in a time */
 export interface Frame {
   actors: Record<CharacterId, ActorStatus>
+
+  /** the time offset, in seconds, of this frame */
+  timeOffset: number
 }
 
 export interface SimulationState {

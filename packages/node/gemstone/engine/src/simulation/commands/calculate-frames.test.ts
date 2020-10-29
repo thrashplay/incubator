@@ -1,9 +1,8 @@
 import { forEach, head, tail } from 'lodash/fp'
 import { mocked } from 'ts-jest/utils'
 
+import { SceneActions, SceneStateContainer } from '../../model/scene'
 import { createStateWithDependencies, SceneStateFixtures } from '../__fixtures__'
-import { SceneActions } from '../actions'
-import { SceneStateContainer } from '../state'
 
 import { calculateFrames } from './calculate-frames'
 import { calculateNextFrame } from './calculate-next-frame'

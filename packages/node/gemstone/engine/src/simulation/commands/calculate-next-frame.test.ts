@@ -1,12 +1,12 @@
 import { mocked } from 'ts-jest/utils'
 
-import { getNextFrame } from '../../../simulation/get-next-frame'
+import { SceneActions } from '../../model/scene'
 import { createStateWithDependencies, FrameFixtures, SceneStateFixtures } from '../__fixtures__'
-import { SceneActions } from '../actions'
+import { getNextFrame } from '../get-next-frame'
 
 import { calculateNextFrame } from './calculate-next-frame'
 
-jest.mock('../../../simulation/get-next-frame')
+jest.mock('../get-next-frame')
 const mockGetNextFrame = mocked(getNextFrame)
 
 const { AllIdle, TypicalIntentions } = FrameFixtures

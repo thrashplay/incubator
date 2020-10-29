@@ -1,8 +1,6 @@
 import { times } from 'lodash/fp'
 
-import { SceneActions } from '../actions'
-import { getCurrentFrameNumber } from '../selectors'
-import { SceneStateContainer } from '../state'
+import { getCurrentFrameNumber, SceneActions, SceneStateContainer } from '../../model/scene'
 
 import { calculateNextFrame } from './calculate-next-frame'
 

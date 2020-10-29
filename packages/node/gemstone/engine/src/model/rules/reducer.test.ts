@@ -1,4 +1,4 @@
-import { CommonActions } from '../common/action'
+import { CommonActions } from '../common'
 
 import { RulesStateFixtures } from './__fixtures__'
 import { reduceRulesState } from './reducer'

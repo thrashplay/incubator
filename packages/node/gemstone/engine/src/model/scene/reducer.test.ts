@@ -1,7 +1,7 @@
 import { take } from 'lodash/fp'
 
-import { SimulationActions } from '../../simulation'
-import { CommonActions } from '../common/action'
+import { CommonActions } from '../common'
+import { SimulationActions } from '../frame'
 
 import { IntentionFixtures, SceneStateFixtures } from './__fixtures__'
 import { SceneActions } from './actions'

@@ -1,6 +1,6 @@
-import { Frame } from '../../simulation/state'
-import { CharacterId, CharacterStateContainer } from '../character/state'
-import { RulesStateContainer } from '../rules/state'
+import { CharacterId, CharacterStateContainer } from '../character'
+import { Frame } from '../frame'
+import { RulesStateContainer } from '../rules'
 
 export interface SceneState {
   /** IDs of the characters in this scene */

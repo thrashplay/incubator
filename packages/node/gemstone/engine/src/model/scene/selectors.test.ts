@@ -1,6 +1,6 @@
 import { keys, omit } from 'lodash/fp'
 
-import { ActorStatus, Frame, IntentionState } from '../../simulation/state'
+import { ActorStatus, Frame, IntentionType } from '../frame'
 import { Point } from '../types'
 
 import {
@@ -198,7 +198,7 @@ describe('scene selectors', () => {
       expect(result).toBeUndefined()
     })
 
-    it.each<[string, IntentionState]>([
+    it.each<[string, IntentionType]>([
       ['gimli', BefriendingElves],
       ['trogdor', Burninating],
     ])('returns correct data: %p', (characterId, expectedIntention) => {

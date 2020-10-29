@@ -1,7 +1,7 @@
 import { ActionType, createAction } from 'typesafe-actions'
 
-import { Frame } from '../../simulation/state'
 import { CharacterId } from '../character'
+import { Frame } from '../frame'
 
 export const SceneActions = {
   /** character added to the scene */

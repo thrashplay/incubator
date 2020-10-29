@@ -24,6 +24,7 @@ export const createIntentionHandler = <TState extends any = any>(
 }
 
 export type Intention =
-  TypeOfIntention<'idle'>
+  TypeOfIntention<'follow'>
+  | TypeOfIntention<'idle'>
   | TypeOfIntention<'move'>
   | TypeOfIntention<'wait'>

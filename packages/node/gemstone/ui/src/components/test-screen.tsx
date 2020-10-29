@@ -1,11 +1,21 @@
 import Slider from '@react-native-community/slider'
 import { toLower } from 'lodash'
+import { filter, flow, get, head, map, matches, reject, sortBy } from 'lodash/fp'
 import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 import { Button } from 'react-native-paper'
 
-import { calculateNextFrame, declareMoveIntention, GameState, move, startNewScene } from '@thrashplay/gemstone-engine'
 import {
+  calculateDistance,
+  calculateNextFrame,
+  createIntention,
+  declareMoveIntention,
+  GameState,
+  move,
+  startNewScene,
+} from '@thrashplay/gemstone-engine'
+import {
+  Actor,
   addCharacter,
   Character,
   CharacterId,
@@ -14,6 +24,7 @@ import {
   getCurrentTime,
   getSegmentDuration,
   SceneActions,
+  SimulationActions,
 } from '@thrashplay/gemstone-model'
 
 import { useStateQuery } from '../game-context'
@@ -36,8 +47,8 @@ const initializeTestScene = () => (_state: GameState) => {
 
   return [
     // add the PCs
-    addCharacter(createCharacter('Dan')),
-    addCharacter(createCharacter('Nate')),
+    addCharacter(createCharacter('Dan', 60)),
+    addCharacter(createCharacter('Nate', 120)),
     addCharacter(createCharacter('Seth')),
     addCharacter(createCharacter('Tom')),
 
@@ -70,10 +81,34 @@ export const TestScreen = () => {
   const handleSelectActor = (id: CharacterId) => setSelectedActorId(id)
 
   const handleSetMoveIntention = useCallback((x: number, y: number) => {
-    if (selectedActorId !== undefined) {
-      execute(declareMoveIntention(selectedActorId, x, y))
+    const getTarget = (): CharacterId => {
+      const computeDistance = (actor: Actor) => ({
+        id: actor.id,
+        distance: calculateDistance(actor.status.position, { x, y }),
+      })
+
+      const closeEnoughToTarget = ({ distance }: { distance: number }) => distance < 10
+
+      return flow(
+        reject(matches({ id: selectedActorId })),
+        map(computeDistance),
+        filter(closeEnoughToTarget),
+        sortBy(get('distance')),
+        head,
+        get('id')
+      )(actors)
     }
-  }, [execute, selectedActorId])
+
+    if (selectedActorId !== undefined) {
+      const target = getTarget()
+      return target === undefined
+        ? execute(declareMoveIntention(selectedActorId, x, y))
+        : dispatch(SimulationActions.intentionDeclared({
+          characterId: selectedActorId,
+          intention: createIntention('follow', target),
+        }))
+    }
+  }, [actors, dispatch, execute, selectedActorId])
 
   const handleAdvanceClock = useCallback(() => {
     execute(calculateNextFrame())

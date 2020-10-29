@@ -2,7 +2,10 @@ import { get, map, take } from 'lodash/fp'
 import React from 'react'
 import { Circle, CircleProps, G, LineProps, Text, TextProps } from 'react-native-svg'
 
-import { Actor, getMaxDistance } from '@thrashplay/gemstone-engine'
+import { getMaxDistance } from '@thrashplay/gemstone-engine'
+import { Actor, getActor } from '@thrashplay/gemstone-model'
+
+import { useStateQuery } from '../../game-context'
 
 import { SegmentedVector } from './segmented-vector'
 
@@ -60,12 +63,15 @@ const setColor = (selected: boolean) => (props: LineProps) => ({
 
 const feetToPixels = (feet: number) => feet * PIXELS_PER_FOOT
 
-const renderIntention = ({
+const RenderIntention = ({
   actor,
   selected,
 }: AvatarProps) => {
   const { intention, position } = actor.status
   const speed = actor.speed ?? 0
+
+  // todo this is a hack, to see something working
+  const target = useStateQuery(getActor, { characterId: get('data')(intention) })
 
   switch (intention.type) {
     case 'move':
@@ -82,6 +88,25 @@ const renderIntention = ({
           <SegmentedVector
             breakpoints={map(feetToPixels)([10, getMaxDistance(speed, 3)])}
             destination={get('data')(intention)}
+            segmentStyles={map(setColor(selected))([NO_LINE, SOLID_LINE, NO_LINE])}
+            start={position}
+          />
+        )
+
+    case 'follow':
+      return selected
+        ? (
+          <SegmentedVector
+            breakpoints={map(feetToPixels)([10, getMaxDistance(speed, 3)])}
+            destination={target?.status.position}
+            segmentStyles={map(setColor(selected))([NO_LINE, SOLID_LINE, DASHED_LINE])}
+            start={position}
+          />
+        )
+        : (
+          <SegmentedVector
+            breakpoints={map(feetToPixels)([10, getMaxDistance(speed, 3)])}
+            destination={target?.status.position}
             segmentStyles={map(setColor(selected))([NO_LINE, SOLID_LINE, NO_LINE])}
             start={position}
           />
@@ -117,7 +142,7 @@ export const DefaultAvatar = (props: AvatarProps) => {
         r={feetToPixels(10)}
         {...getCircleProps(selected)}
       />
-      {renderIntention(props)}
+      <RenderIntention {...props} />
     </G>
   )
 }

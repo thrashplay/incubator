@@ -4,8 +4,9 @@ import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 import { Svg } from 'react-native-svg'
 
 import { Canvas, ContentViewProps, Dimensions, Extents } from '@thrashplay/canvas-with-tools'
-import { Actor } from '@thrashplay/gemstone-engine'
+import { Actor } from '@thrashplay/gemstone-model'
 
+import { AvatarAnimation, AvatarAnimationProps } from './avatar-animation'
 import { AvatarProps, DefaultAvatar } from './default-avatar'
 import { Grid } from './grid'
 import { INITIAL_STATE, MapViewAction, reducer } from './state'
@@ -38,6 +39,9 @@ export interface SceneMapProps {
 
   /** style to apply to the maps's container */
   style?: StyleProp<ViewStyle>
+
+  /** time offset, in seconds, of the frame being rendered */
+  timeOffset: number
 }
 
 export const SceneMap = ({
@@ -47,6 +51,7 @@ export const SceneMap = ({
   renderAvatar = DefaultAvatar,
   selectedActor,
   style,
+  timeOffset,
 }: SceneMapProps) => {
   // zoom to full extents the when the map is first displayed
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE, (initialState) => ({
@@ -75,50 +80,55 @@ export const SceneMap = ({
     })
   }, [])
 
-  const createAvatarRenderProps = useCallback((actor: Actor): AvatarProps => {
-    const position = actor.status.position
-    return {
-      actor,
-      selected: selectedActor?.id === actor.id,
-      x: position.x,
-      y: position.y,
-    }
-  }, [selectedActor])
-
-  const renderAvatars = useCallback(() => flow(
-    map(createAvatarRenderProps),
-    map(renderAvatar)
-  )(actors), [actors, createAvatarRenderProps, renderAvatar])
-
-  const mapRenderer = useCallback(({
-    extents,
-  }: ContentViewProps<unknown>) => {
-    return (
-      <Svg
-        style={[styles.container, style]}
-        viewBox={`${extents.x} ${extents.y} ${extents.width} ${extents.height}`}
-      >
-        <Grid
-          gridSpacing={12.5}
-          mapHeight={500}
-          mapWidth={500}
-        />
-        {renderAvatars()}
-      </Svg>
-    )
-  }, [renderAvatars, style])
-
   return (
     <Canvas
-      data={{}}
+      data={{ actors, renderAvatar, style, selectedActor, timeOffset }}
       extents={extents}
       onToolEvent={handleToolEvent}
       onViewportChange={handleViewportChange}
       selectedTool={SetMoveIntentionTool}
       style={{ flex: 1 }}
     >
-      {mapRenderer}
+      {MapContent}
     </Canvas>
+  )
+}
+
+const MapContent = ({
+  data,
+  extents,
+}: ContentViewProps<SceneMapProps & { renderAvatar: (props: AvatarProps) => React.ReactNode }>) => {
+  const { actors, renderAvatar, selectedActor, style, timeOffset } = data
+
+  const createAvatarRenderProps = useCallback((actor: Actor): AvatarAnimationProps => {
+    const position = actor.status.position
+    return {
+      actor,
+      renderAvatar,
+      selected: selectedActor?.id === actor.id,
+      timeOffset,
+      x: position.x,
+      y: position.y,
+    }
+  }, [renderAvatar, selectedActor?.id, timeOffset])
+
+  const renderAvatars = useCallback(() => flow(
+    map(createAvatarRenderProps),
+    map((props: AvatarAnimationProps) => <AvatarAnimation key={props.actor.id} {...props} />)
+  )(actors), [actors, createAvatarRenderProps])
+
+  return (
+    <Svg
+      style={[styles.container, style]}
+      viewBox={`${extents.x} ${extents.y} ${extents.width} ${extents.height}`}
+    >
+      <Grid
+        gridSpacing={12.5}
+        mapHeight={500}
+        mapWidth={500}
+      />
+      {renderAvatars()}
+    </Svg>
   )
 }
 

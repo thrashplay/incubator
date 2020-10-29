@@ -1,4 +1,5 @@
 import { follow } from './follow'
+import { meleeAttack } from './melee-attack'
 import { move } from './move'
 import { wait } from './wait'
 
@@ -6,6 +7,7 @@ import { wait } from './wait'
 export const IntentionHandlers = {
   follow,
   idle: wait,
+  melee: meleeAttack,
   move,
   wait,
 }

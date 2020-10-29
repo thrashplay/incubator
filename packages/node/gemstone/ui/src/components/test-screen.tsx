@@ -105,9 +105,13 @@ export const TestScreen = () => {
       const target = getTarget()
       return target === undefined
         ? execute(declareMoveIntention(selectedActorId, x, y))
+        // : dispatch(SimulationActions.intentionDeclared({
+        //   characterId: selectedActorId,
+        //   intention: createIntention('follow', target),
+        // }))
         : dispatch(SimulationActions.intentionDeclared({
           characterId: selectedActorId,
-          intention: createIntention('follow', target),
+          intention: createIntention('melee', { target }),
         }))
     }
   }, [actors, dispatch, execute, selectedActorId])

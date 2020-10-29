@@ -1,6 +1,8 @@
 import { flow, has } from 'lodash/fp'
 import { getType } from 'typesafe-actions'
 
+import { isValidPoint } from '@thrashplay/gemstone-model'
+
 import { CharacterId } from '../character'
 
 import { ActorStatus, Frame } from '.'
@@ -19,7 +21,7 @@ export const frameReducer = (frame: Frame, action: SimulationAction): Frame => {
         : frame
 
     case getType(SimulationActions.moved):
-      return has(action.payload.characterId)(frame.actors)
+      return !isValidPoint(action.payload.position) ? frame : has(action.payload.characterId)(frame.actors)
         ? setActorStatus(action.payload.characterId, { position: action.payload.position })(frame)
         : frame
 

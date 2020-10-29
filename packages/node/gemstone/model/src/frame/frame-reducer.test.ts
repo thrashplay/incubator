@@ -76,6 +76,23 @@ describe('frameReducer', () => {
   })
 
   describe('SimulationActions.moved', () => {
+    it.each<[string, any]>([
+      ['undefined', undefined],
+      ['x is undefined', { x: undefined, y: 10 }],
+      ['x is NaN', { x: NaN, y: 10 }],
+      ['x is Infinity', { x: Infinity, y: 10 }],
+      ['x is -Infinity', { x: -Infinity, y: 10 }],
+      ['y is undefined', { x: 10, y: undefined }],
+      ['y is NaN', { x: 10, y: NaN }],
+      ['y is Infinity', { x: 10, y: Infinity }],
+      ['y is -Infinity', { x: 10, y: -Infinity }],
+    ])('does nothing if coordinates are invalid: %p', (_name, badPosition) => {
+      expect(frameReducer(TypicalIntentions, SimulationActions.moved({
+        characterId: 'trogdor',
+        position: badPosition as any,
+      }))).toBe(TypicalIntentions)
+    })
+
     it('does nothing if the character is not present', () => {
       const result = frameReducer(TypicalIntentions, SimulationActions.moved({
         characterId: 'invalid-id',

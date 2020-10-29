@@ -1,4 +1,4 @@
-import { IntentionType } from '../../frame'
+import { EMPTY_FRAME, IntentionType } from '../../frame'
 import { SceneState, SceneStateContainer } from '../state'
 
 export const CharacterFixtures = {
@@ -76,8 +76,13 @@ export const ActorStatusFixtures = {
   },
 }
 
+const baseFrame = {
+  ...EMPTY_FRAME,
+}
+
 export const FrameFixtures = {
   AllIdle: {
+    ...baseFrame,
     actors: {
       gimli: {
         ...ActorStatusFixtures.Gimli,
@@ -92,9 +97,10 @@ export const FrameFixtures = {
     },
   },
   Empty: {
-    actors: { },
+    ...baseFrame,
   },
   TypicalIntentions: {
+    ...baseFrame,
     actors: {
       gimli: ActorStatusFixtures.Gimli,
       trogdor: ActorStatusFixtures.Trogdor,

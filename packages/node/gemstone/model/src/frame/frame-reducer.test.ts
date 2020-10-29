@@ -97,4 +97,19 @@ describe('frameReducer', () => {
       expect(status.position.y).toBe(111)
     })
   })
+
+  describe('SimulationActions.timeOffsetChanged', () => {
+    it('does nothing if new value is negative', () => {
+      const result = frameReducer(TypicalIntentions, SimulationActions.timeOffsetChanged(-1))
+      expect(result).toStrictEqual(TypicalIntentions)
+    })
+
+    it('sets time to new value', () => {
+      const result = frameReducer(TypicalIntentions, SimulationActions.timeOffsetChanged(101))
+      expect(result).toStrictEqual({
+        ...TypicalIntentions,
+        timeOffset: 101,
+      })
+    })
+  })
 })

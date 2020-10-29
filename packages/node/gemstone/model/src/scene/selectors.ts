@@ -37,16 +37,16 @@ export const getCurrentFrameNumber = createSelector(
   }
 )
 
-// Gets the current scene time, in seconds
-export const getCurrentTime = createSelector(
-  [getCurrentFrameNumber, getSegmentDuration],
-  (frameNumber, segmentDuration) => frameNumber * segmentDuration
-)
-
 /** retrieves the current frame (i.e. the last one in the list) */
 export const getCurrentFrame = createSelector(
   [getFrames],
   (frames) => isEmpty(frames) ? EMPTY_FRAME : last(frames)
+)
+
+// Gets the current scene time, in seconds
+export const getCurrentTime = createSelector(
+  [getCurrentFrame],
+  (frame) => frame?.timeOffset ?? 0
 )
 
 export const getCharacterIds = createSelector(

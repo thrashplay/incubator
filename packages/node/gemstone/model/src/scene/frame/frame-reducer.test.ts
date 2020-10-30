@@ -1,6 +1,6 @@
 import { keys } from 'lodash/fp'
 
-import { FrameFixtures, IntentionFixtures } from '../scene/__fixtures__'
+import { FrameFixtures, IntentionFixtures } from '../__fixtures__'
 
 import { SimulationActions } from './actions'
 import { frameReducer } from './frame-reducer'

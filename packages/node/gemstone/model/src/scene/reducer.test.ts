@@ -1,10 +1,10 @@
 import { take } from 'lodash/fp'
 
 import { CommonActions } from '../common'
-import { SimulationActions } from '../frame'
 
 import { IntentionFixtures, SceneStateFixtures } from './__fixtures__'
 import { SceneActions } from './actions'
+import { EMPTY_FRAME, SimulationActions } from './frame'
 import { reduceSceneState } from './reducer'
 import { SceneState } from './state'
 
@@ -66,7 +66,7 @@ describe('reduceSceneState', () => {
 
   describe('SceneActions.frameAdded', () => {
     it('appends the new frame to the frame list', () => {
-      const newFrame = { actors: {} }
+      const newFrame = { ...EMPTY_FRAME, actors: {} }
       const result = reduceSceneState(IdleBeforeTypicalIntentions, SceneActions.frameAdded(newFrame))
       expect(result.frames).toHaveLength(IdleBeforeTypicalIntentions.frames.length + 1)
       expect(result.frames).toContain(newFrame)

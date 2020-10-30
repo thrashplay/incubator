@@ -1,7 +1,7 @@
-import { isEmpty, last, size } from 'lodash/fp'
+import { size } from 'lodash/fp'
 import { createSelector } from 'reselect'
 
-import { EMPTY_FRAME } from '../../frame'
+import { EMPTY_FRAME } from '../frame'
 
 import { getScene } from './base'
 
@@ -19,16 +19,14 @@ export const getFrameCount = createSelector(
 
 // Gets the number of the current frame
 export const getCurrentFrameNumber = createSelector(
-  [getFrames],
-  (frames) => {
-    return Math.max(size(frames), 1) - 1
-  }
+  [getScene],
+  (scene) => scene.currentFrame ?? 0
 )
 
 /** retrieves the current frame (i.e. the last one in the list) */
 export const getCurrentFrame = createSelector(
-  [getFrames],
-  (frames) => isEmpty(frames) ? EMPTY_FRAME : last(frames)
+  [getFrames, getCurrentFrameNumber],
+  (frames, index) => index >= size(frames) ? EMPTY_FRAME : frames[index]
 )
 
 // Gets the current scene time, in seconds

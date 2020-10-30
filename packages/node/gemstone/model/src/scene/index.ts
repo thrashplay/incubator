@@ -1,4 +1,5 @@
 export * from './actions'
+export * from './frame'
 export * from './reducer'
 export * from './selectors'
 export * from './state'

@@ -3,9 +3,9 @@ import { getType } from 'typesafe-actions'
 
 import { CharacterId } from '../character'
 import { CommonAction, CommonActions } from '../common'
-import { EMPTY_FRAME, frameReducer, SimulationAction, SimulationActions } from '../frame'
 
 import { SceneAction, SceneActions } from './actions'
+import { EMPTY_FRAME, frameReducer, SimulationAction, SimulationActions } from './frame'
 import { SceneState } from './state'
 
 export const reduceSceneState = (
@@ -17,6 +17,7 @@ export const reduceSceneState = (
     case getType(SceneActions.sceneStarted):
       return {
         characters: [],
+        currentFrame: 0,
         frames: [EMPTY_FRAME],
       }
 

@@ -2,7 +2,7 @@ import { keys } from 'lodash/fp'
 
 import { FrameFixtures, IntentionFixtures } from '../__fixtures__'
 
-import { SimulationActions } from './actions'
+import { FrameActions } from './actions'
 import { frameReducer } from './frame-reducer'
 
 const { Grumbling } = IntentionFixtures
@@ -11,7 +11,7 @@ const { Empty, TypicalIntentions } = FrameFixtures
 describe('frameReducer', () => {
   describe('SimulationActions.characterAdded', () => {
     it('adds actor if not already present', () => {
-      const result = frameReducer(Empty, SimulationActions.actorAdded('gimli'))
+      const result = frameReducer(Empty, FrameActions.actorAdded('gimli'))
 
       const ids = keys(result.actors)
       expect(ids).toHaveLength(1)
@@ -19,7 +19,7 @@ describe('frameReducer', () => {
     })
 
     it('does NOT add actor if already present', () => {
-      const result = frameReducer(TypicalIntentions, SimulationActions.actorAdded('gimli'))
+      const result = frameReducer(TypicalIntentions, FrameActions.actorAdded('gimli'))
 
       const ids = keys(result.actors)
       expect(ids).toHaveLength(2)
@@ -30,7 +30,7 @@ describe('frameReducer', () => {
     it.todo('does NOT add actor if character ID is invalid')
 
     describe('initial actor status', () => {
-      const result = frameReducer(Empty, SimulationActions.actorAdded('gimli'))
+      const result = frameReducer(Empty, FrameActions.actorAdded('gimli'))
       const status = result.actors.gimli
 
       it('is created in current frame', () => {
@@ -56,7 +56,7 @@ describe('frameReducer', () => {
 
   describe('SimulationActions.intentionDeclared', () => {
     it('does nothing if the character is not present', () => {
-      const result = frameReducer(TypicalIntentions, SimulationActions.intentionDeclared({
+      const result = frameReducer(TypicalIntentions, FrameActions.intentionDeclared({
         characterId: 'invalid-id',
         intention: Grumbling,
       }))
@@ -65,7 +65,7 @@ describe('frameReducer', () => {
     })
 
     it('sets the character intention', () => {
-      const result = frameReducer(TypicalIntentions, SimulationActions.intentionDeclared({
+      const result = frameReducer(TypicalIntentions, FrameActions.intentionDeclared({
         characterId: 'trogdor',
         intention: Grumbling,
       }))
@@ -87,14 +87,14 @@ describe('frameReducer', () => {
       ['y is Infinity', { x: 10, y: Infinity }],
       ['y is -Infinity', { x: 10, y: -Infinity }],
     ])('does nothing if coordinates are invalid: %p', (_name, badPosition) => {
-      expect(frameReducer(TypicalIntentions, SimulationActions.moved({
+      expect(frameReducer(TypicalIntentions, FrameActions.moved({
         characterId: 'trogdor',
         position: badPosition as any,
       }))).toBe(TypicalIntentions)
     })
 
     it('does nothing if the character is not present', () => {
-      const result = frameReducer(TypicalIntentions, SimulationActions.moved({
+      const result = frameReducer(TypicalIntentions, FrameActions.moved({
         characterId: 'invalid-id',
         position: { x: 47, y: 111 },
       }))
@@ -103,7 +103,7 @@ describe('frameReducer', () => {
     })
 
     it('sets the character position', () => {
-      const result = frameReducer(TypicalIntentions, SimulationActions.moved({
+      const result = frameReducer(TypicalIntentions, FrameActions.moved({
         characterId: 'trogdor',
         position: { x: 47, y: 111 },
       }))
@@ -117,12 +117,12 @@ describe('frameReducer', () => {
 
   describe('SimulationActions.timeOffsetChanged', () => {
     it('does nothing if new value is negative', () => {
-      const result = frameReducer(TypicalIntentions, SimulationActions.timeOffsetChanged(-1))
+      const result = frameReducer(TypicalIntentions, FrameActions.timeOffsetChanged(-1))
       expect(result).toStrictEqual(TypicalIntentions)
     })
 
     it('sets time to new value', () => {
-      const result = frameReducer(TypicalIntentions, SimulationActions.timeOffsetChanged(101))
+      const result = frameReducer(TypicalIntentions, FrameActions.timeOffsetChanged(101))
       expect(result).toStrictEqual({
         ...TypicalIntentions,
         timeOffset: 101,

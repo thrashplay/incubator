@@ -5,7 +5,7 @@ import { Point } from '../../common'
 
 import { IntentionType } from './state'
 
-export const SimulationActions = {
+export const FrameActions = {
   /** character added to the simulation */
   actorAdded: createAction('simulation/actor-added')<CharacterId>(),
 
@@ -22,4 +22,4 @@ export const SimulationActions = {
   timeOffsetChanged: createAction('simulator/time-offset-changed')<number>(),
 }
 
-export type SimulationAction = ActionType<typeof SimulationActions>
+export type FrameAction = ActionType<typeof FrameActions>

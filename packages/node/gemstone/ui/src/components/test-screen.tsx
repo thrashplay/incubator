@@ -19,13 +19,13 @@ import {
   addCharacter,
   Character,
   CharacterId,
+  FrameActions,
   getActor,
   getActors,
   getCurrentFrameNumber,
   getCurrentTime,
   getSegmentDuration,
   SceneActions,
-  SimulationActions,
 } from '@thrashplay/gemstone-model'
 
 import { useDispatch, useValue } from '../store'
@@ -108,7 +108,7 @@ export const TestScreen = () => {
         //   characterId: selectedActorId,
         //   intention: createIntention('follow', target),
         // }))
-        : dispatch(SimulationActions.intentionDeclared({
+        : dispatch(FrameActions.intentionDeclared({
           characterId: selectedActorId,
           intention: createIntention('melee', { target }),
         }))
@@ -120,7 +120,7 @@ export const TestScreen = () => {
   }, [dispatch])
 
   const handleRewindClock = useCallback(() => {
-    dispatch(SceneActions.frameReverted(frameNumber - 1))
+    dispatch(SceneActions.currentFrameChanged(frameNumber - 1))
   }, [dispatch, frameNumber])
 
   return (

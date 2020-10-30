@@ -1,7 +1,7 @@
 import { ActionType, createAction } from 'typesafe-actions'
 
-import { CharacterId } from '../character'
-import { Point } from '../common'
+import { CharacterId } from '../../character'
+import { Point } from '../../common'
 
 import { IntentionType } from './state'
 

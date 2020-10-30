@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`scene selectors getActorCollection matches snapshot 1`] = `
+exports[`scene selectors - Actor List getActorCollection matches snapshot 1`] = `
 Object {
   "gimli": Object {
     "id": "gimli",
@@ -38,7 +38,7 @@ Object {
 }
 `;
 
-exports[`scene selectors getActorStatusCollection matches snapshot 1`] = `
+exports[`scene selectors - Actor List getActorStatusCollection matches snapshot 1`] = `
 Object {
   "gimli": Object {
     "id": "gimli",

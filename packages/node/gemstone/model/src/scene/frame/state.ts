@@ -1,7 +1,7 @@
 import { Point } from 'gemstone/model/src/common/types'
 
-import { Character, CharacterId, CharacterStateContainer } from '../character'
-import { RulesStateContainer } from '../rules'
+import { Character, CharacterId, CharacterStateContainer } from '../../character'
+import { RulesStateContainer } from '../../rules'
 
 export const EMPTY_FRAME: Frame = {
   actors: {},

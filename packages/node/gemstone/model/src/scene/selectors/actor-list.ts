@@ -2,7 +2,7 @@ import { filter, get, isUndefined, mapValues, negate, omit, values } from 'lodas
 import { createSelector } from 'reselect'
 
 import { getPlayerCharactersCollection } from '../../character'
-import { Actor, ActorStatus } from '../../frame'
+import { Actor, ActorStatus } from '../frame'
 
 import { getCharacterIdParam, getScene } from './base'
 import { getCurrentFrame } from './frames'

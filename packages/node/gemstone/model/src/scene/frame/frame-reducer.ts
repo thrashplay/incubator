@@ -3,7 +3,7 @@ import { getType } from 'typesafe-actions'
 
 import { isValidPoint } from '@thrashplay/gemstone-model'
 
-import { CharacterId } from '../character'
+import { CharacterId } from '../../character'
 
 import { ActorStatus, Frame } from '.'
 import { SimulationAction, SimulationActions } from './actions'

@@ -1,4 +1,4 @@
-import { castArray, isFunction, reduce } from 'lodash/fp'
+import { castArray, get, isFunction, reduce } from 'lodash/fp'
 
 // TODO: this ended up being custom redux-light... maybe just use Redux?
 
@@ -17,6 +17,11 @@ export type Command<
   TAction extends unknown = any
 > = (state: TState) => TAction | Command<TState, TAction> | (TAction | Command<TState, TAction>)[]
 
+export type Dispatchable<
+  TState extends unknown = any,
+  TAction extends unknown = any
+> = TAction | Command<TState, TAction>
+
 /**
  * Dispatches an action or command, causing the corresponding state changes.
  * For commands, all actions (determined recursively) that are returned are dispatched in turn.
@@ -24,7 +29,7 @@ export type Command<
 export type Dispatch<
   TState extends unknown = any,
   TAction extends unknown = any
-> = (action: TAction | Command<TState, TAction>) => void
+> = (message: Dispatchable<TState, TAction>) => void
 
 /**
  * Dispatches an action or executes a command, causing the corresponding state changes.
@@ -34,7 +39,16 @@ export type Dispatch<
 export type Apply<
   TState extends unknown = any,
   TAction extends unknown = any
-> = (action: TAction | Command<TState, TAction>) => TState
+> = (message: Dispatchable<TState, TAction>) => TState
+
+export interface Store<
+  TState extends unknown = any,
+  TAction extends unknown = any
+> {
+  apply: Apply<TState, TAction>
+  dispatch: Dispatch<TState, TAction>
+  getState: () => TState
+}
 
 /**
  * Creates a global state store, which is an object with the following functions:
@@ -46,21 +60,28 @@ export type Apply<
 export const createStore = <TState extends unknown = any, TAction extends unknown = any>(
   reducer: (state: TState, action: TAction) => TState,
   initialState: TState
-) => {
+): Store<TState, TAction> => {
   let currentState = initialState
 
-  const reduceCommandResult = (state: TState, commandResult: TAction | Command<TState, TAction>): TState => {
-    if (isFunction(commandResult)) {
-      return apply(commandResult)
-    } else {
-      return reducer(state, commandResult)
-    }
-  }
-
   const apply: Apply<TState, TAction> = (commandOrAction: TAction | Command<TState, TAction>) => {
+    const reduceCommandResult = (_: TState, commandResult: TAction | Command<TState, TAction>): TState => {
+      console.log('RECU:', commandResult)
+
+      const r = apply(commandResult)
+      console.log('out', get('actors.dan.position')(r))
+      return r
+    }
+
+    console.log('applying:', commandOrAction)
+
     if (isFunction(commandOrAction)) {
-      currentState = reduce(reduceCommandResult)(currentState)(castArray(commandOrAction(currentState)))
+      console.log('in', get('actors.dan.position')(currentState))
+
+      const messagesFromCommand = castArray(commandOrAction(currentState))
+      console.log('cmd:', commandOrAction, 'messages', messagesFromCommand)
+      currentState = reduce(reduceCommandResult)(currentState)(messagesFromCommand)
     } else {
+      console.log('reducing:', commandOrAction)
       currentState = reducer(currentState, commandOrAction)
     }
 

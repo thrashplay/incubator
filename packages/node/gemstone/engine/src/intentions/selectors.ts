@@ -46,10 +46,11 @@ export const isInRange = createSelector(
 )
 
 export const getRangeCalculations = createSelector(
-  [isInRange, getDistanceToTarget, getTargetPosition],
-  (isInRange, distance, targetPosition) => ({
+  [getTargetPosition, getMeleeRange, getDistanceToTarget, isInRange],
+  (targetPosition, range, distance, isInRange) => ({
     distance,
     isInRange,
+    range,
     targetPosition,
   })
 )

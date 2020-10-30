@@ -31,8 +31,14 @@ export const CharacterStateFixtures = {
   },
 }
 
+const baseRules = {
+  meleeRange: 10,
+  segmentDuration: 5,
+}
+
 export const RulesStateFixtures = {
   Minimal: {
+    ...baseRules,
     movement: {
       defaultMode: 'standard',
       modes: {
@@ -43,7 +49,6 @@ export const RulesStateFixtures = {
         },
       },
     },
-    segmentDuration: 5,
   },
 }
 

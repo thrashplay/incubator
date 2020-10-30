@@ -11,31 +11,46 @@ import {
 
 import { createIntentionHandler } from '../intentions/intentions'
 import { GameState } from '../state'
+import { Apply, createStore, Dispatchable } from '../store'
 
-const calculateNextSegment = (frame: Frame, state: GameState) => {
-  const handler = createIntentionHandler({
-    frame,
+const calculateNextSegment = (state: GameState) => (
+  currentFrame: Frame,
+  apply: Apply<Frame, SimulationAction>
+) => {
+  const handleIntention = createIntentionHandler({
+    frame: currentFrame,
     state,
   })
 
-  const handleIntention = (actor: ActorStatus) => handler(actor, actor.intention)
   const intentionActions = flow(
     values,
     map(handleIntention),
     flatten,
-    concat(SimulationActions.timeOffsetChanged(frame.timeOffset + getSegmentDuration(state)))
-  )(frame.actors)
+    concat(SimulationActions.timeOffsetChanged(currentFrame.timeOffset + getSegmentDuration(state)))
+  )(currentFrame.actors)
 
-  return reduce((result: Frame, action: SimulationAction) => frameReducer(result, action))(frame)(intentionActions)
+  console.log('actions', intentionActions)
+
+  const messageReducer = (_: Frame, message: Dispatchable<Frame, SimulationAction>) => apply(message)
+  return reduce(messageReducer)(currentFrame)(intentionActions)
 }
 
-export const getNextFrame = (frame: Frame, state: GameState, forceStopAt?: number): Frame => {
+export const getNextFrame = (initialFrame: Frame, state: GameState): Frame => {
   const isIdle = (actor: ActorStatus) => actor.intention.type === 'idle'
   const anyActorsIdle = (currentFrame: Frame) => some(isIdle)(currentFrame.actors)
 
-  const needsToPause = (currentFrame: Frame) =>
-    anyActorsIdle(currentFrame) || (forceStopAt !== undefined && currentFrame.timeOffset >= forceStopAt)
+  const needsToPause = (currentFrame: Frame, forceStopAt: number) =>
+    anyActorsIdle(currentFrame) || currentFrame.timeOffset >= forceStopAt
 
-  const nextFrame = calculateNextSegment(frame, state)
-  return needsToPause(nextFrame) ? nextFrame : getNextFrame(nextFrame, state, forceStopAt ?? frame.timeOffset + 60)
+  const store = createStore(frameReducer, initialFrame)
+
+  const getNextFrameRecursive = (currentFrame: Frame, forceStopAt: number): Frame => {
+    const nextFrame = calculateNextSegment(state)(currentFrame, store.apply)
+
+    return needsToPause(nextFrame, forceStopAt)
+      ? nextFrame
+      : getNextFrameRecursive(nextFrame, forceStopAt)
+  }
+
+  return getNextFrameRecursive(initialFrame, initialFrame.timeOffset + 60)
 }

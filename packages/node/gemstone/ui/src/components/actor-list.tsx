@@ -6,7 +6,7 @@ import { List } from 'react-native-paper'
 import { getPublicActionDescription } from '@thrashplay/gemstone-engine'
 import { Actor, CharacterId } from '@thrashplay/gemstone-model'
 
-import { useGame } from '../game-context'
+import { useSelector } from '../store'
 const NO_STYLES = {}
 
 export interface ActorListProps {
@@ -37,7 +37,7 @@ export const ActorList = ({
   title,
   titleStyle,
 }: ActorListProps) => {
-  const { state } = useGame()
+  const getActionDescription = useSelector(getPublicActionDescription)
   const [selectedActor, setSelectedActor] = useState<Actor | undefined>(initialSelection)
 
   const handleListPress = (actor: Actor) => () => {
@@ -58,7 +58,7 @@ export const ActorList = ({
   const createListItem = (actor: Actor) => (
     <List.Item
       key={actor.id}
-      description={() => <Text>is {getPublicActionDescription(state, { characterId: actor.id })}</Text> }
+      description={() => <Text>is {getActionDescription({ characterId: actor.id })}</Text> }
       onPress={handleListPress(actor)}
       style={getListItemContainerStyle(actor)}
       title={actor.name}

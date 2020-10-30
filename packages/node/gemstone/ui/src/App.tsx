@@ -3,7 +3,7 @@ import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper'
 
 import 'react-native-gesture-handler'
 import { TestScreen } from './components/test-screen'
-import { GemstoneProvider } from './game-context/context'
+import { StoreProvider } from './store/context'
 // import { Provider } from 'react-redux'
 
 // import { createApplicationStore } from './store'
@@ -21,13 +21,11 @@ const theme = {
 export class App extends Component {
   public render () {
     return (
-      // <Provider store={store}>
-      <GemstoneProvider>
+      <StoreProvider>
         <PaperProvider theme={theme}>
           <TestScreen />
         </PaperProvider>
-      </GemstoneProvider>
-      // </Provider>
+      </StoreProvider>
     )
   }
 }

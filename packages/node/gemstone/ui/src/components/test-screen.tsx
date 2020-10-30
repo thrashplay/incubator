@@ -6,10 +6,10 @@ import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 import { Button } from 'react-native-paper'
 
 import {
+  beginMoving,
   calculateDistance,
   calculateNextFrame,
   createIntention,
-  declareMoveIntention,
   GameState,
   moveTo,
   startNewScene,
@@ -28,8 +28,7 @@ import {
   SimulationActions,
 } from '@thrashplay/gemstone-model'
 
-import { useStateQuery } from '../game-context'
-import { useGame } from '../game-context/use-game'
+import { useDispatch, useValue } from '../store'
 
 import { ActorList } from './actor-list'
 import { SceneMap } from './scene/scene-map'
@@ -49,7 +48,7 @@ const initializeTestScene = () => (_state: GameState) => {
   return [
     // add the PCs
     addCharacter(createCharacter('Dan', 60)),
-    addCharacter(createCharacter('Nate', 120)),
+    // addCharacter(createCharacter('Nate', 120)),
     // addCharacter(createCharacter('Seth')),
     // addCharacter(createCharacter('Tom')),
 
@@ -65,20 +64,20 @@ const initializeTestScene = () => (_state: GameState) => {
 }
 
 export const TestScreen = () => {
-  const { dispatch, execute } = useGame()
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    execute(initializeTestScene())
+    dispatch(initializeTestScene())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const [selectedActorId, setSelectedActorId] = useState<CharacterId | undefined>(undefined)
 
-  const actors = useStateQuery(getActors)
-  const currentTime = useStateQuery(getCurrentTime)
-  const frameNumber = useStateQuery(getCurrentFrameNumber)
-  const segmentDuration = useStateQuery(getSegmentDuration)
-  const selectedActor = useStateQuery(getActor, { characterId: selectedActorId })
+  const actors = useValue(getActors)
+  const currentTime = useValue(getCurrentTime)
+  const frameNumber = useValue(getCurrentFrameNumber)
+  const segmentDuration = useValue(getSegmentDuration)
+  const selectedActor = useValue(getActor, { characterId: selectedActorId })
 
   const handleSelectActor = (id: CharacterId) => setSelectedActorId(id)
 
@@ -104,7 +103,7 @@ export const TestScreen = () => {
     if (selectedActorId !== undefined) {
       const target = getTarget()
       return target === undefined
-        ? execute(declareMoveIntention(selectedActorId, x, y))
+        ? dispatch(beginMoving(selectedActorId, x, y))
         // : dispatch(SimulationActions.intentionDeclared({
         //   characterId: selectedActorId,
         //   intention: createIntention('follow', target),
@@ -114,11 +113,11 @@ export const TestScreen = () => {
           intention: createIntention('melee', { target }),
         }))
     }
-  }, [actors, dispatch, execute, selectedActorId])
+  }, [actors, dispatch, selectedActorId])
 
   const handleAdvanceClock = useCallback(() => {
-    execute(calculateNextFrame())
-  }, [execute])
+    dispatch(calculateNextFrame())
+  }, [dispatch])
 
   const handleRewindClock = useCallback(() => {
     dispatch(SceneActions.frameReverted(frameNumber - 1))

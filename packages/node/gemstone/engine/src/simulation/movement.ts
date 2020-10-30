@@ -1,15 +1,15 @@
 import { Point } from '@thrashplay/gemstone-model'
 
+// the maximimum distance from a point to consider having 'arrived' for movement purposes
+const MAX_ARRIVAL_DELTA = 0
+
 /** calculates a point that is 'distance' feet away from the start point, in the direction of destination */
-export const calculateLocationAlongVector = (start: Point, destination: Point) => (distance: number) => {
-  const totalDistance = Math.sqrt(
-    (destination.y - start.y) * (destination.y - start.y) +
-    (destination.x - start.x) * (destination.x - start.x)
-  )
+export const calculateLocationAlongVector = (start: Point, end: Point) => (distance: number) => {
+  const totalDistance = calculateDistance(start, end)
 
   return {
-    x: ((destination.x - start.x) * (distance / totalDistance)) + start.x,
-    y: ((destination.y - start.y) * (distance / totalDistance)) + start.y,
+    x: ((end.x - start.x) * (distance / totalDistance)) + start.x,
+    y: ((end.y - start.y) * (distance / totalDistance)) + start.y,
   }
 }
 
@@ -50,3 +50,7 @@ export const getNextPositionOnApproach = (start: Point, end: Point, speed: numbe
   const trueDestination = calculateLocationAlongVector(end, start)(minDistance)
   return getNewPosition(start, trueDestination, speed)
 }
+
+/** determine if a character has 'arrived' at a destination by comparing their distance to some reference detla */
+export const hasArrived = (position: Point, destination: Point, maxDistance = MAX_ARRIVAL_DELTA) =>
+  calculateDistance(position, destination) <= maxDistance

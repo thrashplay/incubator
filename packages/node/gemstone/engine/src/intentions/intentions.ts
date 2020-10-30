@@ -16,9 +16,10 @@ export const createIntention = <
 
 export const createIntentionHandler = <TState extends any = any>(
   context: SimulationContext<TState>
-) => (actor: ActorStatus, intention: IntentionType): SimulationAction | SimulationAction[] => {
+) => (actor: ActorStatus): SimulationAction | SimulationAction[] => {
   const NOOP = () => []
 
+  const { intention } = actor
   const handler = get(intention.type)(IntentionHandlers) ?? NOOP
   return handler(actor, context, get('data')(intention))
 }

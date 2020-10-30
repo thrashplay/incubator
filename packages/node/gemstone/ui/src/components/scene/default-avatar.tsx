@@ -6,7 +6,7 @@ import { Circle, CircleProps, G, LineProps, Text, TextProps } from 'react-native
 import { getMaxDistance } from '@thrashplay/gemstone-engine'
 import { Actor, getActor } from '@thrashplay/gemstone-model'
 
-import { useStateQuery } from '../../game-context'
+import { useValue } from '../../store'
 
 import { SegmentedVector } from './segmented-vector'
 
@@ -75,7 +75,7 @@ const RenderIntention = ({
   const speed = actor.speed ?? 0
 
   // todo this is a hack, to see something working
-  const target = useStateQuery(getActor, { characterId: get('data')(intention) })
+  const target = useValue(getActor, { characterId: get('data')(intention) })
 
   switch (intention.type) {
     case 'move':

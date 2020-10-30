@@ -1,10 +1,10 @@
-import { take } from 'lodash/fp'
+import { size, take } from 'lodash/fp'
 
 import { CommonActions } from '../common'
 
 import { IntentionFixtures, SceneStateFixtures } from './__fixtures__'
 import { SceneActions } from './actions'
-import { EMPTY_FRAME, SimulationActions } from './frame'
+import { EMPTY_FRAME, FrameActions } from './frame'
 import { reduceSceneState } from './reducer'
 import { SceneState } from './state'
 
@@ -64,6 +64,23 @@ describe('reduceSceneState', () => {
     })
   })
 
+  describe('SceneActions.currentFrameChanged', () => {
+    it('does nothing if the new value is negative', () => {
+      const result = reduceSceneState(FiveIdleFrames, SceneActions.currentFrameChanged(-1))
+      expect(result.currentFrame).toBe(FiveIdleFrames.currentFrame)
+    })
+
+    it('does nothing if the new value is greater than the hightest frame index', () => {
+      const result = reduceSceneState(FiveIdleFrames, SceneActions.currentFrameChanged(5))
+      expect(result.currentFrame).toBe(FiveIdleFrames.currentFrame)
+    })
+
+    it.each([0, 1, 2, 3, 4])('correct sets new value: %d', (frame) => {
+      const result = reduceSceneState(FiveIdleFrames, SceneActions.currentFrameChanged(frame))
+      expect(result.currentFrame).toBe(frame)
+    })
+  })
+
   describe('SceneActions.frameAdded', () => {
     it('appends the new frame to the frame list', () => {
       const newFrame = { ...EMPTY_FRAME, actors: {} }
@@ -73,25 +90,8 @@ describe('reduceSceneState', () => {
     })
   })
 
-  describe('SceneActions.frameReverted', () => {
-    it('does nothing if the scene index is negative', () => {
-      const result = reduceSceneState(FiveIdleFrames, SceneActions.frameReverted(-1))
-      expect(result.frames).toStrictEqual(FiveIdleFrames.frames)
-    })
-
-    it.each([4, 5])('does nothing if the scene is not in the past: %p', (frame) => {
-      const result = reduceSceneState(FiveIdleFrames, SceneActions.frameReverted(frame))
-      expect(result.frames).toStrictEqual(FiveIdleFrames.frames)
-    })
-
-    it.each([0, 1, 2, 3])('truncates frames after the specified index: %p', (frame) => {
-      const result = reduceSceneState(FiveIdleFrames, SceneActions.frameReverted(frame))
-      expect(result.frames).toStrictEqual(take(frame + 1)(FiveIdleFrames.frames))
-    })
-  })
-
   describe('SceneActions.intentionDeclared', () => {
-    const result = reduceSceneState(IdleBeforeTypicalIntentions, SimulationActions.intentionDeclared({
+    const result = reduceSceneState(IdleBeforeTypicalIntentions, FrameActions.intentionDeclared({
       characterId: 'trogdor',
       intention: Grumbling,
     }))
@@ -100,7 +100,7 @@ describe('reduceSceneState', () => {
     const trogdorInCurrentFrame = result.frames[1].actors.trogdor
 
     it('does nothing if the character is not present', () => {
-      const result = reduceSceneState(IdleBeforeTypicalIntentions, SimulationActions.intentionDeclared({
+      const result = reduceSceneState(IdleBeforeTypicalIntentions, FrameActions.intentionDeclared({
         characterId: 'invalid-id',
         intention: Grumbling,
       }))
@@ -119,7 +119,7 @@ describe('reduceSceneState', () => {
   })
 
   describe('SceneActions.moved', () => {
-    const result = reduceSceneState(IdleBeforeTypicalIntentions, SimulationActions.moved({
+    const result = reduceSceneState(IdleBeforeTypicalIntentions, FrameActions.moved({
       characterId: 'trogdor',
       position: { x: 47, y: 111 },
     }))
@@ -128,7 +128,7 @@ describe('reduceSceneState', () => {
     const trogdorInCurrentFrame = result.frames[1].actors.trogdor
 
     it('does nothing if the character is not present', () => {
-      const result = reduceSceneState(IdleBeforeTypicalIntentions, SimulationActions.moved({
+      const result = reduceSceneState(IdleBeforeTypicalIntentions, FrameActions.moved({
         characterId: 'invalid-id',
         position: { x: 47, y: 111 },
       }))
@@ -152,6 +152,23 @@ describe('reduceSceneState', () => {
     it('replaces existing scene with new one', () => {
       const result = reduceSceneState(IdleBeforeTypicalIntentions, SceneActions.sceneStarted())
       expect(result).toStrictEqual(Default)
+    })
+  })
+
+  describe('SceneActions.truncated', () => {
+    const sceneWithCurrentFrame = (currentFrame: number) => ({
+      ...FiveIdleFrames,
+      currentFrame,
+    })
+
+    it('does nothing if current frame is the last frame', () => {
+      const result = reduceSceneState(sceneWithCurrentFrame(size(FiveIdleFrames.frames) - 1), SceneActions.truncated())
+      expect(result).toStrictEqual(FiveIdleFrames)
+    })
+
+    it.each([0, 1, 2, 3, 4])('deletes frames when current frame is: %p', (currentFrame) => {
+      const result = reduceSceneState(sceneWithCurrentFrame(currentFrame), SceneActions.truncated())
+      expect(result.frames).toStrictEqual(take(currentFrame + 1)(FiveIdleFrames.frames))
     })
   })
 })

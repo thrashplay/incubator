@@ -6,26 +6,26 @@ import { isValidPoint } from '@thrashplay/gemstone-model'
 import { CharacterId } from '../../character'
 
 import { ActorStatus, Frame } from '.'
-import { SimulationAction, SimulationActions } from './actions'
+import { FrameAction, FrameActions } from './actions'
 
-export const frameReducer = (frame: Frame, action: SimulationAction): Frame => {
+export const frameReducer = (frame: Frame, action: FrameAction): Frame => {
   switch (action.type) {
-    case getType(SimulationActions.actorAdded):
+    case getType(FrameActions.actorAdded):
       return has(action.payload)(frame.actors) ? frame : flow(
         setActorStatus(action.payload, createDefaultActorStatus(action.payload))
       )(frame)
 
-    case getType(SimulationActions.intentionDeclared):
+    case getType(FrameActions.intentionDeclared):
       return has(action.payload.characterId)(frame.actors)
         ? setActorStatus(action.payload.characterId, { intention: action.payload.intention })(frame)
         : frame
 
-    case getType(SimulationActions.moved):
+    case getType(FrameActions.moved):
       return !isValidPoint(action.payload.position) ? frame : has(action.payload.characterId)(frame.actors)
         ? setActorStatus(action.payload.characterId, { position: action.payload.position })(frame)
         : frame
 
-    case getType(SimulationActions.timeOffsetChanged):
+    case getType(FrameActions.timeOffsetChanged):
       return action.payload < 0 ? frame : {
         ...frame,
         timeOffset: action.payload,

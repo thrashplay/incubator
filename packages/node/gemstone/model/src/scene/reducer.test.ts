@@ -1,10 +1,11 @@
+/* eslint-disable jest/no-commented-out-tests */
 import { last, size, take } from 'lodash/fp'
 
 import { CommonActions } from '../common'
 
 import { IntentionFixtures, SceneStateFixtures } from './__fixtures__'
 import { SceneActions } from './actions'
-import { EMPTY_FRAME, FrameAction, FrameActions, frameReducer } from './frame'
+import { EMPTY_FRAME, Frame, FrameAction, FrameActions, frameReducer } from './frame'
 import { reduceSceneState } from './reducer'
 import { SceneState } from './state'
 
@@ -64,20 +65,21 @@ describe('reduceSceneState', () => {
     })
   })
 
-  describe('SceneActions.currentFrameChanged', () => {
-    it('does nothing if the new value is negative', () => {
-      const result = reduceSceneState(FiveIdleFrames, SceneActions.currentFrameChanged(-1))
-      expect(result.currentFrame).toBe(FiveIdleFrames.currentFrame)
+  describe('SceneActions.frameAdded', () => {
+    it('does nothing if the new frame is undefined', () => {
+      const result = reduceSceneState(
+        IdleBeforeTypicalIntentions,
+        SceneActions.frameAdded(undefined as unknown as Frame)
+      )
+
+      expect(result.frames).toStrictEqual(IdleBeforeTypicalIntentions.frames)
     })
 
-    it('does nothing if the new value is greater than the hightest frame index', () => {
-      const result = reduceSceneState(FiveIdleFrames, SceneActions.currentFrameChanged(5))
-      expect(result.currentFrame).toBe(FiveIdleFrames.currentFrame)
-    })
-
-    it.each([0, 1, 2, 3, 4])('correct sets new value: %d', (frame) => {
-      const result = reduceSceneState(FiveIdleFrames, SceneActions.currentFrameChanged(frame))
-      expect(result.currentFrame).toBe(frame)
+    it('appends the new frame to the frame list', () => {
+      const newFrame = { ...EMPTY_FRAME, actors: {} }
+      const result = reduceSceneState(IdleBeforeTypicalIntentions, SceneActions.frameAdded(newFrame))
+      expect(result.frames).toHaveLength(IdleBeforeTypicalIntentions.frames.length + 1)
+      expect(result.frames).toContain(newFrame)
     })
   })
 
@@ -192,16 +194,6 @@ describe('reduceSceneState', () => {
       const expectedFrame = frameReducer(last(IdleBeforeTypicalIntentions.frames)!, action)
       const result = reduceSceneState(IdleBeforeTypicalIntentions, action)
       expect(last(result.frames)).toStrictEqual(expectedFrame)
-    })
-
-    it('is rejected if the current frame is in the past', () => {
-      const input = {
-        ...IdleBeforeTypicalIntentions,
-        currentFrame: 0,
-      }
-
-      const result = reduceSceneState(input, action)
-      expect(result.frames).toStrictEqual(IdleBeforeTypicalIntentions.frames)
     })
   })
 })

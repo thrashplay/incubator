@@ -1,6 +1,6 @@
 import { get, head } from 'lodash/fp'
 
-import { ActorStatus, IntentionType, SimulationAction } from '@thrashplay/gemstone-model'
+import { ActorStatus, FrameAction } from '@thrashplay/gemstone-model'
 
 import { IntentionHandlers } from './handlers'
 import { OptionalRestParameter, TypeOfIntention } from './helper-types'
@@ -16,7 +16,7 @@ export const createIntention = <
 
 export const createIntentionHandler = <TState extends any = any>(
   context: SimulationContext<TState>
-) => (actor: ActorStatus): SimulationAction | SimulationAction[] => {
+) => (actor: ActorStatus): FrameAction | FrameAction[] => {
   const NOOP = () => []
 
   const { intention } = actor

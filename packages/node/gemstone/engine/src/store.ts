@@ -1,4 +1,4 @@
-import { castArray, get, isFunction, reduce } from 'lodash/fp'
+import { castArray, isFunction, reduce } from 'lodash/fp'
 
 // TODO: this ended up being custom redux-light... maybe just use Redux?
 
@@ -16,6 +16,11 @@ export type Command<
   TState extends unknown = any,
   TAction extends unknown = any
 > = (state: TState) => TAction | Command<TState, TAction> | (TAction | Command<TState, TAction>)[]
+
+export type CommandResult<
+  TState extends unknown = any,
+  TAction extends unknown = any
+> = ReturnType<Command<TState, TAction>>
 
 export type Dispatchable<
   TState extends unknown = any,
@@ -65,23 +70,13 @@ export const createStore = <TState extends unknown = any, TAction extends unknow
 
   const apply: Apply<TState, TAction> = (commandOrAction: TAction | Command<TState, TAction>) => {
     const reduceCommandResult = (_: TState, commandResult: TAction | Command<TState, TAction>): TState => {
-      console.log('RECU:', commandResult)
-
-      const r = apply(commandResult)
-      console.log('out', get('actors.dan.position')(r))
-      return r
+      return apply(commandResult)
     }
 
-    console.log('applying:', commandOrAction)
-
     if (isFunction(commandOrAction)) {
-      console.log('in', get('actors.dan.position')(currentState))
-
       const messagesFromCommand = castArray(commandOrAction(currentState))
-      console.log('cmd:', commandOrAction, 'messages', messagesFromCommand)
       currentState = reduce(reduceCommandResult)(currentState)(messagesFromCommand)
     } else {
-      console.log('reducing:', commandOrAction)
       currentState = reducer(currentState, commandOrAction)
     }
 

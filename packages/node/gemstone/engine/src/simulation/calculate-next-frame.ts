@@ -1,15 +1,14 @@
 import {
-  EMPTY_FRAME,
-  getCurrentFrame,
-  SceneAction,
   SceneActions,
 } from '@thrashplay/gemstone-model'
 
 import { GameState } from '../state'
 
-import { getNextFrame } from './get-next-frame'
+import { runSimulation } from './run-simulation'
 
-export const calculateNextFrame = () => (state: GameState): SceneAction | SceneAction[] => {
-  const currentFrame = getCurrentFrame(state)
-  return SceneActions.frameAdded(currentFrame === undefined ? EMPTY_FRAME : getNextFrame(currentFrame, state))
+export const calculateNextFrame = () => (_: GameState) => {
+  return [
+    SceneActions.frameCommitted(),
+    runSimulation(),
+  ]
 }

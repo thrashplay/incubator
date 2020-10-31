@@ -1,5 +1,5 @@
-import { size } from 'lodash'
-import { concat, contains, drop, flow, get, last, take, uniq } from 'lodash/fp'
+import { isNil, size } from 'lodash'
+import { concat, contains, drop, flow, get, initial, last, take, uniq } from 'lodash/fp'
 import { getType } from 'typesafe-actions'
 
 import { CharacterId } from '../character'
@@ -16,24 +16,20 @@ export const reduceSceneState = (
   const error = createReducerErrorHandler('scene', state)
 
   const reduceCurrentFrame = (action: SceneAction | FrameAction | CommonAction) => (state: SceneState) => {
-    const currentFrameNumber = state.currentFrame ?? 0
-    const currentFrame = get(currentFrameNumber)(state.frames)
+    const currentFrame = last(state.frames) ?? EMPTY_FRAME
     const updatedFrame = currentFrame === undefined ? undefined : frameReducer(currentFrame, action as FrameAction)
 
     return updatedFrame === undefined
       ? error(action.type, 'Frame reducer returned undefined value.')
       : currentFrame === updatedFrame
         ? state // no change
-        : currentFrameNumber < size(state.frames) - 1
-          ? error(action.type, 'Cannot modify past frame:', currentFrameNumber, 'frameCount:', size(state.frames))
-          : {
-            ...state,
-            frames: [
-              ...take(currentFrameNumber)(state.frames),
-              updatedFrame,
-              ...drop(currentFrameNumber + 1)(state.frames),
-            ],
-          }
+        : {
+          ...state,
+          frames: [
+            ...initial(state.frames),
+            updatedFrame,
+          ],
+        }
   }
 
   switch (action.type) {
@@ -41,7 +37,6 @@ export const reduceSceneState = (
     case getType(SceneActions.sceneStarted):
       return {
         characters: [],
-        currentFrame: 0,
         frames: [EMPTY_FRAME],
       }
 
@@ -53,12 +48,12 @@ export const reduceSceneState = (
           reduceCurrentFrame(FrameActions.actorAdded(action.payload))
         )(state)
 
-    case getType(SceneActions.currentFrameChanged):
-      return (action.payload < 0 || action.payload >= state.frames.length)
-        ? error(action.type, 'Invalid frame index:', action.payload)
+    case getType(SceneActions.frameAdded):
+      return isNil(action.payload)
+        ? error(action.type, 'New frame is undefined.')
         : {
-          ...error(action.type, 'This action has been deprecated.'),
-          currentFrame: action.payload,
+          ...state,
+          frames: concat(state.frames, action.payload),
         }
 
     case getType(SceneActions.frameCommitted):

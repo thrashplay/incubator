@@ -18,7 +18,6 @@ const { Default, FiveIdleFrames, IdleBeforeTypicalIntentions, SingleTypicalFrame
 // this is an impossible state, but can be used to test what happens if 'frames' is somehow empty
 const emptyState: SceneStateContainer = createStateWithDependencies({
   characters: [],
-  currentFrame: 0,
   frames: [],
 })
 
@@ -35,19 +34,10 @@ describe('scene selectors - frames', () => {
       ['Default', Default, 0],
       ['SingleTypicalFrame', SingleTypicalFrame, 0],
       ['IdleBeforeTypicalIntentions', IdleBeforeTypicalIntentions, 1],
-    ])('returns current frame index: %p', (_name, state, expectedResult) => {
+      ['FiveIdleFrames', FiveIdleFrames, 4],
+    ])('returns index of last frame: %p', (_name, state, expectedResult) => {
       const result = getCurrentFrameNumber(createStateWithDependencies(state))
       expect(result).toBe(expectedResult)
-    })
-
-    it('returns current frame index when last frame is not the current frame', () => {
-      const state = {
-        ...FiveIdleFrames,
-        currentFrame: 2,
-      }
-
-      const result = getCurrentFrameNumber(createStateWithDependencies(state))
-      expect(result).toBe(2)
     })
   })
 
@@ -62,24 +52,12 @@ describe('scene selectors - frames', () => {
       expect(result).toStrictEqual(Empty)
     })
 
-    it('returns empty frame if currentFrame > last frame', () => {
-      const state = createStateWithDependencies({ ...FiveIdleFrames, currentFrame: 10 })
-      const result = getCurrentFrame(state)
-      expect(result).toStrictEqual(Empty)
-    })
-
     it.each<[string, SceneState, Frame]>([
       ['SingleIdleFrame', SingleIdleFrame, AllIdle],
       ['IdleBeforeTypicalIntentions', IdleBeforeTypicalIntentions, TypicalIntentions],
     ])('returns correct frame for: %p', (_fixture, state, expectedFrame) => {
       const result = getCurrentFrame(createStateWithDependencies(state))
       expect(result).toStrictEqual(expectedFrame)
-    })
-
-    it('returns correct frame if current frame is not last frame', () => {
-      const state = createStateWithDependencies({ ...IdleBeforeTypicalIntentions, currentFrame: 0 })
-      const result = getCurrentFrame(state)
-      expect(result).toStrictEqual(AllIdle)
     })
   })
 })

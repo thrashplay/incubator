@@ -55,7 +55,7 @@ export const RulesStateFixtures = {
       },
     },
   },
-}
+} as const
 
 export const IntentionFixtures = {
   BefriendingElves: {

@@ -1,6 +1,6 @@
 import {
   CharacterId,
-  getBaseSpeed,
+  getCurrentSpeed,
   getPosition,
   isValidPoint,
   Point,
@@ -29,7 +29,7 @@ export const approachLocation = (
   const { minimumDistance, onArrival } = withDefaultOptions(options)
 
   const position = getPosition(state, { characterId })
-  const speed = getBaseSpeed(state, { characterId })
+  const speed = getCurrentSpeed(state, { characterId })
 
   const doApproach = (start: Point, end: Point) => {
     const nextPosition = getNextPositionOnApproach(start, end, speed, minimumDistance)

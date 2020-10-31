@@ -1,7 +1,7 @@
-import { size, some } from 'lodash/fp'
+import { size } from 'lodash/fp'
 import { createSelector } from 'reselect'
 
-import { ActorStatus, EMPTY_FRAME } from '../frame'
+import { EMPTY_FRAME } from '../frame'
 
 import { getScene } from './base'
 
@@ -35,14 +35,8 @@ export const getCurrentTime = createSelector(
   (frame) => frame?.timeOffset ?? 0
 )
 
-const isIdle = (actor: ActorStatus) => actor.intention.type === 'idle'
-export const areAnyActorsIdle = createSelector(
-  [getCurrentFrame],
-  (frame) => some(isIdle)(frame.actors)
-)
-
 /** determines if the current frame is a 'key' frame or not */
 export const isCurrentFrameKey = createSelector(
-  [areAnyActorsIdle],
-  (areAnyActorsIdle) => areAnyActorsIdle
+  [getCurrentFrame],
+  (frame) => frame.keyFrame
 )

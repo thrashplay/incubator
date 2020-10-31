@@ -11,7 +11,10 @@ export const SceneActions = {
   /** new frame added to the timline */
   frameAdded: createAction('scene/frame-added')<Frame>(),
 
-  /** commits the current frame by cloning it and appending the copy to the end of the list */
+  /**
+   * Commits the current frame by cloning it and appending the copy to the end of the list.
+   * The new frame will have it's "key frame" status cleared, if it was set.
+   **/
   frameCommitted: createAction('scene/frame-committed')(),
 
   /** new scene has been started */

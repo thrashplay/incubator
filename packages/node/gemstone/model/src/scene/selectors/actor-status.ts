@@ -1,8 +1,11 @@
-import { values } from 'lodash/fp'
+import { some, values } from 'lodash/fp'
 import { createSelector } from 'reselect'
+
+import { ActorStatus } from '../frame/state'
 
 import { getActorStatusCollection } from './actor-list'
 import { getCharacterIdParam } from './base'
+import { getCurrentFrame } from './frames'
 
 /** retrieves an unsorted array of the most recent status for all actors */
 export const getActorStatuses = createSelector(
@@ -26,4 +29,10 @@ export const getCurrentPosition = createSelector(
 export const getCurrentIntention = createSelector(
   [getCurrentStatus],
   (status) => status?.intention ?? undefined
+)
+
+const isIdle = (actor: ActorStatus) => actor.intention.type === 'idle'
+export const areAnyActorsIdle = createSelector(
+  [getCurrentFrame],
+  (frame) => some(isIdle)(frame.actors)
 )

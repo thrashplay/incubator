@@ -13,14 +13,22 @@ export const frameReducer = (frame: Frame, action: FrameAction): Frame => {
 
   switch (action.type) {
     case getType(FrameActions.actorAdded):
-      return has(action.payload)(frame.actors) ? frame : flow(
-        setActorStatus(action.payload, createDefaultActorStatus(action.payload))
-      )(frame)
+      return has(action.payload)(frame.actors)
+        ? error(action.type, 'Actor is already in the scene:', action.payload)
+        : flow(
+          setActorStatus(action.payload, createDefaultActorStatus(action.payload))
+        )(frame)
 
     case getType(FrameActions.intentionDeclared):
-      return has(action.payload.characterId)(frame.actors)
-        ? setActorStatus(action.payload.characterId, { intention: action.payload.intention })(frame)
-        : frame
+      return !has(action.payload.characterId)(frame.actors)
+        ? error(action.type, 'Actor not found:', action.payload.characterId)
+        : setActorStatus(action.payload.characterId, { intention: action.payload.intention })(frame)
+
+    case getType(FrameActions.keyFrameMarked):
+      return {
+        ...frame,
+        keyFrame: true,
+      }
 
     case getType(FrameActions.moved):
       return !isValidPoint(action.payload.position)

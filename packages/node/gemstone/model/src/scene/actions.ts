@@ -2,8 +2,6 @@ import { ActionType, createAction } from 'typesafe-actions'
 
 import { CharacterId } from '../character'
 
-import { Frame } from './frame'
-
 export const SceneActions = {
   /** character added to the scene */
   characterAdded: createAction('scene/character-added')<CharacterId>(),
@@ -11,17 +9,14 @@ export const SceneActions = {
   /** current frame has been set to a new value */
   currentFrameChanged: createAction('scene/current-frame-changed')<number>(),
 
-  /** new frame added to history */
-  frameAdded: createAction('scene/frame-added')<Frame>(),
-
-  /** current frame has been reloaded from a point in history */
-  frameReverted: createAction('scene/current-frame-reverted')<number>(),
+  /** commits the current frame by cloning it and appending the copy to the end of the list */
+  frameCommitted: createAction('scene/frame-committed')(),
 
   /** new scene has been started */
   sceneStarted: createAction('scene/started')(),
 
-  /** all frames after the current one are removed, in case they need to be recalculated */
-  truncated: createAction('scene/truncated')(),
+  /** all frames after the specified one are removed (the frame with the given index is kept) */
+  truncated: createAction('scene/truncated')<number>(),
 }
 
 export type SceneAction = ActionType<typeof SceneActions>

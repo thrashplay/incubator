@@ -1,10 +1,10 @@
-import { size, take } from 'lodash/fp'
+import { last, size, take } from 'lodash/fp'
 
 import { CommonActions } from '../common'
 
 import { IntentionFixtures, SceneStateFixtures } from './__fixtures__'
 import { SceneActions } from './actions'
-import { EMPTY_FRAME, FrameActions } from './frame'
+import { EMPTY_FRAME, FrameAction, FrameActions, frameReducer } from './frame'
 import { reduceSceneState } from './reducer'
 import { SceneState } from './state'
 
@@ -81,12 +81,17 @@ describe('reduceSceneState', () => {
     })
   })
 
-  describe('SceneActions.frameAdded', () => {
-    it('appends the new frame to the frame list', () => {
-      const newFrame = { ...EMPTY_FRAME, actors: {} }
-      const result = reduceSceneState(IdleBeforeTypicalIntentions, SceneActions.frameAdded(newFrame))
+  describe('SceneActions.frameCommitted', () => {
+    it('adds an empty frame if the frame list is empty', () => {
+      const result = reduceSceneState({ ...Default, frames: [] }, SceneActions.frameCommitted())
+      expect(result.frames).toHaveLength(1)
+      expect(result.frames).toStrictEqual([EMPTY_FRAME])
+    })
+
+    it('clones the last frame, and appends it to the frame list', () => {
+      const result = reduceSceneState(IdleBeforeTypicalIntentions, SceneActions.frameCommitted())
       expect(result.frames).toHaveLength(IdleBeforeTypicalIntentions.frames.length + 1)
-      expect(result.frames).toContain(newFrame)
+      expect(last(result.frames)).toStrictEqual(last(IdleBeforeTypicalIntentions.frames))
     })
   })
 
@@ -156,19 +161,47 @@ describe('reduceSceneState', () => {
   })
 
   describe('SceneActions.truncated', () => {
-    const sceneWithCurrentFrame = (currentFrame: number) => ({
-      ...FiveIdleFrames,
-      currentFrame,
-    })
-
-    it('does nothing if current frame is the last frame', () => {
-      const result = reduceSceneState(sceneWithCurrentFrame(size(FiveIdleFrames.frames) - 1), SceneActions.truncated())
+    it('does nothing if specified frame is negative', () => {
+      const result = reduceSceneState(FiveIdleFrames, SceneActions.truncated(-1))
       expect(result).toStrictEqual(FiveIdleFrames)
     })
 
-    it.each([0, 1, 2, 3, 4])('deletes frames when current frame is: %p', (currentFrame) => {
-      const result = reduceSceneState(sceneWithCurrentFrame(currentFrame), SceneActions.truncated())
-      expect(result.frames).toStrictEqual(take(currentFrame + 1)(FiveIdleFrames.frames))
+    it('does nothing if specified frame is after the last frame', () => {
+      const result = reduceSceneState(FiveIdleFrames, SceneActions.truncated(size(FiveIdleFrames.frames)))
+      expect(result).toStrictEqual(FiveIdleFrames)
+    })
+
+    it('does nothing if specified frame is the last frame', () => {
+      const result = reduceSceneState(FiveIdleFrames, SceneActions.truncated(size(FiveIdleFrames.frames) - 1))
+      expect(result).toStrictEqual(FiveIdleFrames)
+    })
+
+    it.each([0, 1, 2, 3, 4])('deletes frames when specified frame is: %p', (frame) => {
+      const result = reduceSceneState(FiveIdleFrames, SceneActions.truncated(frame))
+      expect(result.frames).toStrictEqual(take(frame + 1)(FiveIdleFrames.frames))
+    })
+  })
+
+  describe.each<[string, FrameAction]>([
+    ['actor-added', FrameActions.actorAdded('batman')],
+    ['intention-declared', FrameActions.intentionDeclared({ characterId: 'gimli', intention: { type: 'anything' } })],
+    ['actor-moved', FrameActions.moved({ characterId: 'gimli', position: { x: 0, y: 0 } })],
+    ['time-offset-changed', FrameActions.timeOffsetChanged(125)],
+  ])('frame action: %p', (_name, action) => {
+    it('is passed to frameReducer', () => {
+      const expectedFrame = frameReducer(last(IdleBeforeTypicalIntentions.frames)!, action)
+      const result = reduceSceneState(IdleBeforeTypicalIntentions, action)
+      expect(last(result.frames)).toStrictEqual(expectedFrame)
+    })
+
+    it('is rejected if the current frame is in the past', () => {
+      const input = {
+        ...IdleBeforeTypicalIntentions,
+        currentFrame: 0,
+      }
+
+      const result = reduceSceneState(input, action)
+      expect(result.frames).toStrictEqual(IdleBeforeTypicalIntentions.frames)
     })
   })
 })

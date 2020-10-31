@@ -28,7 +28,7 @@ describe('calculate-next-frame', () => {
   it('passes correct initial frame to simulation', () => {
     calculateNextFrame()(initialFrameState)
     expect(mockGetNextFrame).toHaveBeenCalledTimes(1)
-    expect(mockGetNextFrame).toHaveBeenCalledWith(INITIAL_FRAME)
+    expect(mockGetNextFrame).toHaveBeenCalledWith(initialFrameState)
   })
 
   it('returns correct result', () => {

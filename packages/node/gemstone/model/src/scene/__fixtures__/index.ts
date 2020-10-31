@@ -81,13 +81,9 @@ export const ActorStatusFixtures = {
   },
 }
 
-const baseFrame = {
-  ...EMPTY_FRAME,
-}
-
 export const FrameFixtures = {
   AllIdle: {
-    ...baseFrame,
+    ...EMPTY_FRAME,
     actors: {
       gimli: {
         ...ActorStatusFixtures.Gimli,
@@ -102,10 +98,10 @@ export const FrameFixtures = {
     },
   },
   Empty: {
-    ...baseFrame,
+    ...EMPTY_FRAME,
   },
   TypicalIntentions: {
-    ...baseFrame,
+    ...EMPTY_FRAME,
     actors: {
       gimli: ActorStatusFixtures.Gimli,
       trogdor: ActorStatusFixtures.Trogdor,

@@ -1,8 +1,8 @@
 import { concat, flatten, flow, map, values } from 'lodash/fp'
-import { Action } from 'typesafe-actions'
 
 import { FrameActions, getCurrentFrame, getSegmentDuration } from '@thrashplay/gemstone-model'
 
+import { Action } from '../action'
 import { createIntentionHandler } from '../intentions'
 import { GameState } from '../state'
 import { Command } from '../store'

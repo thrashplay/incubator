@@ -18,8 +18,10 @@ export interface SceneSelectorParameters {
   targetId?: CharacterId
 }
 
-export const getCharacterIdParam = createParameterSelector((params: SceneSelectorParameters) => params.characterId)
-export const getTargetIdParam = createParameterSelector((params: SceneSelectorParameters) => params.targetId)
+export const getCharacterIdParam = createParameterSelector((params?: SceneSelectorParameters) => params?.characterId)
+export const getTargetIdParam = createParameterSelector((params?: SceneSelectorParameters) => params?.targetId)
+
+const getParameters = (_: any, parameters?: SceneSelectorParameters) => parameters
 
 export const getTarget = createSelector(
   [getTargetIdParam, getActorCollection],
@@ -55,12 +57,12 @@ export const getRangeCalculations = createSelector(
 
 /** Returns a human-readable description of the actor's current action */
 export const getPublicActionDescription = createSelector(
-  [getActor, getState],
-  (actor, state) => {
+  [getActor, getState, getParameters],
+  (actor, state, parameters) => {
     const getWellKnownTypeString = (actor: Actor, intention: Intention) => {
       switch (intention.type) {
         case 'follow':
-          return `following ${getPublicCharacterName(state, { characterId: intention.data })}`
+          return `following ${getPublicCharacterName(state, { ...parameters, characterId: intention.data })}`
 
         case 'melee': {
           const rangeCalculations = getRangeCalculations(state, {
@@ -68,7 +70,7 @@ export const getPublicActionDescription = createSelector(
             targetId: intention.data.target,
           })
 
-          const targetName = getPublicCharacterName(state, { characterId: intention.data.target })
+          const targetName = getPublicCharacterName(state, { ...parameters, characterId: intention.data.target })
 
           return rangeCalculations.isInRange
             ? `attacking ${targetName}`

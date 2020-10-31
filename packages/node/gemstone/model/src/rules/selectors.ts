@@ -8,7 +8,7 @@ export interface RulesSelectorParameters {
   movementModeId?: MovementModeId
 }
 
-const getMovementModeIdParam = createParameterSelector((params: RulesSelectorParameters) => params.movementModeId)
+const getMovementModeIdParam = createParameterSelector((params?: RulesSelectorParameters) => params?.movementModeId)
 
 /** rules selectors */
 export const getRules = (state: RulesStateContainer) => state.rules ?? {}

@@ -3,7 +3,7 @@ import { createSelector } from 'reselect'
 
 import { EMPTY_FRAME } from '../frame'
 
-import { getScene } from './base'
+import { getFrameNumberParam, getScene } from './base'
 
 // Get all frames in this scene
 export const getFrames = createSelector(
@@ -17,10 +17,15 @@ export const getFrameCount = createSelector(
   (frames) => size(frames)
 )
 
-// Gets the number of the current frame
 export const getCurrentFrameNumber = createSelector(
   [getFrames],
   (frames) => Math.max(0, size(frames) - 1)
+)
+
+/** Gets the frame number from the frameNumber param, or uses the current frame by default */
+export const getSelectedFrameNumber = createSelector(
+  [getCurrentFrameNumber, getFrameNumberParam],
+  (currentFrame, selectedFrame) => selectedFrame ?? currentFrame
 )
 
 /** retrieves the current frame (i.e. the last one in the list) */
@@ -29,14 +34,19 @@ export const getCurrentFrame = createSelector(
   (frames, index) => index >= size(frames) ? EMPTY_FRAME : frames[index]
 )
 
-// Gets the current scene time, in seconds
-export const getCurrentTime = createSelector(
-  [getCurrentFrame],
+/** retrieves the selected frame, as determined by getSelectedFrameNumber */
+export const getSelectedFrame = createSelector(
+  [getFrames, getSelectedFrameNumber],
+  (frames, index) => index >= size(frames) ? EMPTY_FRAME : frames[index]
+)
+/** Gets the time, in seconds, of the current frame */
+export const getTime = createSelector(
+  [getSelectedFrame],
   (frame) => frame?.timeOffset ?? 0
 )
 
-/** determines if the current frame is a 'key' frame or not */
-export const isCurrentFrameKey = createSelector(
-  [getCurrentFrame],
+/** Determines if the current frame is a 'key' frame or not */
+export const isKeyFrame = createSelector(
+  [getSelectedFrame],
   (frame) => frame.keyFrame
 )

@@ -1,4 +1,4 @@
-import { IntentionType, SceneState, SceneStateContainer } from '@thrashplay/gemstone-model'
+import { EMPTY_FRAME, IntentionType, SceneState, SceneStateContainer } from '@thrashplay/gemstone-model'
 
 export const CharacterFixtures = {
   Trogdor: {
@@ -30,8 +30,14 @@ export const CharacterStateFixtures = {
   },
 }
 
+const baseRules = {
+  meleeRange: 10,
+  segmentDuration: 5,
+}
+
 export const RulesStateFixtures = {
   Minimal: {
+    ...baseRules,
     movement: {
       defaultMode: 'standard',
       modes: {
@@ -42,7 +48,6 @@ export const RulesStateFixtures = {
         },
       },
     },
-    segmentDuration: 5,
   },
 }
 
@@ -77,6 +82,7 @@ export const ActorStatusFixtures = {
 
 export const FrameFixtures = {
   AllIdle: {
+    ...EMPTY_FRAME,
     actors: {
       gimli: {
         ...ActorStatusFixtures.Gimli,
@@ -91,9 +97,10 @@ export const FrameFixtures = {
     },
   },
   Empty: {
-    actors: { },
+    ...EMPTY_FRAME,
   },
   TypicalIntentions: {
+    ...EMPTY_FRAME,
     actors: {
       gimli: ActorStatusFixtures.Gimli,
       trogdor: ActorStatusFixtures.Trogdor,
@@ -104,6 +111,7 @@ export const FrameFixtures = {
 export const SceneStateFixtures = {
   FiveIdleFrames: {
     characters: ['gimli', 'trogdor'],
+    currentFrame: 4,
     frames: [
       FrameFixtures.AllIdle,
       FrameFixtures.AllIdle,
@@ -114,6 +122,7 @@ export const SceneStateFixtures = {
   },
   SingleIdleFrame: {
     characters: ['gimli', 'trogdor'],
+    currentFrame: 0,
     frames: [FrameFixtures.AllIdle],
   },
 }

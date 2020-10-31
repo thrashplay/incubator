@@ -13,8 +13,6 @@ import {
   getState,
 } from '@thrashplay/gemstone-model'
 
-import { meleeAttack } from './handlers/melee-attack'
-
 export interface SceneSelectorParameters {
   characterId?: CharacterId
   targetId?: CharacterId

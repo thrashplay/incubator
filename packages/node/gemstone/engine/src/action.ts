@@ -3,9 +3,9 @@ import { ActionType } from 'typesafe-actions'
 import {
   CharacterActions,
   CommonActions,
+  FrameActions,
   RulesActions,
   SceneActions,
-  SimulationActions,
 } from '@thrashplay/gemstone-model'
 
 export const NOOP = { type: 'noop' } as const
@@ -15,7 +15,7 @@ export const AllActions = {
   ...CommonActions,
   ...RulesActions,
   ...SceneActions,
-  ...SimulationActions,
+  ...FrameActions,
   NOOP,
 }
 

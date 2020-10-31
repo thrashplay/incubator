@@ -26,7 +26,6 @@ const defaultState: SceneStateContainer = createStateWithDependencies(IdleBefore
 // this is an impossible state, but can be used to test what happens if 'frames' is somehow empty
 const emptyState: SceneStateContainer = createStateWithDependencies({
   characters: [],
-  currentFrame: 0,
   frames: [],
 })
 

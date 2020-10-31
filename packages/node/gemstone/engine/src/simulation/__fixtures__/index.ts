@@ -111,7 +111,6 @@ export const FrameFixtures = {
 export const SceneStateFixtures = {
   FiveIdleFrames: {
     characters: ['gimli', 'trogdor'],
-    currentFrame: 4,
     frames: [
       FrameFixtures.AllIdle,
       FrameFixtures.AllIdle,
@@ -122,7 +121,6 @@ export const SceneStateFixtures = {
   },
   SingleIdleFrame: {
     characters: ['gimli', 'trogdor'],
-    currentFrame: 0,
     frames: [FrameFixtures.AllIdle],
   },
 }

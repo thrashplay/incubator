@@ -9,7 +9,7 @@ const { Grumbling } = IntentionFixtures
 const { Empty, TypicalIntentions } = FrameFixtures
 
 describe('frameReducer', () => {
-  describe('SimulationActions.characterAdded', () => {
+  describe('FrameActions.characterAdded', () => {
     it('adds actor if not already present', () => {
       const result = frameReducer(Empty, FrameActions.actorAdded('gimli'))
 
@@ -54,7 +54,7 @@ describe('frameReducer', () => {
     })
   })
 
-  describe('SimulationActions.intentionDeclared', () => {
+  describe('FrameActions.intentionDeclared', () => {
     it('does nothing if the character is not present', () => {
       const result = frameReducer(TypicalIntentions, FrameActions.intentionDeclared({
         characterId: 'invalid-id',
@@ -75,7 +75,7 @@ describe('frameReducer', () => {
     })
   })
 
-  describe('SimulationActions.moved', () => {
+  describe('FrameActions.moved', () => {
     it.each<[string, any]>([
       ['undefined', undefined],
       ['x is undefined', { x: undefined, y: 10 }],
@@ -115,7 +115,7 @@ describe('frameReducer', () => {
     })
   })
 
-  describe('SimulationActions.timeOffsetChanged', () => {
+  describe('FrameActions.timeOffsetChanged', () => {
     it('does nothing if new value is negative', () => {
       const result = frameReducer(TypicalIntentions, FrameActions.timeOffsetChanged(-1))
       expect(result).toStrictEqual(TypicalIntentions)

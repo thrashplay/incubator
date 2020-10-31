@@ -1,7 +1,7 @@
 import { flow, has } from 'lodash/fp'
 import { getType } from 'typesafe-actions'
 
-import { isValidPoint } from '@thrashplay/gemstone-model'
+import { createReducerErrorHandler, isValidPoint } from '@thrashplay/gemstone-model'
 
 import { CharacterId } from '../../character'
 
@@ -9,6 +9,8 @@ import { ActorStatus, Frame } from '.'
 import { FrameAction, FrameActions } from './actions'
 
 export const frameReducer = (frame: Frame, action: FrameAction): Frame => {
+  const error = createReducerErrorHandler('frame', frame)
+
   switch (action.type) {
     case getType(FrameActions.actorAdded):
       return has(action.payload)(frame.actors) ? frame : flow(
@@ -21,9 +23,11 @@ export const frameReducer = (frame: Frame, action: FrameAction): Frame => {
         : frame
 
     case getType(FrameActions.moved):
-      return !isValidPoint(action.payload.position) ? frame : has(action.payload.characterId)(frame.actors)
-        ? setActorStatus(action.payload.characterId, { position: action.payload.position })(frame)
-        : frame
+      return !isValidPoint(action.payload.position)
+        ? error(action.type, 'Invalid destination:', action.payload.position)
+        : has(action.payload.characterId)(frame.actors)
+          ? setActorStatus(action.payload.characterId, { position: action.payload.position })(frame)
+          : error(action.type, 'Invalid actor ID:', action.payload.characterId)
 
     case getType(FrameActions.timeOffsetChanged):
       return action.payload < 0 ? frame : {

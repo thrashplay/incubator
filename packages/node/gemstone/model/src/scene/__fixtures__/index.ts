@@ -112,17 +112,14 @@ export const FrameFixtures = {
 export const SceneStateFixtures = {
   CharactersInFirstFrame: {
     characters: ['gimli', 'trogdor'],
-    currentFrame: 0,
     frames: [FrameFixtures.Empty],
   },
   Default: {
     characters: [],
-    currentFrame: 0,
     frames: [FrameFixtures.Empty],
   },
   FiveIdleFrames: {
     characters: ['gimli', 'trogdor'],
-    currentFrame: 4,
     frames: [
       FrameFixtures.AllIdle,
       FrameFixtures.AllIdle,
@@ -133,17 +130,14 @@ export const SceneStateFixtures = {
   },
   IdleBeforeTypicalIntentions: {
     characters: ['gimli', 'trogdor'],
-    currentFrame: 1,
     frames: [FrameFixtures.AllIdle, FrameFixtures.TypicalIntentions],
   },
   SingleIdleFrame: {
     characters: ['gimli', 'trogdor'],
-    currentFrame: 0,
     frames: [FrameFixtures.AllIdle],
   },
   SingleTypicalFrame: {
     characters: ['gimli', 'trogdor'],
-    currentFrame: 0,
     frames: [FrameFixtures.TypicalIntentions],
   },
 }

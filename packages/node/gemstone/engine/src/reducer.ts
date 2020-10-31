@@ -10,7 +10,7 @@ export const reducer = (state: GameState, action: Action): GameState => {
     scene: reduceSceneState(state.scene, action as any),
   }
 
-  console.log('action:', action, 'result:', result)
+  // console.log('Action:', action, '; New State:', result)
 
   return result
 }

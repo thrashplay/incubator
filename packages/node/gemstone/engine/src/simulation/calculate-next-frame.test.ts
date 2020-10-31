@@ -4,7 +4,7 @@ import { SceneActions } from '@thrashplay/gemstone-model'
 
 import { createStateWithDependencies, FrameFixtures, SceneStateFixtures } from './__fixtures__'
 import { calculateNextFrame } from './calculate-next-frame'
-import { getNextFrame } from './get-next-frame'
+import { getNextFrame } from './run-simulation'
 
 jest.mock('./get-next-frame')
 const mockGetNextFrame = mocked(getNextFrame)

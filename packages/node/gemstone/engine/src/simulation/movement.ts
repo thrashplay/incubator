@@ -1,7 +1,7 @@
 import { Point } from '@thrashplay/gemstone-model'
 
 // the maximimum distance from a point to consider having 'arrived' for movement purposes
-const MAX_ARRIVAL_DELTA = 0
+const MAX_ARRIVAL_DELTA = 1
 
 /** calculates a point that is 'distance' feet away from the start point, in the direction of destination */
 export const calculateLocationAlongVector = (start: Point, end: Point) => (distance: number) => {
@@ -31,13 +31,13 @@ export const getNextSegmentDistance = (start: Point, destination: Point, speed: 
 /** given a speed (in feet per round), and time (in segments), return the maximum allowed movement */
 export const getMaxDistance = (speed: number, segments: number) => speed * (segments / 12)
 
-export const getNewPosition = (origin: Point, destination: Point, speed: number, _ignored?: any) => {
-  const requestedDistance = calculateDistance(origin, destination)
+export const getNewPosition = (start: Point, destination: Point, speed: number, _ignored?: any) => {
+  const requestedDistance = calculateDistance(start, destination)
 
-  const maxDistance = getNextSegmentDistance(origin, destination, speed)
+  const maxDistance = getNextSegmentDistance(start, destination, speed)
   const distance = Math.min(maxDistance, requestedDistance)
 
-  return calculateLocationAlongVector(origin, destination)(distance)
+  return calculateLocationAlongVector(start, destination)(distance)
 }
 
 /**
@@ -51,6 +51,8 @@ export const getNextPositionOnApproach = (start: Point, end: Point, speed: numbe
   return getNewPosition(start, trueDestination, speed)
 }
 
-/** determine if a character has 'arrived' at a destination by comparing their distance to some reference detla */
-export const hasArrived = (position: Point, destination: Point, maxDistance = MAX_ARRIVAL_DELTA) =>
-  calculateDistance(position, destination) <= maxDistance
+/** determine if a character has 'arrived' at a destination by comparing their distance to some reference delta */
+export const hasArrived = (current: Point, destination: Point, maxDistance = MAX_ARRIVAL_DELTA) => {
+  const distance = calculateDistance(current, destination)
+  return distance <= maxDistance
+}

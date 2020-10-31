@@ -1,15 +1,15 @@
 import _ from 'lodash'
-import { castArray } from 'lodash/fp'
 
 import {
   CharacterId,
+  FrameActions,
   getBaseSpeed,
   getCurrentPosition,
   isValidPoint,
   Point,
-  SimulationActions,
 } from '@thrashplay/gemstone-model'
 
+import { Action } from '../../action'
 import { error } from '../../command-error-handler'
 import { GameState } from '../../state'
 import { Command } from '../../store'
@@ -20,7 +20,7 @@ export interface MovementOptions {
   minimumDistance: number
 
   // command to execute when a movement is completed, defaults to a noop
-  onArrival: Command
+  onArrival: Command<GameState, Action>
 }
 
 const DEFAULT_OPTIONS: MovementOptions = {
@@ -28,12 +28,11 @@ const DEFAULT_OPTIONS: MovementOptions = {
   onArrival: () => [],
 }
 
-const withDefaults = (options: Partial<MovementOptions> = {}): MovementOptions => _.merge({}, options, DEFAULT_OPTIONS)
+const withDefaults = (options: Partial<MovementOptions> = {}): MovementOptions => _.merge({}, DEFAULT_OPTIONS, options)
 
 /** move the actor to the specified location */
 export const moveTo = (characterId: CharacterId, position: Point) => (_state: GameState) => {
-  console.log('m', position)
-  return SimulationActions.moved({
+  return FrameActions.moved({
     characterId,
     position,
   })
@@ -62,11 +61,9 @@ export const approachLocation = (
     const move = moveTo(characterId, nextPosition)
 
     return hasArrived(nextPosition, end)
-      ? [move, ...castArray(onArrival)]
+      ? [move, onArrival]
       : move
   }
-
-  console.log('id:', characterId, 'pos', position, 'state', state)
 
   return isValidPoint(position) && isValidPoint(destination)
     ? doApproach(position, destination)

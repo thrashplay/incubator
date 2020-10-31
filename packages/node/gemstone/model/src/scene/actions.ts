@@ -2,12 +2,14 @@ import { ActionType, createAction } from 'typesafe-actions'
 
 import { CharacterId } from '../character'
 
+import { Frame } from './frame/state'
+
 export const SceneActions = {
   /** character added to the scene */
   characterAdded: createAction('scene/character-added')<CharacterId>(),
 
-  /** current frame has been set to a new value */
-  currentFrameChanged: createAction('scene/current-frame-changed')<number>(),
+  /** new frame added to the timline */
+  frameAdded: createAction('scene/frame-added')<Frame>(),
 
   /** commits the current frame by cloning it and appending the copy to the end of the list */
   frameCommitted: createAction('scene/frame-committed')(),

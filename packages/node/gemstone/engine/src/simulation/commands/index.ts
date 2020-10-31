@@ -1,3 +1,5 @@
+export * from './calculate-next-frame'
 export * from './intentions'
 export * from './movement'
 export * from './scene'
+export * from './run-simulation'

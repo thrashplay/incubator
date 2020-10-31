@@ -175,7 +175,7 @@ export const TestScreen = () => {
 const actorList: ViewStyle = {
   flexGrow: 0.1,
   marginRight: 8,
-  maxWidth: 300,
+  width: 250,
 }
 
 const container: ViewStyle = {

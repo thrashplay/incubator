@@ -93,7 +93,13 @@ describe('reduceSceneState', () => {
     it('clones the last frame, and appends it to the frame list', () => {
       const result = reduceSceneState(IdleBeforeTypicalIntentions, SceneActions.frameCommitted())
       expect(result.frames).toHaveLength(IdleBeforeTypicalIntentions.frames.length + 1)
-      expect(last(result.frames)).toStrictEqual(last(IdleBeforeTypicalIntentions.frames))
+      expect(last(result.frames)).toEqual(last(IdleBeforeTypicalIntentions.frames))
+    })
+
+    it('clears the key frame status', () => {
+      const stateWithCurrentKeyFrame = reduceSceneState(IdleBeforeTypicalIntentions, FrameActions.keyFrameMarked())
+      const result = reduceSceneState(stateWithCurrentKeyFrame, SceneActions.frameCommitted())
+      expect(last(result.frames)!.keyFrame).toBe(false)
     })
   })
 

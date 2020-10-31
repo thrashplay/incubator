@@ -59,7 +59,10 @@ export const reduceSceneState = (
     case getType(SceneActions.frameCommitted):
       return {
         ...state,
-        frames: [...state.frames, last(state.frames) ?? EMPTY_FRAME],
+        frames: [...state.frames, {
+          ...(last(state.frames) ?? EMPTY_FRAME),
+          keyFrame: false,
+        }],
       }
 
     case getType(SceneActions.truncated):

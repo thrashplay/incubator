@@ -5,6 +5,7 @@ import { RulesStateContainer } from '../../rules'
 
 export const EMPTY_FRAME: Frame = {
   actors: {},
+  keyFrame: false,
   timeOffset: 0,
 }
 
@@ -32,6 +33,9 @@ export type Actor = Character & {
 /** a single frame, containing the status of all actors at a single point in a time */
 export interface Frame {
   actors: Record<CharacterId, ActorStatus>
+
+  /** if true, this frame is a 'key frame', meaning there is a reason to stop the simulation when it is reached */
+  keyFrame?: boolean
 
   /** the time offset, in seconds, of this frame */
   timeOffset: number

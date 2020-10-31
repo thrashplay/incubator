@@ -75,6 +75,13 @@ describe('frameReducer', () => {
     })
   })
 
+  describe('FrameActions.keyFrameMarked', () => {
+    it('sets the key frame flag', () => {
+      const result = frameReducer(TypicalIntentions, FrameActions.keyFrameMarked())
+      expect(result.keyFrame).toBe(true)
+    })
+  })
+
   describe('FrameActions.moved', () => {
     it.each<[string, any]>([
       ['undefined', undefined],

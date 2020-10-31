@@ -1,42 +1,18 @@
-import _ from 'lodash'
 
 import {
   CharacterId,
-  FrameActions,
   getBaseSpeed,
   getCurrentPosition,
   isValidPoint,
   Point,
 } from '@thrashplay/gemstone-model'
 
-import { Action } from '../../action'
-import { error } from '../../command-error-handler'
-import { GameState } from '../../state'
-import { Command } from '../../store'
-import { getNextPositionOnApproach, hasArrived } from '../movement'
+import { error } from '../command-error-handler'
+import { GameState } from '../state'
 
-export interface MovementOptions {
-  // minimum distance to try and maintain from a movement destination, defaults to zero
-  minimumDistance: number
-
-  // command to execute when a movement is completed, defaults to a noop
-  onArrival: Command<GameState, Action>
-}
-
-const DEFAULT_OPTIONS: MovementOptions = {
-  minimumDistance: 0,
-  onArrival: () => [],
-}
-
-const withDefaults = (options: Partial<MovementOptions> = {}): MovementOptions => _.merge({}, DEFAULT_OPTIONS, options)
-
-/** move the actor to the specified location */
-export const moveTo = (characterId: CharacterId, position: Point) => (_state: GameState) => {
-  return FrameActions.moved({
-    characterId,
-    position,
-  })
-}
+import { moveTo } from './move-to'
+import { getNextPositionOnApproach, hasArrived } from './movement-utils'
+import { MovementOptions, withDefaultOptions } from './options'
 
 /**
  * Move the actor as fast as possible towards destination, but keep the given minimum distance.
@@ -51,7 +27,7 @@ export const approachLocation = (
   destination: Point,
   options?: Partial<MovementOptions>
 ) => (state: GameState) => {
-  const { minimumDistance, onArrival } = withDefaults(options)
+  const { minimumDistance, onArrival } = withDefaultOptions(options)
 
   const position = getCurrentPosition(state, { characterId })
   const speed = getBaseSpeed(state, { characterId })

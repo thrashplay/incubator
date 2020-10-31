@@ -1,8 +1,9 @@
 import { ActorStatus, Point } from '@thrashplay/gemstone-model'
 
-import { approachLocation, beginIdling } from '../../simulation'
+import { MovementCommands } from '../../movement'
 import { GameState } from '../../state'
 import { Command } from '../../store'
+import { beginIdling } from '../commands'
 import { SimulationContext } from '../types'
 
 /** handles the outcome of a move intention, once time has advanced to the endSegment */
@@ -11,7 +12,7 @@ export const move = (
   _context: SimulationContext<GameState>,
   destination: Point
 ): ReturnType<Command> => {
-  return approachLocation(
+  return MovementCommands.approachLocation(
     id,
     destination,
     { onArrival: beginIdling(id) }

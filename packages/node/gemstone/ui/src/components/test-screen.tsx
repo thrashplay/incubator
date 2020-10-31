@@ -6,13 +6,13 @@ import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 import { Button } from 'react-native-paper'
 
 import {
-  beginMoving,
   calculateDistance,
-  calculateNextFrame,
   createIntention,
   GameState,
-  moveTo,
-  startNewScene,
+  IntentionCommands,
+  MovementCommands,
+  SceneCommands,
+  SimulationCommands,
 } from '@thrashplay/gemstone-engine'
 import {
   Actor,
@@ -53,13 +53,13 @@ const initializeTestScene = () => (_state: GameState) => {
     // addCharacter(createCharacter('Tom')),
 
     // start the scene
-    startNewScene(),
+    SceneCommands.startNewScene(),
 
     // move PCs to random starting positions
-    moveTo('dan', createRandomPosition()),
-    moveTo('nate', createRandomPosition()),
-    moveTo('seth', createRandomPosition()),
-    moveTo('tom', createRandomPosition()),
+    MovementCommands.moveTo('dan', createRandomPosition()),
+    MovementCommands.moveTo('nate', createRandomPosition()),
+    MovementCommands.moveTo('seth', createRandomPosition()),
+    MovementCommands.moveTo('tom', createRandomPosition()),
   ]
 }
 
@@ -103,7 +103,7 @@ export const TestScreen = () => {
     if (selectedActorId !== undefined) {
       const target = getTarget()
       return target === undefined
-        ? dispatch(beginMoving(selectedActorId, x, y))
+        ? dispatch(IntentionCommands.beginMoving(selectedActorId, x, y))
         // : dispatch(SimulationActions.intentionDeclared({
         //   characterId: selectedActorId,
         //   intention: createIntention('follow', target),
@@ -116,7 +116,7 @@ export const TestScreen = () => {
   }, [actors, dispatch, selectedActorId])
 
   const handleAdvanceClock = useCallback(() => {
-    dispatch(calculateNextFrame())
+    dispatch(SimulationCommands.calculateNextFrame())
   }, [dispatch])
 
   const handleRewindClock = useCallback(() => {

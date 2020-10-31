@@ -3,9 +3,9 @@ import {
   isCurrentFrameKey,
 } from '@thrashplay/gemstone-model'
 
-import { GameState } from '../../state'
+import { GameState } from '../state'
 
-import { simulateNextSegment } from './simulate-next-segment'
+import { calculateNextSegment } from './calculate-next-segment'
 
 /**
  * Runs the simulation by advancing the current frame's time until one of the following conditions is reached:
@@ -13,7 +13,7 @@ import { simulateNextSegment } from './simulate-next-segment'
  *   - user input is required
  *   - the 'maxTime' (in seconds) has elapsed in the simulation
  */
-export const runSimulation = (maxTime = 60) => (state: GameState) => {
+export const run = (maxTime = 60) => (state: GameState) => {
   const simulateUntilKeyFrame =
     (forceStopAt: number) => (currentState: GameState) => {
       const isKeyFrame = isCurrentFrameKey(currentState)
@@ -21,13 +21,13 @@ export const runSimulation = (maxTime = 60) => (state: GameState) => {
       const needsToPause = isKeyFrame || currentTime >= forceStopAt
 
       return !needsToPause
-        ? [simulateNextSegment, simulateUntilKeyFrame(forceStopAt)]
+        ? [calculateNextSegment, simulateUntilKeyFrame(forceStopAt)]
         : []
     }
 
   const currentTime = getCurrentTime(state)
   return [
-    simulateNextSegment,
+    calculateNextSegment,
     simulateUntilKeyFrame(currentTime + maxTime),
   ]
 }

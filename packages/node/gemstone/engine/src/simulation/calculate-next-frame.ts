@@ -2,13 +2,13 @@ import {
   SceneActions,
 } from '@thrashplay/gemstone-model'
 
-import { GameState } from '../../state'
+import { GameState } from '../state'
 
-import { runSimulation } from './run-simulation'
+import { run } from './run'
 
 export const calculateNextFrame = () => (_: GameState) => {
   return [
     SceneActions.frameCommitted(),
-    runSimulation(),
+    run(),
   ]
 }

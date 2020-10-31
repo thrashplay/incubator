@@ -1,3 +1,9 @@
-export * from './commands'
-export * from './movement'
-export * from './commands/calculate-next-frame'
+import { calculateNextFrame } from './calculate-next-frame'
+import { calculateNextSegment } from './calculate-next-segment'
+import { run } from './run'
+
+export const SimulationCommands = {
+  calculateNextFrame,
+  calculateNextSegment,
+  run,
+}

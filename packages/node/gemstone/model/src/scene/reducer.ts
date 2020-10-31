@@ -1,5 +1,5 @@
 import { isNil, size } from 'lodash'
-import { concat, contains, drop, flow, get, initial, last, take, uniq } from 'lodash/fp'
+import { concat, contains, flow, initial, last, take, uniq } from 'lodash/fp'
 import { getType } from 'typesafe-actions'
 
 import { CharacterId } from '../character'

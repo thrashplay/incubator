@@ -1,9 +1,7 @@
-import Slider from '@react-native-community/slider'
 import { toLower } from 'lodash'
 import { filter, flow, get, head, map, matches, reject, sortBy } from 'lodash/fp'
 import React, { useCallback, useEffect, useState } from 'react'
-import { StyleSheet, Text, View, ViewStyle } from 'react-native'
-import { Button } from 'react-native-paper'
+import { StyleSheet, View, ViewStyle } from 'react-native'
 
 import {
   calculateDistance,
@@ -12,7 +10,6 @@ import {
   IntentionCommands,
   MovementCommands,
   SceneCommands,
-  SimulationCommands,
 } from '@thrashplay/gemstone-engine'
 import {
   Actor,
@@ -22,16 +19,14 @@ import {
   FrameActions,
   getActor,
   getActors,
-  getCurrentFrameNumber,
-  getCurrentTime,
-  getSegmentDuration,
-  SceneActions,
+  getTime,
 } from '@thrashplay/gemstone-model'
 
 import { useDispatch, useValue } from '../store'
 
 import { ActorList } from './actor-list'
 import { SceneMap } from './scene/scene-map'
+import { TimeControls } from './time-controls'
 
 const initializeTestScene = () => (_state: GameState) => {
   const createCharacter = (name: string, speed = 90): Character => ({
@@ -48,9 +43,9 @@ const initializeTestScene = () => (_state: GameState) => {
   return [
     // add the PCs
     addCharacter(createCharacter('Dan', 60)),
-    // addCharacter(createCharacter('Nate', 120)),
-    // addCharacter(createCharacter('Seth')),
-    // addCharacter(createCharacter('Tom')),
+    addCharacter(createCharacter('Nate', 120)),
+    addCharacter(createCharacter('Seth')),
+    addCharacter(createCharacter('Tom')),
 
     // start the scene
     SceneCommands.startNewScene(),
@@ -72,14 +67,14 @@ export const TestScreen = () => {
   }, [])
 
   const [selectedActorId, setSelectedActorId] = useState<CharacterId | undefined>(undefined)
+  const [frameNumber, setFrameNumber] = useState(0)
 
-  const actors = useValue(getActors)
-  const currentTime = useValue(getCurrentTime)
-  const frameNumber = useValue(getCurrentFrameNumber)
-  const segmentDuration = useValue(getSegmentDuration)
-  const selectedActor = useValue(getActor, { characterId: selectedActorId })
+  const actors = useValue(getActors, { frameNumber })
+  const selectedTime = useValue(getTime, { frameNumber })
+  const selectedActor = useValue(getActor, { characterId: selectedActorId, frameNumber })
 
   const handleSelectActor = (id: CharacterId) => setSelectedActorId(id)
+  const handleSelectFrame = (frame: number) => setFrameNumber(frame)
 
   const handleSetMoveIntention = useCallback((x: number, y: number) => {
     const getTarget = (): CharacterId => {
@@ -115,19 +110,12 @@ export const TestScreen = () => {
     }
   }, [actors, dispatch, selectedActorId])
 
-  const handleAdvanceClock = useCallback(() => {
-    dispatch(SimulationCommands.calculateNextFrame())
-  }, [dispatch])
-
-  const handleRewindClock = useCallback(() => {
-    dispatch(SceneActions.currentFrameChanged(frameNumber - 1))
-  }, [dispatch, frameNumber])
-
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         <ActorList
           actors={actors}
+          frameNumber={frameNumber}
           onSelect={handleSelectActor}
           style={styles.actorList}
           title="Combatants"
@@ -137,37 +125,14 @@ export const TestScreen = () => {
           onSetMoveIntention={handleSetMoveIntention}
           selectedActor={selectedActor as any}
           style={styles.locationMap}
-          timeOffset={currentTime}
+          timeOffset={selectedTime}
         />
       </View>
-      <View style={styles.timeBar}>
-        <Button
-          mode="contained"
-          onPress={handleRewindClock}
-          style={{ width: 32 }}
-        >
-          &lt;
-        </Button>
-        <View style={styles.timeTextContainer}>
-          <Text>{currentTime}s</Text>
-        </View>
-        <Button
-          mode="contained"
-          onPress={handleAdvanceClock}
-          style={{ width: 32 }}
-        >
-          &gt;
-        </Button>
-
-        <Slider
-          disabled={true}
-          maximumValue={currentTime + 60}
-          minimumValue={0}
-          step={segmentDuration}
-          style={{ marginLeft: 16 }}
-          value={currentTime}
-        />
-      </View>
+      <TimeControls
+        onSelectFrame={handleSelectFrame}
+        selectedFrame={frameNumber}
+        style={styles.timeBar}
+      />
     </View>
   )
 }
@@ -198,16 +163,7 @@ const locationMap: ViewStyle = {
 }
 
 const timeBar: ViewStyle = {
-  alignItems: 'center',
-  backgroundColor: '#eee',
-  flexDirection: 'row',
   marginTop: 8,
-  padding: 8,
-}
-
-const timeTextContainer: ViewStyle = {
-  marginLeft: 16,
-  marginRight: 16,
 }
 
 const styles = StyleSheet.create({
@@ -216,5 +172,4 @@ const styles = StyleSheet.create({
   content,
   locationMap,
   timeBar,
-  timeTextContainer,
 })

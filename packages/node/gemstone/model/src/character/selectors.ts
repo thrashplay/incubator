@@ -9,7 +9,7 @@ export interface CharacterSelectorParameters {
   characterId?: CharacterId
 }
 
-const getCharacterIdParam = createParameterSelector((params: CharacterSelectorParameters) => params.characterId)
+const getCharacterIdParam = createParameterSelector((params?: CharacterSelectorParameters) => params?.characterId)
 
 /** character selectors */
 export const getCharactersState = (state: CharacterStateContainer) => state.characters ?? { }

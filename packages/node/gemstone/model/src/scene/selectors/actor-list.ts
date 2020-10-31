@@ -5,7 +5,7 @@ import { getPlayerCharactersCollection } from '../../character'
 import { Actor, ActorStatus } from '../frame'
 
 import { getCharacterIdParam, getScene } from './base'
-import { getCurrentFrame } from './frames'
+import { getSelectedFrame } from './frames'
 
 export const getCharacterIds = createSelector(
   [getScene],
@@ -13,7 +13,7 @@ export const getCharacterIds = createSelector(
 )
 
 export const getActorStatusCollection = createSelector(
-  [getCurrentFrame],
+  [getSelectedFrame],
   (frame) => frame?.actors ?? {}
 )
 

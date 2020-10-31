@@ -27,7 +27,7 @@ export const AvatarAnimation = (props: AvatarAnimationProps) => {
   const animationCurrent = useRef(new Animated.ValueXY(position)).current
 
   if (!isEqual(lastPosition.current, position)) {
-    const MAX_ANIMATION_DURATION = 2500
+    const MAX_ANIMATION_DURATION = 625
     const ANIMATION_DURATION_FACTOR = 0.05
 
     const timeDelta = Math.abs(timeOffset - lastTime.current)

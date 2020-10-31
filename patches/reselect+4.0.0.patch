@@ -1,0 +1,14 @@
+diff --git a/node_modules/reselect/lib/index.d.ts b/node_modules/reselect/lib/index.d.ts
+index 5a2cf43..3733e92 100644
+--- a/node_modules/reselect/lib/index.d.ts
++++ b/node_modules/reselect/lib/index.d.ts
+@@ -8,7 +8,8 @@ export type OutputSelector<S, R, C> = Selector<S, R> & {
+   resetRecomputations: () => number;
+ }
+ 
+-export type ParametricSelector<S, P, R> = (state: S, props: P, ...args: any[]) => R;
++// this makes 'parameter' arguments to selectors optional
++export type ParametricSelector<S, P, R> = (state: S, props?: P, ...args: any[]) => R;
+ 
+ export type OutputParametricSelector<S, P, R, C> = ParametricSelector<S, P, R> & {
+   resultFunc: C;

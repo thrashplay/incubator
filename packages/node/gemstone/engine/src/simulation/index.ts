@@ -1,9 +1,9 @@
-import { calculateNextFrame } from './calculate-next-frame'
 import { calculateNextSegment } from './calculate-next-segment'
 import { run } from './run'
+import { runSingleSegment } from './run-single-segment'
 
 export const SimulationCommands = {
-  calculateNextFrame,
   calculateNextSegment,
   run,
+  runSingleSegment,
 }

@@ -4,14 +4,17 @@ import { StyleProp, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native'
 import { List } from 'react-native-paper'
 
 import { getPublicActionDescription } from '@thrashplay/gemstone-engine'
-import { Actor, CharacterId } from '@thrashplay/gemstone-model'
+import { Actor, CharacterId, getActors } from '@thrashplay/gemstone-model'
 
-import { useSelector } from '../store'
+import { useSelector, useValue } from '../store'
 const NO_STYLES = {}
 
 export interface ActorListProps {
   /** list of actors to include in the list */
   actors?: Actor[]
+
+  /** the frame number to render the list for, or the current frame by default */
+  frameNumber?: number
 
   /** the actor to initially select (onSelect is not called for this initial selection) */
   initialSelection?: Actor
@@ -30,7 +33,7 @@ export interface ActorListProps {
 }
 
 export const ActorList = ({
-  actors = [],
+  frameNumber,
   initialSelection,
   onSelect = noop,
   style,
@@ -38,14 +41,16 @@ export const ActorList = ({
   titleStyle,
 }: ActorListProps) => {
   const getActionDescription = useSelector(getPublicActionDescription)
-  const [selectedActor, setSelectedActor] = useState<Actor | undefined>(initialSelection)
+  const [selectedActorId, setSelectedActorId] = useState<string | undefined>(initialSelection?.id)
+
+  const actors = useValue(getActors, { frameNumber })
 
   const handleListPress = (actor: Actor) => () => {
     onSelect(actor.id)
-    setSelectedActor(actor)
+    setSelectedActorId(actor.id)
   }
 
-  const isSelected = (actor: Actor) => actor.id === selectedActor?.id
+  const isSelected = (actor: Actor) => actor.id === selectedActorId
 
   const getListItemContainerStyle = (actor: Actor) => isSelected(actor)
     ? styles.selectedItemContainer
@@ -58,7 +63,7 @@ export const ActorList = ({
   const createListItem = (actor: Actor) => (
     <List.Item
       key={actor.id}
-      description={() => <Text>is {getActionDescription({ characterId: actor.id })}</Text> }
+      description={() => <Text>is {getActionDescription({ characterId: actor.id, frameNumber })}</Text> }
       onPress={handleListPress(actor)}
       style={getListItemContainerStyle(actor)}
       title={actor.name}

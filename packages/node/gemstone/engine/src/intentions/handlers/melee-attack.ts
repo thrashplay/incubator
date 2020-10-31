@@ -1,6 +1,6 @@
 import { ActorStatus, CharacterId } from '@thrashplay/gemstone-model'
 
-import { intercept } from '../../simulation'
+import { MovementCommands } from '../../movement'
 import { GameState } from '../../state'
 import { getRangeCalculations } from '../selectors'
 import { SimulationContext } from '../types'
@@ -18,5 +18,5 @@ export const meleeAttack = (actor: ActorStatus, { state }: SimulationContext<Gam
 
   return isInRange
     ? [] // attack actions go here
-    : intercept(actor.id, attack.target, { minimumDistance: range })
+    : MovementCommands.intercept(actor.id, attack.target, { minimumDistance: range })
 }

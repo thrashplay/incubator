@@ -5,7 +5,7 @@ import { ActorStatus } from '../frame/state'
 
 import { getActorStatusCollection } from './actor-list'
 import { getCharacterIdParam } from './base'
-import { getCurrentFrame } from './frames'
+import { getSelectedFrame } from './frames'
 
 /** retrieves an unsorted array of the most recent status for all actors */
 export const getActorStatuses = createSelector(
@@ -33,6 +33,6 @@ export const getCurrentIntention = createSelector(
 
 const isIdle = (actor: ActorStatus) => actor.intention.type === 'idle'
 export const areAnyActorsIdle = createSelector(
-  [getCurrentFrame],
+  [getSelectedFrame],
   (frame) => some(isIdle)(frame.actors)
 )

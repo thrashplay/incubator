@@ -2,6 +2,7 @@ import { ActionType, createAction } from 'typesafe-actions'
 
 import { CharacterId } from '../../character'
 import { Point } from '../../common'
+import { MovementModeId } from '../../rules'
 
 import { IntentionType } from './state'
 
@@ -20,6 +21,11 @@ export const FrameActions = {
 
   /** actor has moved to a specified position */
   moved: createAction('frame/actor-moved')<{ characterId: CharacterId; position: Point }>(),
+
+  movementModeChanged: createAction('frame/actor-changed-movement-mode')<{
+    characterId: CharacterId
+    mode: MovementModeId
+  }>(),
 
   /** frame's time offset has been changed */
   timeOffsetChanged: createAction('frame/time-offset-changed')<number>(),

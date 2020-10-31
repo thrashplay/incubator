@@ -1,26 +1,29 @@
-
 import { Point } from '../../common'
 import {
   createStateWithDependencies,
   FrameFixtures,
   IntentionFixtures,
+  RulesStateFixtures,
   SceneStateFixtures,
 } from '../__fixtures__'
 import { ActorStatus, IntentionType } from '../frame'
 import { SceneStateContainer } from '../state'
 
 import {
+  getActiveMovementMode,
   getActorStatuses,
-  getCurrentIntention,
-  getCurrentPosition,
-  getCurrentStatus,
+  getIntention,
+  getPosition,
+  getStatus,
 } from '.'
 
 const { TypicalIntentions } = FrameFixtures
 const { BefriendingElves, Burninating } = IntentionFixtures
-const { IdleBeforeTypicalIntentions } = SceneStateFixtures
+const { Minimal } = RulesStateFixtures
+const { IdleBeforeTypicalIntentions, WithGimliRunning } = SceneStateFixtures
 
 const defaultState: SceneStateContainer = createStateWithDependencies(IdleBeforeTypicalIntentions)
+const withGimliRunning: SceneStateContainer = createStateWithDependencies(WithGimliRunning)
 
 // this is an impossible state, but can be used to test what happens if 'frames' is somehow empty
 const emptyState: SceneStateContainer = createStateWithDependencies({
@@ -50,24 +53,24 @@ describe('scene selectors - Actor Status', () => {
     })
   })
 
-  describe('getCurrentStatus', () => {
+  describe('getStatus', () => {
     it('returns undefined if scene state is missing', () => {
-      const result = getCurrentStatus(invalidState, { characterId: 'gimli' })
+      const result = getStatus(invalidState, { characterId: 'gimli' })
       expect(result).toBeUndefined()
     })
 
     it('returns undefined if scene has no frames', () => {
-      const result = getCurrentStatus(emptyState, { characterId: 'gimli' })
+      const result = getStatus(emptyState, { characterId: 'gimli' })
       expect(result).toBeUndefined()
     })
 
     it('returns undefined if character ID is not specified', () => {
-      const result = getCurrentStatus(defaultState, {})
+      const result = getStatus(defaultState, {})
       expect(result).toBeUndefined()
     })
 
     it('returns undefined if character ID is invalid', () => {
-      const result = getCurrentStatus(defaultState, { characterId: 'invalid-id' })
+      const result = getStatus(defaultState, { characterId: 'invalid-id' })
       expect(result).toBeUndefined()
     })
 
@@ -75,29 +78,29 @@ describe('scene selectors - Actor Status', () => {
       ['gimli', TypicalIntentions.actors.gimli],
       ['trogdor', TypicalIntentions.actors.trogdor],
     ])('returns correct data: %p', (characterId, expectedStatus) => {
-      const result = getCurrentStatus(defaultState, { characterId })
+      const result = getStatus(defaultState, { characterId })
       expect(result).toStrictEqual(expectedStatus)
     })
   })
 
-  describe('getCurrentPosition', () => {
+  describe('getPosition', () => {
     it('returns undefined if scene state is missing', () => {
-      const result = getCurrentPosition(invalidState, { characterId: 'gimli' })
+      const result = getPosition(invalidState, { characterId: 'gimli' })
       expect(result).toBeUndefined()
     })
 
     it('returns undefined if scene has no frames', () => {
-      const result = getCurrentPosition(emptyState, { characterId: 'gimli' })
+      const result = getPosition(emptyState, { characterId: 'gimli' })
       expect(result).toBeUndefined()
     })
 
     it('returns undefined if character ID is not specified', () => {
-      const result = getCurrentPosition(defaultState, {})
+      const result = getPosition(defaultState, {})
       expect(result).toBeUndefined()
     })
 
     it('returns undefined if character ID is invalid', () => {
-      const result = getCurrentPosition(defaultState, { characterId: 'invalid-id' })
+      const result = getPosition(defaultState, { characterId: 'invalid-id' })
       expect(result).toBeUndefined()
     })
 
@@ -105,29 +108,29 @@ describe('scene selectors - Actor Status', () => {
       ['gimli', { x: 100, y: 100 }],
       ['trogdor', { x: 7, y: 7 }],
     ])('returns correct data: %p', (characterId, expectedPosition) => {
-      const result = getCurrentPosition(defaultState, { characterId })
+      const result = getPosition(defaultState, { characterId })
       expect(result).toStrictEqual(expectedPosition)
     })
   })
 
-  describe('getCurrentIntention', () => {
+  describe('getIntention', () => {
     it('returns undefined if scene state is missing', () => {
-      const result = getCurrentIntention(invalidState, { characterId: 'gimli' })
+      const result = getIntention(invalidState, { characterId: 'gimli' })
       expect(result).toBeUndefined()
     })
 
     it('returns undefined if scene has no frames', () => {
-      const result = getCurrentIntention(emptyState, { characterId: 'gimli' })
+      const result = getIntention(emptyState, { characterId: 'gimli' })
       expect(result).toBeUndefined()
     })
 
     it('returns undefined if character ID is not specified', () => {
-      const result = getCurrentIntention(defaultState, {})
+      const result = getIntention(defaultState, {})
       expect(result).toBeUndefined()
     })
 
     it('returns undefined if character ID is invalid', () => {
-      const result = getCurrentIntention(defaultState, { characterId: 'invalid-id' })
+      const result = getIntention(defaultState, { characterId: 'invalid-id' })
       expect(result).toBeUndefined()
     })
 
@@ -135,8 +138,20 @@ describe('scene selectors - Actor Status', () => {
       ['gimli', BefriendingElves],
       ['trogdor', Burninating],
     ])('returns correct data: %p', (characterId, expectedIntention) => {
-      const result = getCurrentIntention(defaultState, { characterId })
+      const result = getIntention(defaultState, { characterId })
       expect(result).toStrictEqual(expectedIntention)
+    })
+  })
+
+  describe('getActiveMovementMode', () => {
+    it('returns system default if undefined', () => {
+      const result = getActiveMovementMode(defaultState, { characterId: 'gimli' })
+      expect(result).toStrictEqual(Minimal.movement.modes.standard)
+    })
+
+    it('returns correct value', () => {
+      const result = getActiveMovementMode(withGimliRunning, { characterId: 'gimli' })
+      expect(result).toStrictEqual(Minimal.movement.modes.run)
     })
   })
 })

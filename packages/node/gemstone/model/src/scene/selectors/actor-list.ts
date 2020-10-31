@@ -29,6 +29,7 @@ export const getActorCollection = createSelector(
       })
     }
 
+    console.log('making:', statuses)
     return mapValues(createActor)(statuses)
   }
 )

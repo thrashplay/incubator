@@ -1,7 +1,7 @@
 import { Point } from 'gemstone/model/src/common/types'
 
 import { Character, CharacterId, CharacterStateContainer } from '../../character'
-import { RulesStateContainer } from '../../rules'
+import { MovementModeId, RulesStateContainer } from '../../rules'
 
 export const EMPTY_FRAME: Frame = {
   actors: {},
@@ -20,6 +20,9 @@ export interface ActorStatus {
 
   /** the actor's current intention (that is, selected game action) */
   intention: IntentionType
+
+  /** the type of movement currently used by this actor, or the rule system default if undefined */
+  movementMode?: MovementModeId
 
   /** the current position of the actor, in world coordinates */
   position: Point

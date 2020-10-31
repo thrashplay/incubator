@@ -1,8 +1,7 @@
-
 import {
   CharacterId,
   getBaseSpeed,
-  getCurrentPosition,
+  getPosition,
   isValidPoint,
   Point,
 } from '@thrashplay/gemstone-model'
@@ -29,7 +28,7 @@ export const approachLocation = (
 ) => (state: GameState) => {
   const { minimumDistance, onArrival } = withDefaultOptions(options)
 
-  const position = getCurrentPosition(state, { characterId })
+  const position = getPosition(state, { characterId })
   const speed = getBaseSpeed(state, { characterId })
 
   const doApproach = (start: Point, end: Point) => {
@@ -57,7 +56,7 @@ export const intercept = (
   targetId: CharacterId,
   options?: Partial<MovementOptions>
 ) => (state: GameState) => {
-  const targetPosition = getCurrentPosition(state, { characterId: targetId })
+  const targetPosition = getPosition(state, { characterId: targetId })
   return isValidPoint(targetPosition)
     ? [approachLocation(characterId, targetPosition, options)]
     : error('[intercept] Invalid input - targetPosition:', targetPosition)

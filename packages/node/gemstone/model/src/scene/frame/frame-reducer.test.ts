@@ -122,6 +122,27 @@ describe('frameReducer', () => {
     })
   })
 
+  describe('FrameActions.movementModeChanged', () => {
+    it('does nothing if the character is not present', () => {
+      const result = frameReducer(TypicalIntentions, FrameActions.movementModeChanged({
+        characterId: 'invalid-id',
+        mode: 'run',
+      }))
+
+      expect(result).toStrictEqual(TypicalIntentions)
+    })
+
+    it('sets the character movement mode', () => {
+      const result = frameReducer(TypicalIntentions, FrameActions.movementModeChanged({
+        characterId: 'trogdor',
+        mode: 'run',
+      }))
+
+      const status = result.actors.trogdor
+      expect(status.movementMode).toBe('run')
+    })
+  })
+
   describe('FrameActions.timeOffsetChanged', () => {
     it('does nothing if new value is negative', () => {
       const result = frameReducer(TypicalIntentions, FrameActions.timeOffsetChanged(-1))

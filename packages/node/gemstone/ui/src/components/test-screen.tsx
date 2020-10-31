@@ -25,6 +25,7 @@ import {
 import { useDispatch, useValue } from '../store'
 
 import { ActorList } from './actor-list'
+import { Inspect } from './inspect'
 import { SceneMap } from './scene/scene-map'
 import { TimeControls } from './time-controls'
 
@@ -113,13 +114,20 @@ export const TestScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <ActorList
-          actors={actors}
-          frameNumber={frameNumber}
-          onSelect={handleSelectActor}
-          style={styles.actorList}
-          title="Combatants"
-        />
+        <View style={styles.sidebar}>
+          <ActorList
+            actors={actors}
+            frameNumber={frameNumber}
+            onSelect={handleSelectActor}
+            style={styles.actorList}
+            title="Combatants"
+          />
+          <Inspect
+            actorId={selectedActorId}
+            frameNumber={frameNumber}
+            style={styles.characterControlPanel}
+          />
+        </View>
         <SceneMap
           actors={actors}
           onSetMoveIntention={handleSetMoveIntention}
@@ -138,9 +146,20 @@ export const TestScreen = () => {
 }
 
 const actorList: ViewStyle = {
-  flexGrow: 0.1,
-  marginRight: 8,
-  width: 250,
+  borderColor: '#999',
+  borderStyle: 'solid',
+  borderWidth: 1,
+  flexBasis: 0,
+  flexGrow: 1,
+  marginBottom: 8,
+}
+
+const characterControlPanel: ViewStyle = {
+  borderColor: '#999',
+  borderStyle: 'solid',
+  borderWidth: 1,
+  flexBasis: 0,
+  flexGrow: 1,
 }
 
 const container: ViewStyle = {
@@ -162,14 +181,23 @@ const locationMap: ViewStyle = {
   flexGrow: 1,
 }
 
+const sidebar: ViewStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  marginRight: 16,
+  width: 300,
+}
+
 const timeBar: ViewStyle = {
   marginTop: 8,
 }
 
 const styles = StyleSheet.create({
   actorList,
+  characterControlPanel,
   container,
   content,
   locationMap,
+  sidebar,
   timeBar,
 })

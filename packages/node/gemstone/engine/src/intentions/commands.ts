@@ -3,7 +3,7 @@ import {
   FrameActions,
 } from '@thrashplay/gemstone-model'
 
-import { createIntention } from '../../intentions'
+import { createIntention } from './create-intention'
 
 export const beginIdling = (characterId: CharacterId) => () =>
   FrameActions.intentionDeclared({

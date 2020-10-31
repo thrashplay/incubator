@@ -1,5 +1,6 @@
 import { Point } from '../../common'
 import {
+  CharacterFixtures,
   createStateWithDependencies,
   FrameFixtures,
   IntentionFixtures,
@@ -16,7 +17,9 @@ import {
   getPosition,
   getStatus,
 } from '.'
+import { getCurrentSpeed } from './actor-status'
 
+const { Gimli } = CharacterFixtures
 const { TypicalIntentions } = FrameFixtures
 const { BefriendingElves, Burninating } = IntentionFixtures
 const { Minimal } = RulesStateFixtures
@@ -152,6 +155,25 @@ describe('scene selectors - Actor Status', () => {
     it('returns correct value', () => {
       const result = getActiveMovementMode(withGimliRunning, { characterId: 'gimli' })
       expect(result).toStrictEqual(Minimal.movement.modes.run)
+    })
+  })
+
+  describe('getCurrentSpeed', () => {
+    it('when no movement mode is specified, default is used', () => {
+      const result = getCurrentSpeed(defaultState, { characterId: 'gimli' })
+
+      const defaultMovementModeId = Minimal.movement.defaultMode
+      const multiplier = Minimal.movement.modes[defaultMovementModeId]?.multiplier
+      const expectedResult = Gimli.speed * multiplier
+      expect(result).toBe(expectedResult)
+    })
+
+    it('uses correct movement mode multiplier', () => {
+      const result = getCurrentSpeed(withGimliRunning, { characterId: 'gimli' })
+
+      const multiplier = Minimal.movement.modes.run.multiplier
+      const expectedResult = Gimli.speed * multiplier
+      expect(result).toBe(expectedResult)
     })
   })
 })

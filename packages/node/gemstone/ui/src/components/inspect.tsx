@@ -36,13 +36,10 @@ export const Inspect = ({
 
   const actor = useValue(getActor, { characterId: actorId, frameNumber })
   const movementModes = useValue(getMovementModes)
-  const movementMode = useValue(getActiveMovementMode)
-
-  console.log('rr', movementMode, movementModes, actor?.status.movementMode)
+  const movementMode = useValue(getActiveMovementMode, { characterId: actorId, frameNumber })
 
   const renderControls = (actor: Actor) => {
     const handleMovementModeSelection = (id: MovementModeId) => () => {
-      console.log('d', { characterId: actor.id, mode: id })
       dispatch(FrameActions.movementModeChanged({ characterId: actorId!, mode: id }))
     }
 
@@ -78,7 +75,7 @@ export const Inspect = ({
 
   return actor === undefined ? null : (
     <View style={style}>
-      <Text style={styles.title}>{actor.name} (Inspect)</Text>
+      <Text style={styles.title}>{actor.name}</Text>
       {actor && renderControls(actor)}
     </View>
   )

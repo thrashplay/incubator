@@ -1,6 +1,7 @@
-import { get, some, values } from 'lodash/fp'
+import { some, values } from 'lodash/fp'
 import { createSelector } from 'reselect'
 
+import { getBaseSpeed } from '../../character'
 import { getDefaultMovementMode, getMovementModesCollection } from '../../rules'
 import { ActorStatus } from '../frame/state'
 
@@ -36,11 +37,15 @@ export const getIntention = createSelector(
 export const getActiveMovementMode = createSelector(
   [getStatus, getMovementModesCollection, getDefaultMovementMode],
   (status, modes, defaultMode) => {
-    console.log('status', status, modes, defaultMode)
-    return status?.movementMode === undefined
+    return status?.movementMode === undefined || modes === undefined
       ? defaultMode
-      : get(status.movementMode)(modes) ?? defaultMode
+      : modes[status.movementMode] ?? defaultMode
   }
+)
+
+export const getCurrentSpeed = createSelector(
+  [getBaseSpeed, getActiveMovementMode],
+  (speed, mode) => mode === undefined ? speed : speed * mode.multiplier
 )
 
 // export const getNextPosition = createSelector(

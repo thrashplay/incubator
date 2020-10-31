@@ -7,8 +7,8 @@ import {
   createParameterSelector,
   getActor,
   getActorCollection,
-  getCurrentPosition,
   getMeleeRange,
+  getPosition,
   getPublicCharacterName,
   getState,
 } from '@thrashplay/gemstone-model'
@@ -34,7 +34,7 @@ export const getTargetPosition = createSelector(
 )
 
 export const getDistanceToTarget = createSelector(
-  [getCurrentPosition, getTargetPosition],
+  [getPosition, getTargetPosition],
   (position, targetPosition) => position === undefined || targetPosition === undefined
     ? Number.MAX_SAFE_INTEGER
     : calculateDistance(position, targetPosition)

@@ -42,10 +42,15 @@ export const RulesStateFixtures = {
     movement: {
       defaultMode: 'standard',
       modes: {
-        hustle: {
+        standard: {
           id: 'standard',
           name: 'Standard',
           multiplier: 1,
+        },
+        run: {
+          id: 'run',
+          name: 'Run',
+          multiplier: 2,
         },
       },
     },
@@ -100,6 +105,16 @@ export const FrameFixtures = {
   Empty: {
     ...EMPTY_FRAME,
   },
+  WithGimliRunning: {
+    ...EMPTY_FRAME,
+    actors: {
+      gimli: {
+        ...ActorStatusFixtures.Gimli,
+        movementMode: 'run',
+      },
+      trogdor: ActorStatusFixtures.Trogdor,
+    },
+  },
   TypicalIntentions: {
     ...EMPTY_FRAME,
     actors: {
@@ -139,6 +154,10 @@ export const SceneStateFixtures = {
   SingleTypicalFrame: {
     characters: ['gimli', 'trogdor'],
     frames: [FrameFixtures.TypicalIntentions],
+  },
+  WithGimliRunning: {
+    characters: ['gimli'],
+    frames: [FrameFixtures.WithGimliRunning],
   },
 }
 

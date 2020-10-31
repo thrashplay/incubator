@@ -1,3 +1,4 @@
+import { values } from 'lodash'
 import { createSelector } from 'reselect'
 
 import { createParameterSelector } from '../common'
@@ -31,6 +32,11 @@ export const getMovementRules = createSelector(
 export const getMovementModesCollection = createSelector(
   [getMovementRules],
   (movement) => movement.modes ?? {}
+)
+
+export const getMovementModes = createSelector(
+  [getMovementModesCollection],
+  (modes) => values(modes)
 )
 
 /** gets the ID of the rule system's default movement mode */

@@ -1,11 +1,11 @@
 import { beginIdling, beginMoving } from './commands'
 
-export * from './create-intention-handler'
-export * from './create-intention'
+export * from './create-action-handler'
+export * from './create-action'
 export * from './selectors'
 export * from './types'
 
-export const IntentionCommands = {
+export const ActionCommands = {
   beginIdling,
   beginMoving,
 }

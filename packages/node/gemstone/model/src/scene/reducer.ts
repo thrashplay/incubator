@@ -2,24 +2,24 @@ import { concat, contains, flow, initial, isNil, last, omit, omitBy, size, take,
 import { getType } from 'typesafe-actions'
 
 import { CharacterId } from '../character'
-import { CommonAction, CommonActions, createReducerErrorHandler } from '../common'
+import { CommonEvent, CommonEvents, createReducerErrorHandler } from '../common'
 
-import { SceneAction, SceneActions } from './actions'
-import { EMPTY_FRAME, FrameAction, FrameActions, frameReducer } from './frame'
+import { SceneEvent, SceneEvents } from './events'
+import { EMPTY_FRAME, FrameEvent, FrameEvents, frameReducer } from './frame'
 import { EMPTY_SCENE, SceneState } from './state'
 
 export const reduceSceneState = (
   state: SceneState,
-  action: SceneAction | FrameAction | CommonAction
+  event: SceneEvent | FrameEvent | CommonEvent
 ): SceneState => {
   const error = createReducerErrorHandler('scene', state)
 
-  const reduceCurrentFrame = (action: SceneAction | FrameAction | CommonAction) => (state: SceneState) => {
+  const reduceCurrentFrame = (event: SceneEvent | FrameEvent | CommonEvent) => (state: SceneState) => {
     const currentFrame = last(state.frames) ?? EMPTY_FRAME
-    const updatedFrame = currentFrame === undefined ? undefined : frameReducer(currentFrame, action as FrameAction)
+    const updatedFrame = currentFrame === undefined ? undefined : frameReducer(currentFrame, event as FrameEvent)
 
     return updatedFrame === undefined
-      ? error(action.type, 'Frame reducer returned undefined value.')
+      ? error(event.type, 'Frame reducer returned undefined value.')
       : currentFrame === updatedFrame
         ? state // no change
         : {
@@ -31,32 +31,32 @@ export const reduceSceneState = (
         }
   }
 
-  switch (action.type) {
-    case getType(CommonActions.initialized):
-    case getType(SceneActions.sceneStarted):
+  switch (event.type) {
+    case getType(CommonEvents.initialized):
+    case getType(SceneEvents.sceneStarted):
       return {
         ...EMPTY_SCENE,
         characters: [],
         frames: [EMPTY_FRAME],
       }
 
-    case getType(SceneActions.characterAdded):
-      return contains(action.payload)(state.characters)
-        ? error(action.type, 'Character ID not found:', action.payload)
+    case getType(SceneEvents.characterAdded):
+      return contains(event.payload)(state.characters)
+        ? error(event.type, 'Character ID not found:', event.payload)
         : flow(
-          addCharacter(action.payload),
-          reduceCurrentFrame(FrameActions.actorAdded(action.payload))
+          addCharacter(event.payload),
+          reduceCurrentFrame(FrameEvents.actorAdded(event.payload))
         )(state)
 
-    case getType(SceneActions.frameAdded):
-      return isNil(action.payload)
-        ? error(action.type, 'New frame is undefined.')
+    case getType(SceneEvents.frameAdded):
+      return isNil(event.payload)
+        ? error(event.type, 'New frame is undefined.')
         : {
           ...state,
-          frames: concat(state.frames, action.payload),
+          frames: concat(state.frames, event.payload),
         }
 
-    case getType(SceneActions.frameCommitted):
+    case getType(SceneEvents.frameCommitted):
       return {
         ...state,
         frames: [...state.frames, {
@@ -65,33 +65,33 @@ export const reduceSceneState = (
         }],
       }
 
-    case getType(SceneActions.frameTagged):
-      return action.payload.frameNumber < 0 || action.payload.frameNumber >= size(state.frames)
-        ? error(action.type, 'Invalid frame:', action.payload, ', frameCount:', size(state.frames))
+    case getType(SceneEvents.frameTagged):
+      return event.payload.frameNumber < 0 || event.payload.frameNumber >= size(state.frames)
+        ? error(event.type, 'Invalid frame:', event.payload, ', frameCount:', size(state.frames))
         : {
           ...state,
           frameTags: {
-            [action.payload.tag]: action.payload.frameNumber,
+            [event.payload.tag]: event.payload.frameNumber,
           },
         }
 
-    case getType(SceneActions.frameTagDeleted):
+    case getType(SceneEvents.frameTagDeleted):
       return {
         ...state,
-        frameTags: omit(action.payload)(state.frameTags),
+        frameTags: omit(event.payload)(state.frameTags),
       }
 
-    case getType(SceneActions.truncated):
-      return action.payload < 0 || action.payload >= size(state.frames)
-        ? error(action.type, 'Invalid frame:', action.payload, ', frameCount:', size(state.frames))
+    case getType(SceneEvents.truncated):
+      return event.payload < 0 || event.payload >= size(state.frames)
+        ? error(event.type, 'Invalid frame:', event.payload, ', frameCount:', size(state.frames))
         : flow(
-          truncateFrames(action.payload),
+          truncateFrames(event.payload),
           updateTagsAfterTruncation
         )(state)
 
     default:
       // apply frame reducer to the current frame
-      return reduceCurrentFrame(action)(state)
+      return reduceCurrentFrame(event)(state)
   }
 }
 

@@ -1,13 +1,13 @@
 import { getType } from 'typesafe-actions'
 
-import { CommonAction, CommonActions } from '../common'
+import { CommonEvent, CommonEvents } from '../common'
 
-import { RulesAction } from './actions'
+import { RulesEvent } from './events'
 import { RulesState } from './state'
 
-export const reduceRulesState = (state: RulesState, action: RulesAction | CommonAction): RulesState => {
-  switch (action.type) {
-    case getType(CommonActions.initialized):
+export const reduceRulesState = (state: RulesState, event: RulesEvent | CommonEvent): RulesState => {
+  switch (event.type) {
+    case getType(CommonEvents.initialized):
       return {
         meleeRange: 10,
         movement: {

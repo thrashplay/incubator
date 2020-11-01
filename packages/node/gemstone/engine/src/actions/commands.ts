@@ -1,19 +1,19 @@
 import {
   CharacterId,
-  FrameActions,
+  FrameEvents,
 } from '@thrashplay/gemstone-model'
 
-import { createIntention } from './create-intention'
+import { createAction } from './create-action'
 
 export const beginIdling = (characterId: CharacterId) => () =>
-  FrameActions.intentionDeclared({
+  FrameEvents.actionDeclared({
     characterId,
-    intention: createIntention('idle'),
+    action: createAction('idle'),
   })
 
 /** Begins a move action for an actor */
 export const beginMoving = (characterId: CharacterId, x: number, y: number) => () =>
-  FrameActions.intentionDeclared({
+  FrameEvents.actionDeclared({
     characterId,
-    intention: createIntention('move', { x, y }),
+    action: createAction('move', { x, y }),
   })

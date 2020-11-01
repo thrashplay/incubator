@@ -7,7 +7,7 @@ Object {
     "name": "Gimli, son of Glóin",
     "speed": 60,
     "status": Object {
-      "intention": Object {
+      "action": Object {
         "data": "Legolas Greenleaf",
         "type": "befriending-elves",
       },
@@ -22,7 +22,7 @@ Object {
     "name": "Trogdor, the Burninator",
     "speed": 120,
     "status": Object {
-      "intention": Object {
+      "action": Object {
         "data": Object {
           "location": "The Countryside",
           "target": "The Peasants",
@@ -41,25 +41,25 @@ Object {
 exports[`scene selectors - Actor List getActorStatusCollection matches snapshot 1`] = `
 Object {
   "gimli": Object {
-    "id": "gimli",
-    "intention": Object {
+    "action": Object {
       "data": "Legolas Greenleaf",
       "type": "befriending-elves",
     },
+    "id": "gimli",
     "position": Object {
       "x": 100,
       "y": 100,
     },
   },
   "trogdor": Object {
-    "id": "trogdor",
-    "intention": Object {
+    "action": Object {
       "data": Object {
         "location": "The Countryside",
         "target": "The Peasants",
       },
       "type": "burninating",
     },
+    "id": "trogdor",
     "position": Object {
       "x": 7,
       "y": 7,

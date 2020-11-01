@@ -1,19 +1,19 @@
-import { ActionType, createAction } from 'typesafe-actions'
+import { createAction, ActionType as EventType } from 'typesafe-actions'
 
 import { CharacterId } from '../../character'
 import { Point } from '../../common'
 import { MovementModeId } from '../../rules'
 
-import { IntentionType } from './state'
+import { ActionType } from './state'
 
-export const FrameActions = {
+export const FrameEvents = {
   /** character added to the simulation */
   actorAdded: createAction('frame/actor-added')<CharacterId>(),
 
-  /** actor has set an intention */
-  intentionDeclared: createAction('frame/actor-declared-intention')<{
+  /** actor has set an action */
+  actionDeclared: createAction('frame/actor-declared-action')<{
     characterId: CharacterId
-    intention: IntentionType
+    action: ActionType
   }>(),
 
   /** the current frame has been identified as a key frame */
@@ -31,4 +31,4 @@ export const FrameActions = {
   timeOffsetChanged: createAction('frame/time-offset-changed')<number>(),
 }
 
-export type FrameAction = ActionType<typeof FrameActions>
+export type FrameEvent = EventType<typeof FrameEvents>

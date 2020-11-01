@@ -27,10 +27,10 @@ export const getPosition = createSelector(
   (status) => status?.position ?? undefined
 )
 
-/** gets the intention in the current frame for the actor withs the specified ID */
-export const getIntention = createSelector(
+/** gets the action in the current frame for the actor withs the specified ID */
+export const getAction = createSelector(
   [getStatus],
-  (status) => status?.intention ?? undefined
+  (status) => status?.action ?? undefined
 )
 
 /** returns the movement mode currently active for an actor */
@@ -53,7 +53,7 @@ export const getCurrentSpeed = createSelector(
 //   (status) => status?.position ?? undefined
 // )
 
-const isIdle = (actor: ActorStatus) => actor.intention.type === 'idle'
+const isIdle = (actor: ActorStatus) => actor.action.type === 'idle'
 export const areAnyActorsIdle = createSelector(
   [getFrame],
   (frame) => some(isIdle)(frame.actors)

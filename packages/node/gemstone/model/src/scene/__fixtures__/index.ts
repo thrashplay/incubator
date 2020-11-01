@@ -1,4 +1,4 @@
-import { EMPTY_FRAME, IntentionType } from '../frame'
+import { ActionType, EMPTY_FRAME } from '../frame'
 import { EMPTY_SCENE, SceneState, SceneStateContainer } from '../state'
 
 export const CharacterFixtures = {
@@ -57,18 +57,18 @@ export const RulesStateFixtures = {
   },
 } as const
 
-export const IntentionFixtures = {
+export const ActionFixtures = {
   BefriendingElves: {
     type: 'befriending-elves',
     data: 'Legolas Greenleaf',
-  } as IntentionType<'befriending-elves', string>,
+  } as ActionType<'befriending-elves', string>,
   Burninating: {
     type: 'burninating',
     data: {
       location: 'The Countryside',
       target: 'The Peasants',
     },
-  } as IntentionType<'burninating', { location: string; target: string }>,
+  } as ActionType<'burninating', { location: string; target: string }>,
   Grumbling: { type: 'grumbling' },
   Idle: { type: 'idle' },
 }
@@ -76,12 +76,12 @@ export const IntentionFixtures = {
 export const ActorStatusFixtures = {
   Gimli: {
     id: CharacterFixtures.Gimli.id,
-    intention: IntentionFixtures.BefriendingElves,
+    action: ActionFixtures.BefriendingElves,
     position: { x: 100, y: 100 },
   },
   Trogdor: {
     id: CharacterFixtures.Trogdor.id,
-    intention: IntentionFixtures.Burninating,
+    action: ActionFixtures.Burninating,
     position: { x: 7, y: 7 },
   },
 }
@@ -92,12 +92,12 @@ export const FrameFixtures = {
     actors: {
       gimli: {
         ...ActorStatusFixtures.Gimli,
-        intention: IntentionFixtures.Idle,
+        action: ActionFixtures.Idle,
         position: { x: 105, y: 105 },
       },
       trogdor: {
         ...ActorStatusFixtures.Trogdor,
-        intention: IntentionFixtures.Idle,
+        action: ActionFixtures.Idle,
         position: { x: 5, y: 5 },
       },
     },
@@ -115,7 +115,7 @@ export const FrameFixtures = {
       trogdor: ActorStatusFixtures.Trogdor,
     },
   },
-  TypicalIntentions: {
+  TypicalActions: {
     ...EMPTY_FRAME,
     actors: {
       gimli: ActorStatusFixtures.Gimli,
@@ -146,10 +146,10 @@ export const SceneStateFixtures = {
       FrameFixtures.AllIdle,
     ],
   },
-  IdleBeforeTypicalIntentions: {
+  IdleBeforeTypicalActions: {
     ...EMPTY_SCENE,
     characters: ['gimli', 'trogdor'],
-    frames: [FrameFixtures.AllIdle, FrameFixtures.TypicalIntentions],
+    frames: [FrameFixtures.AllIdle, FrameFixtures.TypicalActions],
   },
   SingleIdleFrame: {
     ...EMPTY_SCENE,
@@ -159,7 +159,7 @@ export const SceneStateFixtures = {
   SingleTypicalFrame: {
     ...EMPTY_SCENE,
     characters: ['gimli', 'trogdor'],
-    frames: [FrameFixtures.TypicalIntentions],
+    frames: [FrameFixtures.TypicalActions],
   },
   WithGimliRunning: {
     ...EMPTY_SCENE,

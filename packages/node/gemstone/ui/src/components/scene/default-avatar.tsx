@@ -68,25 +68,25 @@ const setColor = (selected: boolean) => (props: LineProps) => ({
 
 const feetToPixels = (feet: number) => feet * PIXELS_PER_FOOT
 
-const RenderIntention = ({
+const RenderAction = ({
   actor,
   selected,
 }: AvatarProps) => {
   const frameQuery = useFrameQuery()
 
-  const { intention, position } = actor.status
+  const { action, position } = actor.status
   const speed = useValue(getCurrentSpeed, { ...frameQuery, characterId: actor.id })
 
   // todo this is a hack, to see something working
-  const target = useValue(getActor, { characterId: get('data')(intention) })
+  const target = useValue(getActor, { characterId: get('data')(action) })
 
-  switch (intention.type) {
+  switch (action.type) {
     case 'move':
       return selected
         ? (
           <SegmentedVector
             breakpoints={map(feetToPixels)([10, getMaxDistance(speed, 3)])}
-            destination={get('data')(intention)}
+            destination={get('data')(action)}
             segmentStyles={map(setColor(selected))([NO_LINE, SOLID_LINE, DASHED_LINE])}
             start={position}
           />
@@ -94,7 +94,7 @@ const RenderIntention = ({
         : (
           <SegmentedVector
             breakpoints={map(feetToPixels)([10, getMaxDistance(speed, 3)])}
-            destination={get('data')(intention)}
+            destination={get('data')(action)}
             segmentStyles={map(setColor(selected))([NO_LINE, SOLID_LINE, NO_LINE])}
             start={position}
           />
@@ -154,7 +154,7 @@ export const DefaultAvatar = (props: AvatarProps) => {
           {...getCircleProps(selected)}
         />
       </AnimatedG>
-      {!isAnimating && <RenderIntention {...props} />}
+      {!isAnimating && <RenderAction {...props} />}
     </G>
   )
 }

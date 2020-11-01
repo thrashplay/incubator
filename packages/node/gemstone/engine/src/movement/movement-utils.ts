@@ -42,7 +42,7 @@ export const getNewPosition = (start: Point, destination: Point, speed: number, 
 
 /**
  * When starting at 'start', and approaching 'end' at the given speed, calculate the end point for a single
- * segment's worth of movement. If specified, the approach will not intentionally get any closer than the
+ * segment's worth of movement. If specified, the approach will not actionally get any closer than the
  * 'minDistance' value.
  */
 export const getNextPositionOnApproach = (start: Point, end: Point, speed: number, minDistance = 0) => {

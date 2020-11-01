@@ -1,8 +1,8 @@
 export const createReducerErrorHandler = <TState extends unknown = any>(
   reducerName: string,
   state: TState
-) => (action: string, ...rest: any[]) => {
+) => (event: string, ...rest: any[]) => {
   // eslint-disable-next-line no-console
-  console.error(`[${reducerName}:${action}]`, ...rest)
+  console.error(`[${reducerName}:${event}]`, ...rest)
   return state
 }

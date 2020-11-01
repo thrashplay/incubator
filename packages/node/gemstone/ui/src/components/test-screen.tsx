@@ -4,10 +4,10 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 
 import {
+  ActionCommands,
   calculateDistance,
-  createIntention,
+  createAction,
   GameState,
-  IntentionCommands,
   MovementCommands,
   SceneCommands,
 } from '@thrashplay/gemstone-engine'
@@ -16,11 +16,11 @@ import {
   addCharacter,
   Character,
   CharacterId,
-  FrameActions,
+  FrameEvents,
   getActor,
   getActors,
   getTime,
-  SceneActions,
+  SceneEvents,
 } from '@thrashplay/gemstone-model'
 
 import { FrameProvider } from '../frame-context'
@@ -76,12 +76,12 @@ export const TestScreen = () => {
   const selectedActor = useValue(getActor, { characterId: selectedActorId, fallback: true, frameTag: 'selected' })
 
   const handleSelectActor = (id: CharacterId) => setSelectedActorId(id)
-  const handleSelectFrame = (frameNumber: number) => dispatch(SceneActions.frameTagged({
+  const handleSelectFrame = (frameNumber: number) => dispatch(SceneEvents.frameTagged({
     frameNumber,
     tag: 'selected',
   }))
 
-  const handleSetMoveIntention = useCallback((x: number, y: number) => {
+  const handleSetMoveAction = useCallback((x: number, y: number) => {
     const getTarget = (): CharacterId => {
       const computeDistance = (actor: Actor) => ({
         id: actor.id,
@@ -103,14 +103,14 @@ export const TestScreen = () => {
     if (selectedActorId !== undefined) {
       const target = getTarget()
       return target === undefined
-        ? dispatch(IntentionCommands.beginMoving(selectedActorId, x, y))
-        // : dispatch(SimulationActions.intentionDeclared({
+        ? dispatch(ActionCommands.beginMoving(selectedActorId, x, y))
+        // : dispatch(SimulationActions.actionDeclared({
         //   characterId: selectedActorId,
-        //   intention: createIntention('follow', target),
+        //   action: createAction('follow', target),
         // }))
-        : dispatch(FrameActions.intentionDeclared({
+        : dispatch(FrameEvents.actionDeclared({
           characterId: selectedActorId,
-          intention: createIntention('melee', { target }),
+          action: createAction('melee', { target }),
         }))
     }
   }, [actors, dispatch, selectedActorId])
@@ -133,7 +133,7 @@ export const TestScreen = () => {
           </View>
           <SceneMap
             actors={actors}
-            onSetMoveIntention={handleSetMoveIntention}
+            onSetMoveAction={handleSetMoveAction}
             selectedActor={selectedActor as any}
             style={styles.locationMap}
             timeOffset={selectedTime}

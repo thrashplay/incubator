@@ -1,13 +1,13 @@
 import { keys, omit } from 'lodash/fp'
 
 import {
+  ActionFixtures,
   CharacterStateFixtures,
   createStateWithDependencies,
-  IntentionFixtures,
   RulesStateFixtures,
   SceneStateFixtures,
 } from '../__fixtures__'
-import { SceneStateContainer } from '../state'
+import { EMPTY_SCENE, SceneStateContainer } from '../state'
 
 import {
   getActor,
@@ -19,12 +19,13 @@ import {
 
 const { GimliAndTrogdor, GimliOnly } = CharacterStateFixtures
 const { Minimal } = RulesStateFixtures
-const { IdleBeforeTypicalIntentions } = SceneStateFixtures
+const { IdleBeforeTypicalActions } = SceneStateFixtures
 
-const defaultState: SceneStateContainer = createStateWithDependencies(IdleBeforeTypicalIntentions)
+const defaultState: SceneStateContainer = createStateWithDependencies(IdleBeforeTypicalActions)
 
 // this is an impossible state, but can be used to test what happens if 'frames' is somehow empty
 const emptyState: SceneStateContainer = createStateWithDependencies({
+  ...EMPTY_SCENE,
   characters: [],
   frames: [],
 })
@@ -85,7 +86,7 @@ describe('scene selectors - Actor List', () => {
     const stateWithoutTrogdor = ({
       characters: GimliOnly,
       rules: Minimal,
-      scene: IdleBeforeTypicalIntentions,
+      scene: IdleBeforeTypicalActions,
     })
 
     const gimli = {
@@ -93,7 +94,7 @@ describe('scene selectors - Actor List', () => {
       name: 'Gimli, son of Glóin',
       speed: 60,
       status: {
-        intention: IntentionFixtures.BefriendingElves,
+        action: ActionFixtures.BefriendingElves,
         position: { x: 100, y: 100 },
       },
     }
@@ -103,7 +104,7 @@ describe('scene selectors - Actor List', () => {
       name: 'Trogdor, the Burninator',
       speed: 120,
       status: {
-        intention: IntentionFixtures.Burninating,
+        action: ActionFixtures.Burninating,
         position: { x: 7, y: 7 },
       },
     }
@@ -131,7 +132,7 @@ describe('scene selectors - Actor List', () => {
     const stateWithoutTrogdor = ({
       characters: GimliOnly,
       rules: Minimal,
-      scene: IdleBeforeTypicalIntentions,
+      scene: IdleBeforeTypicalActions,
     })
 
     const gimli = {
@@ -139,7 +140,7 @@ describe('scene selectors - Actor List', () => {
       name: 'Gimli, son of Glóin',
       speed: 60,
       status: {
-        intention: IntentionFixtures.BefriendingElves,
+        action: ActionFixtures.BefriendingElves,
         position: { x: 100, y: 100 },
       },
     }

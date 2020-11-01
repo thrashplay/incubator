@@ -6,46 +6,46 @@ import { createReducerErrorHandler, isValidPoint } from '@thrashplay/gemstone-mo
 import { CharacterId } from '../../character'
 
 import { ActorStatus, Frame } from '.'
-import { FrameAction, FrameActions } from './actions'
+import { FrameEvent, FrameEvents } from './events'
 
-export const frameReducer = (frame: Frame, action: FrameAction): Frame => {
+export const frameReducer = (frame: Frame, event: FrameEvent): Frame => {
   const error = createReducerErrorHandler('frame', frame)
 
-  switch (action.type) {
-    case getType(FrameActions.actorAdded):
-      return has(action.payload)(frame.actors)
-        ? error(action.type, 'Actor is already in the scene:', action.payload)
+  switch (event.type) {
+    case getType(FrameEvents.actorAdded):
+      return has(event.payload)(frame.actors)
+        ? error(event.type, 'Actor is already in the scene:', event.payload)
         : flow(
-          setActorStatus(action.payload, createDefaultActorStatus(action.payload))
+          setActorStatus(event.payload, createDefaultActorStatus(event.payload))
         )(frame)
 
-    case getType(FrameActions.intentionDeclared):
-      return !has(action.payload.characterId)(frame.actors)
-        ? error(action.type, 'Actor not found:', action.payload.characterId)
-        : setActorStatus(action.payload.characterId, { intention: action.payload.intention })(frame)
+    case getType(FrameEvents.actionDeclared):
+      return !has(event.payload.characterId)(frame.actors)
+        ? error(event.type, 'Actor not found:', event.payload.characterId)
+        : setActorStatus(event.payload.characterId, { action: event.payload.action })(frame)
 
-    case getType(FrameActions.keyFrameMarked):
+    case getType(FrameEvents.keyFrameMarked):
       return {
         ...frame,
         keyFrame: true,
       }
 
-    case getType(FrameActions.moved):
-      return !isValidPoint(action.payload.position)
-        ? error(action.type, 'Invalid destination:', action.payload.position)
-        : has(action.payload.characterId)(frame.actors)
-          ? setActorStatus(action.payload.characterId, { position: action.payload.position })(frame)
-          : error(action.type, 'Invalid actor ID:', action.payload.characterId)
+    case getType(FrameEvents.moved):
+      return !isValidPoint(event.payload.position)
+        ? error(event.type, 'Invalid destination:', event.payload.position)
+        : has(event.payload.characterId)(frame.actors)
+          ? setActorStatus(event.payload.characterId, { position: event.payload.position })(frame)
+          : error(event.type, 'Invalid actor ID:', event.payload.characterId)
 
-    case getType(FrameActions.movementModeChanged):
-      return !has(action.payload.characterId)(frame.actors)
-        ? error(action.type, 'Actor not found:', action.payload.characterId)
-        : setActorStatus(action.payload.characterId, { movementMode: action.payload.mode })(frame)
+    case getType(FrameEvents.movementModeChanged):
+      return !has(event.payload.characterId)(frame.actors)
+        ? error(event.type, 'Actor not found:', event.payload.characterId)
+        : setActorStatus(event.payload.characterId, { movementMode: event.payload.mode })(frame)
 
-    case getType(FrameActions.timeOffsetChanged):
-      return action.payload < 0 ? frame : {
+    case getType(FrameEvents.timeOffsetChanged):
+      return event.payload < 0 ? frame : {
         ...frame,
-        timeOffset: action.payload,
+        timeOffset: event.payload,
       }
 
     default:
@@ -58,7 +58,7 @@ export const frameReducer = (frame: Frame, action: FrameAction): Frame => {
 /** creates the initial actor status for a character */
 const createDefaultActorStatus = (id: CharacterId) => ({
   id,
-  intention: { type: 'idle' },
+  action: { type: 'idle' },
   position: { x: 0, y: 0 },
 })
 

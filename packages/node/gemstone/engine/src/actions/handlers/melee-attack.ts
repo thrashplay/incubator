@@ -1,7 +1,8 @@
+
 import { ActorStatus, CharacterId } from '@thrashplay/gemstone-model'
 
+import { GameState } from '../..//state'
 import { MovementCommands } from '../../movement'
-import { GameState } from '../../state'
 import { getRangeCalculations } from '../selectors'
 import { SimulationContext } from '../types'
 
@@ -9,7 +10,7 @@ export interface Attack {
   target: CharacterId
 }
 
-/** handles the outcome of a melee attack intention */
+/** handles the outcome of a melee attack action */
 export const meleeAttack = (actor: ActorStatus, { state }: SimulationContext<GameState>, attack: Attack) => {
   const { isInRange, range } = getRangeCalculations(state, {
     characterId: actor.id,

@@ -17,6 +17,12 @@ export const SceneActions = {
    **/
   frameCommitted: createAction('scene/frame-committed')(),
 
+  /** set the specified tag to the given frame index */
+  frameTagged: createAction('scene/frame-tagged')<{ frameNumber: number; tag: string }>(),
+
+  /** remove the specified frame tag */
+  frameTagDeleted: createAction('scene/frame-tag-deleted')<string>(),
+
   /** new scene has been started */
   sceneStarted: createAction('scene/started')(),
 

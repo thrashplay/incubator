@@ -1,10 +1,12 @@
 import { flow, map, noop } from 'lodash/fp'
 import React, { useCallback, useReducer } from 'react'
-import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
+import { StyleSheet, ViewStyle } from 'react-native'
 import { Svg } from 'react-native-svg'
 
 import { Canvas, ContentViewProps, Dimensions, Extents } from '@thrashplay/canvas-with-tools'
 import { Actor } from '@thrashplay/gemstone-model'
+
+import { WithFrameQuery, WithViewStyles } from '../prop-types'
 
 import { AvatarAnimation, AvatarAnimationProps } from './avatar-animation'
 import { AvatarProps, DefaultAvatar } from './default-avatar'
@@ -21,7 +23,7 @@ const DEFAULT_EXTENTS = {
 
 export type SetMoveIntentionHandler = (x: number, y: number) => void
 
-export interface SceneMapProps {
+export interface SceneMapProps extends WithFrameQuery, WithViewStyles<'style'> {
   /** list of actors in the scene */
   actors?: Actor[]
 
@@ -36,9 +38,6 @@ export interface SceneMapProps {
 
   /** the actor currently selected */
   selectedActor?: Actor
-
-  /** style to apply to the maps's container */
-  style?: StyleProp<ViewStyle>
 
   /** time offset, in seconds, of the frame being rendered */
   timeOffset: number

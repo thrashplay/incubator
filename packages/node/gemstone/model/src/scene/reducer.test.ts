@@ -12,6 +12,11 @@ import { SceneState } from './state'
 const { Default, FiveIdleFrames, IdleBeforeTypicalIntentions, SingleTypicalFrame } = SceneStateFixtures
 const { Grumbling, Idle } = IntentionFixtures
 
+const tag = (frameNumber: number, tag: string) => ({
+  frameNumber,
+  tag,
+})
+
 describe('reduceSceneState', () => {
   describe('CommonActions.initialized', () => {
     it('returns default state', () => {
@@ -103,6 +108,53 @@ describe('reduceSceneState', () => {
     })
   })
 
+  describe('SceneActions.frameTagged', () => {
+    it('does nothing if the frame number is negative', () => {
+      const result = reduceSceneState(IdleBeforeTypicalIntentions, SceneActions.frameTagged(tag(-1, 'any-tag')))
+      expect(result).toBe(IdleBeforeTypicalIntentions)
+    })
+
+    it('does nothing if the frame number is > number of frames', () => {
+      const result = reduceSceneState(IdleBeforeTypicalIntentions, SceneActions.frameTagged(tag(2, 'any-tag')))
+      expect(result).toBe(IdleBeforeTypicalIntentions)
+    })
+
+    it('tags the selected frame', () => {
+      const result = reduceSceneState(IdleBeforeTypicalIntentions, SceneActions.frameTagged(tag(1, 'testTag')))
+      expect(result.frameTags.testTag).toBe(1)
+    })
+
+    it('overwrites existing tags', () => {
+      const input = {
+        ...IdleBeforeTypicalIntentions,
+        frameTags: {
+          testTag: 0,
+        },
+      }
+      const result = reduceSceneState(input, SceneActions.frameTagged(tag(1, 'testTag')))
+      expect(result.frameTags.testTag).toBe(1)
+    })
+  })
+
+  describe('SceneActions.frameTagDeleted', () => {
+    it('does nothing if tag does not exist', () => {
+      const result = reduceSceneState(IdleBeforeTypicalIntentions, SceneActions.frameTagDeleted('invalid-tag'))
+      expect(result).toStrictEqual(IdleBeforeTypicalIntentions)
+    })
+
+    it('clears an existing frame tag', () => {
+      const input = {
+        ...FiveIdleFrames,
+        frameTags: {
+          testTag: 2,
+        },
+      }
+
+      const result = reduceSceneState(input, SceneActions.frameTagDeleted('testTag'))
+      expect(result.frameTags.testTag).toBeUndefined()
+    })
+  })
+
   describe('SceneActions.intentionDeclared', () => {
     const result = reduceSceneState(IdleBeforeTypicalIntentions, FrameActions.intentionDeclared({
       characterId: 'trogdor',
@@ -171,22 +223,46 @@ describe('reduceSceneState', () => {
   describe('SceneActions.truncated', () => {
     it('does nothing if specified frame is negative', () => {
       const result = reduceSceneState(FiveIdleFrames, SceneActions.truncated(-1))
-      expect(result).toStrictEqual(FiveIdleFrames)
+      expect(result).toEqual(FiveIdleFrames)
     })
 
     it('does nothing if specified frame is after the last frame', () => {
       const result = reduceSceneState(FiveIdleFrames, SceneActions.truncated(size(FiveIdleFrames.frames)))
-      expect(result).toStrictEqual(FiveIdleFrames)
+      expect(result).toEqual(FiveIdleFrames)
     })
 
     it('does nothing if specified frame is the last frame', () => {
       const result = reduceSceneState(FiveIdleFrames, SceneActions.truncated(size(FiveIdleFrames.frames) - 1))
-      expect(result).toStrictEqual(FiveIdleFrames)
+      expect(result).toEqual(FiveIdleFrames)
     })
 
     it.each([0, 1, 2, 3, 4])('deletes frames when specified frame is: %p', (frame) => {
       const result = reduceSceneState(FiveIdleFrames, SceneActions.truncated(frame))
       expect(result.frames).toStrictEqual(take(frame + 1)(FiveIdleFrames.frames))
+    })
+
+    it('does not change tagged frames if they still exist', () => {
+      const input = {
+        ...FiveIdleFrames,
+        frameTags: {
+          testTag: 3,
+        },
+      }
+
+      const result = reduceSceneState(input, SceneActions.truncated(3))
+      expect(result.frameTags.testTag).toBe(3)
+    })
+
+    it('clears frame tags that pointed to a removed frame', () => {
+      const input = {
+        ...FiveIdleFrames,
+        frameTags: {
+          testTag: 3,
+        },
+      }
+
+      const result = reduceSceneState(input, SceneActions.truncated(2))
+      expect(result.frameTags.testTag).toBeUndefined()
     })
   })
 

@@ -20,12 +20,14 @@ import {
   getActor,
   getActors,
   getTime,
+  SceneActions,
 } from '@thrashplay/gemstone-model'
 
+import { FrameProvider } from '../frame-context'
 import { useDispatch, useValue } from '../store'
 
 import { ActorList } from './actor-list'
-import { Inspect } from './inspect'
+import { InspectPanel } from './inspect-panel'
 import { SceneMap } from './scene/scene-map'
 import { TimeControls } from './time-controls'
 
@@ -68,14 +70,16 @@ export const TestScreen = () => {
   }, [])
 
   const [selectedActorId, setSelectedActorId] = useState<CharacterId | undefined>(undefined)
-  const [frameNumber, setFrameNumber] = useState(0)
 
-  const actors = useValue(getActors, { frameNumber })
-  const selectedTime = useValue(getTime, { frameNumber })
-  const selectedActor = useValue(getActor, { characterId: selectedActorId, frameNumber })
+  const actors = useValue(getActors, { fallback: true, frameTag: 'selected' })
+  const selectedTime = useValue(getTime, { fallback: true, frameTag: 'selected' })
+  const selectedActor = useValue(getActor, { characterId: selectedActorId, fallback: true, frameTag: 'selected' })
 
   const handleSelectActor = (id: CharacterId) => setSelectedActorId(id)
-  const handleSelectFrame = (frame: number) => setFrameNumber(frame)
+  const handleSelectFrame = (frameNumber: number) => dispatch(SceneActions.frameTagged({
+    frameNumber,
+    tag: 'selected',
+  }))
 
   const handleSetMoveIntention = useCallback((x: number, y: number) => {
     const getTarget = (): CharacterId => {
@@ -112,36 +116,35 @@ export const TestScreen = () => {
   }, [actors, dispatch, selectedActorId])
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.sidebar}>
-          <ActorList
+    <FrameProvider frameQuery={{ fallback: true, frameTag: 'selected' }}>
+      <View style={styles.container}>
+        <View style={styles.content}>
+          <View style={styles.sidebar}>
+            <ActorList
+              actors={actors}
+              onSelect={handleSelectActor}
+              style={styles.actorList}
+              title="Combatants"
+            />
+            <InspectPanel
+              actorId={selectedActorId}
+              style={styles.characterControlPanel}
+            />
+          </View>
+          <SceneMap
             actors={actors}
-            frameNumber={frameNumber}
-            onSelect={handleSelectActor}
-            style={styles.actorList}
-            title="Combatants"
-          />
-          <Inspect
-            actorId={selectedActorId}
-            frameNumber={frameNumber}
-            style={styles.characterControlPanel}
+            onSetMoveIntention={handleSetMoveIntention}
+            selectedActor={selectedActor as any}
+            style={styles.locationMap}
+            timeOffset={selectedTime}
           />
         </View>
-        <SceneMap
-          actors={actors}
-          onSetMoveIntention={handleSetMoveIntention}
-          selectedActor={selectedActor as any}
-          style={styles.locationMap}
-          timeOffset={selectedTime}
+        <TimeControls
+          onSelectFrame={handleSelectFrame}
+          style={styles.timeBar}
         />
       </View>
-      <TimeControls
-        onSelectFrame={handleSelectFrame}
-        selectedFrame={frameNumber}
-        style={styles.timeBar}
-      />
-    </View>
+    </FrameProvider>
   )
 }
 

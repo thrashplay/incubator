@@ -5,11 +5,13 @@ import {
   SceneStateFixtures,
 } from '../__fixtures__'
 import { Frame } from '../frame'
-import { SceneState, SceneStateContainer } from '../state'
+import { EMPTY_SCENE, SceneState, SceneStateContainer } from '../state'
 
 import {
   getCurrentFrame,
   getCurrentFrameNumber,
+  getRequestedFrameNumber,
+  isValidFrameTag,
 } from '.'
 
 const { AllIdle, Empty, TypicalIntentions } = FrameFixtures
@@ -17,11 +19,23 @@ const { Default, FiveIdleFrames, IdleBeforeTypicalIntentions, SingleTypicalFrame
 
 // this is an impossible state, but can be used to test what happens if 'frames' is somehow empty
 const emptyState: SceneStateContainer = createStateWithDependencies({
+  ...EMPTY_SCENE,
   characters: [],
   frames: [],
 })
 
 const invalidState = { } as unknown as SceneStateContainer
+
+const defaultState = createStateWithDependencies(FiveIdleFrames)
+const createStateWithTaggedFrame = (tagName: string, frameNumber: number) => ({
+  ...defaultState,
+  scene: {
+    ...defaultState.scene,
+    frameTags: {
+      [tagName]: frameNumber,
+    },
+  },
+})
 
 describe('scene selectors - frames', () => {
   describe('getCurrentFrameNumber', () => {
@@ -38,6 +52,46 @@ describe('scene selectors - frames', () => {
     ])('returns index of last frame: %p', (_name, state, expectedResult) => {
       const result = getCurrentFrameNumber(createStateWithDependencies(state))
       expect(result).toBe(expectedResult)
+    })
+  })
+
+  describe('isValidFrameTag', () => {
+    const inputState = createStateWithTaggedFrame('testTag', 2)
+
+    it('returns true when tag exists', () => {
+      expect(isValidFrameTag(inputState, { frameTag: 'testTag' })).toBe(true)
+    })
+
+    it('returns false when tag does not exist', () => {
+      expect(isValidFrameTag(inputState, { frameTag: 'invalid-tag' })).toBe(false)
+    })
+
+    it('returns true when no tag specified', () => {
+      expect(isValidFrameTag(inputState)).toBe(false)
+    })
+  })
+
+  describe('getRequestedFrameNumber', () => {
+    const inputState = createStateWithTaggedFrame('testTag', 2)
+
+    it('returns tagged frame if it exists', () => {
+      const result = getRequestedFrameNumber(inputState, { frameTag: 'testTag' })
+      expect(result).toBe(2)
+    })
+
+    it('returns current frame fallback if frame tag does not exist and fallback = true', () => {
+      const result = getRequestedFrameNumber(inputState, { fallback: true, frameTag: 'invalid-tag' })
+      expect(result).toBe(4)
+    })
+
+    it('returns undefined if frame tag does not exist and fallback = false', () => {
+      const result = getRequestedFrameNumber(inputState, { fallback: false, frameTag: 'invalid-tag' })
+      expect(result).toBeUndefined()
+    })
+
+    it('returns currentFrame if no frameTag param', () => {
+      const result = getRequestedFrameNumber(inputState)
+      expect(result).toBe(4)
     })
   })
 

@@ -26,6 +26,9 @@ export interface ActorStatus {
 
   /** the current position of the actor, in world coordinates */
   position: Point
+
+  /** the actor's current target */
+  target?: CharacterId
 }
 
 /** combined data structure, merging full character info with the associated scene status */

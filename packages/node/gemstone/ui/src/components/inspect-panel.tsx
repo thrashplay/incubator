@@ -3,6 +3,7 @@ import React from 'react'
 import { StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native'
 import { Button } from 'react-native-paper'
 
+import { GameState } from '@thrashplay/gemstone-engine'
 import {
   Actor,
   CharacterId,
@@ -10,8 +11,11 @@ import {
   getActiveMovementMode,
   getActor,
   getMovementModes,
+  getPlayerCharacterName,
+  getTarget,
   MovementMode,
   MovementModeId,
+  SelectorParameters,
 } from '@thrashplay/gemstone-model'
 
 import { useFrameQuery } from '../frame-context'
@@ -22,6 +26,29 @@ import { WithViewStyles } from './prop-types'
 export interface InspectPanelProps extends WithViewStyles<'style'> {
   /** the ID of the character to control */
   actorId?: CharacterId
+}
+
+interface AttributeRowProps extends WithViewStyles<'style'> {
+  actorId: CharacterId
+  name: string
+  selector: (state: GameState, params: SelectorParameters) => any
+}
+
+const AttributeRow = ({
+  actorId,
+  name,
+  selector,
+  style,
+}: AttributeRowProps) => {
+  const frameQuery = useFrameQuery()
+  const value = useValue(selector, { characterId: actorId, ...frameQuery })
+
+  return (
+    <View style={[styles.attributeRow, style]}>
+      <Text style={styles.attributeLabel}>{name}:</Text>
+      <Text style={styles.attributeValue}>{value ?? 'None'}</Text>
+    </View>
+  )
 }
 
 export const InspectPanel = ({
@@ -58,13 +85,30 @@ export const InspectPanel = ({
       )
     }
 
+    const createAttributeRow = (
+      name: string,
+      selector: AttributeRowProps['selector'],
+      rest?: Partial<AttributeRowProps>
+    ) => actorId === undefined ? null : (
+      <AttributeRow
+        key="name"
+        actorId={actorId}
+        name={name}
+        selector={selector}
+        {...rest}
+      />
+    )
+
     return (
       <>
         <View style={styles.content}>
+          {createAttributeRow('Name', getPlayerCharacterName, { style: styles.firstRow })}
+          {createAttributeRow('Target', getTarget)}
           <Text>Movement Mode: {movementMode?.name ?? 'unknown'} ({movementMode?.multiplier ?? 1}x)</Text>
           <View style={styles.smallOptionRow}>
             {map(createMovementModeButton)(movementModes)}
           </View>
+
         </View>
       </>
     )
@@ -78,14 +122,33 @@ export const InspectPanel = ({
   )
 }
 
+const attributeLabel: TextStyle = {
+  fontWeight: 'bold',
+  marginRight: 8,
+}
+
+const attributeRow: ViewStyle = {
+  flexDirection: 'row',
+  marginBottom: 8,
+  marginTop: 8,
+}
+
+const attributeValue: TextStyle = {
+
+}
+
+const content: ViewStyle = {
+  padding: 16,
+}
+
+const firstRow: ViewStyle = {
+  marginTop: 0,
+}
+
 const title: TextStyle = {
   backgroundColor: '#ccc',
   borderBottomColor: '#666',
   borderBottomWidth: 1,
-  padding: 16,
-}
-
-const content: ViewStyle = {
   padding: 16,
 }
 
@@ -110,7 +173,11 @@ const smallOptionRow: ViewStyle = {
 }
 
 const styles = StyleSheet.create({
+  attributeLabel,
+  attributeRow,
+  attributeValue,
   content,
+  firstRow,
   smallOptionButton,
   smallOptionButtonSelectedText,
   smallOptionButtonText,

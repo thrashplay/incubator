@@ -1,18 +1,22 @@
 import { flow, map, noop } from 'lodash/fp'
 import React, { useCallback, useReducer } from 'react'
-import { StyleSheet, ViewStyle } from 'react-native'
+import { StyleSheet, View, ViewStyle } from 'react-native'
 import { Svg } from 'react-native-svg'
 
 import { Canvas, ContentViewProps, Dimensions, Extents } from '@thrashplay/canvas-with-tools'
-import { Actor } from '@thrashplay/gemstone-model'
+import { SceneCommands } from '@thrashplay/gemstone-engine'
+import { Actor, FrameEvents, SceneEvents } from '@thrashplay/gemstone-model'
 
+import { useDispatch } from '../../store'
 import { WithFrameQuery, WithViewStyles } from '../prop-types'
 
 import { AvatarAnimation, AvatarAnimationProps } from './avatar-animation'
 import { AvatarProps, DefaultAvatar } from './default-avatar'
 import { Grid } from './grid'
-import { INITIAL_STATE, MapViewAction, reducer } from './state'
-import { SetMoveActionTool } from './tools/set-move-action-tool'
+import { INITIAL_STATE, MapViewAction, reducer, ToolName } from './state'
+import { ToolSelector } from './tool-selector'
+import { MoveTool } from './tools/move-tool'
+import { SetTargetTool } from './tools/set-target-tool'
 
 const DEFAULT_EXTENTS = {
   height: 500,
@@ -21,7 +25,7 @@ const DEFAULT_EXTENTS = {
   y: 0,
 }
 
-export type SetMoveActionHandler = (x: number, y: number) => void
+export type MoveActionHandler = (x: number, y: number) => void
 
 export interface SceneMapProps extends WithFrameQuery, WithViewStyles<'style'> {
   /** list of actors in the scene */
@@ -31,7 +35,7 @@ export interface SceneMapProps extends WithFrameQuery, WithViewStyles<'style'> {
   extents?: Extents
 
   /** handler called when the user attempts to set a move action */
-  onSetMoveAction?: SetMoveActionHandler
+  onMove?: MoveActionHandler
 
   /** render function used to create Avatar elements */
   renderAvatar?: (props: AvatarProps) => React.ReactNode
@@ -46,7 +50,7 @@ export interface SceneMapProps extends WithFrameQuery, WithViewStyles<'style'> {
 export const SceneMap = ({
   actors = [],
   extents: initialExtents = DEFAULT_EXTENTS,
-  onSetMoveAction = noop,
+  onMove = noop,
   renderAvatar = DefaultAvatar,
   selectedActor,
   style,
@@ -58,19 +62,41 @@ export const SceneMap = ({
     extents: initialExtents,
   }))
 
+  const globalDispatch = useDispatch()
+
   const { extents, selectedToolName } = state
 
   const handleToolEvent = useCallback((event: MapViewAction) => {
     switch (event.type) {
-      case 'set-move-action':
-        onSetMoveAction(event.payload.x, event.payload.y)
+      case 'move':
+        onMove(event.payload.x, event.payload.y)
+        break
+
+      case 'set-target':
+        if (selectedActor !== undefined) {
+          globalDispatch(
+            event.payload === undefined
+              ? FrameEvents.targetRemoved(selectedActor.id)
+              : FrameEvents.targetChanged({
+                characterId: selectedActor.id,
+                targetId: event.payload,
+              })
+          )
+        }
         break
 
       default:
         // all other events are local to our view, so we just update our state
         dispatch(event)
     }
-  }, [onSetMoveAction])
+  }, [globalDispatch, onMove, selectedActor])
+
+  const handleToolSelect = useCallback((toolName: ToolName) => {
+    dispatch({
+      type: 'select-tool',
+      payload: toolName,
+    })
+  }, [dispatch])
 
   const handleViewportChange = useCallback((viewport: Dimensions) => {
     dispatch({
@@ -79,17 +105,23 @@ export const SceneMap = ({
     })
   }, [])
 
+  const SelectedTool = selectedToolName === 'move' ? MoveTool : SetTargetTool
+
   return (
-    <Canvas
-      data={{ actors, renderAvatar, style, selectedActor, timeOffset }}
-      extents={extents}
-      onToolEvent={handleToolEvent}
-      onViewportChange={handleViewportChange}
-      selectedTool={SetMoveActionTool}
-      style={{ flex: 1 }}
-    >
-      {MapContent}
-    </Canvas>
+    <View style={[styles.container, style]}>
+      <ToolSelector onSelect={handleToolSelect} tools={['move', 'set-target']} />
+
+      <Canvas
+        data={{ actors, renderAvatar, style, selectedActor, timeOffset }}
+        extents={extents}
+        onToolEvent={handleToolEvent}
+        onViewportChange={handleViewportChange}
+        selectedTool={SelectedTool}
+        style={{ flex: 1 }}
+      >
+        {MapContent}
+      </Canvas>
+    </View>
   )
 }
 
@@ -97,7 +129,7 @@ const MapContent = ({
   data,
   extents,
 }: ContentViewProps<SceneMapProps & { renderAvatar: (props: AvatarProps) => React.ReactNode }>) => {
-  const { actors, renderAvatar, selectedActor, style, timeOffset } = data
+  const { actors, renderAvatar, selectedActor, timeOffset } = data
 
   const createAvatarRenderProps = useCallback((actor: Actor): AvatarAnimationProps => {
     const position = actor.status.position
@@ -118,7 +150,7 @@ const MapContent = ({
 
   return (
     <Svg
-      style={[styles.container, style]}
+      style={[styles.mapView]}
       viewBox={`${extents.x} ${extents.y} ${extents.width} ${extents.height}`}
     >
       <Grid
@@ -132,13 +164,18 @@ const MapContent = ({
 }
 
 const container: ViewStyle = {
+  flexDirection: 'column',
+}
+
+const mapView: ViewStyle = {
   backgroundColor: '#eee',
   borderWidth: 1,
   borderColor: '#666',
   marginBottom: 0,
-  marginTop: 0,
+  marginTop: 8,
 }
 
 const styles = StyleSheet.create({
   container,
+  mapView,
 })

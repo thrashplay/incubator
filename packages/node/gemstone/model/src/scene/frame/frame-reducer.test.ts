@@ -143,6 +143,60 @@ describe('frameReducer', () => {
     })
   })
 
+  describe('FrameEvents.targetChanged', () => {
+    it('does nothing if the character is not present', () => {
+      const result = frameReducer(TypicalActions, FrameEvents.targetChanged({
+        characterId: 'invalid-id',
+        targetId: 'gimli',
+      }))
+
+      expect(result).toStrictEqual(TypicalActions)
+    })
+
+    it('does nothing if the target is not present', () => {
+      const result = frameReducer(TypicalActions, FrameEvents.targetChanged({
+        characterId: 'gimli',
+        targetId: 'invalid-id',
+      }))
+
+      expect(result).toStrictEqual(TypicalActions)
+    })
+
+    it('sets the character target', () => {
+      const result = frameReducer(TypicalActions, FrameEvents.targetChanged({
+        characterId: 'trogdor',
+        targetId: 'gimli',
+      }))
+
+      const status = result.actors.trogdor
+      expect(status.target).toBe('gimli')
+    })
+  })
+
+  describe('FrameEvents.targetRemoved', () => {
+    const inputState = {
+      ...TypicalActions,
+      actors: {
+        ...TypicalActions.actors,
+        gimli: {
+          ...TypicalActions.actors.gimli,
+          target: 'trogdor',
+        },
+      },
+    }
+
+    it('does nothing if the character is not present', () => {
+      const result = frameReducer(inputState, FrameEvents.targetRemoved('invalid-id'))
+      expect(result).toStrictEqual(inputState)
+    })
+
+    it('removes the character target', () => {
+      const result = frameReducer(inputState, FrameEvents.targetRemoved('gimli'))
+      const status = result.actors.gimli
+      expect(status.target).toBeUndefined()
+    })
+  })
+
   describe('FrameEvents.timeOffsetChanged', () => {
     it('does nothing if new value is negative', () => {
       const result = frameReducer(TypicalActions, FrameEvents.timeOffsetChanged(-1))

@@ -3,9 +3,10 @@ import { isNil } from 'lodash'
 
 import { calculateScale, Dimensions, Extents, PanAndZoom } from '@thrashplay/canvas-with-tools'
 
-import { SetMoveAction } from './tools/set-move-action-tool'
+import { Move } from './tools/move-tool'
+import { SetTarget } from './tools/set-target-tool'
 
-export type ToolName = 'set-move-action'
+export type ToolName = 'move' | 'set-target'
 export interface MapViewState {
   extents: Extents
   selectedToolName: ToolName
@@ -13,7 +14,7 @@ export interface MapViewState {
 }
 
 export const INITIAL_STATE: Omit<MapViewState, 'extents'> = {
-  selectedToolName: 'set-move-action',
+  selectedToolName: 'move',
 }
 
 export interface Action<TType extends string = string, TPayload extends any = any> {
@@ -25,7 +26,8 @@ export type MapViewAction =
   Action<'select-tool', ToolName>
   | Action<'set-viewport', Dimensions>
   | PanAndZoom
-  | SetMoveAction
+  | Move
+  | SetTarget
 
 // calculates new extents whenever the viewport changes
 // current implementation is to ??

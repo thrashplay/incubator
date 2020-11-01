@@ -27,6 +27,12 @@ export const FrameEvents = {
     mode: MovementModeId
   }>(),
 
+  /** the actor has declared a new target */
+  targetChanged: createAction('frame/actor-changed-target')<{ characterId: CharacterId; targetId: CharacterId }>(),
+
+  /** the target has removed it's target */
+  targetRemoved: createAction('frame/actor-removed-target')<CharacterId>(),
+
   /** frame's time offset has been changed */
   timeOffsetChanged: createAction('frame/time-offset-changed')<number>(),
 }

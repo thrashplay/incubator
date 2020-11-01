@@ -81,7 +81,7 @@ export const TestScreen = () => {
     tag: 'selected',
   }))
 
-  const handleSetMoveAction = useCallback((x: number, y: number) => {
+  const handleMove = useCallback((x: number, y: number) => {
     const getTarget = (): CharacterId => {
       const computeDistance = (actor: Actor) => ({
         id: actor.id,
@@ -128,12 +128,12 @@ export const TestScreen = () => {
             />
             <InspectPanel
               actorId={selectedActorId}
-              style={styles.characterControlPanel}
+              style={styles.inspectPanel}
             />
           </View>
           <SceneMap
             actors={actors}
-            onSetMoveAction={handleSetMoveAction}
+            onMove={handleMove}
             selectedActor={selectedActor as any}
             style={styles.locationMap}
             timeOffset={selectedTime}
@@ -154,15 +154,15 @@ const actorList: ViewStyle = {
   borderWidth: 1,
   flexBasis: 0,
   flexGrow: 1,
-  marginBottom: 8,
 }
 
-const characterControlPanel: ViewStyle = {
+const inspectPanel: ViewStyle = {
   borderColor: '#999',
   borderStyle: 'solid',
   borderWidth: 1,
   flexBasis: 0,
   flexGrow: 1,
+  marginTop: 8,
 }
 
 const container: ViewStyle = {
@@ -197,9 +197,9 @@ const timeBar: ViewStyle = {
 
 const styles = StyleSheet.create({
   actorList,
-  characterControlPanel,
   container,
   content,
+  inspectPanel,
   locationMap,
   sidebar,
   timeBar,

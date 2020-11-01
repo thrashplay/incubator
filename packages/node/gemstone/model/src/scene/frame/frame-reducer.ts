@@ -42,6 +42,18 @@ export const frameReducer = (frame: Frame, event: FrameEvent): Frame => {
         ? error(event.type, 'Actor not found:', event.payload.characterId)
         : setActorStatus(event.payload.characterId, { movementMode: event.payload.mode })(frame)
 
+    case getType(FrameEvents.targetChanged):
+      return !has(event.payload.characterId)(frame.actors)
+        ? error(event.type, 'Actor not found:', event.payload.characterId)
+        : !has(event.payload.targetId)(frame.actors)
+          ? error(event.type, 'Target not found:', event.payload.targetId)
+          : setActorStatus(event.payload.characterId, { target: event.payload.targetId })(frame)
+
+    case getType(FrameEvents.targetRemoved):
+      return !has(event.payload)(frame.actors)
+        ? error(event.type, 'Actor not found:', event.payload)
+        : setActorStatus(event.payload, { target: undefined })(frame)
+
     case getType(FrameEvents.timeOffsetChanged):
       return event.payload < 0 ? frame : {
         ...frame,

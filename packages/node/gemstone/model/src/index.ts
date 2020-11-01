@@ -4,6 +4,7 @@ import * as SceneModel from './scene'
 
 export * from './common'
 export * from './character'
+export * from './movement-utils'
 export * from './rules'
 export * from './scene'
 export * from './selectors'

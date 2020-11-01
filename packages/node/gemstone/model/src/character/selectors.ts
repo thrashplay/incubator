@@ -2,8 +2,9 @@ import { values } from 'lodash/fp'
 import { createSelector } from 'reselect'
 
 import { createParameterSelector } from '../common'
+import { getRules } from '../rules'
 
-import { CharacterId, CharacterStateContainer } from './state'
+import { Character, CharacterId, CharacterStateContainer } from './state'
 
 export interface CharacterSelectorParameters {
   characterId?: CharacterId
@@ -37,9 +38,20 @@ export const getPublicCharacterName = createSelector(
   (character) => character?.name ?? 'an unknown character'
 )
 
+export const getBaseReach = createSelector(
+  [getPlayerCharactersCollection, getCharacterIdParam, getRules],
+  (characters, id, rules) => id === undefined ? 0 : characters[id]?.reach ?? rules.meleeRange
+)
+
+export const calculateSizeFromCharacter = (character: Character | undefined) => character?.size ?? 3
+export const getBaseSize = createSelector(
+  [getPlayerCharacter],
+  calculateSizeFromCharacter
+)
+
 export const getBaseSpeed = createSelector(
-  [getPlayerCharactersCollection, getCharacterIdParam],
-  (characters, id) => id === undefined ? 0 : characters[id]?.speed ?? 0
+  [getPlayerCharacter],
+  (character) => character?.speed ?? 0
 )
 
 /** retrieves an unsorted array of all player characters */

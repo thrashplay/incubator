@@ -1,7 +1,14 @@
-import { ActionType, EMPTY_FRAME } from '../frame'
+import { Point } from '../../common'
+import { ActionType, ActorStatus, EMPTY_FRAME } from '../frame'
 import { EMPTY_SCENE, SceneState, SceneStateContainer } from '../state'
 
 export const CharacterFixtures = {
+  Treestump: {
+    id: 'treestump',
+    name: 'Treestump Block',
+    size: 5,
+    speed: 90,
+  },
   Trogdor: {
     id: 'trogdor',
     name: 'Trogdor, the Burninator',
@@ -26,6 +33,13 @@ export const CharacterStateFixtures = {
   GimliAndTrogdor: {
     pcs: {
       gimli: CharacterFixtures.Gimli,
+      trogdor: CharacterFixtures.Trogdor,
+    },
+  },
+  AllThreeCharacters: {
+    pcs: {
+      gimli: CharacterFixtures.Gimli,
+      treestump: CharacterFixtures.Treestump,
       trogdor: CharacterFixtures.Trogdor,
     },
   },
@@ -79,12 +93,22 @@ export const ActorStatusFixtures = {
     action: ActionFixtures.BefriendingElves,
     position: { x: 100, y: 100 },
   },
+  Treestump: {
+    id: CharacterFixtures.Treestump.id,
+    action: ActionFixtures.Grumbling,
+    position: { x: 200, y: 50 },
+  },
   Trogdor: {
     id: CharacterFixtures.Trogdor.id,
     action: ActionFixtures.Burninating,
     position: { x: 7, y: 7 },
   },
 }
+
+const withPosition = (position: Point) => (actor: ActorStatus) => ({
+  ...actor,
+  position,
+})
 
 export const FrameFixtures = {
   AllIdle: {
@@ -105,6 +129,21 @@ export const FrameFixtures = {
   Empty: {
     ...EMPTY_FRAME,
   },
+  TypicalActions: {
+    ...EMPTY_FRAME,
+    actors: {
+      gimli: ActorStatusFixtures.Gimli,
+      trogdor: ActorStatusFixtures.Trogdor,
+    },
+  },
+  WithGimliAndTreestumpInMelee: {
+    ...EMPTY_FRAME,
+    actors: {
+      gimli: withPosition({ x: 100, y: 100 })(ActorStatusFixtures.Gimli),
+      treestump: withPosition({ x: 100, y: 114 })(ActorStatusFixtures.Treestump),
+      trogdor: withPosition({ x: 100, y: 113 })(ActorStatusFixtures.Trogdor),
+    },
+  },
   WithGimliRunning: {
     ...EMPTY_FRAME,
     actors: {
@@ -112,13 +151,6 @@ export const FrameFixtures = {
         ...ActorStatusFixtures.Gimli,
         movementMode: 'run',
       },
-      trogdor: ActorStatusFixtures.Trogdor,
-    },
-  },
-  TypicalActions: {
-    ...EMPTY_FRAME,
-    actors: {
-      gimli: ActorStatusFixtures.Gimli,
       trogdor: ActorStatusFixtures.Trogdor,
     },
   },
@@ -161,6 +193,11 @@ export const SceneStateFixtures = {
     characters: ['gimli', 'trogdor'],
     frames: [FrameFixtures.TypicalActions],
   },
+  WithGimliAndTreestumpInMelee: {
+    ...EMPTY_SCENE,
+    characters: ['gimli', 'treestump', 'trogdor'],
+    frames: [FrameFixtures.WithGimliAndTreestumpInMelee],
+  },
   WithGimliRunning: {
     ...EMPTY_SCENE,
     characters: ['gimli'],
@@ -169,7 +206,7 @@ export const SceneStateFixtures = {
 }
 
 export const defaultDependencies = {
-  characters: CharacterStateFixtures.GimliAndTrogdor,
+  characters: CharacterStateFixtures.AllThreeCharacters,
   rules: RulesStateFixtures.Minimal,
 }
 

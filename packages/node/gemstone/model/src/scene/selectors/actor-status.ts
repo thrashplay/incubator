@@ -1,11 +1,14 @@
-import { some, values } from 'lodash/fp'
+import { matches } from 'lodash'
+import { filter, flow, negate, some, values } from 'lodash/fp'
 import { createSelector } from 'reselect'
 
-import { getBaseSpeed } from '../../character'
+import { calculateSizeFromCharacter, getBaseReach, getBaseSize, getBaseSpeed } from '../../character'
+import { ORIGIN, Point } from '../../common'
+import { calculateDistance } from '../../movement-utils'
 import { getDefaultMovementMode, getMovementModesCollection } from '../../rules'
-import { ActorStatus } from '../frame/state'
+import { Actor, ActorStatus } from '../frame/state'
 
-import { getActorStatusCollection } from './actor-list'
+import { getActors, getActorStatusCollection } from './actor-list'
 import { getCharacterIdParam } from './base'
 import { getFrame } from './frames'
 
@@ -24,7 +27,7 @@ export const getStatus = createSelector(
 /** gets the position in the current frame for the actor withs the specified ID */
 export const getPosition = createSelector(
   [getStatus],
-  (status) => status?.position ?? { x: 0, y: 0 }
+  (status) => status?.position ?? ORIGIN
 )
 
 /** gets the action in the current frame for the actor withs the specified ID */
@@ -43,9 +46,37 @@ export const getActiveMovementMode = createSelector(
   }
 )
 
+/** returns an actor's current speed */
 export const getCurrentSpeed = createSelector(
   [getBaseSpeed, getActiveMovementMode],
   (speed, mode) => mode === undefined ? speed : speed * mode.multiplier
+)
+
+/** returns an actor's current melee reach */
+export const getReach = createSelector(
+  [getBaseReach],
+  (reach) => reach
+)
+
+/** returns an actor's current size, in feet */
+export const getSize = createSelector(
+  [getBaseSize],
+  (size) => size
+)
+
+/** determines if an actor is in melee range, given an attacker's position and reach */
+const isInRange = (position: Point, reach: number) => (target: Actor) => {
+  const targetSize = calculateSizeFromCharacter(target)
+  return calculateDistance(position, target.status.position) - targetSize + 1 <= reach
+}
+
+/** retrieves a list of all actors that can be reached in melee by the specified actor */
+export const getReachableTargets = createSelector(
+  [getCharacterIdParam, getPosition, getReach, getActors],
+  (id, position, reach, actors) => flow(
+    filter(negate(matches({ id }))),
+    filter(isInRange(position, reach))
+  )(actors)
 )
 
 export const getTarget = createSelector(

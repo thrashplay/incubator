@@ -1,8 +1,7 @@
 import { useFrameQuery } from 'gemstone/ui/src/frame-context'
 import { useValue } from 'gemstone/ui/src/store'
-import { filter, flow, get, head, map, matches, reject, sortBy } from 'lodash/fp'
+import { filter, flow, get, head, map, sortBy } from 'lodash/fp'
 import React, { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
 
 import {
   CoordinateConverter,
@@ -13,8 +12,7 @@ import {
   ToolProps,
   useCanvasEvent,
 } from '@thrashplay/canvas-with-tools'
-import { calculateDistance } from '@thrashplay/gemstone-engine'
-import { Actor, CharacterId, getActors, Point, SceneEvents } from '@thrashplay/gemstone-model'
+import { Actor, calculateDistance, CharacterId, getActors, Point } from '@thrashplay/gemstone-model'
 
 export type SetTarget = ToolEvent<'set-target', CharacterId | undefined>
 

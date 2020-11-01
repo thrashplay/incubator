@@ -1,6 +1,12 @@
-import { ActorStatus, CharacterId, FrameEvents, getCurrentSpeed } from '@thrashplay/gemstone-model'
+import {
+  ActorStatus,
+  calculateDistance,
+  CharacterId,
+  FrameEvents,
+  getCurrentSpeed,
+  getNewPosition,
+} from '@thrashplay/gemstone-model'
 
-import { calculateDistance, getNewPosition } from '../../movement'
 import { GameState } from '../../state'
 import { SimulationContext } from '../types'
 

@@ -1,4 +1,4 @@
-import { Point } from '@thrashplay/gemstone-model'
+import { Point } from './common'
 
 // the maximimum distance from a point to consider having 'arrived' for movement purposes
 const MAX_ARRIVAL_DELTA = 1

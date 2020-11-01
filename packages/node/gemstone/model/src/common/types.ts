@@ -7,6 +7,8 @@ export interface Point {
   y: number
 }
 
+export const ORIGIN = { x: 0, y: 0 }
+
 export const isValidPoint = (point: any): point is Point => {
   const { x, y } = point ?? {}
   return isFinite(x) && isFinite(y)

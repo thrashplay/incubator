@@ -1,32 +1,33 @@
 import { Point } from '../../common'
 import {
+  ActionFixtures,
   CharacterFixtures,
   createStateWithDependencies,
   FrameFixtures,
-  ActionFixtures,
   RulesStateFixtures,
   SceneStateFixtures,
 } from '../__fixtures__'
-import { ActorStatus, ActionType } from '../frame'
+import { ActionType, ActorStatus } from '../frame'
 import { EMPTY_SCENE, SceneStateContainer } from '../state'
 
 import {
+  getAction,
   getActiveMovementMode,
   getActorStatuses,
-  getAction,
   getPosition,
   getStatus,
 } from '.'
-import { getCurrentSpeed } from './actor-status'
+import { getCurrentSpeed, getReachableTargets } from './actor-status'
 
 const { Gimli } = CharacterFixtures
 const { TypicalActions } = FrameFixtures
 const { BefriendingElves, Burninating } = ActionFixtures
 const { Minimal } = RulesStateFixtures
-const { IdleBeforeTypicalActions, WithGimliRunning } = SceneStateFixtures
+const { IdleBeforeTypicalActions, WithGimliAndTreestumpInMelee, WithGimliRunning } = SceneStateFixtures
 
 const defaultState: SceneStateContainer = createStateWithDependencies(IdleBeforeTypicalActions)
 const withGimliRunning: SceneStateContainer = createStateWithDependencies(WithGimliRunning)
+const withMelee = createStateWithDependencies(WithGimliAndTreestumpInMelee)
 
 // this is an impossible state, but can be used to test what happens if 'frames' is somehow empty
 const emptyState: SceneStateContainer = createStateWithDependencies({
@@ -88,24 +89,25 @@ describe('scene selectors - Actor Status', () => {
   })
 
   describe('getPosition', () => {
-    it('returns undefined if scene state is missing', () => {
+    const origin = { x: 0, y: 0 }
+    it('returns origin if scene state is missing', () => {
       const result = getPosition(invalidState, { characterId: 'gimli' })
-      expect(result).toBeUndefined()
+      expect(result).toEqual(origin)
     })
 
-    it('returns undefined if scene has no frames', () => {
+    it('returns origin if scene has no frames', () => {
       const result = getPosition(emptyState, { characterId: 'gimli' })
-      expect(result).toBeUndefined()
+      expect(result).toEqual(origin)
     })
 
-    it('returns undefined if character ID is not specified', () => {
+    it('returns origin if character ID is not specified', () => {
       const result = getPosition(defaultState, {})
-      expect(result).toBeUndefined()
+      expect(result).toEqual(origin)
     })
 
-    it('returns undefined if character ID is invalid', () => {
+    it('returns origin if character ID is invalid', () => {
       const result = getPosition(defaultState, { characterId: 'invalid-id' })
-      expect(result).toBeUndefined()
+      expect(result).toEqual(origin)
     })
 
     it.each<[string, Point]>([
@@ -175,6 +177,30 @@ describe('scene selectors - Actor Status', () => {
       const multiplier = Minimal.movement.modes.run.multiplier
       const expectedResult = Gimli.speed * multiplier
       expect(result).toBe(expectedResult)
+    })
+  })
+
+  describe('getReachableTargets', () => {
+    it('does not include self', () => {
+      const result = getReachableTargets(withMelee, { characterId: 'gimli' })
+      expect(result).not.toContainEqual(expect.objectContaining({
+        id: 'gimli',
+      }))
+    })
+
+    it('does not include out of range targets', () => {
+      const result = getReachableTargets(withMelee, { characterId: 'gimli' })
+      expect(result).not.toContainEqual(expect.objectContaining({
+        id: 'trogdor',
+      }))
+    })
+
+    it('includes correct results', () => {
+      const result = getReachableTargets(withMelee, { characterId: 'gimli' })
+      expect(result).toHaveLength(1)
+      expect(result).toContainEqual(expect.objectContaining({
+        id: 'treestump',
+      }))
     })
   })
 })

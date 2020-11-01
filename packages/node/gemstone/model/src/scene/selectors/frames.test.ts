@@ -10,12 +10,12 @@ import { EMPTY_SCENE, SceneState, SceneStateContainer } from '../state'
 import {
   getCurrentFrame,
   getCurrentFrameNumber,
-  getRequestedFrameNumber,
+  getFrameNumber,
   isValidFrameTag,
 } from '.'
 
-const { AllIdle, Empty, TypicalIntentions } = FrameFixtures
-const { Default, FiveIdleFrames, IdleBeforeTypicalIntentions, SingleTypicalFrame, SingleIdleFrame } = SceneStateFixtures
+const { AllIdle, Empty, TypicalActions } = FrameFixtures
+const { Default, FiveIdleFrames, IdleBeforeTypicalActions, SingleTypicalFrame, SingleIdleFrame } = SceneStateFixtures
 
 // this is an impossible state, but can be used to test what happens if 'frames' is somehow empty
 const emptyState: SceneStateContainer = createStateWithDependencies({
@@ -47,7 +47,7 @@ describe('scene selectors - frames', () => {
     it.each<[string, SceneState, number]>([
       ['Default', Default, 0],
       ['SingleTypicalFrame', SingleTypicalFrame, 0],
-      ['IdleBeforeTypicalIntentions', IdleBeforeTypicalIntentions, 1],
+      ['IdleBeforeTypicalActions', IdleBeforeTypicalActions, 1],
       ['FiveIdleFrames', FiveIdleFrames, 4],
     ])('returns index of last frame: %p', (_name, state, expectedResult) => {
       const result = getCurrentFrameNumber(createStateWithDependencies(state))
@@ -71,26 +71,26 @@ describe('scene selectors - frames', () => {
     })
   })
 
-  describe('getRequestedFrameNumber', () => {
+  describe('getFrameNumber', () => {
     const inputState = createStateWithTaggedFrame('testTag', 2)
 
     it('returns tagged frame if it exists', () => {
-      const result = getRequestedFrameNumber(inputState, { frameTag: 'testTag' })
+      const result = getFrameNumber(inputState, { frameTag: 'testTag' })
       expect(result).toBe(2)
     })
 
     it('returns current frame fallback if frame tag does not exist and fallback = true', () => {
-      const result = getRequestedFrameNumber(inputState, { fallback: true, frameTag: 'invalid-tag' })
+      const result = getFrameNumber(inputState, { fallback: true, frameTag: 'invalid-tag' })
       expect(result).toBe(4)
     })
 
     it('returns undefined if frame tag does not exist and fallback = false', () => {
-      const result = getRequestedFrameNumber(inputState, { fallback: false, frameTag: 'invalid-tag' })
+      const result = getFrameNumber(inputState, { fallback: false, frameTag: 'invalid-tag' })
       expect(result).toBeUndefined()
     })
 
     it('returns currentFrame if no frameTag param', () => {
-      const result = getRequestedFrameNumber(inputState)
+      const result = getFrameNumber(inputState)
       expect(result).toBe(4)
     })
   })
@@ -108,7 +108,7 @@ describe('scene selectors - frames', () => {
 
     it.each<[string, SceneState, Frame]>([
       ['SingleIdleFrame', SingleIdleFrame, AllIdle],
-      ['IdleBeforeTypicalIntentions', IdleBeforeTypicalIntentions, TypicalIntentions],
+      ['IdleBeforeTypicalActions', IdleBeforeTypicalActions, TypicalActions],
     ])('returns correct frame for: %p', (_fixture, state, expectedFrame) => {
       const result = getCurrentFrame(createStateWithDependencies(state))
       expect(result).toStrictEqual(expectedFrame)

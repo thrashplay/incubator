@@ -1,7 +1,7 @@
 import {
   getTime,
   isKeyFrame,
-  SceneActions,
+  SceneEvents,
 } from '@thrashplay/gemstone-model'
 
 import { GameState } from '../state'
@@ -28,7 +28,7 @@ export const run = (maxTime = 60) => (state: GameState) => {
 
   const currentTime = getTime(state)
   return [
-    SceneActions.frameCommitted(),
+    SceneEvents.frameCommitted(),
     calculateNextSegment,
     simulateUntilKeyFrame(currentTime + maxTime),
   ]

@@ -1,7 +1,7 @@
 import { ActionType, createAction } from 'typesafe-actions'
 
-export const CommonActions = {
+export const CommonEvents = {
   initialized: createAction('common/initialized')(),
 }
 
-export type CommonAction = ActionType<typeof CommonActions>
+export type CommonEvent = ActionType<typeof CommonEvents>

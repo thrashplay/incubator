@@ -11,9 +11,9 @@ import {
   XY,
 } from '@thrashplay/canvas-with-tools'
 
-export type SetMoveIntention = ToolEvent<'set-move-intention', XY>
+export type SetMoveAction = ToolEvent<'set-move-action', XY>
 
-export const SetMoveIntentionTool = ({ ...props }: ToolProps<SetMoveIntention | PanAndZoom, unknown>) => {
+export const SetMoveActionTool = ({ ...props }: ToolProps<SetMoveAction | PanAndZoom, unknown>) => {
   const { extents, onToolEvent, viewport } = props
 
   const handleTap = (coordinates: TapEvent) => {
@@ -21,7 +21,7 @@ export const SetMoveIntentionTool = ({ ...props }: ToolProps<SetMoveIntention | 
     const worldCoordinates = convertCoordinates.toWorld(coordinates)
 
     onToolEvent({
-      type: 'set-move-intention',
+      type: 'set-move-action',
       payload: worldCoordinates,
     })
   }

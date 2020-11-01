@@ -14,18 +14,18 @@ import { castArray, isFunction, reduce } from 'lodash/fp'
  */
 export type Command<
   TState extends unknown = any,
-  TAction extends unknown = any
-> = (state: TState) => TAction | Command<TState, TAction> | (TAction | Command<TState, TAction>)[]
+  TEvent extends unknown = any
+> = (state: TState) => TEvent | Command<TState, TEvent> | (TEvent | Command<TState, TEvent>)[]
 
 export type CommandResult<
   TState extends unknown = any,
-  TAction extends unknown = any
-> = ReturnType<Command<TState, TAction>>
+  TEvent extends unknown = any
+> = ReturnType<Command<TState, TEvent>>
 
 export type Dispatchable<
   TState extends unknown = any,
-  TAction extends unknown = any
-> = TAction | Command<TState, TAction>
+  TEvent extends unknown = any
+> = TEvent | Command<TState, TEvent>
 
 /**
  * Dispatches an action or command, causing the corresponding state changes.
@@ -33,8 +33,8 @@ export type Dispatchable<
  */
 export type Dispatch<
   TState extends unknown = any,
-  TAction extends unknown = any
-> = (message: Dispatchable<TState, TAction>) => void
+  TEvent extends unknown = any
+> = (message: Dispatchable<TState, TEvent>) => void
 
 /**
  * Dispatches an action or executes a command, causing the corresponding state changes.
@@ -43,15 +43,15 @@ export type Dispatch<
  */
 export type Apply<
   TState extends unknown = any,
-  TAction extends unknown = any
-> = (message: Dispatchable<TState, TAction>) => TState
+  TEvent extends unknown = any
+> = (message: Dispatchable<TState, TEvent>) => TState
 
 export interface Store<
   TState extends unknown = any,
-  TAction extends unknown = any
+  TEvent extends unknown = any
 > {
-  apply: Apply<TState, TAction>
-  dispatch: Dispatch<TState, TAction>
+  apply: Apply<TState, TEvent>
+  dispatch: Dispatch<TState, TEvent>
   getState: () => TState
 }
 
@@ -62,30 +62,30 @@ export interface Store<
  *   - dispatch: a write-only function for dispatching actions
  *   - getState: function to retrieve the current state of the store
  */
-export const createStore = <TState extends unknown = any, TAction extends unknown = any>(
-  reducer: (state: TState, action: TAction) => TState,
+export const createStore = <TState extends unknown = any, TEvent extends unknown = any>(
+  reducer: (state: TState, event: TEvent) => TState,
   initialState: TState
-): Store<TState, TAction> => {
+): Store<TState, TEvent> => {
   let currentState = initialState
 
-  const apply: Apply<TState, TAction> = (commandOrAction: TAction | Command<TState, TAction>) => {
-    const reduceCommandResult = (_: TState, commandResult: TAction | Command<TState, TAction>): TState => {
+  const apply: Apply<TState, TEvent> = (commandOrEvent: TEvent | Command<TState, TEvent>) => {
+    const reduceCommandResult = (_: TState, commandResult: TEvent | Command<TState, TEvent>): TState => {
       return apply(commandResult)
     }
 
-    if (isFunction(commandOrAction)) {
-      const messagesFromCommand = castArray(commandOrAction(currentState))
+    if (isFunction(commandOrEvent)) {
+      const messagesFromCommand = castArray(commandOrEvent(currentState))
       currentState = reduce(reduceCommandResult)(currentState)(messagesFromCommand)
     } else {
-      currentState = reducer(currentState, commandOrAction)
+      currentState = reducer(currentState, commandOrEvent)
     }
 
     return currentState
   }
 
-  const dispatch: Dispatch<TState, TAction> = (commandOrAction: TAction | Command<TState, TAction>) => {
+  const dispatch: Dispatch<TState, TEvent> = (commandOrEvent: TEvent | Command<TState, TEvent>) => {
     // applies the state without returning, may be used for asynchronous optimizations later
-    apply(commandOrAction)
+    apply(commandOrEvent)
   }
 
   const getState = (): TState => currentState

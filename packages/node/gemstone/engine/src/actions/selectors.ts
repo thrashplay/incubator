@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect'
 
-import { calculateDistance, Intention } from '@thrashplay/gemstone-engine'
 import {
   Actor,
   CharacterId,
@@ -12,6 +11,10 @@ import {
   getPublicCharacterName,
   getState,
 } from '@thrashplay/gemstone-model'
+
+import { calculateDistance } from '../movement'
+
+import { Action } from './types'
 
 export interface SceneSelectorParameters {
   characterId?: CharacterId
@@ -59,18 +62,18 @@ export const getRangeCalculations = createSelector(
 export const getPublicActionDescription = createSelector(
   [getActor, getState, getParameters],
   (actor, state, parameters) => {
-    const getWellKnownTypeString = (actor: Actor, intention: Intention) => {
-      switch (intention.type) {
+    const getWellKnownTypeString = (actor: Actor, action: Action) => {
+      switch (action.type) {
         case 'follow':
-          return `following ${getPublicCharacterName(state, { ...parameters, characterId: intention.data })}`
+          return `following ${getPublicCharacterName(state, { ...parameters, characterId: action.data })}`
 
         case 'melee': {
           const rangeCalculations = getRangeCalculations(state, {
             characterId: actor.id,
-            targetId: intention.data.target,
+            targetId: action.data.target,
           })
 
-          const targetName = getPublicCharacterName(state, { ...parameters, characterId: intention.data.target })
+          const targetName = getPublicCharacterName(state, { ...parameters, characterId: action.data.target })
 
           return rangeCalculations.isInRange
             ? `attacking ${targetName}`
@@ -78,7 +81,7 @@ export const getPublicActionDescription = createSelector(
         }
 
         case 'move': {
-          const remainingDistance = calculateDistance(actor.status.position, intention.data)
+          const remainingDistance = calculateDistance(actor.status.position, action.data)
           const distance =
           remainingDistance < 20 ? 'a few feet'
             : remainingDistance < 150 ? 'a short distance'
@@ -88,13 +91,13 @@ export const getPublicActionDescription = createSelector(
         }
 
         default:
-          return intention.type
+          return action.type
       }
     }
 
-    const intention = actor?.status.intention
-    return intention === undefined || actor === undefined
+    const action = actor?.status.action
+    return action === undefined || actor === undefined
       ? 'being mysterious' // should never happen
-      : getWellKnownTypeString(actor, intention as Intention)
+      : getWellKnownTypeString(actor, action as Action)
   }
 )

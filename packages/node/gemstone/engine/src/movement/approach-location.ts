@@ -44,20 +44,3 @@ export const approachLocation = (
     ? doApproach(position, destination)
     : error('[approachLocation] Invalid input - position:', position, 'destination:', destination)
 }
-
-/**
- * Move the actor with the given characterId as fast as possible on an intercept course with the actor
- * that has the given targetId, but keep the given minimum distance between them while approaching.
- *
- * See 'approachLocation' for information on the arguments to this function.
- **/
-export const intercept = (
-  characterId: CharacterId,
-  targetId: CharacterId,
-  options?: Partial<MovementOptions>
-) => (state: GameState) => {
-  const targetPosition = getPosition(state, { characterId: targetId })
-  return isValidPoint(targetPosition)
-    ? [approachLocation(characterId, targetPosition, options)]
-    : error('[intercept] Invalid input - targetPosition:', targetPosition)
-}

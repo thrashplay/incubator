@@ -1,17 +1,17 @@
 import { keys } from 'lodash/fp'
 
-import { FrameFixtures, IntentionFixtures } from '../__fixtures__'
+import { ActionFixtures, FrameFixtures } from '../__fixtures__'
 
-import { FrameActions } from './actions'
+import { FrameEvents } from './events'
 import { frameReducer } from './frame-reducer'
 
-const { Grumbling } = IntentionFixtures
-const { Empty, TypicalIntentions } = FrameFixtures
+const { Grumbling } = ActionFixtures
+const { Empty, TypicalActions } = FrameFixtures
 
 describe('frameReducer', () => {
-  describe('FrameActions.characterAdded', () => {
+  describe('FrameEvents.characterAdded', () => {
     it('adds actor if not already present', () => {
-      const result = frameReducer(Empty, FrameActions.actorAdded('gimli'))
+      const result = frameReducer(Empty, FrameEvents.actorAdded('gimli'))
 
       const ids = keys(result.actors)
       expect(ids).toHaveLength(1)
@@ -19,7 +19,7 @@ describe('frameReducer', () => {
     })
 
     it('does NOT add actor if already present', () => {
-      const result = frameReducer(TypicalIntentions, FrameActions.actorAdded('gimli'))
+      const result = frameReducer(TypicalActions, FrameEvents.actorAdded('gimli'))
 
       const ids = keys(result.actors)
       expect(ids).toHaveLength(2)
@@ -30,7 +30,7 @@ describe('frameReducer', () => {
     it.todo('does NOT add actor if character ID is invalid')
 
     describe('initial actor status', () => {
-      const result = frameReducer(Empty, FrameActions.actorAdded('gimli'))
+      const result = frameReducer(Empty, FrameEvents.actorAdded('gimli'))
       const status = result.actors.gimli
 
       it('is created in current frame', () => {
@@ -46,43 +46,43 @@ describe('frameReducer', () => {
         expect(status.position.y).toBe(0)
       })
 
-      it('has idle intention', () => {
-        expect(status.intention).toMatchObject({
+      it('has idle action', () => {
+        expect(status.action).toMatchObject({
           type: 'idle',
         })
       })
     })
   })
 
-  describe('FrameActions.intentionDeclared', () => {
+  describe('FrameEvents.actionDeclared', () => {
     it('does nothing if the character is not present', () => {
-      const result = frameReducer(TypicalIntentions, FrameActions.intentionDeclared({
+      const result = frameReducer(TypicalActions, FrameEvents.actionDeclared({
         characterId: 'invalid-id',
-        intention: Grumbling,
+        action: Grumbling,
       }))
 
-      expect(result).toStrictEqual(TypicalIntentions)
+      expect(result).toStrictEqual(TypicalActions)
     })
 
-    it('sets the character intention', () => {
-      const result = frameReducer(TypicalIntentions, FrameActions.intentionDeclared({
+    it('sets the character action', () => {
+      const result = frameReducer(TypicalActions, FrameEvents.actionDeclared({
         characterId: 'trogdor',
-        intention: Grumbling,
+        action: Grumbling,
       }))
 
       const status = result.actors.trogdor
-      expect(status.intention).toStrictEqual(Grumbling)
+      expect(status.action).toStrictEqual(Grumbling)
     })
   })
 
-  describe('FrameActions.keyFrameMarked', () => {
+  describe('FrameEvents.keyFrameMarked', () => {
     it('sets the key frame flag', () => {
-      const result = frameReducer(TypicalIntentions, FrameActions.keyFrameMarked())
+      const result = frameReducer(TypicalActions, FrameEvents.keyFrameMarked())
       expect(result.keyFrame).toBe(true)
     })
   })
 
-  describe('FrameActions.moved', () => {
+  describe('FrameEvents.moved', () => {
     it.each<[string, any]>([
       ['undefined', undefined],
       ['x is undefined', { x: undefined, y: 10 }],
@@ -94,23 +94,23 @@ describe('frameReducer', () => {
       ['y is Infinity', { x: 10, y: Infinity }],
       ['y is -Infinity', { x: 10, y: -Infinity }],
     ])('does nothing if coordinates are invalid: %p', (_name, badPosition) => {
-      expect(frameReducer(TypicalIntentions, FrameActions.moved({
+      expect(frameReducer(TypicalActions, FrameEvents.moved({
         characterId: 'trogdor',
         position: badPosition as any,
-      }))).toBe(TypicalIntentions)
+      }))).toBe(TypicalActions)
     })
 
     it('does nothing if the character is not present', () => {
-      const result = frameReducer(TypicalIntentions, FrameActions.moved({
+      const result = frameReducer(TypicalActions, FrameEvents.moved({
         characterId: 'invalid-id',
         position: { x: 47, y: 111 },
       }))
 
-      expect(result).toStrictEqual(TypicalIntentions)
+      expect(result).toStrictEqual(TypicalActions)
     })
 
     it('sets the character position', () => {
-      const result = frameReducer(TypicalIntentions, FrameActions.moved({
+      const result = frameReducer(TypicalActions, FrameEvents.moved({
         characterId: 'trogdor',
         position: { x: 47, y: 111 },
       }))
@@ -122,18 +122,18 @@ describe('frameReducer', () => {
     })
   })
 
-  describe('FrameActions.movementModeChanged', () => {
+  describe('FrameEvents.movementModeChanged', () => {
     it('does nothing if the character is not present', () => {
-      const result = frameReducer(TypicalIntentions, FrameActions.movementModeChanged({
+      const result = frameReducer(TypicalActions, FrameEvents.movementModeChanged({
         characterId: 'invalid-id',
         mode: 'run',
       }))
 
-      expect(result).toStrictEqual(TypicalIntentions)
+      expect(result).toStrictEqual(TypicalActions)
     })
 
     it('sets the character movement mode', () => {
-      const result = frameReducer(TypicalIntentions, FrameActions.movementModeChanged({
+      const result = frameReducer(TypicalActions, FrameEvents.movementModeChanged({
         characterId: 'trogdor',
         mode: 'run',
       }))
@@ -143,16 +143,16 @@ describe('frameReducer', () => {
     })
   })
 
-  describe('FrameActions.timeOffsetChanged', () => {
+  describe('FrameEvents.timeOffsetChanged', () => {
     it('does nothing if new value is negative', () => {
-      const result = frameReducer(TypicalIntentions, FrameActions.timeOffsetChanged(-1))
-      expect(result).toStrictEqual(TypicalIntentions)
+      const result = frameReducer(TypicalActions, FrameEvents.timeOffsetChanged(-1))
+      expect(result).toStrictEqual(TypicalActions)
     })
 
     it('sets time to new value', () => {
-      const result = frameReducer(TypicalIntentions, FrameActions.timeOffsetChanged(101))
+      const result = frameReducer(TypicalActions, FrameEvents.timeOffsetChanged(101))
       expect(result).toStrictEqual({
-        ...TypicalIntentions,
+        ...TypicalActions,
         timeOffset: 101,
       })
     })

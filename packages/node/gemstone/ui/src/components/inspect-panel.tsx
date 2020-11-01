@@ -6,7 +6,7 @@ import { Button } from 'react-native-paper'
 import {
   Actor,
   CharacterId,
-  FrameActions,
+  FrameEvents,
   getActiveMovementMode,
   getActor,
   getMovementModes,
@@ -37,7 +37,7 @@ export const InspectPanel = ({
 
   const renderControls = (actor: Actor) => {
     const handleMovementModeSelection = (id: MovementModeId) => () => {
-      dispatch(FrameActions.movementModeChanged({ characterId: actorId!, mode: id }))
+      dispatch(FrameEvents.movementModeChanged({ characterId: actorId!, mode: id }))
     }
 
     const createMovementModeButton = ({ id, name }: MovementMode) => {

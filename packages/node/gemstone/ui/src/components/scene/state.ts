@@ -3,9 +3,9 @@ import { isNil } from 'lodash'
 
 import { calculateScale, Dimensions, Extents, PanAndZoom } from '@thrashplay/canvas-with-tools'
 
-import { SetMoveIntention } from './tools/set-move-intention-tool'
+import { SetMoveAction } from './tools/set-move-action-tool'
 
-export type ToolName = 'set-move-intention'
+export type ToolName = 'set-move-action'
 export interface MapViewState {
   extents: Extents
   selectedToolName: ToolName
@@ -13,7 +13,7 @@ export interface MapViewState {
 }
 
 export const INITIAL_STATE: Omit<MapViewState, 'extents'> = {
-  selectedToolName: 'set-move-intention',
+  selectedToolName: 'set-move-action',
 }
 
 export interface Action<TType extends string = string, TPayload extends any = any> {
@@ -25,7 +25,7 @@ export type MapViewAction =
   Action<'select-tool', ToolName>
   | Action<'set-viewport', Dimensions>
   | PanAndZoom
-  | SetMoveIntention
+  | SetMoveAction
 
 // calculates new extents whenever the viewport changes
 // current implementation is to ??
@@ -52,25 +52,25 @@ const adjustExtents = (extents: Extents, oldViewport: Dimensions | undefined, ne
   }
 }
 
-export const reducer = (state: MapViewState, action: MapViewAction): MapViewState => {
-  switch (action.type) {
+export const reducer = (state: MapViewState, event: MapViewAction): MapViewState => {
+  switch (event.type) {
     case 'canvas/pan-and-zoom':
       return {
         ...state,
-        extents: action.payload.extents,
+        extents: event.payload.extents,
       }
 
     case 'select-tool':
       return {
         ...state,
-        selectedToolName: action.payload,
+        selectedToolName: event.payload,
       }
 
     case 'set-viewport': {
       return {
         ...state,
-        extents: adjustExtents(state.extents, state.viewport, action.payload),
-        viewport: action.payload,
+        extents: adjustExtents(state.extents, state.viewport, event.payload),
+        viewport: event.payload,
       }
     }
 

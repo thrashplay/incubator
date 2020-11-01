@@ -1,33 +1,33 @@
 import { pickBy } from 'lodash/fp'
 import { getType } from 'typesafe-actions'
 
-import { CommonAction, CommonActions } from '../common'
+import { CommonEvent, CommonEvents } from '../common'
 
-import { CharacterAction, CharacterActions } from './actions'
+import { CharacterEvent, CharacterEvents } from './events'
 import { CharacterState } from './state'
 
 export const reduceCharacterState = (
-  state: CharacterState, action: CharacterAction | CommonAction
+  state: CharacterState, event: CharacterEvent | CommonEvent
 ): CharacterState => {
-  switch (action.type) {
-    case getType(CommonActions.initialized):
+  switch (event.type) {
+    case getType(CommonEvents.initialized):
       return {
         pcs: {},
       }
 
-    case getType(CharacterActions.characterCreated):
+    case getType(CharacterEvents.characterCreated):
       return {
         ...state,
         pcs: {
           ...state.pcs,
-          [action.payload.id]: action.payload,
+          [event.payload.id]: event.payload,
         },
       }
 
-    case getType(CharacterActions.characterRemoved):
+    case getType(CharacterEvents.characterRemoved):
       return {
         ...state,
-        pcs: pickBy((_: any, key: string) => key !== action.payload)(state.pcs),
+        pcs: pickBy((_: any, key: string) => key !== event.payload)(state.pcs),
       }
 
     default:

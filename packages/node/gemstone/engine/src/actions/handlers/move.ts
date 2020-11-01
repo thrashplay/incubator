@@ -1,3 +1,4 @@
+
 import { ActorStatus, Point } from '@thrashplay/gemstone-model'
 
 import { MovementCommands } from '../../movement'
@@ -6,7 +7,7 @@ import { Command } from '../../store'
 import { beginIdling } from '../commands'
 import { SimulationContext } from '../types'
 
-/** handles the outcome of a move intention, once time has advanced to the endSegment */
+/** handles the outcome of a move action, once time has advanced to the endSegment */
 export const move = (
   { id }: ActorStatus,
   _context: SimulationContext<GameState>,

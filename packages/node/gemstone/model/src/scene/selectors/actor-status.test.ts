@@ -3,33 +3,34 @@ import {
   CharacterFixtures,
   createStateWithDependencies,
   FrameFixtures,
-  IntentionFixtures,
+  ActionFixtures,
   RulesStateFixtures,
   SceneStateFixtures,
 } from '../__fixtures__'
-import { ActorStatus, IntentionType } from '../frame'
-import { SceneStateContainer } from '../state'
+import { ActorStatus, ActionType } from '../frame'
+import { EMPTY_SCENE, SceneStateContainer } from '../state'
 
 import {
   getActiveMovementMode,
   getActorStatuses,
-  getIntention,
+  getAction,
   getPosition,
   getStatus,
 } from '.'
 import { getCurrentSpeed } from './actor-status'
 
 const { Gimli } = CharacterFixtures
-const { TypicalIntentions } = FrameFixtures
-const { BefriendingElves, Burninating } = IntentionFixtures
+const { TypicalActions } = FrameFixtures
+const { BefriendingElves, Burninating } = ActionFixtures
 const { Minimal } = RulesStateFixtures
-const { IdleBeforeTypicalIntentions, WithGimliRunning } = SceneStateFixtures
+const { IdleBeforeTypicalActions, WithGimliRunning } = SceneStateFixtures
 
-const defaultState: SceneStateContainer = createStateWithDependencies(IdleBeforeTypicalIntentions)
+const defaultState: SceneStateContainer = createStateWithDependencies(IdleBeforeTypicalActions)
 const withGimliRunning: SceneStateContainer = createStateWithDependencies(WithGimliRunning)
 
 // this is an impossible state, but can be used to test what happens if 'frames' is somehow empty
 const emptyState: SceneStateContainer = createStateWithDependencies({
+  ...EMPTY_SCENE,
   characters: [],
   frames: [],
 })
@@ -49,10 +50,10 @@ describe('scene selectors - Actor Status', () => {
     })
 
     it('returns correct status objects from last frame', () => {
-      const result = getActorStatuses(createStateWithDependencies(IdleBeforeTypicalIntentions))
+      const result = getActorStatuses(createStateWithDependencies(IdleBeforeTypicalActions))
       expect(result).toHaveLength(2)
-      expect(result).toContain(TypicalIntentions.actors.gimli)
-      expect(result).toContain(TypicalIntentions.actors.trogdor)
+      expect(result).toContain(TypicalActions.actors.gimli)
+      expect(result).toContain(TypicalActions.actors.trogdor)
     })
   })
 
@@ -78,8 +79,8 @@ describe('scene selectors - Actor Status', () => {
     })
 
     it.each<[string, ActorStatus]>([
-      ['gimli', TypicalIntentions.actors.gimli],
-      ['trogdor', TypicalIntentions.actors.trogdor],
+      ['gimli', TypicalActions.actors.gimli],
+      ['trogdor', TypicalActions.actors.trogdor],
     ])('returns correct data: %p', (characterId, expectedStatus) => {
       const result = getStatus(defaultState, { characterId })
       expect(result).toStrictEqual(expectedStatus)
@@ -116,33 +117,33 @@ describe('scene selectors - Actor Status', () => {
     })
   })
 
-  describe('getIntention', () => {
+  describe('getAction', () => {
     it('returns undefined if scene state is missing', () => {
-      const result = getIntention(invalidState, { characterId: 'gimli' })
+      const result = getAction(invalidState, { characterId: 'gimli' })
       expect(result).toBeUndefined()
     })
 
     it('returns undefined if scene has no frames', () => {
-      const result = getIntention(emptyState, { characterId: 'gimli' })
+      const result = getAction(emptyState, { characterId: 'gimli' })
       expect(result).toBeUndefined()
     })
 
     it('returns undefined if character ID is not specified', () => {
-      const result = getIntention(defaultState, {})
+      const result = getAction(defaultState, {})
       expect(result).toBeUndefined()
     })
 
     it('returns undefined if character ID is invalid', () => {
-      const result = getIntention(defaultState, { characterId: 'invalid-id' })
+      const result = getAction(defaultState, { characterId: 'invalid-id' })
       expect(result).toBeUndefined()
     })
 
-    it.each<[string, IntentionType]>([
+    it.each<[string, ActionType]>([
       ['gimli', BefriendingElves],
       ['trogdor', Burninating],
-    ])('returns correct data: %p', (characterId, expectedIntention) => {
-      const result = getIntention(defaultState, { characterId })
-      expect(result).toStrictEqual(expectedIntention)
+    ])('returns correct data: %p', (characterId, expectedAction) => {
+      const result = getAction(defaultState, { characterId })
+      expect(result).toStrictEqual(expectedAction)
     })
   })
 

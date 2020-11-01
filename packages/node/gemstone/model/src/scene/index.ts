@@ -1,4 +1,4 @@
-export * from './actions'
+export * from './events'
 export * from './frame'
 export * from './reducer'
 export * from './selectors'

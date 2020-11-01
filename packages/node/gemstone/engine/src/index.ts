@@ -1,5 +1,5 @@
-export * from './action'
-export * from './intentions'
+export * from './actions'
+export * from './events'
 export * from './movement'
 export * from './reducer'
 export * from './scene'

@@ -9,7 +9,7 @@ export const EMPTY_FRAME: Frame = {
   timeOffset: 0,
 }
 
-export interface IntentionType<TType extends string = string, TData extends any = any> {
+export interface ActionType<TType extends string = string, TData extends any = any> {
   type: TType
   data?: TData
 }
@@ -18,8 +18,8 @@ export interface IntentionType<TType extends string = string, TData extends any 
 export interface ActorStatus {
   id: CharacterId
 
-  /** the actor's current intention (that is, selected game action) */
-  intention: IntentionType
+  /** the actor's current action (that is, selected game action) */
+  action: ActionType
 
   /** the type of movement currently used by this actor, or the rule system default if undefined */
   movementMode?: MovementModeId

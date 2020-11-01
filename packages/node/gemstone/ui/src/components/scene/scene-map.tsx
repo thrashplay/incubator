@@ -12,7 +12,7 @@ import { AvatarAnimation, AvatarAnimationProps } from './avatar-animation'
 import { AvatarProps, DefaultAvatar } from './default-avatar'
 import { Grid } from './grid'
 import { INITIAL_STATE, MapViewAction, reducer } from './state'
-import { SetMoveIntentionTool } from './tools/set-move-intention-tool'
+import { SetMoveActionTool } from './tools/set-move-action-tool'
 
 const DEFAULT_EXTENTS = {
   height: 500,
@@ -21,7 +21,7 @@ const DEFAULT_EXTENTS = {
   y: 0,
 }
 
-export type SetMoveIntentionHandler = (x: number, y: number) => void
+export type SetMoveActionHandler = (x: number, y: number) => void
 
 export interface SceneMapProps extends WithFrameQuery, WithViewStyles<'style'> {
   /** list of actors in the scene */
@@ -30,8 +30,8 @@ export interface SceneMapProps extends WithFrameQuery, WithViewStyles<'style'> {
   /** extents for the map view, defaults to [0, 0]-[1000, 1000] */
   extents?: Extents
 
-  /** handler called when the user attempts to set a move intention */
-  onSetMoveIntention?: SetMoveIntentionHandler
+  /** handler called when the user attempts to set a move action */
+  onSetMoveAction?: SetMoveActionHandler
 
   /** render function used to create Avatar elements */
   renderAvatar?: (props: AvatarProps) => React.ReactNode
@@ -46,7 +46,7 @@ export interface SceneMapProps extends WithFrameQuery, WithViewStyles<'style'> {
 export const SceneMap = ({
   actors = [],
   extents: initialExtents = DEFAULT_EXTENTS,
-  onSetMoveIntention = noop,
+  onSetMoveAction = noop,
   renderAvatar = DefaultAvatar,
   selectedActor,
   style,
@@ -62,15 +62,15 @@ export const SceneMap = ({
 
   const handleToolEvent = useCallback((event: MapViewAction) => {
     switch (event.type) {
-      case 'set-move-intention':
-        onSetMoveIntention(event.payload.x, event.payload.y)
+      case 'set-move-action':
+        onSetMoveAction(event.payload.x, event.payload.y)
         break
 
       default:
         // all other events are local to our view, so we just update our state
         dispatch(event)
     }
-  }, [onSetMoveIntention])
+  }, [onSetMoveAction])
 
   const handleViewportChange = useCallback((viewport: Dimensions) => {
     dispatch({
@@ -85,7 +85,7 @@ export const SceneMap = ({
       extents={extents}
       onToolEvent={handleToolEvent}
       onViewportChange={handleViewportChange}
-      selectedTool={SetMoveIntentionTool}
+      selectedTool={SetMoveActionTool}
       style={{ flex: 1 }}
     >
       {MapContent}

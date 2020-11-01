@@ -4,7 +4,7 @@ import { CharacterId } from '../character'
 
 import { Frame } from './frame/state'
 
-export const SceneActions = {
+export const SceneEvents = {
   /** character added to the scene */
   characterAdded: createAction('scene/character-added')<CharacterId>(),
 
@@ -30,4 +30,4 @@ export const SceneActions = {
   truncated: createAction('scene/truncated')<number>(),
 }
 
-export type SceneAction = ActionType<typeof SceneActions>
+export type SceneEvent = ActionType<typeof SceneEvents>

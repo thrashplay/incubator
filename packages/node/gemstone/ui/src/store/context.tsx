@@ -1,17 +1,17 @@
 import { noop } from 'lodash/fp'
 import React, { PropsWithChildren, useCallback, useRef, useState } from 'react'
 
-import { Action, createStore, Dispatch, GameState, reducer } from '@thrashplay/gemstone-engine'
+import { createStore, Dispatch, Event, GameState, reducer } from '@thrashplay/gemstone-engine'
 import {
-  CommonActions,
+  CommonEvents,
 } from '@thrashplay/gemstone-model'
 
 export type StoreContextType = {
-  dispatch: Dispatch<GameState, Action>
+  dispatch: Dispatch<GameState, Event>
   getState: () => GameState
 }
 
-const initialState = reducer({} as any, CommonActions.initialized())
+const initialState = reducer({} as any, CommonEvents.initialized())
 
 export const StoreContext = React.createContext<StoreContextType>({
   dispatch: noop,

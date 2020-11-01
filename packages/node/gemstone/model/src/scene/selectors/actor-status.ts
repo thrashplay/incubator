@@ -24,13 +24,13 @@ export const getStatus = createSelector(
 /** gets the position in the current frame for the actor withs the specified ID */
 export const getPosition = createSelector(
   [getStatus],
-  (status) => status?.position ?? undefined
+  (status) => status?.position ?? { x: 0, y: 0 }
 )
 
 /** gets the action in the current frame for the actor withs the specified ID */
 export const getAction = createSelector(
   [getStatus],
-  (status) => status?.action ?? undefined
+  (status) => status?.action
 )
 
 /** returns the movement mode currently active for an actor */
@@ -46,6 +46,11 @@ export const getActiveMovementMode = createSelector(
 export const getCurrentSpeed = createSelector(
   [getBaseSpeed, getActiveMovementMode],
   (speed, mode) => mode === undefined ? speed : speed * mode.multiplier
+)
+
+export const getTarget = createSelector(
+  [getStatus],
+  (status) => status?.target
 )
 
 // export const getNextPosition = createSelector(

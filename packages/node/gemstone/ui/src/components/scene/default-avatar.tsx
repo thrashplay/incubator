@@ -4,7 +4,7 @@ import { Animated } from 'react-native'
 import { Circle, CircleProps, G, LineProps, Text, TextProps } from 'react-native-svg'
 
 import { getMaxDistance } from '@thrashplay/gemstone-engine'
-import { Actor, getActor, getCurrentSpeed } from '@thrashplay/gemstone-model'
+import { Actor, getActor, getCurrentSpeed, getPosition, getTarget } from '@thrashplay/gemstone-model'
 
 import { useFrameQuery } from '../../frame-context'
 import { useValue } from '../../store'
@@ -57,6 +57,12 @@ const SOLID_LINE = {
 const DASHED_LINE = {
   stroke: 'gray',
   strokeDasharray: [1, 1],
+  strokeOpacity: 0.5,
+  strokeWidth: 0.5,
+}
+const SPARSE_DASHED_LINE = {
+  stroke: 'black',
+  strokeDasharray: [1, 3],
   strokeOpacity: 0.5,
   strokeWidth: 0.5,
 }
@@ -124,6 +130,25 @@ const RenderAction = ({
   }
 }
 
+const RenderTarget = ({
+  actor,
+  selected,
+}: AvatarProps) => {
+  const frameQuery = useFrameQuery()
+
+  const position = useValue(getPosition, { ...frameQuery, characterId: actor.id })
+  const target = useValue(getTarget, { ...frameQuery, characterId: actor.id })
+  const targetLocation = useValue(getPosition, { ...frameQuery, characterId: target })
+
+  return target === undefined ? null : (
+    <SegmentedVector
+      destination={targetLocation}
+      segmentStyles={[SPARSE_DASHED_LINE]}
+      start={position}
+    />
+  )
+}
+
 export const DefaultAvatar = (props: AvatarProps) => {
   const {
     actor,
@@ -155,6 +180,7 @@ export const DefaultAvatar = (props: AvatarProps) => {
         />
       </AnimatedG>
       {!isAnimating && <RenderAction {...props} />}
+      {!isAnimating && <RenderTarget {...props} />}
     </G>
   )
 }

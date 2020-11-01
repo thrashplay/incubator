@@ -16,9 +16,8 @@ export interface GridProps {
 
 const StyledGridLine = (props: any) => <Line
   stroke="gray"
-  strokeDasharray={[1, 2]}
-  strokeOpacity={0.5}
-  strokeWidth={0.5}
+  strokeOpacity={0.15}
+  strokeWidth={0.25}
   {...props}
 />
 

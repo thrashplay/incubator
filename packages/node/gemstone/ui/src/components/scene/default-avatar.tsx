@@ -8,7 +8,6 @@ import {
   calculateDistance,
   getActor,
   getCurrentSpeed,
-  getMaxDistance,
   getPosition,
   getReach,
   getSize,
@@ -26,6 +25,7 @@ export interface AvatarProps {
   actor: Actor
   animatedX: Animated.Value
   animatedY: Animated.Value
+  highlighted: boolean
   isAnimating: boolean
   selected: boolean
   x: number
@@ -39,31 +39,6 @@ const getTextProps = (selected: boolean): TextProps => selected
   : {
     fontSize: 8,
   }
-
-const getLineProps = (selected: boolean): LineProps => selected
-  ? {
-    strokeWidth: 0,
-    // strokeOpacity: 0.5,
-    // stroke: 'red',
-  }
-  : {
-    strokeWidth: 0,
-  }
-
-const getFillProps = (selected: boolean): CircleProps => selected
-  ? {
-    fillOpacity: 0.25,
-    fill: 'red',
-  }
-  : {
-    fillOpacity: 0.25,
-    fill: 'gray',
-  }
-
-const getCircleProps = (selected: boolean): CircleProps => ({
-  ...getFillProps(selected),
-  ...getLineProps(selected),
-})
 
 const getProjectionCircleProps = (selected: boolean): CircleProps => selected
   ? {
@@ -167,25 +142,6 @@ const RenderAction = ({
       )
     }
 
-    case 'follow':
-      return selected
-        ? (
-          <SegmentedVector
-            breakpoints={map(feetToPixels)([reach, getMaxDistance(speed, 3)])}
-            destination={target?.status.position}
-            segmentStyles={map(setColor(selected))([NO_LINE, SOLID_LINE, DASHED_LINE])}
-            start={position}
-          />
-        )
-        : (
-          <SegmentedVector
-            breakpoints={map(feetToPixels)([reach, getMaxDistance(speed, 3)])}
-            destination={target?.status.position}
-            segmentStyles={map(setColor(selected))([NO_LINE, SOLID_LINE, NO_LINE])}
-            start={position}
-          />
-        )
-
     default:
       return null
   }
@@ -217,6 +173,7 @@ export const DefaultAvatar = (props: AvatarProps) => {
     actor,
     animatedX,
     animatedY,
+    highlighted,
     isAnimating,
     selected,
   } = props
@@ -224,26 +181,34 @@ export const DefaultAvatar = (props: AvatarProps) => {
   const reach = useValue(getReach, { ...frameQuery, characterId: actor.id })
   const size = useValue(getSize, { ...frameQuery, characterId: actor.id })
 
+  const getStyles = (type: string) => {
+    const specialStyles = selected
+      ? SelectedStyles
+      : highlighted ? HighlightedStyles : {}
+
+    return {
+      ...(get(type)(DefaultStyles) ?? {}),
+      ...(get(type)(specialStyles) ?? {}),
+    }
+  }
+
   return (
     <G key={actor.id}>
       <AnimatedG
         x={animatedX}
         y={animatedY}
       >
-        {selected && (
-          <Circle
-            cx={0}
-            cy={0}
-            r={feetToPixels(reach)}
-            {...getCircleProps(selected)}
-          />
-        )}
+        <Circle
+          cx={0}
+          cy={0}
+          r={feetToPixels(reach)}
+          {...getStyles('reachCircle')}
+        />
         <Circle
           cx={0}
           cy={0}
           r={feetToPixels(size)}
-          fillOpacity={0.25}
-          fill="black"
+          {...getStyles('bodyCircle')}
         />
         <Text
           fontSize={8}
@@ -262,3 +227,32 @@ export const DefaultAvatar = (props: AvatarProps) => {
 }
 
 const AnimatedG = Animated.createAnimatedComponent(G)
+
+const DefaultStyles: { [k in string]?: CircleProps } = {
+  bodyCircle: {
+    fillOpacity: 0.25,
+    fill: 'black',
+    strokeWidth: 0,
+  },
+  reachCircle: {
+    strokeWidth: 0,
+    fillOpacity: 0.25,
+    fill: 'gray',
+  },
+}
+
+const HighlightedStyles: { [k in string]?: CircleProps } = {
+  bodyCircle: {
+    fill: 'yellow',
+    fillOpacity: 0.8,
+    strokeWidth: 0.5,
+    stroke: 'gray',
+  },
+}
+
+const SelectedStyles: { [k in string]?: CircleProps } = {
+  reachCircle: {
+    fillOpacity: 0.25,
+    fill: 'red',
+  },
+}

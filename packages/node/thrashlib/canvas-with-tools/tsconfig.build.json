@@ -8,5 +8,8 @@
     "src/**/__fixtures__/**"
   ],
   "references": [
+    {
+      "path": "../geometry/tsconfig.build.json"
+    }
   ]
 }

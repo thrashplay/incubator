@@ -13,7 +13,9 @@ import {
   TapGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler'
 
-import { Dimensions, DragEvent, Extents, TapEvent, XY, ZoomEvent } from './types'
+import { Dimensions, Extents, XY } from '@thrashplay/geometry'
+
+import { DragEvent, TapEvent, ZoomEvent } from './canvas-events'
 
 export interface ToolGestureHandlerProps {
   extents: Extents

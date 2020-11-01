@@ -5,7 +5,7 @@ import React, { useCallback } from 'react'
 
 import {
   CoordinateConverter,
-  PanAndZoom,
+  PanAndZoomEvent,
   PanAndZoomTool,
   TapEvent,
   ToolEvent,
@@ -14,10 +14,14 @@ import {
 } from '@thrashplay/canvas-with-tools'
 import { Actor, calculateDistance, CharacterId, getActors, Point } from '@thrashplay/gemstone-model'
 
-export type SetTarget = ToolEvent<'set-target', CharacterId | undefined>
+import { SceneMapData } from '../scene-map'
 
-export const SetTargetTool = ({ ...props }: ToolProps<SetTarget | PanAndZoom, unknown>) => {
-  const { extents, onToolEvent, viewport } = props
+export type SetTargetEvent = ToolEvent<'set-target', CharacterId | undefined>
+
+export const SetTargbetTool = (
+  { ...props }: ToolProps<SetTargetEvent | PanAndZoomEvent, SceneMapData>
+) => {
+  const { extents, toolEventDispatch, viewport } = props
 
   const frameQuery = useFrameQuery()
   const actors = useValue(getActors, frameQuery)
@@ -43,7 +47,7 @@ export const SetTargetTool = ({ ...props }: ToolProps<SetTarget | PanAndZoom, un
     const convertCoordinates = new CoordinateConverter(extents, viewport)
     const worldCoordinates = convertCoordinates.toWorld(coordinates)
 
-    onToolEvent({
+    toolEventDispatch({
       type: 'set-target',
       payload: pickTarget(worldCoordinates),
     })

@@ -67,8 +67,6 @@ export const SegmentedVector = ({
     // since we use the tail, the index is one less than in our source array
     const start = breakpointLocations[index]
 
-    console.log('s', start, end)
-
     return (
       <Line
         {...getSegmentStyle(index)}

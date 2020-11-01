@@ -145,10 +145,10 @@ export const MapView = ({
       <Canvas
         data={mapData}
         extents={extents}
-        onToolEvent={handleToolEvent}
         onViewportChange={handleViewportChange}
         style={style}
         selectedTool={ActiveTool}
+        toolEventDispatch={handleToolEvent}
       >
         {hexGridCanvasRenderer}
       </Canvas>

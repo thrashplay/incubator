@@ -21,11 +21,10 @@ import {
   MovementModeId,
   SelectorParameters,
 } from '@thrashplay/gemstone-model'
+import { WithViewStyles } from '@thrashplay/react-helpers'
 
 import { useFrameQuery } from '../frame-context'
 import { useDispatch, useValue } from '../store'
-
-import { WithViewStyles } from './prop-types'
 
 export interface InspectPanelProps extends WithViewStyles<'style'> {
   /** the ID of the character to control */

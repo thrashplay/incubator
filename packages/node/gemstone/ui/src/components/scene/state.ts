@@ -1,20 +1,26 @@
 
 import { isNil } from 'lodash'
 
-import { calculateScale, Dimensions, Extents, PanAndZoom } from '@thrashplay/canvas-with-tools'
+import { calculateScale, PanAndZoomEvent, ToolEvent } from '@thrashplay/canvas-with-tools'
+import { CharacterId } from '@thrashplay/gemstone-model'
+import { Dimensions, Extents } from '@thrashplay/geometry'
 
-import { Move } from './tools/move-tool'
-import { SetTarget } from './tools/set-target-tool'
+import { MoveEvent } from './tools/move'
+import { SetTargetEvent } from './tools/set-target'
 
-export type ToolName = 'move' | 'set-target'
+export type SetHighlightsEvent = ToolEvent<'set-highlights', { [k in string]?: boolean }>
+
+export type ToolName = 'attack' | 'move' | 'set-target' | 'zoom-and-pan'
 export interface MapViewState {
   extents: Extents
-  selectedToolName: ToolName
+  highlights: { [k in string]?: boolean }
+  selectedToolId: string
   viewport?: Dimensions
 }
 
 export const INITIAL_STATE: Omit<MapViewState, 'extents'> = {
-  selectedToolName: 'move',
+  highlights: {},
+  selectedToolId: 'pan-and-zoom',
 }
 
 export interface Action<TType extends string = string, TPayload extends any = any> {
@@ -23,11 +29,12 @@ export interface Action<TType extends string = string, TPayload extends any = an
 }
 
 export type MapViewAction =
-  Action<'select-tool', ToolName>
+  Action<'select-tool', string>
   | Action<'set-viewport', Dimensions>
-  | PanAndZoom
-  | Move
-  | SetTarget
+  | PanAndZoomEvent
+  | MoveEvent
+  | SetHighlightsEvent
+  | SetTargetEvent
 
 // calculates new extents whenever the viewport changes
 // current implementation is to ??
@@ -65,7 +72,13 @@ export const reducer = (state: MapViewState, event: MapViewAction): MapViewState
     case 'select-tool':
       return {
         ...state,
-        selectedToolName: event.payload,
+        selectedToolId: event.payload,
+      }
+
+    case 'set-highlights':
+      return {
+        ...state,
+        highlights: event.payload,
       }
 
     case 'set-viewport': {

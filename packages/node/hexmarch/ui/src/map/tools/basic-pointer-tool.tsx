@@ -1,4 +1,3 @@
-
 import React from 'react'
 
 import {
@@ -17,13 +16,13 @@ export type SelectTile = ToolEvent<'select-tile', AxialCoordinates>
 
 export const BasicPointerTool = ({ data, ...props }: ToolProps<SelectTile | PanAndZoom, MapData>) => {
   const { layout } = data
-  const { extents, onToolEvent, viewport } = props
+  const { extents, toolEventDispatch, viewport } = props
 
   const handleTap = (coordinates: TapEvent) => {
     const convertCoordinates = new CoordinateConverter(extents, viewport)
     const worldCoordinates = convertCoordinates.toWorld(coordinates)
 
-    onToolEvent({
+    toolEventDispatch({
       type: 'select-tile',
       payload: layout.pixelToHex(worldCoordinates),
     })

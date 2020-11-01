@@ -3,7 +3,6 @@
   "compilerOptions": {
     "declaration": true,
     "declarationDir": "lib",
-    "jsx": "react-native",
     "lib": ["DOM"],
     "outDir": "lib",
     "rootDir": "src"
@@ -17,5 +16,8 @@
     "src/**/*.tsx"
   ],
   "references": [
+    {
+      "path": "../geometry/tsconfig.json"
+    }
   ]
 }

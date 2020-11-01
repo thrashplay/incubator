@@ -6,7 +6,7 @@ import { App } from '@thrashplay/gemstone-ui'
 
 const iconFontStyles = `@font-face {
   font-family: MaterialCommunityIcons;
-  src: url(${materialIconsFont}) format('truetype');
+  src: url('dist/${materialIconsFont}') format('truetype');
 }`
 
 // Create stylesheet

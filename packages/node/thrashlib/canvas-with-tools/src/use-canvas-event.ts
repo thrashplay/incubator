@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react'
 
 import { CanvasEventContext } from './canvas'
-import { CanvasEvents } from './types'
+import { CanvasEvents } from './canvas-events'
 
 export const useCanvasEvent = <
   TEvent extends keyof CanvasEvents

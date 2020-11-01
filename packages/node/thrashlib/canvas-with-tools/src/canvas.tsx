@@ -3,25 +3,20 @@ import { isNil, noop } from 'lodash'
 import React, { ReactElement, useCallback, useRef, useState } from 'react'
 import { LayoutChangeEvent, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 
+import { Dimensions, Extents } from '@thrashplay/geometry'
+
+import { CanvasEventEmitter, DragEvent, TapEvent, ZoomEvent } from './canvas-events'
+import { ContentViewProps } from './content-view-props'
+import { ToolProps } from './tool-component'
+import { ToolEvent } from './tool-events'
 import { ToolGestureHandler } from './tool-gesture-handler'
-import {
-  CanvasEventEmitter,
-  ContentViewProps,
-  Dimensions,
-  DragEvent,
-  Extents,
-  TapEvent,
-  ToolEvent,
-  ToolProps,
-  ZoomEvent,
-} from './types'
 
 export type CanvasProps<
   TData extends any,
   TToolEvent extends ToolEvent
 > =
   TData extends undefined ? unknown : { data: TData } &
-  Partial<Pick<ToolProps<TToolEvent, TData>, 'onToolEvent'>> & {
+  Partial<Pick<ToolProps<TToolEvent, TData>, 'toolEventDispatch'>> & {
     children: React.ComponentType<ContentViewProps<TData>>
     extents: Extents
     onViewportChange?: (viewport: Dimensions) => void
@@ -38,15 +33,13 @@ export const Canvas = <
   children,
   data,
   extents,
-  onToolEvent = noop,
+  toolEventDispatch = noop,
   onViewportChange = noop,
   selectedTool,
   style,
 }: CanvasProps<TData, TToolEvent>) => {
   const ChildContent = children
   const ActiveTool = selectedTool
-
-  // console.log('newC', extents)
 
   const eventEmitter = useRef(new EventEmitter() as CanvasEventEmitter)
 
@@ -101,10 +94,9 @@ export const Canvas = <
               viewport={viewport}
             />
             <ActiveTool
-              canvasEvents={eventEmitter.current}
               data={data}
               extents={extents}
-              onToolEvent={onToolEvent}
+              toolEventDispatch={toolEventDispatch}
               viewport={viewport}
             />
           </CanvasEventContext.Provider>

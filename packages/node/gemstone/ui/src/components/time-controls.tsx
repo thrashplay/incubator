@@ -6,11 +6,10 @@ import { Button } from 'react-native-paper'
 
 import { SimulationCommands } from '@thrashplay/gemstone-engine'
 import { getCurrentFrameNumber, getFrameNumber, getSegmentDuration, getTime } from '@thrashplay/gemstone-model'
+import { WithViewStyles } from '@thrashplay/react-helpers'
 
 import { useFrameQuery } from '../frame-context'
 import { useDispatch, useValue } from '../store'
-
-import { WithViewStyles } from './prop-types'
 
 export interface TimeControlsProps extends WithViewStyles<'style'> {
   /** callback notified when a new frame is selected */

@@ -1,22 +1,16 @@
 import { toLower } from 'lodash'
-import { filter, flow, get, head, map, matches, reject, sortBy } from 'lodash/fp'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 
 import {
-  ActionCommands,
-  createAction,
   GameState,
   MovementCommands,
   SceneCommands,
 } from '@thrashplay/gemstone-engine'
 import {
-  Actor,
   addCharacter,
-  calculateDistance,
   Character,
   CharacterId,
-  FrameEvents,
   getActor,
   getActors,
   getTime,
@@ -82,40 +76,6 @@ export const TestScreen = () => {
     tag: 'selected',
   }))
 
-  const handleMove = useCallback((x: number, y: number) => {
-    const getTarget = (): CharacterId => {
-      const computeDistance = (actor: Actor) => ({
-        id: actor.id,
-        distance: calculateDistance(actor.status.position, { x, y }),
-      })
-
-      const closeEnoughToTarget = ({ distance }: { distance: number }) => distance < 10
-
-      return flow(
-        reject(matches({ id: selectedActorId })),
-        map(computeDistance),
-        filter(closeEnoughToTarget),
-        sortBy(get('distance')),
-        head,
-        get('id')
-      )(actors)
-    }
-
-    if (selectedActorId !== undefined) {
-      const target = getTarget()
-      return target === undefined
-        ? dispatch(ActionCommands.beginMoving(selectedActorId, x, y))
-        // : dispatch(SimulationActions.actionDeclared({
-        //   characterId: selectedActorId,
-        //   action: createAction('follow', target),
-        // }))
-        : dispatch(FrameEvents.actionDeclared({
-          characterId: selectedActorId,
-          action: createAction('melee', { target }),
-        }))
-    }
-  }, [actors, dispatch, selectedActorId])
-
   return (
     <FrameProvider frameQuery={{ fallback: true, frameTag: 'selected' }}>
       <View style={styles.container}>
@@ -134,7 +94,6 @@ export const TestScreen = () => {
           </View>
           <SceneMap
             actors={actors}
-            onMove={handleMove}
             selectedActor={selectedActor as any}
             style={styles.locationMap}
             timeOffset={selectedTime}

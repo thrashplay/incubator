@@ -12,6 +12,12 @@
       "path": "../../thrashlib/canvas-with-tools/tsconfig.build.json"
     },
     {
+      "path": "../../thrashlib/react-helpers/tsconfig.build.json"
+    },
+    {
+      "path": "../../thrashlib/tool-selector/tsconfig.build.json"
+    },
+    {
       "path": "../engine/tsconfig.build.json"
     },
     {

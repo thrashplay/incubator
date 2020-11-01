@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import { Action } from '../action'
+import { Action } from '../actions'
 import { GameState } from '../state'
 import { Command } from '../store'
 

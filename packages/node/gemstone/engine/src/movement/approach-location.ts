@@ -1,7 +1,9 @@
 import {
   CharacterId,
   getCurrentSpeed,
+  getNextPositionOnApproach,
   getPosition,
+  hasArrived,
   isValidPoint,
   Point,
 } from '@thrashplay/gemstone-model'
@@ -10,7 +12,6 @@ import { error } from '../command-error-handler'
 import { GameState } from '../state'
 
 import { moveTo } from './move-to'
-import { getNextPositionOnApproach, hasArrived } from './movement-utils'
 import { MovementOptions, withDefaultOptions } from './options'
 
 /**

@@ -1,4 +1,5 @@
-import { map } from 'lodash/fp'
+import { concat, flow } from 'lodash'
+import { get, identity, join, map } from 'lodash/fp'
 import React from 'react'
 import { StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native'
 import { Button } from 'react-native-paper'
@@ -10,8 +11,11 @@ import {
   FrameEvents,
   getActiveMovementMode,
   getActor,
+  getCurrentSpeed,
   getMovementModes,
   getPlayerCharacterName,
+  getReach,
+  getReachableTargets,
   getTarget,
   MovementMode,
   MovementModeId,
@@ -28,28 +32,38 @@ export interface InspectPanelProps extends WithViewStyles<'style'> {
   actorId?: CharacterId
 }
 
-interface AttributeRowProps extends WithViewStyles<'style'> {
+interface AttributeRowProps<TAttribute> extends WithViewStyles<'style'> {
   actorId: CharacterId
+
+  /** function used to convert the selected value into a string for display */
+  format?: (value: TAttribute) => string
   name: string
-  selector: (state: GameState, params: SelectorParameters) => any
+  selector: (state: GameState, params: SelectorParameters) => TAttribute
 }
 
-const AttributeRow = ({
+const AttributeRow = <TAttribute extends unknown = any>({
   actorId,
+  format = identity,
   name,
   selector,
   style,
-}: AttributeRowProps) => {
+}: AttributeRowProps<TAttribute>) => {
   const frameQuery = useFrameQuery()
   const value = useValue(selector, { characterId: actorId, ...frameQuery })
 
   return (
     <View style={[styles.attributeRow, style]}>
       <Text style={styles.attributeLabel}>{name}:</Text>
-      <Text style={styles.attributeValue}>{value ?? 'None'}</Text>
+      <Text style={styles.attributeValue}>{format(value)}</Text>
     </View>
   )
 }
+
+const appendDistanceUnit = (value: any) => value === undefined ? 'None' : `${value} ft`
+const getActorNames = (value: Actor[]) => flow(
+  map(get('name')),
+  join(', ')
+)(value)
 
 export const InspectPanel = ({
   actorId,
@@ -85,13 +99,13 @@ export const InspectPanel = ({
       )
     }
 
-    const createAttributeRow = (
+    const createAttributeRow = <TAttribute extends unknown = any>(
       name: string,
-      selector: AttributeRowProps['selector'],
-      rest?: Partial<AttributeRowProps>
+      selector: AttributeRowProps<TAttribute>['selector'],
+      rest?: Partial<AttributeRowProps<TAttribute>>
     ) => actorId === undefined ? null : (
       <AttributeRow
-        key="name"
+        key={name}
         actorId={actorId}
         name={name}
         selector={selector}
@@ -104,6 +118,9 @@ export const InspectPanel = ({
         <View style={styles.content}>
           {createAttributeRow('Name', getPlayerCharacterName, { style: styles.firstRow })}
           {createAttributeRow('Target', getTarget)}
+          {createAttributeRow('Speed', getCurrentSpeed, { format: appendDistanceUnit })}
+          {createAttributeRow('Reach', getReach, { format: appendDistanceUnit })}
+          {createAttributeRow('In Range', getReachableTargets, { format: getActorNames })}
           <Text>Movement Mode: {movementMode?.name ?? 'unknown'} ({movementMode?.multiplier ?? 1}x)</Text>
           <View style={styles.smallOptionRow}>
             {map(createMovementModeButton)(movementModes)}

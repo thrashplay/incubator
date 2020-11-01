@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 
 import {
   CoordinateConverter,
+  DragEvent,
   PanAndZoom,
   PanAndZoomTool,
   TapEvent,
@@ -16,6 +17,19 @@ export type Move = ToolEvent<'move', XY>
 export const MoveTool = ({ ...props }: ToolProps<Move | PanAndZoom, unknown>) => {
   const { extents, onToolEvent, viewport } = props
 
+  const handleDrag = useCallback(({
+    x,
+    y,
+  }: DragEvent) => {
+    const convertCoordinates = new CoordinateConverter(extents, viewport)
+    const worldCoordinates = convertCoordinates.toWorld({ x, y })
+
+    onToolEvent({
+      type: 'move',
+      payload: worldCoordinates,
+    })
+  }, [extents, onToolEvent, viewport])
+
   const handleTap = (coordinates: TapEvent) => {
     const convertCoordinates = new CoordinateConverter(extents, viewport)
     const worldCoordinates = convertCoordinates.toWorld(coordinates)
@@ -27,8 +41,9 @@ export const MoveTool = ({ ...props }: ToolProps<Move | PanAndZoom, unknown>) =>
   }
 
   useCanvasEvent('tap', handleTap)
+  useCanvasEvent('drag', handleDrag)
 
   return (
-    <PanAndZoomTool {...props} />
+    null
   )
 }

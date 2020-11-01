@@ -3,8 +3,17 @@ import React from 'react'
 import { Animated } from 'react-native'
 import { Circle, CircleProps, G, LineProps, Text, TextProps } from 'react-native-svg'
 
-import { getMaxDistance } from '@thrashplay/gemstone-engine'
-import { Actor, getActor, getCurrentSpeed, getPosition, getTarget } from '@thrashplay/gemstone-model'
+import {
+  Actor,
+  calculateDistance,
+  getActor,
+  getCurrentSpeed,
+  getMaxDistance,
+  getPosition,
+  getReach,
+  getSize,
+  getTarget,
+} from '@thrashplay/gemstone-model'
 
 import { useFrameQuery } from '../../frame-context'
 import { useValue } from '../../store'
@@ -25,27 +34,48 @@ export interface AvatarProps {
 
 const getTextProps = (selected: boolean): TextProps => selected
   ? {
-    fill: 'red',
-    stroke: 'red',
+    fontSize: 8,
   }
   : {
-    fill: 'black',
-    stroke: 'black',
+    fontSize: 8,
   }
 
 const getLineProps = (selected: boolean): LineProps => selected
   ? {
+    strokeWidth: 0,
+    // strokeOpacity: 0.5,
+    // stroke: 'red',
+  }
+  : {
+    strokeWidth: 0,
+  }
+
+const getFillProps = (selected: boolean): CircleProps => selected
+  ? {
+    fillOpacity: 0.25,
+    fill: 'red',
+  }
+  : {
+    fillOpacity: 0.25,
+    fill: 'gray',
+  }
+
+const getCircleProps = (selected: boolean): CircleProps => ({
+  ...getFillProps(selected),
+  ...getLineProps(selected),
+})
+
+const getProjectionCircleProps = (selected: boolean): CircleProps => selected
+  ? {
     fillOpacity: 0,
-    strokeWidth: 2,
-    stroke: 'red',
+    stroke: 'gray',
+    strokeDasharray: [1, 1],
+    strokeOpacity: 0.25,
   }
   : {
     fillOpacity: 0,
-    strokeWidth: 1,
-    stroke: 'gray',
+    strokeOpacity: 0,
   }
-
-const getCircleProps = (selected: boolean): CircleProps => getLineProps(selected)
 
 const NO_LINE = {
   strokeWidth: 0,
@@ -57,7 +87,7 @@ const SOLID_LINE = {
 const DASHED_LINE = {
   stroke: 'gray',
   strokeDasharray: [1, 1],
-  strokeOpacity: 0.5,
+  strokeOpacity: 0.25,
   strokeWidth: 0.5,
 }
 const SPARSE_DASHED_LINE = {
@@ -69,7 +99,7 @@ const SPARSE_DASHED_LINE = {
 
 const setColor = (selected: boolean) => (props: LineProps) => ({
   ...props,
-  stroke: selected ? 'red' : 'black',
+  stroke: selected ? 'black' : 'black',
 })
 
 const feetToPixels = (feet: number) => feet * PIXELS_PER_FOOT
@@ -82,35 +112,66 @@ const RenderAction = ({
 
   const { action, position } = actor.status
   const speed = useValue(getCurrentSpeed, { ...frameQuery, characterId: actor.id })
+  const reach = useValue(getReach, { ...frameQuery, characterId: actor.id })
+  const size = useValue(getSize, { ...frameQuery, characterId: actor.id })
 
   // todo this is a hack, to see something working
   const target = useValue(getActor, { characterId: get('data')(action) })
 
   switch (action.type) {
-    case 'move':
-      return selected
-        ? (
-          <SegmentedVector
-            breakpoints={map(feetToPixels)([10, getMaxDistance(speed, 3)])}
-            destination={get('data')(action)}
-            segmentStyles={map(setColor(selected))([NO_LINE, SOLID_LINE, DASHED_LINE])}
-            start={position}
-          />
-        )
-        : (
-          <SegmentedVector
-            breakpoints={map(feetToPixels)([10, getMaxDistance(speed, 3)])}
-            destination={get('data')(action)}
-            segmentStyles={map(setColor(selected))([NO_LINE, SOLID_LINE, NO_LINE])}
-            start={position}
-          />
-        )
+    case 'move': {
+      const destination = get('data')(action)
+      const totalDistance = calculateDistance(position, destination)
+
+      return (
+        <G>
+          {selected && (
+            <>
+              <Circle
+                cx={destination.x}
+                cy={destination.y}
+                r={feetToPixels(size)}
+                fillOpacity={0}
+                stroke="gray"
+                strokeWidth={0.5}
+              />
+              <Circle
+                cx={destination.x}
+                cy={destination.y}
+                r={feetToPixels(reach)}
+                fillOpacity={0}
+                stroke="gray"
+                strokeDasharray={[1, 1]}
+                strokeWidth={0.5}
+              />
+            </>
+          )}
+          {selected
+            ? (
+              <SegmentedVector
+                breakpoints={map(feetToPixels)([size, totalDistance - size])}
+                destination={destination}
+                segmentStyles={map(setColor(selected))([NO_LINE, DASHED_LINE, NO_LINE])}
+                start={position}
+              />
+            )
+            : (
+              <SegmentedVector
+                breakpoints={map(feetToPixels)([size, totalDistance - size])}
+                destination={destination}
+                segmentStyles={map(setColor(selected))([NO_LINE, NO_LINE, NO_LINE])}
+                start={position}
+              />
+            )}
+        </G>
+      )
+    }
 
     case 'follow':
       return selected
         ? (
           <SegmentedVector
-            breakpoints={map(feetToPixels)([10, getMaxDistance(speed, 3)])}
+            breakpoints={map(feetToPixels)([reach, getMaxDistance(speed, 3)])}
             destination={target?.status.position}
             segmentStyles={map(setColor(selected))([NO_LINE, SOLID_LINE, DASHED_LINE])}
             start={position}
@@ -118,7 +179,7 @@ const RenderAction = ({
         )
         : (
           <SegmentedVector
-            breakpoints={map(feetToPixels)([10, getMaxDistance(speed, 3)])}
+            breakpoints={map(feetToPixels)([reach, getMaxDistance(speed, 3)])}
             destination={target?.status.position}
             segmentStyles={map(setColor(selected))([NO_LINE, SOLID_LINE, NO_LINE])}
             start={position}
@@ -137,13 +198,15 @@ const RenderTarget = ({
   const frameQuery = useFrameQuery()
 
   const position = useValue(getPosition, { ...frameQuery, characterId: actor.id })
+  const reach = useValue(getReach, { ...frameQuery, characterId: actor.id })
   const target = useValue(getTarget, { ...frameQuery, characterId: actor.id })
   const targetLocation = useValue(getPosition, { ...frameQuery, characterId: target })
 
   return target === undefined ? null : (
     <SegmentedVector
+      breakpoints={[feetToPixels(reach)]}
       destination={targetLocation}
-      segmentStyles={[SPARSE_DASHED_LINE]}
+      segmentStyles={[NO_LINE, SPARSE_DASHED_LINE]}
       start={position}
     />
   )
@@ -157,27 +220,40 @@ export const DefaultAvatar = (props: AvatarProps) => {
     isAnimating,
     selected,
   } = props
+  const frameQuery = useFrameQuery()
+  const reach = useValue(getReach, { ...frameQuery, characterId: actor.id })
+  const size = useValue(getSize, { ...frameQuery, characterId: actor.id })
+
   return (
     <G key={actor.id}>
       <AnimatedG
         x={animatedX}
         y={animatedY}
       >
+        {selected && (
+          <Circle
+            cx={0}
+            cy={0}
+            r={feetToPixels(reach)}
+            {...getCircleProps(selected)}
+          />
+        )}
+        <Circle
+          cx={0}
+          cy={0}
+          r={feetToPixels(size)}
+          fillOpacity={0.25}
+          fill="black"
+        />
         <Text
           fontSize={8}
           textAnchor="middle"
           x={0}
-          y={3}
+          y={-size - 2}
           {...getTextProps(selected)}
         >
           {take(1)(actor.name)}
         </Text>
-        <Circle
-          cx={0}
-          cy={0}
-          r={feetToPixels(10)}
-          {...getCircleProps(selected)}
-        />
       </AnimatedG>
       {!isAnimating && <RenderAction {...props} />}
       {!isAnimating && <RenderTarget {...props} />}

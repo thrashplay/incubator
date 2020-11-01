@@ -2,6 +2,7 @@ import { createSelector } from 'reselect'
 
 import {
   Actor,
+  calculateDistance,
   CharacterId,
   createParameterSelector,
   getActor,
@@ -11,8 +12,6 @@ import {
   getPublicCharacterName,
   getState,
 } from '@thrashplay/gemstone-model'
-
-import { calculateDistance } from '../movement'
 
 import { Action } from './types'
 

@@ -5,7 +5,6 @@ import { StyleSheet, View, ViewStyle } from 'react-native'
 
 import {
   ActionCommands,
-  calculateDistance,
   createAction,
   GameState,
   MovementCommands,
@@ -14,6 +13,7 @@ import {
 import {
   Actor,
   addCharacter,
+  calculateDistance,
   Character,
   CharacterId,
   FrameEvents,
@@ -32,10 +32,11 @@ import { SceneMap } from './scene/scene-map'
 import { TimeControls } from './time-controls'
 
 const initializeTestScene = () => (_state: GameState) => {
-  const createCharacter = (name: string, speed = 90): Character => ({
+  const createCharacter = (name: string, speed = 90, stats?: Partial<Character>): Character => ({
     id: toLower(name),
     name,
     speed,
+    ...stats,
   })
 
   const createRandomPosition = () => ({
@@ -45,7 +46,7 @@ const initializeTestScene = () => (_state: GameState) => {
 
   return [
     // add the PCs
-    addCharacter(createCharacter('Dan', 60)),
+    addCharacter(createCharacter('Dan', 60, { reach: 25, size: 10 })),
     addCharacter(createCharacter('Nate', 120)),
     addCharacter(createCharacter('Seth')),
     addCharacter(createCharacter('Tom')),

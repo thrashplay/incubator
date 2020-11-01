@@ -38,7 +38,6 @@ export const frameReducer = (frame: Frame, action: FrameAction): Frame => {
           : error(action.type, 'Invalid actor ID:', action.payload.characterId)
 
     case getType(FrameActions.movementModeChanged):
-      console.log('combobreaker', action.payload.mode)
       return !has(action.payload.characterId)(frame.actors)
         ? error(action.type, 'Actor not found:', action.payload.characterId)
         : setActorStatus(action.payload.characterId, { movementMode: action.payload.mode })(frame)

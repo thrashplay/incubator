@@ -1,5 +1,4 @@
-import { isNil, size } from 'lodash'
-import { concat, contains, flow, initial, last, take, uniq } from 'lodash/fp'
+import { concat, contains, flow, initial, isNil, last, omit, omitBy, size, take, uniq } from 'lodash/fp'
 import { getType } from 'typesafe-actions'
 
 import { CharacterId } from '../character'
@@ -7,7 +6,7 @@ import { CommonAction, CommonActions, createReducerErrorHandler } from '../commo
 
 import { SceneAction, SceneActions } from './actions'
 import { EMPTY_FRAME, FrameAction, FrameActions, frameReducer } from './frame'
-import { SceneState } from './state'
+import { EMPTY_SCENE, SceneState } from './state'
 
 export const reduceSceneState = (
   state: SceneState,
@@ -36,6 +35,7 @@ export const reduceSceneState = (
     case getType(CommonActions.initialized):
     case getType(SceneActions.sceneStarted):
       return {
+        ...EMPTY_SCENE,
         characters: [],
         frames: [EMPTY_FRAME],
       }
@@ -65,13 +65,29 @@ export const reduceSceneState = (
         }],
       }
 
-    case getType(SceneActions.truncated):
-      return action.payload < 0 || action.payload >= size(state.frames)
+    case getType(SceneActions.frameTagged):
+      return action.payload.frameNumber < 0 || action.payload.frameNumber >= size(state.frames)
         ? error(action.type, 'Invalid frame:', action.payload, ', frameCount:', size(state.frames))
         : {
           ...state,
-          frames: take(action.payload + 1)(state.frames),
+          frameTags: {
+            [action.payload.tag]: action.payload.frameNumber,
+          },
         }
+
+    case getType(SceneActions.frameTagDeleted):
+      return {
+        ...state,
+        frameTags: omit(action.payload)(state.frameTags),
+      }
+
+    case getType(SceneActions.truncated):
+      return action.payload < 0 || action.payload >= size(state.frames)
+        ? error(action.type, 'Invalid frame:', action.payload, ', frameCount:', size(state.frames))
+        : flow(
+          truncateFrames(action.payload),
+          updateTagsAfterTruncation
+        )(state)
 
     default:
       // apply frame reducer to the current frame
@@ -80,6 +96,21 @@ export const reduceSceneState = (
 }
 
 // state update helpers
+
+/** truncate frames by dropping all frames after the specified one */
+const truncateFrames = (frameNumber: number) => (state: SceneState) => ({
+  ...state,
+  frames: take(frameNumber + 1)(state.frames),
+})
+
+/** clears the selected frame, if it points to a frame that we truncated */
+const updateTagsAfterTruncation = (state: SceneState) => {
+  const shouldTruncate = (value: number) => value > size(state.frames) - 1
+  return {
+    ...state,
+    frameTags: omitBy(shouldTruncate)(state.frameTags),
+  }
+}
 
 /** updates state by adding a character id to the character list */
 const addCharacter = (id: CharacterId) => (state: SceneState) => ({

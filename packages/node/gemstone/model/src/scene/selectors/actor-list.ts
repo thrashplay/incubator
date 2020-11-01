@@ -5,7 +5,7 @@ import { getPlayerCharactersCollection } from '../../character'
 import { Actor, ActorStatus } from '../frame'
 
 import { getCharacterIdParam, getScene } from './base'
-import { getSelectedFrame } from './frames'
+import { getFrame } from './frames'
 
 export const getCharacterIds = createSelector(
   [getScene],
@@ -13,7 +13,7 @@ export const getCharacterIds = createSelector(
 )
 
 export const getActorStatusCollection = createSelector(
-  [getSelectedFrame],
+  [getFrame],
   (frame) => frame?.actors ?? {}
 )
 
@@ -29,7 +29,6 @@ export const getActorCollection = createSelector(
       })
     }
 
-    console.log('making:', statuses)
     return mapValues(createActor)(statuses)
   }
 )

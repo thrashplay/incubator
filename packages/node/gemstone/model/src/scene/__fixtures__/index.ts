@@ -1,5 +1,5 @@
 import { EMPTY_FRAME, IntentionType } from '../frame'
-import { SceneState, SceneStateContainer } from '../state'
+import { EMPTY_SCENE, SceneState, SceneStateContainer } from '../state'
 
 export const CharacterFixtures = {
   Trogdor: {
@@ -126,14 +126,17 @@ export const FrameFixtures = {
 
 export const SceneStateFixtures = {
   CharactersInFirstFrame: {
+    ...EMPTY_SCENE,
     characters: ['gimli', 'trogdor'],
     frames: [FrameFixtures.Empty],
   },
   Default: {
+    ...EMPTY_SCENE,
     characters: [],
     frames: [FrameFixtures.Empty],
   },
   FiveIdleFrames: {
+    ...EMPTY_SCENE,
     characters: ['gimli', 'trogdor'],
     frames: [
       FrameFixtures.AllIdle,
@@ -144,18 +147,22 @@ export const SceneStateFixtures = {
     ],
   },
   IdleBeforeTypicalIntentions: {
+    ...EMPTY_SCENE,
     characters: ['gimli', 'trogdor'],
     frames: [FrameFixtures.AllIdle, FrameFixtures.TypicalIntentions],
   },
   SingleIdleFrame: {
+    ...EMPTY_SCENE,
     characters: ['gimli', 'trogdor'],
     frames: [FrameFixtures.AllIdle],
   },
   SingleTypicalFrame: {
+    ...EMPTY_SCENE,
     characters: ['gimli', 'trogdor'],
     frames: [FrameFixtures.TypicalIntentions],
   },
   WithGimliRunning: {
+    ...EMPTY_SCENE,
     characters: ['gimli'],
     frames: [FrameFixtures.WithGimliRunning],
   },

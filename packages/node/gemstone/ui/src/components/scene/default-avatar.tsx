@@ -4,8 +4,9 @@ import { Animated } from 'react-native'
 import { Circle, CircleProps, G, LineProps, Text, TextProps } from 'react-native-svg'
 
 import { getMaxDistance } from '@thrashplay/gemstone-engine'
-import { Actor, getActor } from '@thrashplay/gemstone-model'
+import { Actor, getActor, getCurrentSpeed } from '@thrashplay/gemstone-model'
 
+import { useFrameQuery } from '../../frame-context'
 import { useValue } from '../../store'
 
 import { SegmentedVector } from './segmented-vector'
@@ -71,8 +72,10 @@ const RenderIntention = ({
   actor,
   selected,
 }: AvatarProps) => {
+  const frameQuery = useFrameQuery()
+
   const { intention, position } = actor.status
-  const speed = actor.speed ?? 0
+  const speed = useValue(getCurrentSpeed, { ...frameQuery, characterId: actor.id })
 
   // todo this is a hack, to see something working
   const target = useValue(getActor, { characterId: get('data')(intention) })

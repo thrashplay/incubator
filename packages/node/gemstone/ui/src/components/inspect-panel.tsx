@@ -1,6 +1,6 @@
 import { map } from 'lodash/fp'
 import React from 'react'
-import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native'
+import { StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native'
 import { Button } from 'react-native-paper'
 
 import {
@@ -14,29 +14,26 @@ import {
   MovementModeId,
 } from '@thrashplay/gemstone-model'
 
+import { useFrameQuery } from '../frame-context'
 import { useDispatch, useValue } from '../store'
 
-export interface InspectProps {
+import { WithViewStyles } from './prop-types'
+
+export interface InspectPanelProps extends WithViewStyles<'style'> {
   /** the ID of the character to control */
   actorId?: CharacterId
-
-  /** the frame number to render the panel for, or the current frame by default */
-  frameNumber?: number
-
-  /** style to apply to the component container */
-  style?: StyleProp<ViewStyle>
 }
 
-export const Inspect = ({
+export const InspectPanel = ({
   actorId,
-  frameNumber,
   style,
-}: InspectProps) => {
+}: InspectPanelProps) => {
   const dispatch = useDispatch()
 
-  const actor = useValue(getActor, { characterId: actorId, frameNumber })
+  const frameQuery = useFrameQuery()
+  const actor = useValue(getActor, { ...frameQuery, characterId: actorId })
   const movementModes = useValue(getMovementModes)
-  const movementMode = useValue(getActiveMovementMode, { characterId: actorId, frameNumber })
+  const movementMode = useValue(getActiveMovementMode, { ...frameQuery, characterId: actorId })
 
   const renderControls = (actor: Actor) => {
     const handleMovementModeSelection = (id: MovementModeId) => () => {

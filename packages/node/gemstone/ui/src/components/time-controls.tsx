@@ -1,58 +1,56 @@
 import Slider from '@react-native-community/slider'
 import { noop } from 'lodash/fp'
 import React, { useCallback } from 'react'
-import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native'
+import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 import { Button } from 'react-native-paper'
 
 import { SimulationCommands } from '@thrashplay/gemstone-engine'
-import { getCurrentFrameNumber, getSegmentDuration, getTime } from '@thrashplay/gemstone-model'
+import { getCurrentFrameNumber, getFrameNumber, getSegmentDuration, getTime } from '@thrashplay/gemstone-model'
 
+import { useFrameQuery } from '../frame-context'
 import { useDispatch, useValue } from '../store'
 
-export interface TimeControlsProps {
+import { WithViewStyles } from './prop-types'
+
+export interface TimeControlsProps extends WithViewStyles<'style'> {
   /** callback notified when a new frame is selected */
   onSelectFrame?: (frameNumber: number) => void
-
-  /** the number of the frame currently selected for display */
-  selectedFrame?: number
-
-  /** style to apply to the component's container */
-  style?: StyleProp<ViewStyle>
 }
 
 export const TimeControls = ({
   onSelectFrame = noop,
-  selectedFrame = 0,
   style,
 }: TimeControlsProps) => {
   const dispatch = useDispatch()
 
+  const frameQuery = useFrameQuery()
+  const currentFrameNumber = useValue(getCurrentFrameNumber)
   const currentTime = useValue(getTime)
-  const frameNumber = useValue(getCurrentFrameNumber)
+  const selectedFrameNumber = useValue(getFrameNumber, frameQuery) ?? 0
+  const selectedTime = useValue(getTime, frameQuery)
   const segmentDuration = useValue(getSegmentDuration)
-  const selectedTime = useValue(getTime, { frameNumber: selectedFrame })
 
   const handleStepForward = useCallback(() => {
     dispatch(SimulationCommands.runSingleSegment())
-    onSelectFrame(frameNumber + 1)
-  }, [dispatch, frameNumber, onSelectFrame])
+    onSelectFrame(currentFrameNumber + 1)
+  }, [currentFrameNumber, dispatch, onSelectFrame])
 
   const handleFastForward = useCallback(() => {
     dispatch(SimulationCommands.run())
-    onSelectFrame(frameNumber + 1)
-  }, [dispatch, frameNumber, onSelectFrame])
+    onSelectFrame(currentFrameNumber + 1)
+  }, [currentFrameNumber, dispatch, onSelectFrame])
 
   const handleSelectPreviousFrame = useCallback(() => {
-    if (selectedFrame > 0) {
-      onSelectFrame(selectedFrame - 1)
+    if (selectedFrameNumber > 0) {
+      onSelectFrame(selectedFrameNumber - 1)
     }
-  }, [onSelectFrame, selectedFrame])
+  }, [onSelectFrame, selectedFrameNumber])
 
   const handleSelectNextFrame = useCallback(() => {
-    if (selectedFrame < frameNumber) {
-      onSelectFrame(selectedFrame + 1)
+    if (selectedFrameNumber < currentFrameNumber) {
+      onSelectFrame(selectedFrameNumber + 1)
     }
-  }, [frameNumber, onSelectFrame, selectedFrame])
+  }, [currentFrameNumber, onSelectFrame, selectedFrameNumber])
 
   return (
     <View style={[styles.container, style]}>

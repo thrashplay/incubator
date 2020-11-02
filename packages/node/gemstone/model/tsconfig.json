@@ -19,6 +19,9 @@
   "references": [
     {
       "path": "../../thrashlib/fp/tsconfig.json"
+    },
+    {
+      "path": "../../thrashlib/math/tsconfig.json"
     }
   ]
 }

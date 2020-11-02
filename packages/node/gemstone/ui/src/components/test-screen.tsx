@@ -14,7 +14,6 @@ import {
   getActor,
   getActors,
   getTime,
-  SceneEvents,
 } from '@thrashplay/gemstone-model'
 
 import { FrameProvider } from '../frame-context'
@@ -40,8 +39,11 @@ const initializeTestScene = () => (_state: GameState) => {
 
   return [
     // add the PCs
-    addCharacter(createCharacter('Dan', 60, { reach: 25, size: 10 })),
-    addCharacter(createCharacter('Nate', 120)),
+    addCharacter(createCharacter('Human', 90)),
+    addCharacter(createCharacter('Ogre', 60, { reach: 25, size: 10 })),
+    // addCharacter(createCharacter('Pixie', 120, { reach: 5, size: 1 })),
+    // addCharacter(createCharacter('Dan')),
+    // addCharacter(createCharacter('Nate')),
     // addCharacter(createCharacter('Seth')),
     // addCharacter(createCharacter('Tom')),
 
@@ -49,10 +51,12 @@ const initializeTestScene = () => (_state: GameState) => {
     SceneCommands.startNewScene(),
 
     // move PCs to random starting positions
-    MovementCommands.moveTo('dan', createRandomPosition()),
-    MovementCommands.moveTo('nate', createRandomPosition()),
-    MovementCommands.moveTo('seth', createRandomPosition()),
-    MovementCommands.moveTo('tom', createRandomPosition()),
+    MovementCommands.moveTo('human', createRandomPosition()),
+    MovementCommands.moveTo('ogre', createRandomPosition()),
+    MovementCommands.moveTo('pixie', createRandomPosition()),
+    // MovementCommands.moveTo('nate', createRandomPosition()),
+    // MovementCommands.moveTo('seth', createRandomPosition()),
+    // MovementCommands.moveTo('tom', createRandomPosition()),
   ]
 }
 

@@ -1,6 +1,6 @@
 import {
   CharacterId,
-  getPosition,
+  getInterceptPosition,
   isValidPoint,
 } from '@thrashplay/gemstone-model'
 
@@ -21,8 +21,9 @@ export const intercept = (
   targetId: CharacterId,
   options?: Partial<MovementOptions>
 ) => (state: GameState) => {
-  const targetPosition = getPosition(state, { characterId: targetId })
-  return isValidPoint(targetPosition)
-    ? [approachLocation(characterId, targetPosition, options)]
-    : error('[intercept] Invalid input - targetPosition:', targetPosition)
+  const interceptLocation = getInterceptPosition(state, { characterId, targetId })
+
+  return isValidPoint(interceptLocation)
+    ? [approachLocation(characterId, interceptLocation, options)]
+    : error('[intercept] Invalid input - targetPosition:', interceptLocation)
 }

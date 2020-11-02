@@ -17,7 +17,7 @@
   ],
   "references": [
     {
-      "path": "../geometry/tsconfig.json"
+      "path": "../math/tsconfig.json"
     }
   ]
 }

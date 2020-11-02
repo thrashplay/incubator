@@ -83,6 +83,10 @@ export const ActionFixtures = {
       target: 'The Peasants',
     },
   } as ActionType<'burninating', { location: string; target: string }>,
+  Moving: {
+    type: 'move',
+    data: { x: 123, y: 456 },
+  },
   Grumbling: { type: 'grumbling' },
   Idle: { type: 'idle' },
 }
@@ -150,6 +154,7 @@ export const FrameFixtures = {
       gimli: {
         ...ActorStatusFixtures.Gimli,
         movementMode: 'run',
+        action: ActionFixtures.Moving,
       },
       trogdor: ActorStatusFixtures.Trogdor,
     },

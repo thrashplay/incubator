@@ -1,7 +1,7 @@
 {
-  "name": "@thrashplay/geometry",
+  "name": "@thrashplay/math",
   "version": "0.0.1",
-  "description": "Helper types and functions for working with geometric concepts.",
+  "description": "Helper types and functions for working with mathematical concepts.",
   "bugs": "https://github.com/thrashplay/incubator-node/issues",
   "license": "MIT",
   "author": "Sean Kleinjung <sean@thrashplay.com>",

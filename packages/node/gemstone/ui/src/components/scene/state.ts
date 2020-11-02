@@ -2,8 +2,7 @@
 import { isNil } from 'lodash'
 
 import { calculateScale, PanAndZoomEvent, ToolEvent } from '@thrashplay/canvas-with-tools'
-import { CharacterId } from '@thrashplay/gemstone-model'
-import { Dimensions, Extents } from '@thrashplay/geometry'
+import { Dimensions, Extents } from '@thrashplay/math'
 
 import { MoveEvent } from './tools/move'
 import { SetTargetEvent } from './tools/set-target'

@@ -1,14 +1,17 @@
 import { filter, flow, isEmpty, matches, negate, omit, reduce, toPairs } from 'lodash/fp'
 import { createSelector } from 'reselect'
 
+import { calculateDistance, calculateIntercept } from '@thrashplay/math'
+
 import { calculateSizeFromCharacter, CharacterId } from '../../character'
 import { ORIGIN, Point } from '../../common'
-import { calculateDistance } from '../../movement-utils'
 import { Actor } from '../frame/state'
+import { SceneStateContainer } from '../state'
 
+import { getDestination } from './action-specific'
 import { getActors } from './actor-list'
-import { getPosition, getReach } from './actor-status'
-import { getCharacterIdParam, getPositionParam } from './base'
+import { getCurrentSpeed, getPosition, getReach } from './actor-status'
+import { getCharacterIdParam, getPositionParam, SceneSelectorParameters } from './base'
 
 export interface Distance {
   actorId: CharacterId
@@ -84,3 +87,26 @@ export const hasReachableTargets = createSelector(
   [getReachableTargets],
   (targets) => !isEmpty(targets)
 )
+
+/**
+ * This implementation is not memoized, but is just a stop-gap until we get a better idea
+ **/
+type GetInterceptPositionParams = { characterId: CharacterId; targetId: CharacterId} & SceneSelectorParameters
+export const getInterceptPosition = (
+  state: SceneStateContainer,
+  { targetId, ...params }: GetInterceptPositionParams
+) => {
+  const position = getPosition(state, params)
+  const speed = getCurrentSpeed(state, params)
+  const targetPosition = getPosition(state, { ...params, characterId: targetId })
+  const targetSpeed = getCurrentSpeed(state, { ...params, characterId: targetId })
+  const targetDestination = getDestination(state, { ...params, characterId: targetId })
+
+  return calculateIntercept(
+    position,
+    speed,
+    targetPosition,
+    targetDestination,
+    targetSpeed
+  )
+}

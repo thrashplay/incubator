@@ -10,6 +10,9 @@
   "references": [
     {
       "path": "../../thrashlib/fp/tsconfig.build.json"
+    },   
+    {
+      "path": "../../thrashlib/math/tsconfig.build.json"
     },
     {
       "path": "../model/tsconfig.build.json"

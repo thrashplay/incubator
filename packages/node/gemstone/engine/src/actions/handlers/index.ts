@@ -1,5 +1,5 @@
+import { attack } from '../handlers/attack'
 import { follow } from '../handlers/follow'
-import { meleeAttack } from '../handlers/melee-attack'
 import { move } from '../handlers/move'
 import { wait } from '../handlers/wait'
 
@@ -7,7 +7,7 @@ import { wait } from '../handlers/wait'
 export const ActionHandlers = {
   follow,
   idle: wait,
-  melee: meleeAttack,
+  attack,
   move,
   wait,
-}
+} as const

@@ -1,6 +1,6 @@
 import { applyToPoint, compose, inverse, Matrix, scale, translate } from 'transformation-matrix'
 
-import { Dimensions, Extents, Point } from '@thrashplay/geometry'
+import { Dimensions, Extents, Point } from '@thrashplay/math'
 
 export const calculateScale = (extents: Extents, viewport: Dimensions) => {
   const scaleX = viewport.width / extents.width

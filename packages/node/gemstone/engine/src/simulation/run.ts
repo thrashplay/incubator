@@ -22,7 +22,11 @@ export const run = (maxTime = 60) => (state: GameState) => {
       const needsToPause = keyFrame || currentTime >= forceStopAt
 
       return !needsToPause
-        ? [calculateNextSegment, simulateUntilKeyFrame(forceStopAt)]
+        ? [
+          SceneEvents.frameCommitted(),
+          calculateNextSegment,
+          simulateUntilKeyFrame(forceStopAt),
+        ]
         : []
     }
 

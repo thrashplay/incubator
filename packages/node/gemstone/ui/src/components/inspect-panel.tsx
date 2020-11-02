@@ -13,12 +13,13 @@ import {
   getActor,
   getCurrentSpeed,
   getMovementModes,
-  getPlayerCharacterName,
+  getPosition,
   getReach,
   getReachableTargets,
   getTarget,
   MovementMode,
   MovementModeId,
+  Point,
   SelectorParameters,
 } from '@thrashplay/gemstone-model'
 import { WithViewStyles } from '@thrashplay/react-helpers'
@@ -59,6 +60,8 @@ const AttributeRow = <TAttribute extends unknown = any>({
 }
 
 const appendDistanceUnit = (value: any) => value === undefined ? 'None' : `${value} ft`
+const formatMovementMode = (mode: MovementMode) => `${mode?.name ?? 'unknown'} (${mode?.multiplier ?? 1}x)`
+const formatPoint = ({ x, y }: Point) => `(${Math.round(x)}, ${Math.round(y)})`
 const getActorNames = (value: Actor[]) => flow(
   map(get('name')),
   join(', ')
@@ -115,12 +118,12 @@ export const InspectPanel = ({
     return (
       <>
         <View style={styles.content}>
-          {createAttributeRow('Name', getPlayerCharacterName, { style: styles.firstRow })}
+          {createAttributeRow('Position', getPosition, { format: formatPoint })}
           {createAttributeRow('Target', getTarget)}
           {createAttributeRow('Speed', getCurrentSpeed, { format: appendDistanceUnit })}
           {createAttributeRow('Reach', getReach, { format: appendDistanceUnit })}
           {createAttributeRow('In Range', getReachableTargets, { format: getActorNames })}
-          <Text>Movement Mode: {movementMode?.name ?? 'unknown'} ({movementMode?.multiplier ?? 1}x)</Text>
+          {createAttributeRow('Movement Mode', getActiveMovementMode, { format: formatMovementMode })}
           <View style={styles.smallOptionRow}>
             {map(createMovementModeButton)(movementModes)}
           </View>

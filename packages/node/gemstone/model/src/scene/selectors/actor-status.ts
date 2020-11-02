@@ -1,14 +1,12 @@
-import { matches } from 'lodash'
-import { filter, flow, negate, some, values } from 'lodash/fp'
+import { some, values } from 'lodash/fp'
 import { createSelector } from 'reselect'
 
-import { calculateSizeFromCharacter, getBaseReach, getBaseSize, getBaseSpeed } from '../../character'
-import { ORIGIN, Point } from '../../common'
-import { calculateDistance } from '../../movement-utils'
+import { getBaseReach, getBaseSize, getBaseSpeed } from '../../character'
+import { ORIGIN } from '../../common'
 import { getDefaultMovementMode, getMovementModesCollection } from '../../rules'
-import { Actor, ActorStatus } from '../frame/state'
+import { ActorStatus } from '../frame/state'
 
-import { getActors, getActorStatusCollection } from './actor-list'
+import { getActorStatusCollection } from './actor-list'
 import { getCharacterIdParam } from './base'
 import { getFrame } from './frames'
 
@@ -62,21 +60,6 @@ export const getReach = createSelector(
 export const getSize = createSelector(
   [getBaseSize],
   (size) => size
-)
-
-/** determines if an actor is in melee range, given an attacker's position and reach */
-const isInRange = (position: Point, reach: number) => (target: Actor) => {
-  const targetSize = calculateSizeFromCharacter(target)
-  return calculateDistance(position, target.status.position) - targetSize + 1 <= reach
-}
-
-/** retrieves a list of all actors that can be reached in melee by the specified actor */
-export const getReachableTargets = createSelector(
-  [getCharacterIdParam, getPosition, getReach, getActors],
-  (id, position, reach, actors) => flow(
-    filter(negate(matches({ id }))),
-    filter(isInRange(position, reach))
-  )(actors)
 )
 
 export const getTarget = createSelector(

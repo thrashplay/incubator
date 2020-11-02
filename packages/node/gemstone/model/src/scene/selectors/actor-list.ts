@@ -38,6 +38,12 @@ export const getActors = createSelector(
   (actors) => filter<Actor>(negate(isUndefined))(values(actors))
 )
 
+const isMoving = (actor: Actor) => actor.status.action?.type === 'move'
+export const getActorsWhoAreMoving = createSelector(
+  [getActors],
+  (actors) => filter(isMoving)(actors)
+)
+
 /** gets a hydrated actor+character object by ID */
 export const getActor = createSelector(
   [getCharacterIdParam, getActorCollection],

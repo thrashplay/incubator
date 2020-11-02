@@ -1,11 +1,11 @@
-import { concat, flatten, flow, map, values } from 'lodash/fp'
+import { flatten, flow, map, values } from 'lodash/fp'
 
 import { FrameEvents, getCurrentFrame, getSegmentDuration } from '@thrashplay/gemstone-model'
 
 import { createActionHandler } from '../actions'
 import { Event } from '../events'
 import { GameState } from '../state'
-import { Command } from '../store'
+import { Command, Dispatchable } from '../store'
 
 import { isInputRequired } from './is-input-required'
 
@@ -24,13 +24,16 @@ export const calculateNextSegment: Command<GameState, Event> = (state: GameState
     state,
   })
 
+  const finishFrame = (dispatchables: Dispatchable) => [
+    ...dispatchables,
+    FrameEvents.timeOffsetChanged(currentFrame.timeOffset + getSegmentDuration(state)),
+    checkKeyFrame,
+  ]
+
   return flow(
     values,
     map(handleAction),
     flatten,
-    concat([
-      FrameEvents.timeOffsetChanged(currentFrame.timeOffset + getSegmentDuration(state)),
-      checkKeyFrame,
-    ])
+    finishFrame
   )(currentFrame.actors)
 }

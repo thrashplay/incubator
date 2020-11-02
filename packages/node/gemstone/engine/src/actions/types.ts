@@ -18,8 +18,8 @@ export interface SimulationContext<TState extends any = any> {
 }
 
 export type Action =
-  TypeOfAction<'follow'>
-  | TypeOfAction<'idle'>
-  | TypeOfAction<'melee'>
-  | TypeOfAction<'move'>
-  | TypeOfAction<'wait'>
+| TypeOfAction<'attack'>
+| TypeOfAction<'follow'>
+| TypeOfAction<'idle'>
+| TypeOfAction<'move'>
+| TypeOfAction<'wait'>

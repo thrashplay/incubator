@@ -1,27 +1,24 @@
 import { useFrameQuery } from 'gemstone/ui/src/frame-context'
 import { useValue } from 'gemstone/ui/src/store'
 import { filter, flow, get, head, map, sortBy } from 'lodash/fp'
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 
 import {
   CoordinateConverter,
-  PanAndZoomEvent,
-  PanAndZoomTool,
   TapEvent,
   ToolEvent,
   ToolProps,
   useCanvasEvent,
 } from '@thrashplay/canvas-with-tools'
-import { Actor, calculateDistance, CharacterId, getActors, Point } from '@thrashplay/gemstone-model'
+import { Actor, CharacterId, getActors, Point } from '@thrashplay/gemstone-model'
 import { calculateDistance } from '@thrashplay/math'
 
 import { SceneMapData } from '../scene-map'
 
-export type SetTargetEvent = ToolEvent<'set-target', CharacterId | undefined>
+export type AttackEvent = ToolEvent<'attack', CharacterId | undefined>
 
-export const SetTargbetTool = (
-  { ...props }: ToolProps<SetTargetEvent | PanAndZoomEvent, SceneMapData>
-) => {
+export const AttackTool = ({ data, ...props }: ToolProps<AttackEvent, SceneMapData>) => {
+  const { selectedActor } = data
   const { extents, toolEventDispatch, viewport } = props
 
   const frameQuery = useFrameQuery()
@@ -49,7 +46,7 @@ export const SetTargbetTool = (
     const worldCoordinates = convertCoordinates.toWorld(coordinates)
 
     toolEventDispatch({
-      type: 'set-target',
+      type: 'attack',
       payload: pickTarget(worldCoordinates),
     })
   }
@@ -57,6 +54,6 @@ export const SetTargbetTool = (
   useCanvasEvent('tap', handleTap)
 
   return (
-    <PanAndZoomTool {...props} />
+    null
   )
 }

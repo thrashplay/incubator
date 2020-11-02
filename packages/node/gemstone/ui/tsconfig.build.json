@@ -12,6 +12,9 @@
       "path": "../../thrashlib/canvas-with-tools/tsconfig.build.json"
     },
     {
+      "path": "../../thrashlib/math/tsconfig.build.json"
+    },
+    {
       "path": "../../thrashlib/react-helpers/tsconfig.build.json"
     },
     {

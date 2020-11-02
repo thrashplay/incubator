@@ -9,7 +9,7 @@
   ],
   "references": [
     {
-      "path": "../geometry/tsconfig.build.json"
+      "path": "../math/tsconfig.build.json"
     }
   ]
 }

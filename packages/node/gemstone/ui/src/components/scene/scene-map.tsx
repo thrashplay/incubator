@@ -5,7 +5,7 @@ import { Svg } from 'react-native-svg'
 
 import { Canvas, ContentViewProps } from '@thrashplay/canvas-with-tools'
 import { Actor } from '@thrashplay/gemstone-model'
-import { Dimensions, Extents } from '@thrashplay/geometry'
+import { Dimensions, Extents } from '@thrashplay/math'
 import { WithViewStyles } from '@thrashplay/react-helpers'
 import { ToolSelectorButtonBar } from '@thrashplay/tool-selector'
 

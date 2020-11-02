@@ -2,7 +2,6 @@ import { createSelector } from 'reselect'
 
 import {
   Actor,
-  calculateDistance,
   CharacterId,
   createParameterSelector,
   getActor,
@@ -12,6 +11,7 @@ import {
   getPublicCharacterName,
   getState,
 } from '@thrashplay/gemstone-model'
+import { calculateDistance } from '@thrashplay/math'
 
 import { Action } from './types'
 
@@ -66,7 +66,7 @@ export const getPublicActionDescription = createSelector(
         case 'follow':
           return `following ${getPublicCharacterName(state, { ...parameters, characterId: action.data })}`
 
-        case 'melee': {
+        case 'attack': {
           const rangeCalculations = getRangeCalculations(state, {
             characterId: actor.id,
             targetId: action.data.target,

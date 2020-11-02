@@ -1,4 +1,4 @@
-import { filter, flow, forEach, get, has, isUndefined, map, negate, partition, reduce } from 'lodash/fp'
+import { filter, flow, reduce } from 'lodash/fp'
 import React, { useCallback } from 'react'
 
 import {
@@ -12,18 +12,25 @@ import {
   ZoomComponent,
 } from '@thrashplay/canvas-with-tools'
 import { createAction } from '@thrashplay/gemstone-engine'
-import { Actor, calculateDistance, CharacterId, FrameEvents, getActors, getPosition, getReach, getReachableTargets, getSize } from '@thrashplay/gemstone-model'
-import { Point } from '@thrashplay/geometry'
+import {
+  Actor,
+  CharacterId,
+  FrameEvents,
+  getActors,
+  getReach,
+  getSize,
+} from '@thrashplay/gemstone-model'
+import { calculateDistance, Point } from '@thrashplay/math'
 
 import { useFrameQuery } from '../../../frame-context'
 import { useDispatch, useSelector, useValue } from '../../../store'
 import { SceneMapData } from '../scene-map'
-import { SetHighlightEvent } from '../state'
+import { SetHighlightsEvent } from '../state'
 
 export type MoveEvent = ToolEvent<'move', Point>
 
 export const MoveTool = (
-  { data, ...props }: ToolProps<SetHighlightEvent | MoveEvent | PanAndZoomEvent, SceneMapData>
+  { data, ...props }: ToolProps<SetHighlightsEvent | MoveEvent | PanAndZoomEvent, SceneMapData>
 ) => {
   const { extents, toolEventDispatch, viewport } = props
   const { selectedActor } = data

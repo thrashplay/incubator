@@ -13,12 +13,16 @@ export interface SceneSelectorParameters {
 
   /** position to use for spatial selectors */
   position?: Point
+
+  /** ID of the 'target', used by the "target-status" selector group */
+  targetId?: CharacterId
 }
 
 export const getCharacterIdParam = createParameterSelector((params?: SceneSelectorParameters) => params?.characterId)
 export const getFallbackParam = createParameterSelector((params?: SceneSelectorParameters) => params?.fallback ?? false)
 export const getFrameTagParam = createParameterSelector((params?: SceneSelectorParameters) => params?.frameTag)
 export const getPositionParam = createParameterSelector((params?: SceneSelectorParameters) => params?.position)
+export const getTargetIdParam = createParameterSelector((params?: SceneSelectorParameters) => params?.targetId)
 
 export const getState = (state: SceneStateContainer) => state
 

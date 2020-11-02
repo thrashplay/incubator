@@ -13,7 +13,7 @@ export const FrameEvents = {
   /** actor has set an action */
   actionDeclared: createAction('frame/actor-declared-action')<{
     characterId: CharacterId
-    action: ActionType
+    action: ActionType<string, unknown>
   }>(),
 
   /** the current frame has been identified as a key frame */

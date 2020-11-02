@@ -17,17 +17,16 @@ import {
   getPosition,
   getStatus,
 } from '.'
-import { getCurrentSpeed, getReachableTargets } from './actor-status'
+import { getCurrentSpeed } from './actor-status'
 
 const { Gimli } = CharacterFixtures
 const { TypicalActions } = FrameFixtures
 const { BefriendingElves, Burninating } = ActionFixtures
 const { Minimal } = RulesStateFixtures
-const { IdleBeforeTypicalActions, WithGimliAndTreestumpInMelee, WithGimliRunning } = SceneStateFixtures
+const { IdleBeforeTypicalActions, WithGimliRunning } = SceneStateFixtures
 
 const defaultState: SceneStateContainer = createStateWithDependencies(IdleBeforeTypicalActions)
 const withGimliRunning: SceneStateContainer = createStateWithDependencies(WithGimliRunning)
-const withMelee = createStateWithDependencies(WithGimliAndTreestumpInMelee)
 
 // this is an impossible state, but can be used to test what happens if 'frames' is somehow empty
 const emptyState: SceneStateContainer = createStateWithDependencies({
@@ -177,30 +176,6 @@ describe('scene selectors - Actor Status', () => {
       const multiplier = Minimal.movement.modes.run.multiplier
       const expectedResult = Gimli.speed * multiplier
       expect(result).toBe(expectedResult)
-    })
-  })
-
-  describe('getReachableTargets', () => {
-    it('does not include self', () => {
-      const result = getReachableTargets(withMelee, { characterId: 'gimli' })
-      expect(result).not.toContainEqual(expect.objectContaining({
-        id: 'gimli',
-      }))
-    })
-
-    it('does not include out of range targets', () => {
-      const result = getReachableTargets(withMelee, { characterId: 'gimli' })
-      expect(result).not.toContainEqual(expect.objectContaining({
-        id: 'trogdor',
-      }))
-    })
-
-    it('includes correct results', () => {
-      const result = getReachableTargets(withMelee, { characterId: 'gimli' })
-      expect(result).toHaveLength(1)
-      expect(result).toContainEqual(expect.objectContaining({
-        id: 'treestump',
-      }))
     })
   })
 })

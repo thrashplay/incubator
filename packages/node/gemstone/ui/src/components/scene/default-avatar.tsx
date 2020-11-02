@@ -5,7 +5,6 @@ import { Circle, CircleProps, G, LineProps, Text, TextProps } from 'react-native
 
 import {
   Actor,
-  calculateDistance,
   getActor,
   getCurrentSpeed,
   getPosition,
@@ -13,6 +12,7 @@ import {
   getSize,
   getTarget,
 } from '@thrashplay/gemstone-model'
+import { calculateDistance } from '@thrashplay/math'
 
 import { useFrameQuery } from '../../frame-context'
 import { useValue } from '../../store'
@@ -72,9 +72,9 @@ const SPARSE_DASHED_LINE = {
   strokeWidth: 0.5,
 }
 
-const setColor = (selected: boolean) => (props: LineProps) => ({
+const setColor = (color: string) => (props: LineProps) => ({
   ...props,
-  stroke: selected ? 'black' : 'black',
+  stroke: color,
 })
 
 const feetToPixels = (feet: number) => feet * PIXELS_PER_FOOT
@@ -91,7 +91,10 @@ const RenderAction = ({
   const size = useValue(getSize, { ...frameQuery, characterId: actor.id })
 
   // todo this is a hack, to see something working
-  const target = useValue(getActor, { characterId: get('data')(action) })
+  const targetId = get('data.target')(action)
+  const target = useValue(getTarget, { ...frameQuery, characterId: targetId })
+  const targetPosition = useValue(getPosition, { ...frameQuery, characterId: targetId })
+  const targetSize = useValue(getSize, { ...frameQuery, characterId: targetId })
 
   switch (action.type) {
     case 'move': {
@@ -126,7 +129,7 @@ const RenderAction = ({
               <SegmentedVector
                 breakpoints={map(feetToPixels)([size, totalDistance - size])}
                 destination={destination}
-                segmentStyles={map(setColor(selected))([NO_LINE, DASHED_LINE, NO_LINE])}
+                segmentStyles={map(setColor('black'))([NO_LINE, DASHED_LINE, NO_LINE])}
                 start={position}
               />
             )
@@ -134,10 +137,48 @@ const RenderAction = ({
               <SegmentedVector
                 breakpoints={map(feetToPixels)([size, totalDistance - size])}
                 destination={destination}
-                segmentStyles={map(setColor(selected))([NO_LINE, NO_LINE, NO_LINE])}
+                segmentStyles={map(setColor('black'))([NO_LINE, NO_LINE, NO_LINE])}
                 start={position}
               />
             )}
+        </G>
+      )
+    }
+
+    case 'attack': {
+      const totalDistance = calculateDistance(position, targetPosition)
+
+      return (
+        <G>
+          {/* {selected && (
+            <>
+              <Circle
+                cx={destination.x}
+                cy={destination.y}
+                r={feetToPixels(size)}
+                fillOpacity={0}
+                stroke="gray"
+                strokeWidth={0.5}
+              />
+              <Circle
+                cx={destination.x}
+                cy={destination.y}
+                r={feetToPixels(reach)}
+                fillOpacity={0}
+                stroke="gray"
+                strokeDasharray={[1, 1]}
+                strokeWidth={0.5}
+              />
+            </>
+          )} */}
+          {(
+            <SegmentedVector
+              breakpoints={map(feetToPixels)([size, totalDistance - targetSize])}
+              destination={targetPosition}
+              segmentStyles={map(setColor('red'))([NO_LINE, DASHED_LINE, NO_LINE])}
+              start={position}
+            />
+          )}
         </G>
       )
     }

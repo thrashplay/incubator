@@ -1,4 +1,3 @@
-
 import { ActorStatus, CharacterId } from '@thrashplay/gemstone-model'
 
 import { GameState } from '../..//state'
@@ -11,7 +10,7 @@ export interface Attack {
 }
 
 /** handles the outcome of a melee attack action */
-export const meleeAttack = (actor: ActorStatus, { state }: SimulationContext<GameState>, attack: Attack) => {
+export const attack = (actor: ActorStatus, { state }: SimulationContext<GameState>, attack: Attack) => {
   const { isInRange, range } = getRangeCalculations(state, {
     characterId: actor.id,
     targetId: attack.target,

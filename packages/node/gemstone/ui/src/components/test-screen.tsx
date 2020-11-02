@@ -42,8 +42,8 @@ const initializeTestScene = () => (_state: GameState) => {
     // add the PCs
     addCharacter(createCharacter('Dan', 60, { reach: 25, size: 10 })),
     addCharacter(createCharacter('Nate', 120)),
-    addCharacter(createCharacter('Seth')),
-    addCharacter(createCharacter('Tom')),
+    // addCharacter(createCharacter('Seth')),
+    // addCharacter(createCharacter('Tom')),
 
     // start the scene
     SceneCommands.startNewScene(),
@@ -71,10 +71,6 @@ export const TestScreen = () => {
   const selectedActor = useValue(getActor, { characterId: selectedActorId, fallback: true, frameTag: 'selected' })
 
   const handleSelectActor = (id: CharacterId) => setSelectedActorId(id)
-  const handleSelectFrame = (frameNumber: number) => dispatch(SceneEvents.frameTagged({
-    frameNumber,
-    tag: 'selected',
-  }))
 
   return (
     <FrameProvider frameQuery={{ fallback: true, frameTag: 'selected' }}>
@@ -100,7 +96,6 @@ export const TestScreen = () => {
           />
         </View>
         <TimeControls
-          onSelectFrame={handleSelectFrame}
           style={styles.timeBar}
         />
       </View>

@@ -1,23 +1,27 @@
 import Slider from '@react-native-community/slider'
-import { noop } from 'lodash/fp'
 import React, { useCallback } from 'react'
 import { StyleSheet, Text, View, ViewStyle } from 'react-native'
-import { Button } from 'react-native-paper'
+import { IconButton } from 'react-native-paper'
 
 import { SimulationCommands } from '@thrashplay/gemstone-engine'
-import { getCurrentFrameNumber, getFrameNumber, getSegmentDuration, getTime } from '@thrashplay/gemstone-model'
+import {
+  getCurrentFrameNumber,
+  getFrameNumber,
+  getSegmentDuration,
+  getTime,
+  SceneEvents,
+} from '@thrashplay/gemstone-model'
 import { WithViewStyles } from '@thrashplay/react-helpers'
 
 import { useFrameQuery } from '../frame-context'
 import { useDispatch, useValue } from '../store'
 
-export interface TimeControlsProps extends WithViewStyles<'style'> {
-  /** callback notified when a new frame is selected */
-  onSelectFrame?: (frameNumber: number) => void
-}
+/** callback notified when a new frame is selected */
+// onSelectFrame?: (frameNumber: number) => void
+
+export type TimeControlsProps = WithViewStyles<'style'>
 
 export const TimeControls = ({
-  onSelectFrame = noop,
   style,
 }: TimeControlsProps) => {
   const dispatch = useDispatch()
@@ -29,75 +33,95 @@ export const TimeControls = ({
   const selectedTime = useValue(getTime, frameQuery)
   const segmentDuration = useValue(getSegmentDuration)
 
-  const handleStepForward = useCallback(() => {
+  const selectFrame = useCallback((frameNumber: number) => {
+    dispatch(SceneEvents.frameTagged({
+      frameNumber,
+      tag: 'selected',
+    }))
+  }, [dispatch])
+
+  const selectTime = useCallback((time: number) => {
+    selectFrame(time / segmentDuration)
+  }, [segmentDuration, selectFrame])
+
+  const jumpToPresent = useCallback(() => {
+    dispatch(SceneEvents.frameTagDeleted('selected'))
+  }, [dispatch])
+
+  const stepForward = useCallback(() => {
     dispatch(SimulationCommands.runSingleSegment())
-    onSelectFrame(currentFrameNumber + 1)
-  }, [currentFrameNumber, dispatch, onSelectFrame])
+    selectFrame(currentFrameNumber + 1)
+  }, [currentFrameNumber, dispatch, selectFrame])
 
-  const handleFastForward = useCallback(() => {
+  const fastForward = useCallback(() => {
     dispatch(SimulationCommands.run())
-    onSelectFrame(currentFrameNumber + 1)
-  }, [currentFrameNumber, dispatch, onSelectFrame])
+    jumpToPresent()
+  }, [dispatch, jumpToPresent])
 
-  const handleSelectPreviousFrame = useCallback(() => {
+  const truncate = useCallback(() => {
+    dispatch(SceneEvents.truncated(selectedFrameNumber))
+  }, [dispatch, selectedFrameNumber])
+
+  const selectPreviousFrame = useCallback(() => {
     if (selectedFrameNumber > 0) {
-      onSelectFrame(selectedFrameNumber - 1)
+      selectFrame(selectedFrameNumber - 1)
     }
-  }, [onSelectFrame, selectedFrameNumber])
+  }, [selectFrame, selectedFrameNumber])
 
-  const handleSelectNextFrame = useCallback(() => {
+  const selectNextFrame = useCallback(() => {
     if (selectedFrameNumber < currentFrameNumber) {
-      onSelectFrame(selectedFrameNumber + 1)
+      selectFrame(selectedFrameNumber + 1)
     }
-  }, [currentFrameNumber, onSelectFrame, selectedFrameNumber])
+  }, [currentFrameNumber, selectFrame, selectedFrameNumber])
 
   return (
     <View style={[styles.container, style]}>
-      <Button
-        mode="outlined"
-        onPress={handleSelectPreviousFrame}
+      <IconButton
+        icon="step-backward"
+        onPress={selectPreviousFrame}
         style={styles.button}
-      >
-          &lt;
-      </Button>
+      />
 
       <View style={styles.timeTextContainer}>
         <Text>{selectedTime}s</Text>
       </View>
 
-      <Button
-        mode="outlined"
-        onPress={handleSelectNextFrame}
+      <IconButton
+        icon="step-forward"
+        onPress={selectNextFrame}
         style={styles.button}
-      >
-          &gt;
-      </Button>
+      />
 
       <View style={styles.sliderContainer}>
         {currentTime > 0 && <Slider
           disabled={true}
           maximumValue={currentTime}
           minimumValue={0}
+          onValueChange={selectTime}
           step={segmentDuration}
           value={selectedTime}
         />}
       </View>
 
       <View style={styles.rightControls}>
-        <Button
-          mode="contained"
-          onPress={handleStepForward}
+        <IconButton
+          color="red"
+          icon="delete"
+          onPress={truncate}
           style={styles.button}
-        >
-            1
-        </Button>
-        <Button
-          mode="contained"
-          onPress={handleFastForward}
+        />
+
+        <IconButton
+          icon="play"
+          onPress={stepForward}
           style={styles.button}
-        >
-            &gt;&gt;&gt;
-        </Button>
+        />
+
+        <IconButton
+          icon="fast-forward"
+          onPress={fastForward}
+          style={styles.button}
+        />
 
         <View style={styles.timeTextContainer}>
           <Text>{currentTime}s</Text>
@@ -108,7 +132,6 @@ export const TimeControls = ({
 }
 
 const button: ViewStyle = {
-  width: 24,
   marginLeft: 4,
   marginRight: 4,
 }

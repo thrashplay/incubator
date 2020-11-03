@@ -5,8 +5,6 @@ import { Circle, CircleProps, G, LineProps, Text, TextProps } from 'react-native
 
 import {
   Actor,
-  getActor,
-  getCurrentSpeed,
   getPosition,
   getReach,
   getSize,
@@ -40,24 +38,8 @@ const getTextProps = (selected: boolean): TextProps => selected
     fontSize: 8,
   }
 
-const getProjectionCircleProps = (selected: boolean): CircleProps => selected
-  ? {
-    fillOpacity: 0,
-    stroke: 'gray',
-    strokeDasharray: [1, 1],
-    strokeOpacity: 0.25,
-  }
-  : {
-    fillOpacity: 0,
-    strokeOpacity: 0,
-  }
-
 const NO_LINE = {
   strokeWidth: 0,
-}
-const SOLID_LINE = {
-  stroke: 'black',
-  strokeWidth: 1,
 }
 const DASHED_LINE = {
   stroke: 'gray',
@@ -86,13 +68,11 @@ const RenderAction = ({
   const frameQuery = useFrameQuery()
 
   const { action, position } = actor.status
-  const speed = useValue(getCurrentSpeed, { ...frameQuery, characterId: actor.id })
   const reach = useValue(getReach, { ...frameQuery, characterId: actor.id })
   const size = useValue(getSize, { ...frameQuery, characterId: actor.id })
 
   // todo this is a hack, to see something working
   const targetId = get('data.target')(action)
-  const target = useValue(getTarget, { ...frameQuery, characterId: targetId })
   const targetPosition = useValue(getPosition, { ...frameQuery, characterId: targetId })
   const targetSize = useValue(getSize, { ...frameQuery, characterId: targetId })
 
@@ -190,7 +170,6 @@ const RenderAction = ({
 
 const RenderTarget = ({
   actor,
-  selected,
 }: AvatarProps) => {
   const frameQuery = useFrameQuery()
 

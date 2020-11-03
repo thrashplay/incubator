@@ -1,4 +1,4 @@
-import { concat, flow } from 'lodash'
+import { flow } from 'lodash'
 import { get, identity, join, map } from 'lodash/fp'
 import React from 'react'
 import { StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native'
@@ -29,7 +29,7 @@ import { useDispatch, useValue } from '../store'
 
 export interface InspectPanelProps extends WithViewStyles<'style'> {
   /** the ID of the character to control */
-  actorId?: CharacterId
+  actorId: CharacterId
 }
 
 interface AttributeRowProps<TAttribute> extends WithViewStyles<'style'> {
@@ -78,9 +78,9 @@ export const InspectPanel = ({
   const movementModes = useValue(getMovementModes)
   const movementMode = useValue(getActiveMovementMode, { ...frameQuery, characterId: actorId })
 
-  const renderControls = (actor: Actor) => {
+  const renderControls = (_: Actor) => {
     const handleMovementModeSelection = (id: MovementModeId) => () => {
-      dispatch(FrameEvents.movementModeChanged({ characterId: actorId!, mode: id }))
+      dispatch(FrameEvents.movementModeChanged({ characterId: actorId, mode: id }))
     }
 
     const createMovementModeButton = ({ id, name }: MovementMode) => {

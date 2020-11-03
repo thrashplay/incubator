@@ -17,8 +17,7 @@ import { SceneMapData } from '../scene-map'
 
 export type AttackEvent = ToolEvent<'attack', CharacterId | undefined>
 
-export const AttackTool = ({ data, ...props }: ToolProps<AttackEvent, SceneMapData>) => {
-  const { selectedActor } = data
+export const AttackTool = ({ ...props }: ToolProps<AttackEvent, SceneMapData>) => {
   const { extents, toolEventDispatch, viewport } = props
 
   const frameQuery = useFrameQuery()

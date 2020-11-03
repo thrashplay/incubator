@@ -11,6 +11,7 @@ export const reducer = (state: GameState, event: Event): GameState => {
     scene: reduceSceneState(state.scene, event as any),
   }
 
+  // eslint-disable-next-line no-console
   console.log('Event:', event, '; New State:', result)
 
   return result

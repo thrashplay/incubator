@@ -1,22 +1,18 @@
-import { MovementModeFixtures, RulesStateFixtures } from './__fixtures__'
+import { MovementModes, Rules } from '../__fixtures__'
+
+import { newRules } from './builders'
 import { getDefaultMovementMode, getDefaultMovementModeId, getMovementMode } from './selectors'
 import { MovementMode, MovementModeId, RulesStateContainer } from './state'
 
-const { Crawl, Walk, WithCane } = MovementModeFixtures
-const { Default, RiddleOfTheSphinx } = RulesStateFixtures
+const { Crawl, Walk, WithCane } = MovementModes
+const { RiddleOfTheSphinx } = Rules
 
 const state: RulesStateContainer = {
   rules: RiddleOfTheSphinx,
 }
 
 const emptyState: RulesStateContainer = {
-  rules: {
-    ...Default,
-    movement: {
-      defaultMode: '',
-      modes: {},
-    },
-  },
+  rules: newRules(),
 }
 
 const invalidState = { } as unknown as RulesStateContainer

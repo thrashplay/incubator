@@ -1,4 +1,4 @@
-import { Dictionary } from '../types'
+import { Dictionary } from '../common'
 
 export type CharacterId = string
 export interface Character {
@@ -19,7 +19,7 @@ export interface Character {
 }
 
 export interface CharacterState {
-  pcs: Dictionary<Character, CharacterId>
+  pcs: Dictionary<CharacterId, Character>
 }
 
 export interface CharacterStateContainer {

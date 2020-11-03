@@ -21,7 +21,7 @@ export type ActorStatReference = {
 }
 
 export interface SceneState {
-  actors: Dictionary<ActorStatReference, MonsterTypeId | CharacterId>
+  actors: Dictionary<MonsterTypeId | CharacterId, ActorStatReference>
 
   /** array of frames comprising this scene */
   frames: Frame[]

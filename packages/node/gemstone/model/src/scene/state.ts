@@ -1,17 +1,27 @@
 import { CharacterId, CharacterStateContainer } from '../character'
+import { MonsterTypeId } from '../monster'
 import { RulesStateContainer } from '../rules'
+import { Dictionary } from '../types'
 
 import { EMPTY_FRAME, Frame } from './frame'
 
 export const EMPTY_SCENE: SceneState = {
-  characters: [],
+  actors: {},
   frames: [EMPTY_FRAME],
   frameTags: {},
 }
 
+export type ActorType = 'pc' | 'monster'
+export type ActorStatReference = {
+  id: CharacterId
+  type: 'pc'
+} | {
+  id: MonsterTypeId
+  type: 'monster'
+}
+
 export interface SceneState {
-  /** IDs of the characters in this scene */
-  characters: CharacterId[]
+  actors: Dictionary<ActorStatReference, MonsterTypeId | CharacterId>
 
   /** array of frames comprising this scene */
   frames: Frame[]

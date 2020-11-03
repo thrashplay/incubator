@@ -26,7 +26,6 @@ const defaultState: SceneStateContainer = createStateWithDependencies(IdleBefore
 // this is an impossible state, but can be used to test what happens if 'frames' is somehow empty
 const emptyState: SceneStateContainer = createStateWithDependencies({
   ...EMPTY_SCENE,
-  characters: [],
   frames: [],
 })
 
@@ -49,6 +48,10 @@ describe('scene selectors - Actor List', () => {
       expect(result).toHaveLength(2)
       expect(result).toContain('gimli')
       expect(result).toContain('trogdor')
+    })
+
+    it('does not return monster IDs', () => {
+      expect('it is implemented').toBe(true)
     })
   })
 

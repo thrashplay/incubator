@@ -1,10 +1,10 @@
+import { Rules } from '../__fixtures__'
 import { CommonEvents } from '../common'
 
-import { RulesStateFixtures } from './__fixtures__'
 import { reduceRulesState } from './reducer'
 import { RulesState } from './state'
 
-const { Default } = RulesStateFixtures
+const { Default } = Rules
 
 describe('reduceRulesState', () => {
   describe('CommonEvents.initialized', () => {

@@ -1,3 +1,4 @@
+import { Characters, CharacterStates } from '../../__fixtures__'
 import { Point } from '../../common'
 import { ActionType, ActorStatus, EMPTY_FRAME } from '../frame'
 import { EMPTY_SCENE, SceneState, SceneStateContainer } from '../state'
@@ -9,33 +10,12 @@ export const CharacterFixtures = {
     size: 5,
     speed: 90,
   },
-  Trogdor: {
-    id: 'trogdor',
-    name: 'Trogdor, the Burninator',
-    speed: 120,
-  },
-  Gimli: {
-    id: 'gimli',
-    name: 'Gimli, son of Glóin',
-    speed: 60,
-  },
+  Trogdor: Characters.Trogdor,
+  Gimli: Characters.Gimli,
 }
 
 export const CharacterStateFixtures = {
-  Default: {
-    pcs: {},
-  },
-  GimliOnly: {
-    pcs: {
-      gimli: CharacterFixtures.Gimli,
-    },
-  },
-  GimliAndTrogdor: {
-    pcs: {
-      gimli: CharacterFixtures.Gimli,
-      trogdor: CharacterFixtures.Trogdor,
-    },
-  },
+  ...CharacterStates,
   AllThreeCharacters: {
     pcs: {
       gimli: CharacterFixtures.Gimli,

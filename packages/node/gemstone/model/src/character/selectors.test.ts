@@ -1,12 +1,13 @@
-import { CharacterFixtures, CharacterStateFixtures, stateWithCharacters } from './__fixtures__'
+import { Characters, CharacterStates } from '../__fixtures__'
+
 import { getPlayerCharacter, getPlayerCharacters } from './selectors'
 import { Character, CharacterId, CharacterStateContainer } from './state'
 
-const { Gimli, Trogdor } = CharacterFixtures
-const { Default } = CharacterStateFixtures
+const { Gimli, Trogdor } = Characters
+const { Default, WithGimliAndTrogdor } = CharacterStates
 
 const state: CharacterStateContainer = {
-  characters: stateWithCharacters(Gimli, Trogdor),
+  characters: WithGimliAndTrogdor,
 }
 
 const emptyState: CharacterStateContainer = {

@@ -2,6 +2,8 @@
 
 import { isFinite } from 'lodash/fp'
 
+export type Dictionary<K extends string | number | symbol = string, T = unknown> = Partial<Record<K, T>>
+
 export interface Point {
   x: number
   y: number

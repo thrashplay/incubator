@@ -19,7 +19,7 @@ export interface MonsterType {
 }
 
 export interface MonsterState {
-  types: Dictionary<MonsterType, MonsterTypeId>
+  types: Dictionary<MonsterTypeId, MonsterType>
 }
 
 export interface MonsterStateContainer {

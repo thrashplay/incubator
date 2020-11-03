@@ -17,7 +17,7 @@ import {
   getCharacterIds,
 } from '.'
 
-const { GimliAndTrogdor, GimliOnly } = CharacterStateFixtures
+const { WithGimli, WithGimliAndTrogdor } = CharacterStateFixtures
 const { Minimal } = RulesStateFixtures
 const { IdleBeforeTypicalActions } = SceneStateFixtures
 
@@ -87,7 +87,7 @@ describe('scene selectors - Actor List', () => {
 
   describe('getActors', () => {
     const stateWithoutTrogdor = ({
-      characters: GimliOnly,
+      characters: WithGimli,
       rules: Minimal,
       scene: IdleBeforeTypicalActions,
     })
@@ -133,7 +133,7 @@ describe('scene selectors - Actor List', () => {
 
   describe('getActor', () => {
     const stateWithoutTrogdor = ({
-      characters: GimliOnly,
+      characters: WithGimli,
       rules: Minimal,
       scene: IdleBeforeTypicalActions,
     })
@@ -160,7 +160,7 @@ describe('scene selectors - Actor List', () => {
 
     describe('status data missing', () => {
       const sceneStateMissing = ({
-        characters: GimliAndTrogdor,
+        characters: WithGimliAndTrogdor,
         rules: Minimal,
       }) as unknown as SceneStateContainer
 

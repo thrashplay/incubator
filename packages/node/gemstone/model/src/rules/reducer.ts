@@ -2,36 +2,21 @@ import { getType } from 'typesafe-actions'
 
 import { CommonEvent, CommonEvents } from '../common'
 
+import { addMovementMode, buildRules, newMovementMode, setDefaultMovementMode } from './builders'
 import { RulesEvent } from './events'
 import { RulesState } from './state'
+
+const DEFAULT_RULES = buildRules(
+  addMovementMode(newMovementMode('Cautious', 0.1)),
+  addMovementMode(newMovementMode('Hustle')),
+  addMovementMode(newMovementMode('Run', 2)),
+  setDefaultMovementMode('hustle')
+)
 
 export const reduceRulesState = (state: RulesState, event: RulesEvent | CommonEvent): RulesState => {
   switch (event.type) {
     case getType(CommonEvents.initialized):
-      return {
-        meleeRange: 10,
-        movement: {
-          defaultMode: 'hustle',
-          modes: {
-            cautious: {
-              id: 'cautious',
-              name: 'Cautious',
-              multiplier: 0.1,
-            },
-            hustle: {
-              id: 'hustle',
-              name: 'Hustle',
-              multiplier: 1,
-            },
-            run: {
-              id: 'run',
-              name: 'Run',
-              multiplier: 2,
-            },
-          },
-        },
-        segmentDuration: 5,
-      }
+      return DEFAULT_RULES
 
     default:
       return state

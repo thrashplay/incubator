@@ -1,3 +1,5 @@
+import { Dictionary } from '../types'
+
 export type CharacterId = string
 export interface Character {
   id: CharacterId
@@ -17,7 +19,7 @@ export interface Character {
 }
 
 export interface CharacterState {
-  pcs: Record<CharacterId, Character>
+  pcs: Dictionary<Character, CharacterId>
 }
 
 export interface CharacterStateContainer {

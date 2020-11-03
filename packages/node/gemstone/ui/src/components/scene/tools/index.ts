@@ -1,7 +1,6 @@
 import { PanAndZoomTool } from '@thrashplay/canvas-with-tools'
 
 import { AttackTool } from './attack'
-import { InterceptTool } from './intercept'
 import { MoveTool } from './move'
 
 export const TOOL_OPTIONS = [

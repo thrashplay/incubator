@@ -1,22 +1,22 @@
-import { RulesBuilder } from '../rules'
-import { newRules, setDefaultMovementMode } from '../rules/builders'
+import { buildRules, RuleSetBuilder } from '../rules'
 
 import { MovementModes } from './movement-modes'
 
-const { addMovementMode, buildRules, newMovementMode } = RulesBuilder
-const { Crawl, Walk, WithCane } = MovementModes
+const { addMovementMode, setDefaultMovementMode } = RuleSetBuilder
+const { Cautious, Crawl, Hustle, Run, Walk, WithCane } = MovementModes
 
 export const Rules = {
   Default: buildRules(
-    addMovementMode(newMovementMode('Cautious', 0.1)),
-    addMovementMode(newMovementMode('Hustle')),
-    addMovementMode(newMovementMode('Run', 2)),
-    setDefaultMovementMode('hustle')
+    addMovementMode(Cautious),
+    addMovementMode(Hustle),
+    addMovementMode(Run),
+    setDefaultMovementMode(Hustle.id)
   ),
-  Empty: newRules(),
+  Empty: buildRules(),
   RiddleOfTheSphinx: buildRules(
     addMovementMode(Crawl),
     addMovementMode(Walk),
+    addMovementMode(Run),
     addMovementMode(WithCane),
     setDefaultMovementMode(Walk.id)
   ),

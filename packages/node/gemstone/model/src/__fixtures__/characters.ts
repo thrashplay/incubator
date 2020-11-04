@@ -1,13 +1,22 @@
-import { CharacterBuilder } from '../character'
+import { buildCharacter, CharacterBuilder } from '../character'
 
-const { build, set } = CharacterBuilder
+const { set } = CharacterBuilder
 
 export const Characters = {
-  Gimli: build(
+  // slower than default
+  Gimli: buildCharacter(
     { id: 'gimli', name: 'Gimli, son of Glóin' },
     set({ speed: 60 })
   ),
-  Trogdor: build(
+
+  // larger than default
+  Treestump: buildCharacter(
+    { id: 'treestump', name: 'Treestump Block' },
+    set({ size: 5 })
+  ),
+
+  // faster than default
+  Trogdor: buildCharacter(
     { id: 'trogdor', name: 'Trogdor, the Burninator' },
     set({ speed: 120 })
   ),

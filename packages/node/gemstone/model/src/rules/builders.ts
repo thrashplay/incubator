@@ -1,14 +1,16 @@
-import { flow } from 'lodash'
+import { get } from 'lodash/fp'
 
+import { createBuilder } from '@thrashplay/fp'
+
+import { AtLeastOneOfIdOrName } from '../common'
 import { toId } from '../common/builder'
-import { BuilderFunction } from '../types'
 
-import { MovementMode, MovementModeId, RulesState } from './state'
+import { MovementMode, MovementModeId, RuleSet } from './state'
 
 const DEFAULT_MELEE_RANGE = 10
 const DEFAULT_SEGMENT_DURATION = 5
 
-const DEFAULT_RULES: RulesState = {
+const DEFAULT_RULES: RuleSet = {
   meleeRange: DEFAULT_MELEE_RANGE,
   movement: {
     modes: {},
@@ -16,19 +18,28 @@ const DEFAULT_RULES: RulesState = {
   segmentDuration: DEFAULT_SEGMENT_DURATION,
 } as const
 
-export const newMovementMode = (name: string, multiplier = 1, id?: string) => ({
-  id: id ?? toId(name),
+export type InitialMovementModeValues = AtLeastOneOfIdOrName & { multiplier?: number }
+
+/**
+ * Builder function for MovementMode instances
+ * At least one of name or id is required. If only one is given, we use it to derive the other.
+ */
+export const buildMovementMode = createBuilder(({
   multiplier,
-  name,
-})
+  ...initial
+}: InitialMovementModeValues): MovementMode => ({
+  id: get('id')(initial) ?? toId(get('name')(initial)),
+  multiplier: multiplier ?? 1,
+  name: get('name')(initial) ?? get('id')(initial),
+}))
 
-export const newRules = () => DEFAULT_RULES
+/** Builder function for Rules instances. */
+export const buildRules = createBuilder(() => DEFAULT_RULES)
 
-export const buildRules = (
-  ...operations: BuilderFunction<RulesState>[]
-): RulesState => flow(...operations)(newRules())
+/** Builder function for RulesStateContainer instances, useful for selector tests */
+export const forRulesSelector = createBuilder((rules: RuleSet) => ({ rules }))
 
-export const addMovementMode = (mode: MovementMode) => (rules: RulesState) => ({
+const addMovementMode = (mode: MovementMode) => (rules: RuleSet) => ({
   ...rules,
   movement: {
     ...rules.movement,
@@ -39,10 +50,20 @@ export const addMovementMode = (mode: MovementMode) => (rules: RulesState) => ({
   },
 })
 
-export const setDefaultMovementMode = (mode: MovementModeId) => (rules: RulesState) => ({
+const setDefaultMovementMode = (mode: MovementModeId) => (rules: RuleSet) => ({
   ...rules,
   movement: {
     ...rules.movement,
     defaultMode: mode,
   },
 })
+
+export const MovementModeBuilder = {
+  set: (values: Partial<MovementMode>) => (initial: MovementMode) => ({ ...initial, ...values }),
+}
+
+export const RuleSetBuilder = {
+  addMovementMode,
+  set: (values: Partial<RuleSet>) => (initial: RuleSet) => ({ ...initial, ...values }),
+  setDefaultMovementMode,
+}

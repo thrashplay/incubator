@@ -1,19 +1,15 @@
-import {
-  ActionFixtures,
-  createStateWithDependencies,
-  FrameFixtures,
-  SceneStateFixtures,
-} from '../__fixtures__'
+
+import { Actions, forSceneSelector, Frames, Scenes } from '../../__fixtures__'
 import { SceneStateContainer } from '../state'
 
 import { getDestination } from './action-specific'
 
-const { TypicalActions } = FrameFixtures
-const { Moving } = ActionFixtures
-const { IdleBeforeTypicalActions, WithGimliRunning } = SceneStateFixtures
+const { TypicalActions } = Frames
+const { Moving } = Actions
+const { IdleBeforeTypicalActions, WithGimliRunning } = Scenes
 
-const defaultState: SceneStateContainer = createStateWithDependencies(IdleBeforeTypicalActions)
-const withGimliRunnin: SceneStateContainer = createStateWithDependencies(WithGimliRunning)
+const defaultState: SceneStateContainer = forSceneSelector(IdleBeforeTypicalActions)
+const withGimliRunning: SceneStateContainer = forSceneSelector(WithGimliRunning)
 
 describe('scene selectors - action-specific', () => {
   describe('getDestination', () => {
@@ -23,7 +19,7 @@ describe('scene selectors - action-specific', () => {
     })
 
     it('returns destination from a move action', () => {
-      const result = getDestination(withGimliRunnin, { characterId: 'gimli' })
+      const result = getDestination(withGimliRunning, { characterId: 'gimli' })
       expect(result).not.toEqual(TypicalActions.actors.gimli.position)
       expect(result).toEqual(Moving.data)
     })

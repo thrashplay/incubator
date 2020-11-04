@@ -1,9 +1,29 @@
-import { RulesBuilder } from '../rules'
-
-const { newMovementMode } = RulesBuilder
+import { buildMovementMode } from '../rules'
 
 export const MovementModes = {
-  Crawl: newMovementMode('Four Legs in the Morning', 0.1, 'crawl'),
-  Walk: newMovementMode('Two Legs in the Afternoon', 1, 'walk'),
-  WithCane: newMovementMode('Three Legs in the Evening', 0.5, 'with-cane'),
+  Cautious: buildMovementMode({
+    multiplier: 0.1,
+    name: 'Cautious',
+  }),
+  Crawl: buildMovementMode({
+    id: 'crawl',
+    multiplier: 0.1,
+    name: 'Four Legs in the Morning',
+  }),
+  Hustle: buildMovementMode({
+    name: 'Hustle',
+  }),
+  Run: buildMovementMode({
+    multiplier: 2,
+    name: 'Run',
+  }),
+  Walk: buildMovementMode({
+    id: 'walk',
+    name: 'Two Legs in the Afternoon',
+  }),
+  WithCane: buildMovementMode({
+    id: 'with-cane',
+    multiplier: 0.5,
+    name: 'Three Legs in the Evening',
+  }),
 }

@@ -1,4 +1,4 @@
-import { Dictionary } from '../types'
+import { Dictionary } from '../common'
 
 export type MovementModeId = string
 
@@ -8,7 +8,7 @@ export interface MovementMode {
   multiplier: number
 }
 
-export interface RulesState {
+export interface RuleSet {
   /** distance, in feet, that is considered "in melee" */
   meleeRange: number
   movement: {
@@ -19,5 +19,5 @@ export interface RulesState {
 }
 
 export interface RulesStateContainer {
-  rules: RulesState
+  rules: RuleSet
 }

@@ -1,16 +1,16 @@
 /* eslint-disable jest/no-commented-out-tests */
 import { last, size, take } from 'lodash/fp'
 
+import { Actions, Scenes } from '../__fixtures__'
 import { CommonEvents } from '../common'
 
-import { ActionFixtures, SceneStateFixtures } from './__fixtures__'
 import { SceneEvents } from './events'
 import { EMPTY_FRAME, Frame, FrameEvent, FrameEvents, frameReducer } from './frame'
 import { reduceSceneState } from './reducer'
-import { SceneState } from './state'
+import { Scene } from './state'
 
-const { Default, FiveIdleFrames, IdleBeforeTypicalActions, SingleTypicalFrame } = SceneStateFixtures
-const { Grumbling, Idle } = ActionFixtures
+const { Default, FiveIdleFrames, IdleBeforeTypicalActions, SingleTypicalFrame } = Scenes
+const { Grumbling, Idle } = Actions
 
 const tag = (frameNumber: number, tag: string) => ({
   frameNumber,
@@ -20,7 +20,7 @@ const tag = (frameNumber: number, tag: string) => ({
 describe('reduceSceneState', () => {
   describe('CommonEvents.initialized', () => {
     it('returns default state', () => {
-      const result = reduceSceneState('any value' as unknown as SceneState, CommonEvents.initialized())
+      const result = reduceSceneState('any value' as unknown as Scene, CommonEvents.initialized())
       expect(result).toStrictEqual(Default)
     })
   })
@@ -28,17 +28,15 @@ describe('reduceSceneState', () => {
   describe('SceneEvents.characterAdded', () => {
     it('adds character if not already present', () => {
       const result = reduceSceneState(SingleTypicalFrame, SceneEvents.characterAdded('batman'))
-      expect(result.characters).toHaveLength(3)
-      expect(result.characters).toContain('batman')
-      expect(result.characters).toContain('gimli')
-      expect(result.characters).toContain('trogdor')
+      expect(result.actors.batman).toEqual({ id: 'batman', type: 'pc' })
+      expect(result.actors.gimli).toEqual({ id: 'gimli', type: 'pc' })
+      expect(result.actors.trogdor).toEqual({ id: 'trogdor', type: 'pc' })
     })
 
     it('does NOT add character if already present', () => {
       const result = reduceSceneState(SingleTypicalFrame, SceneEvents.characterAdded('gimli'))
-      expect(result.characters).toHaveLength(2)
-      expect(result.characters).toContain('gimli')
-      expect(result.characters).toContain('trogdor')
+      expect(result.actors.gimli).toEqual({ id: 'gimli', type: 'pc' })
+      expect(result.actors.trogdor).toEqual({ id: 'trogdor', type: 'pc' })
     })
 
     describe('initial actor status', () => {
@@ -90,7 +88,8 @@ describe('reduceSceneState', () => {
 
   describe('SceneEvents.frameCommitted', () => {
     it('adds an empty frame if the frame list is empty', () => {
-      const result = reduceSceneState({ ...Default, frames: [] }, SceneEvents.frameCommitted())
+      // we cast 'as any' because the types don't actually allow empty frame lists
+      const result = reduceSceneState({ ...Default, frames: [] as any }, SceneEvents.frameCommitted())
       expect(result.frames).toHaveLength(1)
       expect(result.frames).toStrictEqual([EMPTY_FRAME])
     })

@@ -1,10 +1,10 @@
-import { createStateWithDependencies, SceneStateFixtures } from '../__fixtures__'
+import { forSceneSelector, Scenes } from '../../__fixtures__'
 
 import { getReachableTargets } from './spatial'
 
-const { WithGimliAndTreestumpInMelee } = SceneStateFixtures
+const { WithGimliAndTreestumpInMelee } = Scenes
 
-const withMelee = createStateWithDependencies(WithGimliAndTreestumpInMelee)
+const withMelee = forSceneSelector(WithGimliAndTreestumpInMelee)
 
 describe('scene selectors - spatial', () => {
   describe('getReachableTargets', () => {

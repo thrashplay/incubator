@@ -1,18 +1,20 @@
-import { Characters, CharacterStates } from '../__fixtures__'
+import { CharacterRecords, Characters } from '../__fixtures__'
 import { CommonEvents } from '../common'
 
-import { addPc, set } from './builders'
+import { CharacterBuilder, CharacterRecordsBuilder } from './builders'
 import { CharacterEvents } from './events'
 import { reduceCharacterState } from './reducer'
-import { CharacterState } from './state'
+import { CharacterRecordSet } from './state'
 
+const { set } = CharacterBuilder
+const { addCharacter } = CharacterRecordsBuilder
 const { Gimli, Trogdor } = Characters
-const { Default, WithGimli, WithGimliAndTrogdor, WithTrogdor } = CharacterStates
+const { Default, WithGimli, WithGimliAndTrogdor, WithTrogdor } = CharacterRecords
 
 describe('reduceCharacterState', () => {
   describe('CommonEvents.initialized', () => {
     it('returns default state', () => {
-      const result = reduceCharacterState('any value' as unknown as CharacterState, CommonEvents.initialized())
+      const result = reduceCharacterState('any value' as unknown as CharacterRecordSet, CommonEvents.initialized())
       expect(result).toStrictEqual(Default)
     })
   })
@@ -26,7 +28,7 @@ describe('reduceCharacterState', () => {
     it('overrides existing character, if one', () => {
       const coldTrogdor = set({ name: 'Trogdor, the Coldinator' })(Trogdor)
       const result = reduceCharacterState(WithGimliAndTrogdor, CharacterEvents.characterCreated(coldTrogdor))
-      expect(result).toEqual(addPc(coldTrogdor)(WithGimli))
+      expect(result).toEqual(addCharacter(coldTrogdor)(WithGimli))
     })
   })
 

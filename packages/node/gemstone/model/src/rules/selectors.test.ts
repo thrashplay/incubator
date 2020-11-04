@@ -1,19 +1,13 @@
 import { MovementModes, Rules } from '../__fixtures__'
 
-import { newRules } from './builders'
+import { buildRules, forRulesSelector } from './builders'
 import { getDefaultMovementMode, getDefaultMovementModeId, getMovementMode } from './selectors'
 import { MovementMode, MovementModeId, RulesStateContainer } from './state'
 
 const { Crawl, Walk, WithCane } = MovementModes
-const { RiddleOfTheSphinx } = Rules
 
-const state: RulesStateContainer = {
-  rules: RiddleOfTheSphinx,
-}
-
-const emptyState: RulesStateContainer = {
-  rules: newRules(),
-}
+const state = forRulesSelector(Rules.RiddleOfTheSphinx)
+const emptyState = forRulesSelector(buildRules())
 
 const invalidState = { } as unknown as RulesStateContainer
 

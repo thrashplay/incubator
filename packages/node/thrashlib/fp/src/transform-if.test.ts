@@ -1,6 +1,6 @@
 import { stubFalse, stubTrue } from 'lodash/fp'
 
-import { transformIf } from './transformIf'
+import { transformIf } from './transform-if'
 
 describe('transformIf', () => {
   const transform = (value: number) => `transformed-${value}`

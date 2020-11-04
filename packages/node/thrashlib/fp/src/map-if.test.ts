@@ -1,6 +1,6 @@
 import { identity, stubTrue } from 'lodash/fp'
 
-import { mapIf } from './mapIf'
+import { mapIf } from './map-if'
 
 describe('mapIf', () => {
   describe('empty input', () => {

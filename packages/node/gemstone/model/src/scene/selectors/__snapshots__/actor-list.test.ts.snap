@@ -5,6 +5,7 @@ Object {
   "gimli": Object {
     "id": "gimli",
     "name": "Gimli, son of Glóin",
+    "size": 3,
     "speed": 60,
     "status": Object {
       "action": Object {
@@ -17,9 +18,25 @@ Object {
       },
     },
   },
+  "treestump": Object {
+    "id": "treestump",
+    "name": "Treestump Block",
+    "size": 5,
+    "speed": 90,
+    "status": Object {
+      "action": Object {
+        "type": "grumbling",
+      },
+      "position": Object {
+        "x": 200,
+        "y": 50,
+      },
+    },
+  },
   "trogdor": Object {
     "id": "trogdor",
     "name": "Trogdor, the Burninator",
+    "size": 3,
     "speed": 120,
     "status": Object {
       "action": Object {
@@ -30,8 +47,8 @@ Object {
         "type": "burninating",
       },
       "position": Object {
-        "x": 7,
-        "y": 7,
+        "x": 5,
+        "y": 5,
       },
     },
   },
@@ -51,6 +68,16 @@ Object {
       "y": 100,
     },
   },
+  "treestump": Object {
+    "action": Object {
+      "type": "grumbling",
+    },
+    "id": "treestump",
+    "position": Object {
+      "x": 200,
+      "y": 50,
+    },
+  },
   "trogdor": Object {
     "action": Object {
       "data": Object {
@@ -61,8 +88,8 @@ Object {
     },
     "id": "trogdor",
     "position": Object {
-      "x": 7,
-      "y": 7,
+      "x": 5,
+      "y": 5,
     },
   },
 }

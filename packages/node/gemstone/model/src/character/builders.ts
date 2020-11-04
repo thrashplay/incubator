@@ -1,37 +1,44 @@
-import { flow } from 'lodash'
-import { get, identity, noop } from 'lodash/fp'
+import { get } from 'lodash/fp'
 
-import { Character, CharacterState } from '../character'
-import { addItem, BuilderFunction, createBuilder, toId } from '../common/builder'
+import { addItem, createBuilder, removeItem } from '@thrashplay/fp'
 
+import { Character } from '../character'
+import { AtLeastOneOfIdOrName } from '../common'
+
+import { CharacterRecordSet } from './state'
+
+const DEFAULT_SIZE = 3
 const DEFAULT_SPEED = 90
 
 /**
+ * Builder function for Character instances
  * At least one of name or id is required to create a character. If only one is given, we use it to derive the other.
  */
-type NotFunction = { apply?: never }
-type RequiredCharacterFields = NotFunction &
-(Pick<Character, 'id'> |
-Pick<Character, 'name'> |
-Pick<Character, 'id' | 'name'>)
-
-// builders
-export const build = createBuilder((initialValues: RequiredCharacterFields): Character => ({
-  id: get('id')(initialValues) ?? toId(name),
+export const buildCharacter = createBuilder((initialValues: AtLeastOneOfIdOrName): Character => ({
+  id: get('id')(initialValues) ?? get('name')(initialValues),
   name: get('name')(initialValues) ?? get('id')(initialValues),
+  size: DEFAULT_SIZE,
   speed: DEFAULT_SPEED,
 }))
 
-export const newCharacterState = (): CharacterState => ({
-  pcs: {},
-})
+/** builder function for CharacterRecords instances */
+export const buildCharacterRecords = createBuilder((): CharacterRecordSet => ({ }))
 
-export const buildCharacterState = (
-  ...operations: BuilderFunction<CharacterState>[]
-): CharacterState => flow(...operations)(newCharacterState())
+// Character: field-specific operations
+const set = (values: Partial<Character>) => (initial: Character) => ({ ...initial, ...values })
 
-// field-specific operations
-export const set = (values: Partial<Character>) => (character: Character) => ({ ...character, ...values })
+// CharacterRecords: field-specific operations
+const addCharacter = (pc: Character) => (records: CharacterRecordSet) => addItem(records, pc)
+const removeCharacter = (id: Character['id']) => (records: CharacterRecordSet) => removeItem(records, id)
+
+export const CharacterBuilder = {
+  set,
+}
+
+export const CharacterRecordsBuilder = {
+  addCharacter,
+  removeCharacter,
+}
 
 // TODO: after creating this, the value was questionable... commented out for now but might delete later
 // export const setId = (id: string) => (character: Character) => ({ ...character, id })
@@ -39,6 +46,3 @@ export const set = (values: Partial<Character>) => (character: Character) => ({ 
 // export const setReach = (reach?: number) => (character: Character) => ({ ...character, reach })
 // export const setSize = (size?: number) => (character: Character) => ({ ...character, size })
 // export const setSpeed = (speed: number) => (character: Character) => ({ ...character, speed })
-
-// character state
-export const addPc = (pc: Character) => (state: CharacterState) => ({ ...state, pcs: addItem(state.pcs, pc) })

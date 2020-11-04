@@ -1,32 +1,27 @@
 
-import {
-  createStateWithDependencies,
-  FrameFixtures,
-  SceneStateFixtures,
-} from '../__fixtures__'
+import { forSceneSelector, Frames, Scenes } from '../../__fixtures__'
 import { Frame } from '../frame'
-import { EMPTY_SCENE, SceneState, SceneStateContainer } from '../state'
+import { EMPTY_SCENE, Scene, SceneStateContainer } from '../state'
 
 import {
   getCurrentFrame,
   getCurrentFrameNumber,
   getFrameNumber,
   isValidFrameTag,
-} from '.'
+} from './frames'
 
-const { AllIdle, Empty, TypicalActions } = FrameFixtures
-const { Default, FiveIdleFrames, IdleBeforeTypicalActions, SingleTypicalFrame, SingleIdleFrame } = SceneStateFixtures
+const { AllIdle, Empty, TypicalActions } = Frames
+const { Default, FiveIdleFrames, IdleBeforeTypicalActions, SingleTypicalFrame, SingleIdleFrame } = Scenes
 
 // this is an impossible state, but can be used to test what happens if 'frames' is somehow empty
-const emptyState: SceneStateContainer = createStateWithDependencies({
+const emptyState: SceneStateContainer = forSceneSelector({
   ...EMPTY_SCENE,
-  characters: [],
-  frames: [],
+  frames: [] as any,
 })
 
 const invalidState = { } as unknown as SceneStateContainer
 
-const defaultState = createStateWithDependencies(FiveIdleFrames)
+const defaultState = forSceneSelector(FiveIdleFrames)
 const createStateWithTaggedFrame = (tagName: string, frameNumber: number) => ({
   ...defaultState,
   scene: {
@@ -44,13 +39,13 @@ describe('scene selectors - frames', () => {
       expect(result).toBe(0)
     })
 
-    it.each<[string, SceneState, number]>([
+    it.each<[string, Scene, number]>([
       ['Default', Default, 0],
       ['SingleTypicalFrame', SingleTypicalFrame, 0],
       ['IdleBeforeTypicalActions', IdleBeforeTypicalActions, 1],
       ['FiveIdleFrames', FiveIdleFrames, 4],
     ])('returns index of last frame: %p', (_name, state, expectedResult) => {
-      const result = getCurrentFrameNumber(createStateWithDependencies(state))
+      const result = getCurrentFrameNumber(forSceneSelector(state))
       expect(result).toBe(expectedResult)
     })
   })
@@ -106,11 +101,11 @@ describe('scene selectors - frames', () => {
       expect(result).toStrictEqual(Empty)
     })
 
-    it.each<[string, SceneState, Frame]>([
+    it.each<[string, Scene, Frame]>([
       ['SingleIdleFrame', SingleIdleFrame, AllIdle],
       ['IdleBeforeTypicalActions', IdleBeforeTypicalActions, TypicalActions],
     ])('returns correct frame for: %p', (_fixture, state, expectedFrame) => {
-      const result = getCurrentFrame(createStateWithDependencies(state))
+      const result = getCurrentFrame(forSceneSelector(state))
       expect(result).toStrictEqual(expectedFrame)
     })
   })

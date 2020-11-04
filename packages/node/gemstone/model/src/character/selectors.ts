@@ -17,7 +17,7 @@ export const getCharactersState = (state: CharacterStateContainer) => state.char
 
 export const getPlayerCharactersCollection = createSelector(
   [getCharactersState],
-  (state) => state.pcs ?? { }
+  (state) => state ?? { }
 )
 
 /** gets a character by ID */

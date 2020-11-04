@@ -1,60 +1,57 @@
-import { concat, contains, flow, initial, isNil, last, omit, omitBy, size, take, uniq } from 'lodash/fp'
+import { flow, isNil, last, omit, omitBy, size, take, tap } from 'lodash/fp'
 import { getType } from 'typesafe-actions'
 
-import { CharacterId } from '../character'
 import { CommonEvent, CommonEvents, createReducerErrorHandler } from '../common'
 
+import { buildScene, SceneBuilder } from './builders'
 import { SceneEvent, SceneEvents } from './events'
-import { EMPTY_FRAME, FrameEvent, FrameEvents, frameReducer } from './frame'
-import { EMPTY_SCENE, SceneState } from './state'
+import { EMPTY_FRAME, Frame, FrameEvent, FrameEvents, frameReducer } from './frame'
+import { Scene } from './state'
+
+const { addCharacter, addFrame, updateCurrentFrame } = SceneBuilder
 
 export const reduceSceneState = (
-  state: SceneState,
+  state: Scene,
   event: SceneEvent | FrameEvent | CommonEvent
-): SceneState => {
+): Scene => {
   const error = createReducerErrorHandler('scene', state)
 
-  const reduceCurrentFrame = (event: SceneEvent | FrameEvent | CommonEvent) => (state: SceneState) => {
-    const currentFrame = last(state.frames) ?? EMPTY_FRAME
-    const updatedFrame = currentFrame === undefined ? undefined : frameReducer(currentFrame, event as FrameEvent)
+  // const reduceCurrentFrame = (event: SceneEvent | FrameEvent | CommonEvent) => (state: Scene) => {
+  //   const currentFrame = last(state.frames) ?? EMPTY_FRAME
+  //   const updatedFrame = currentFrame === undefined ? undefined : frameReducer(currentFrame, event as FrameEvent)
 
-    return updatedFrame === undefined
-      ? error(event.type, 'Frame reducer returned undefined value.')
-      : currentFrame === updatedFrame
-        ? state // no change
-        : {
-          ...state,
-          frames: [
-            ...initial(state.frames),
-            updatedFrame,
-          ],
-        }
+  //   return updatedFrame === undefined
+  //     ? error(event.type, 'Frame reducer returned undefined value.')
+  //     : currentFrame === updatedFrame
+  //       ? state // no change
+  //       : {
+  //         ...state,
+  //         frames: [
+  //           ...initial(state.frames),
+  //           updatedFrame,
+  //         ],
+  //       }
+  // }
+
+  const reduceCurrentFrame = (event: SceneEvent | FrameEvent | CommonEvent) => (frame: Frame) => {
+    return frameReducer(frame, event as FrameEvent)
   }
 
   switch (event.type) {
     case getType(CommonEvents.initialized):
     case getType(SceneEvents.sceneStarted):
-      return {
-        ...EMPTY_SCENE,
-        characters: [],
-        frames: [EMPTY_FRAME],
-      }
+      return buildScene()
 
     case getType(SceneEvents.characterAdded):
-      return contains(event.payload)(state.characters)
-        ? error(event.type, 'Character ID not found:', event.payload)
-        : flow(
-          addCharacter(event.payload),
-          reduceCurrentFrame(FrameEvents.actorAdded(event.payload))
-        )(state)
+      return flow(
+        addCharacter(event.payload),
+        updateCurrentFrame(reduceCurrentFrame(FrameEvents.actorAdded(event.payload)))
+      )(state)
 
     case getType(SceneEvents.frameAdded):
       return isNil(event.payload)
         ? error(event.type, 'New frame is undefined.')
-        : {
-          ...state,
-          frames: concat(state.frames, event.payload),
-        }
+        : addFrame(event.payload)(state)
 
     case getType(SceneEvents.frameCommitted):
       return {
@@ -91,29 +88,23 @@ export const reduceSceneState = (
 
     default:
       // apply frame reducer to the current frame
-      return reduceCurrentFrame(event)(state)
+      return updateCurrentFrame(reduceCurrentFrame(event))(state)
   }
 }
 
 // state update helpers
 
 /** truncate frames by dropping all frames after the specified one */
-const truncateFrames = (frameNumber: number) => (state: SceneState) => ({
+const truncateFrames = (frameNumber: number) => (state: Scene) => ({
   ...state,
   frames: take(frameNumber + 1)(state.frames),
 })
 
 /** clears the selected frame, if it points to a frame that we truncated */
-const updateTagsAfterTruncation = (state: SceneState) => {
+const updateTagsAfterTruncation = (state: Scene) => {
   const shouldTruncate = (value: number) => value > size(state.frames) - 1
   return {
     ...state,
     frameTags: omitBy(shouldTruncate)(state.frameTags),
   }
 }
-
-/** updates state by adding a character id to the character list */
-const addCharacter = (id: CharacterId) => (state: SceneState) => ({
-  ...state,
-  characters: uniq(concat(state.characters, id)),
-})

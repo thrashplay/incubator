@@ -12,16 +12,14 @@ export interface Character {
    * The actor's base size, which is the radius of the circle they occupy (other base shapes to come later).
    * Currently defaults to 3 feet.
    **/
-  size?: number
+  size: number
 
   /** the actor's base speed, in feet of movement per minute */
   speed: number
 }
 
-export interface CharacterState {
-  pcs: Dictionary<CharacterId, Character>
-}
+export type CharacterRecordSet = Dictionary<CharacterId, Character>
 
-export interface CharacterStateContainer {
-  characters: CharacterState
+export interface CharacterStateContainer extends Dictionary<string, unknown> {
+  characters: CharacterRecordSet
 }

@@ -1,13 +1,15 @@
+import { Dictionary } from 'lodash'
+
 import { CharacterId, CharacterStateContainer } from '../character'
 import { MonsterTypeId } from '../monster'
 import { RulesStateContainer } from '../rules'
-import { Dictionary } from '../types'
 
 import { EMPTY_FRAME, Frame } from './frame'
 
-export const EMPTY_SCENE: SceneState = {
+export const SINGLE_EMPTY_FRAME: [Frame, ...Frame[]] = [EMPTY_FRAME]
+export const EMPTY_SCENE: Scene = {
   actors: {},
-  frames: [EMPTY_FRAME],
+  frames: SINGLE_EMPTY_FRAME,
   frameTags: {},
 }
 
@@ -20,11 +22,11 @@ export type ActorStatReference = {
   type: 'monster'
 }
 
-export interface SceneState {
-  actors: Dictionary<MonsterTypeId | CharacterId, ActorStatReference>
+export interface Scene {
+  actors: Dictionary<ActorStatReference>
 
-  /** array of frames comprising this scene */
-  frames: Frame[]
+  /** array of frames comprising this scene, of which there is always at least one */
+  frames: [Frame, ...Frame[]]
 
   /**
    * Set of frame 'tags', which are names assigned to particular frame numbers.
@@ -36,5 +38,5 @@ export interface SceneState {
 
 type ExternalRequiredState = RulesStateContainer & CharacterStateContainer
 export type SceneStateContainer = ExternalRequiredState & {
-  scene: SceneState
+  scene: Scene
 }

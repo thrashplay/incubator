@@ -1,12 +1,7 @@
 import { keys, omit } from 'lodash/fp'
 
-import {
-  ActionFixtures,
-  CharacterStateFixtures,
-  createStateWithDependencies,
-  RulesStateFixtures,
-  SceneStateFixtures,
-} from '../__fixtures__'
+import { ActorStatuses, CharacterRecords, Characters, forSceneSelector, Rules, Scenes } from '../../__fixtures__'
+import { buildActor } from '../frame/builders'
 import { EMPTY_SCENE, SceneStateContainer } from '../state'
 
 import {
@@ -15,21 +10,37 @@ import {
   getActors,
   getActorStatusCollection,
   getCharacterIds,
-} from '.'
+} from './actor-list'
 
-const { WithGimli, WithGimliAndTrogdor } = CharacterStateFixtures
-const { Minimal } = RulesStateFixtures
-const { IdleBeforeTypicalActions } = SceneStateFixtures
+const { Gimli, Treestump, Trogdor } = Characters
+const { WithGimli, WithGimliAndTrogdor } = CharacterRecords
+const { RiddleOfTheSphinx } = Rules
+const { IdleBeforeTypicalActions } = Scenes
 
-const defaultState: SceneStateContainer = createStateWithDependencies(IdleBeforeTypicalActions)
+const defaultState: SceneStateContainer = forSceneSelector(IdleBeforeTypicalActions)
 
 // this is an impossible state, but can be used to test what happens if 'frames' is somehow empty
-const emptyState: SceneStateContainer = createStateWithDependencies({
+const emptyState: SceneStateContainer = forSceneSelector({
   ...EMPTY_SCENE,
-  frames: [],
+  frames: [] as any,
 })
 
 const invalidState = { } as unknown as SceneStateContainer
+
+const gimliActor = buildActor({
+  character: Gimli,
+  status: ActorStatuses.Gimli.BefriendingElves,
+})
+
+const treestumpActor = buildActor({
+  character: Treestump,
+  status: ActorStatuses.Treestump.Grumbling,
+})
+
+const trogdorActor = buildActor({
+  character: Trogdor,
+  status: ActorStatuses.Trogdor.Burninating,
+})
 
 describe('scene selectors - Actor List', () => {
   describe('getCharacterIds', () => {
@@ -45,8 +56,9 @@ describe('scene selectors - Actor List', () => {
 
     it('returns correct data', () => {
       const result = getCharacterIds(defaultState)
-      expect(result).toHaveLength(2)
+      expect(result).toHaveLength(3)
       expect(result).toContain('gimli')
+      expect(result).toContain('treestump')
       expect(result).toContain('trogdor')
     })
 
@@ -88,29 +100,9 @@ describe('scene selectors - Actor List', () => {
   describe('getActors', () => {
     const stateWithoutTrogdor = ({
       characters: WithGimli,
-      rules: Minimal,
+      rules: RiddleOfTheSphinx,
       scene: IdleBeforeTypicalActions,
     })
-
-    const gimli = {
-      id: 'gimli',
-      name: 'Gimli, son of Glóin',
-      speed: 60,
-      status: {
-        action: ActionFixtures.BefriendingElves,
-        position: { x: 100, y: 100 },
-      },
-    }
-
-    const trogdor = {
-      id: 'trogdor',
-      name: 'Trogdor, the Burninator',
-      speed: 120,
-      status: {
-        action: ActionFixtures.Burninating,
-        position: { x: 7, y: 7 },
-      },
-    }
 
     it('returns undefined if scene state is invalid', () => {
       const result = getActors(invalidState)
@@ -120,33 +112,24 @@ describe('scene selectors - Actor List', () => {
     it('omits actors if character state is missing', () => {
       const result = getActors(stateWithoutTrogdor)
       expect(result).toHaveLength(1)
-      expect(result).toContainEqual(gimli)
+      expect(result).toContainEqual(gimliActor)
     })
 
     it('returns actors when all data is available', () => {
       const result = getActors(defaultState)
-      expect(result).toHaveLength(2)
-      expect(result).toContainEqual(gimli)
-      expect(result).toContainEqual(trogdor)
+      expect(result).toHaveLength(3)
+      expect(result).toContainEqual(gimliActor)
+      expect(result).toContainEqual(treestumpActor)
+      expect(result).toContainEqual(trogdorActor)
     })
   })
 
   describe('getActor', () => {
     const stateWithoutTrogdor = ({
       characters: WithGimli,
-      rules: Minimal,
+      rules: RiddleOfTheSphinx,
       scene: IdleBeforeTypicalActions,
     })
-
-    const gimli = {
-      id: 'gimli',
-      name: 'Gimli, son of Glóin',
-      speed: 60,
-      status: {
-        action: ActionFixtures.BefriendingElves,
-        position: { x: 100, y: 100 },
-      },
-    }
 
     it('returns undefined if character ID is invalid', () => {
       const result = getActor(invalidState, { characterId: 'invalid-id' })
@@ -161,7 +144,7 @@ describe('scene selectors - Actor List', () => {
     describe('status data missing', () => {
       const sceneStateMissing = ({
         characters: WithGimliAndTrogdor,
-        rules: Minimal,
+        rules: RiddleOfTheSphinx,
       }) as unknown as SceneStateContainer
 
       it('returns undefined if scene state is missing', () => {
@@ -178,7 +161,7 @@ describe('scene selectors - Actor List', () => {
     describe('all data available', () => {
       it('returns correct data', () => {
         const result = getActor(defaultState, { characterId: 'gimli' })
-        expect(result).toStrictEqual(gimli)
+        expect(result).toStrictEqual(gimliActor)
       })
     })
   })

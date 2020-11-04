@@ -1,5 +1,8 @@
 import { flow, isFunction, tail } from 'lodash/fp'
 
+/** used to differentiate 'builder function' args from 'initial value' args */
+type NotFunction = { apply?: never }
+
 export type FactoryFunctionWithoutArgs<TResult extends unknown = any> = () => TResult
 
 export type FactoryFunctionWithArgs<
@@ -25,7 +28,7 @@ type MaybeOptionalOpenEndedTuple<TFirst, TRest> =
 export const createBuilder = <TResult extends unknown = any, TInitialValues extends unknown = never>(
   factory: FactoryFunctionWithArgs<TResult, TInitialValues> | FactoryFunctionWithoutArgs<TResult>
 ) => (
-  ...args: MaybeOptionalOpenEndedTuple<TInitialValues, BuilderFunction<TResult>>
+  ...args: MaybeOptionalOpenEndedTuple<TInitialValues & NotFunction, BuilderFunction<TResult>>
 ): TResult => {
   const firstArg = args[0]
   const builders = (isFunction(firstArg) ? args : tail(args)) as BuilderFunction<TResult>[]

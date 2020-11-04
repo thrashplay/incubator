@@ -1,4 +1,4 @@
-import { filter, get, isUndefined, mapValues, negate, omit, values } from 'lodash/fp'
+import { filter, get, isUndefined, keys, mapValues, negate, omit, values } from 'lodash/fp'
 import { createSelector } from 'reselect'
 
 import { getPlayerCharactersCollection } from '../../character'
@@ -9,7 +9,7 @@ import { getFrame } from './frames'
 
 export const getCharacterIds = createSelector(
   [getScene],
-  (scene) => scene.characters ?? []
+  (scene) => keys(scene.actors ?? { })
 )
 
 export const getActorStatusCollection = createSelector(

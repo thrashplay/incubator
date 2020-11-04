@@ -9,13 +9,15 @@ export const EMPTY_FRAME: Frame = {
   timeOffset: 0,
 }
 
+export const IDLE_ACTION: ActionType = { type: 'idle' }
+
 export interface ActionType<TType extends string = string, TData extends any = any> {
   type: TType
   data?: TData
 }
 
 /** scene-specific status for the actor */
-export interface ActorStatus {
+export type ActorStatus = {
   id: CharacterId
 
   /** the actor's current action (that is, selected game action) */
@@ -33,11 +35,11 @@ export interface ActorStatus {
 
 /** combined data structure, merging full character info with the associated scene status */
 export type Actor = Character & {
-  status: ActorStatus
+  status: Omit<ActorStatus, 'id'>
 }
 
 /** a single frame, containing the status of all actors at a single point in a time */
-export interface Frame {
+export type Frame = {
   actors: Record<CharacterId, ActorStatus>
 
   /** if true, this frame is a 'key frame', meaning there is a reason to stop the simulation when it is reached */

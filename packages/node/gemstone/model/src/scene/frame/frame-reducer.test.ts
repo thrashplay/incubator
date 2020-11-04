@@ -1,12 +1,12 @@
 import { keys } from 'lodash/fp'
 
-import { ActionFixtures, FrameFixtures } from '../__fixtures__'
+import { Actions, Frames } from '../../__fixtures__'
 
 import { FrameEvents } from './events'
 import { frameReducer } from './frame-reducer'
 
-const { Grumbling } = ActionFixtures
-const { Empty, TypicalActions } = FrameFixtures
+const { Grumbling } = Actions
+const { Empty, TypicalActions } = Frames
 
 describe('frameReducer', () => {
   describe('FrameEvents.characterAdded', () => {
@@ -22,8 +22,9 @@ describe('frameReducer', () => {
       const result = frameReducer(TypicalActions, FrameEvents.actorAdded('gimli'))
 
       const ids = keys(result.actors)
-      expect(ids).toHaveLength(2)
+      expect(ids).toHaveLength(3)
       expect(ids).toContain('gimli')
+      expect(ids).toContain('treestump')
       expect(ids).toContain('trogdor')
     })
 

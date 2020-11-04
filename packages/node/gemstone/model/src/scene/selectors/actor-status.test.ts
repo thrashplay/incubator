@@ -1,12 +1,5 @@
+import { Actions, Characters, forSceneSelector, Frames, Rules, Scenes } from '../../__fixtures__'
 import { Point } from '../../common'
-import {
-  ActionFixtures,
-  CharacterFixtures,
-  createStateWithDependencies,
-  FrameFixtures,
-  RulesStateFixtures,
-  SceneStateFixtures,
-} from '../__fixtures__'
 import { ActionType, ActorStatus } from '../frame'
 import { EMPTY_SCENE, SceneStateContainer } from '../state'
 
@@ -19,20 +12,19 @@ import {
 } from '.'
 import { getCurrentSpeed } from './actor-status'
 
-const { Gimli } = CharacterFixtures
-const { TypicalActions } = FrameFixtures
-const { BefriendingElves, Burninating } = ActionFixtures
-const { Minimal } = RulesStateFixtures
-const { IdleBeforeTypicalActions, WithGimliRunning } = SceneStateFixtures
+const { Gimli } = Characters
+const { TypicalActions } = Frames
+const { BefriendingElves, Burninating } = Actions
+const { RiddleOfTheSphinx } = Rules
+const { IdleBeforeTypicalActions, WithGimliRunning } = Scenes
 
-const defaultState: SceneStateContainer = createStateWithDependencies(IdleBeforeTypicalActions)
-const withGimliRunning: SceneStateContainer = createStateWithDependencies(WithGimliRunning)
+const defaultState: SceneStateContainer = forSceneSelector(IdleBeforeTypicalActions)
+const withGimliRunning: SceneStateContainer = forSceneSelector(WithGimliRunning)
 
 // this is an impossible state, but can be used to test what happens if 'frames' is somehow empty
-const emptyState: SceneStateContainer = createStateWithDependencies({
+const emptyState: SceneStateContainer = forSceneSelector({
   ...EMPTY_SCENE,
-  characters: [],
-  frames: [],
+  frames: [] as any,
 })
 
 const invalidState = { } as unknown as SceneStateContainer
@@ -50,9 +42,10 @@ describe('scene selectors - Actor Status', () => {
     })
 
     it('returns correct status objects from last frame', () => {
-      const result = getActorStatuses(createStateWithDependencies(IdleBeforeTypicalActions))
-      expect(result).toHaveLength(2)
+      const result = getActorStatuses(forSceneSelector(IdleBeforeTypicalActions))
+      expect(result).toHaveLength(3)
       expect(result).toContain(TypicalActions.actors.gimli)
+      expect(result).toContain(TypicalActions.actors.treestump)
       expect(result).toContain(TypicalActions.actors.trogdor)
     })
   })
@@ -111,7 +104,7 @@ describe('scene selectors - Actor Status', () => {
 
     it.each<[string, Point]>([
       ['gimli', { x: 100, y: 100 }],
-      ['trogdor', { x: 7, y: 7 }],
+      ['trogdor', { x: 5, y: 5 }],
     ])('returns correct data: %p', (characterId, expectedPosition) => {
       const result = getPosition(defaultState, { characterId })
       expect(result).toStrictEqual(expectedPosition)
@@ -151,12 +144,12 @@ describe('scene selectors - Actor Status', () => {
   describe('getActiveMovementMode', () => {
     it('returns system default if undefined', () => {
       const result = getActiveMovementMode(defaultState, { characterId: 'gimli' })
-      expect(result).toStrictEqual(Minimal.movement.modes.standard)
+      expect(result).toStrictEqual(RiddleOfTheSphinx.movement.modes.walk)
     })
 
     it('returns correct value', () => {
       const result = getActiveMovementMode(withGimliRunning, { characterId: 'gimli' })
-      expect(result).toStrictEqual(Minimal.movement.modes.run)
+      expect(result).toStrictEqual(RiddleOfTheSphinx.movement.modes.run)
     })
   })
 
@@ -164,8 +157,8 @@ describe('scene selectors - Actor Status', () => {
     it('when no movement mode is specified, default is used', () => {
       const result = getCurrentSpeed(defaultState, { characterId: 'gimli' })
 
-      const defaultMovementModeId = Minimal.movement.defaultMode
-      const multiplier = Minimal.movement.modes[defaultMovementModeId]?.multiplier
+      const defaultMovementModeId = RiddleOfTheSphinx.movement.defaultMode
+      const multiplier = RiddleOfTheSphinx.movement.modes[defaultMovementModeId!]?.multiplier!
       const expectedResult = Gimli.speed * multiplier
       expect(result).toBe(expectedResult)
     })
@@ -173,7 +166,7 @@ describe('scene selectors - Actor Status', () => {
     it('uses correct movement mode multiplier', () => {
       const result = getCurrentSpeed(withGimliRunning, { characterId: 'gimli' })
 
-      const multiplier = Minimal.movement.modes.run.multiplier
+      const multiplier = RiddleOfTheSphinx.movement.modes?.run?.multiplier!
       const expectedResult = Gimli.speed * multiplier
       expect(result).toBe(expectedResult)
     })

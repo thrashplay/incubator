@@ -1,13 +1,12 @@
 import { flow, has } from 'lodash/fp'
 import { getType } from 'typesafe-actions'
 
-import { createReducerErrorHandler, isValidPoint } from '@thrashplay/gemstone-model'
-
 import { CharacterId } from '../../character'
+import { createReducerErrorHandler, isValidPoint } from '../../common'
 
-import { ActorStatus, Frame } from '.'
+import { ActorStatusBuilder, FrameBuilder } from './builders'
 import { FrameEvent, FrameEvents } from './events'
-
+import { ActorStatus, Frame } from './state'
 export const frameReducer = (frame: Frame, event: FrameEvent): Frame => {
   const error = createReducerErrorHandler('frame', frame)
 
@@ -78,14 +77,4 @@ const createDefaultActorStatus = (id: CharacterId) => ({
 const setActorStatus = (
   id: CharacterId,
   status: Partial<Omit<ActorStatus, 'id'>>
-) => (frame: Frame) => ({
-  ...frame,
-  actors: {
-    ...frame.actors,
-    [id]: {
-      ...frame.actors[id],
-      ...status,
-      id,
-    },
-  },
-})
+) => (frame: Frame) => FrameBuilder.updateActor(id, ActorStatusBuilder.set(status))(frame)

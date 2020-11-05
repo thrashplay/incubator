@@ -10,10 +10,8 @@ import {
   getSize,
   getTarget,
 } from '@thrashplay/gemstone-model'
+import { useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
 import { calculateDistance } from '@thrashplay/math'
-
-import { useFrameQuery } from '../../frame-context'
-import { useValue } from '../../store'
 
 import { SegmentedVector } from './segmented-vector'
 

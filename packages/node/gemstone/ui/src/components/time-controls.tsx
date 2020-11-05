@@ -11,10 +11,8 @@ import {
   getTime,
   SceneEvents,
 } from '@thrashplay/gemstone-model'
+import { useDispatch, useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
 import { WithViewStyles } from '@thrashplay/react-helpers'
-
-import { useFrameQuery } from '../frame-context'
-import { useDispatch, useValue } from '../store'
 
 /** callback notified when a new frame is selected */
 // onSelectFrame?: (frameNumber: number) => void

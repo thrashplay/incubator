@@ -24,6 +24,9 @@
       "path": "../../thrashlib/math/tsconfig.json"
     },
     {
+      "path": "../map-model/tsconfig.json"
+    },
+    {
       "path": "../model/tsconfig.json"
     }
   ]

@@ -1,7 +1,9 @@
-import { CharacterState, RulesState, SceneState } from '@thrashplay/gemstone-model'
+import { MapData } from '@thrashplay/gemstone-map-model'
+import { CharacterRecordSet, RuleSet, Scene } from '@thrashplay/gemstone-model'
 
 export interface GameState {
-  characters: CharacterState
-  rules: RulesState
-  scene: SceneState
+  characters: CharacterRecordSet
+  map: MapData
+  rules: RuleSet
+  scene: Scene
 }

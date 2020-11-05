@@ -1,5 +1,3 @@
-import { useFrameQuery } from 'gemstone/ui/src/frame-context'
-import { useValue } from 'gemstone/ui/src/store'
 import { filter, flow, get, head, map, sortBy } from 'lodash/fp'
 import React, { useCallback } from 'react'
 
@@ -12,7 +10,8 @@ import {
   ToolProps,
   useCanvasEvent,
 } from '@thrashplay/canvas-with-tools'
-import { Actor, calculateDistance, CharacterId, getActors, Point } from '@thrashplay/gemstone-model'
+import { Actor, CharacterId, getActors, Point } from '@thrashplay/gemstone-model'
+import { useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
 import { calculateDistance } from '@thrashplay/math'
 
 import { SceneMapData } from '../scene-map'

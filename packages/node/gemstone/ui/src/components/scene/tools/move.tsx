@@ -20,10 +20,9 @@ import {
   getReach,
   getSize,
 } from '@thrashplay/gemstone-model'
+import { useDispatch, useFrameQuery, useSelector, useValue } from '@thrashplay/gemstone-ui-core'
 import { calculateDistance, Point } from '@thrashplay/math'
 
-import { useFrameQuery } from '../../../frame-context'
-import { useDispatch, useSelector, useValue } from '../../../store'
 import { SceneMapData } from '../scene-map'
 import { SetHighlightsEvent } from '../state'
 

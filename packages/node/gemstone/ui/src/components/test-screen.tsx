@@ -15,9 +15,7 @@ import {
   getActors,
   getTime,
 } from '@thrashplay/gemstone-model'
-
-import { FrameProvider } from '../frame-context'
-import { useDispatch, useValue } from '../store'
+import { FrameProvider, useDispatch, useValue } from '@thrashplay/gemstone-ui-core'
 
 import { ActorList } from './actor-list'
 import { InspectPanel } from './inspect-panel'
@@ -28,6 +26,7 @@ const initializeTestScene = () => (_state: GameState) => {
   const createCharacter = (name: string, speed = 90, stats?: Partial<Character>): Character => ({
     id: toLower(name),
     name,
+    size: 3,
     speed,
     ...stats,
   })

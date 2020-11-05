@@ -1,20 +1,19 @@
 import { map, values } from 'lodash/fp'
 import React from 'react'
-import { G, Rect } from 'react-native-svg'
 
-import { Area, Thing, Wall } from '@thrashplay/gemstone-model'
+import { Area } from '@thrashplay/gemstone-map-model'
 import { useStore } from '@thrashplay/gemstone-ui-core'
+
+import { AreaShape } from './area-shape'
 
 export const AreasRenderer = () => {
   const areas = useStore().getState().map.areas
 
-  const getAreaView = ({ bounds, id }: Area) => (
-    <G key={id}>
-      <Rect
-        {...bounds}
-        fill="white"
-      />
-    </G>
+  const getAreaView = (area: Area) => (
+    <AreaShape key={area.id}
+      area={area}
+      fill="white"
+    />
   )
 
   return <>{map(getAreaView)(values(areas))}</>

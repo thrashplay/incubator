@@ -1,4 +1,5 @@
 import { createBuilder } from '@thrashplay/fp'
+import { Extents } from '@thrashplay/math'
 
 import { Area } from '../state'
 
@@ -23,13 +24,10 @@ const verticalWall = (x: number, y1: number, y2: number) => buildWall({
   end: { x: x, y: y2 },
 })
 
-export const buildSquareRoom = createBuilder((dimensions: RoomSpecification): Area => ({
+/** Builds a square room area with the specified bounds */
+export const buildSquareRoom = createBuilder((bounds: Extents): Area => ({
   id: getNextAreaId(),
-  bounds: {
-    x: 0,
-    y: 0,
-    ...dimensions,
-  },
+  bounds,
   things: [
     // horizontalWall(0, width, 0 + 300),
     // horizontalWall(0, width, height + 300),
@@ -37,3 +35,10 @@ export const buildSquareRoom = createBuilder((dimensions: RoomSpecification): Ar
     // verticalWall(width, 0, height),
   ],
 }))
+
+/** Updates a room area with new values */
+const set = (values: Partial<Area>) => (initial: Area) => ({ ...initial, ...values })
+
+export const RoomBuilder = {
+  set,
+}

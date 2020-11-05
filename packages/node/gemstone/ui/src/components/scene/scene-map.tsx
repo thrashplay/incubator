@@ -4,9 +4,10 @@ import { StyleSheet, View, ViewStyle } from 'react-native'
 import { Rect, Svg } from 'react-native-svg'
 
 import { Canvas, ContentViewProps } from '@thrashplay/canvas-with-tools'
+import { Area } from '@thrashplay/gemstone-map-model'
+import { AreasRenderer, Grid } from '@thrashplay/gemstone-map-ui'
 import { Actor } from '@thrashplay/gemstone-model'
 import { WithFrameQuery } from '@thrashplay/gemstone-ui-core'
-import { AreasRenderer, Grid } from '@thrashplay/gemstone-ui-map'
 import { Dimensions, Extents } from '@thrashplay/math'
 import { WithViewStyles } from '@thrashplay/react-helpers'
 import { ToolSelectorButtonBar } from '@thrashplay/tool-selector'
@@ -50,6 +51,9 @@ export interface SceneMapData extends Omit<SceneMapProps, 'extents'> {
 
   /** render function used to create Avatar elements */
   renderAvatar: (props: AvatarProps) => React.ReactNode
+
+  /** ID of the map area currently selected */
+  selectedMapArea?: Area['id']
 }
 
 export const SceneMap = ({
@@ -66,7 +70,7 @@ export const SceneMap = ({
     extents: initialExtents,
   }))
 
-  const { extents, highlights, selectedToolId } = state
+  const { extents, highlights, selectedMapArea, selectedToolId } = state
 
   const selectedTool = useMemo(() => {
     const option = find(
@@ -98,7 +102,7 @@ export const SceneMap = ({
       />
 
       <Canvas
-        data={{ actors, highlights, renderAvatar, style, selectedActor, timeOffset }}
+        data={{ actors, highlights, renderAvatar, selectedMapArea, style, selectedActor, timeOffset }}
         extents={extents}
         toolEventDispatch={dispatch}
         onViewportChange={handleViewportChange}
@@ -147,12 +151,12 @@ const MapContent = ({
         fill="black"
       />
       {/* <Things /> */}
-      <AreasRenderer />
       <Grid
         gridSpacing={10}
         mapHeight={500}
         mapWidth={500}
       />
+      <AreasRenderer />
       {renderAvatars()}
     </Svg>
   )

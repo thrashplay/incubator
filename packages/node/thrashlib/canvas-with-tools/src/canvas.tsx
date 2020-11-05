@@ -62,7 +62,6 @@ export const Canvas = <
   // ////////////////////////
   // tool event listener management
   // ////////////////////////
-
   return (
     // outer view is for user styles, inner view is for measuring
     // this let's padding and other things correctly reduce content size

@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 
-import { WithFrameQuery } from '../components/prop-types'
+import { WithFrameQuery } from '../with-frame-query'
 
 export const FrameContext = React.createContext<WithFrameQuery>({})
 

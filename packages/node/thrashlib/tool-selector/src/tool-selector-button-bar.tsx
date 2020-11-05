@@ -19,7 +19,6 @@ export const ToolSelectorButtonBar = ({
   const handlePress = (id: string) => () => {
     onSelect(id)
   }
-
   const createButton = ({ icon, id }: Option) => (
     <ToggleButton
       key={id}

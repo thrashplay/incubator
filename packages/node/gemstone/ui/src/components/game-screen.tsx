@@ -22,8 +22,8 @@ import { FrameProvider, useDispatch, useValue } from '@thrashplay/gemstone-ui-co
 
 import { ActorInspectPanel } from './actor-inspect-panel'
 import { ActorList } from './actor-list'
+import { CombatMap } from './combat-map/combat-map'
 import { MapAreaInspectPanel } from './map-editor/map-editor-inspect-panel'
-import { SceneMap } from './scene/scene-map'
 import { TimeControls } from './time-controls'
 
 type Mode = 'combat' | 'gm' | 'map-editor'
@@ -158,12 +158,13 @@ export const GameScreen = () => {
             {selectedMode === 'map-editor' && renderMapEditorControls()}
 
           </View>
-          <SceneMap
+          {/* <SceneMap
             actors={actors}
             selectedActor={selectedActor as any}
             style={styles.locationMap}
             timeOffset={selectedTime}
-          />
+          /> */}
+          <CombatMap />
         </View>
         <TimeControls
           style={styles.timeBar}

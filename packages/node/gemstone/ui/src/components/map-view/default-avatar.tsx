@@ -3,9 +3,12 @@ import React from 'react'
 import { Animated } from 'react-native'
 import { Circle, CircleProps, G, LineProps, Text, TextProps } from 'react-native-svg'
 
+import { createAction } from '@thrashplay/gemstone-engine'
 import {
   Actor,
+  getAction,
   getPosition,
+  getPublicCharacterName,
   getReach,
   getSize,
   getTarget,
@@ -18,14 +21,12 @@ import { SegmentedVector } from './segmented-vector'
 const PIXELS_PER_FOOT = 1
 
 export interface AvatarProps {
-  actor: Actor
+  actorId: Actor['id']
   animatedX: Animated.Value
   animatedY: Animated.Value
   highlighted?: boolean
   isAnimating: boolean
   selected?: boolean
-  x: number
-  y: number
 }
 
 const getTextProps = (selected: boolean): TextProps => selected
@@ -60,14 +61,16 @@ const setColor = (color: string) => (props: LineProps) => ({
 const feetToPixels = (feet: number) => feet * PIXELS_PER_FOOT
 
 const RenderAction = ({
-  actor,
+  actorId,
   selected,
 }: AvatarProps) => {
   const frameQuery = useFrameQuery()
+  const query = { ...frameQuery, characterId: actorId }
 
-  const { action, position } = actor.status
-  const reach = useValue(getReach, { ...frameQuery, characterId: actor.id })
-  const size = useValue(getSize, { ...frameQuery, characterId: actor.id })
+  const action = useValue(getAction, query) ?? createAction('idle')
+  const position = useValue(getPosition, query)
+  const reach = useValue(getReach, query)
+  const size = useValue(getSize, query)
 
   // todo this is a hack, to see something working
   const targetId = get('data.target')(action)
@@ -167,13 +170,14 @@ const RenderAction = ({
 }
 
 const RenderTarget = ({
-  actor,
+  actorId,
 }: AvatarProps) => {
   const frameQuery = useFrameQuery()
+  const query = { ...frameQuery, characterId: actorId }
 
-  const position = useValue(getPosition, { ...frameQuery, characterId: actor.id })
-  const reach = useValue(getReach, { ...frameQuery, characterId: actor.id })
-  const target = useValue(getTarget, { ...frameQuery, characterId: actor.id })
+  const position = useValue(getPosition, query)
+  const reach = useValue(getReach, query)
+  const target = useValue(getTarget, query)
   const targetLocation = useValue(getPosition, { ...frameQuery, characterId: target })
 
   return target === undefined ? null : (
@@ -188,16 +192,18 @@ const RenderTarget = ({
 
 export const DefaultAvatar = (props: AvatarProps) => {
   const {
-    actor,
+    actorId,
     animatedX,
     animatedY,
     highlighted,
     isAnimating,
-    selected,
+    selected = false,
   } = props
   const frameQuery = useFrameQuery()
-  const reach = useValue(getReach, { ...frameQuery, characterId: actor.id })
-  const size = useValue(getSize, { ...frameQuery, characterId: actor.id })
+  const query = { ...frameQuery, characterId: actorId }
+  const reach = useValue(getReach, query)
+  const size = useValue(getSize, query)
+  const name = useValue(getPublicCharacterName, query)
 
   const getStyles = (type: string) => {
     const specialStyles = selected
@@ -211,7 +217,7 @@ export const DefaultAvatar = (props: AvatarProps) => {
   }
 
   return (
-    <G key={actor.id}>
+    <G key={actorId}>
       <AnimatedG
         x={animatedX}
         y={animatedY}
@@ -235,7 +241,7 @@ export const DefaultAvatar = (props: AvatarProps) => {
           y={-size - 2}
           {...getTextProps(selected)}
         >
-          {take(1)(actor.name)}
+          {take(1)(name)}
         </Text>
       </AnimatedG>
       {!isAnimating && <RenderAction {...props} />}

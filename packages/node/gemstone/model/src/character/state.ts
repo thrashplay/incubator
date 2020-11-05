@@ -20,6 +20,6 @@ export interface Character {
 
 export type CharacterRecordSet = Dictionary<CharacterId, Character>
 
-export interface CharacterStateContainer extends Dictionary<string, unknown> {
+export interface CharacterStateContainer {
   characters: CharacterRecordSet
 }

@@ -1,19 +1,18 @@
 import { find, flow, get, map, matches } from 'lodash/fp'
 import React, { useCallback, useMemo, useReducer } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
-import { Svg } from 'react-native-svg'
+import { Rect, Svg } from 'react-native-svg'
 
 import { Canvas, ContentViewProps } from '@thrashplay/canvas-with-tools'
 import { Actor } from '@thrashplay/gemstone-model'
+import { WithFrameQuery } from '@thrashplay/gemstone-ui-core'
+import { AreasRenderer, Grid } from '@thrashplay/gemstone-ui-map'
 import { Dimensions, Extents } from '@thrashplay/math'
 import { WithViewStyles } from '@thrashplay/react-helpers'
 import { ToolSelectorButtonBar } from '@thrashplay/tool-selector'
 
-import { WithFrameQuery } from '../prop-types'
-
 import { AvatarAnimation, AvatarAnimationProps } from './avatar-animation'
 import { AvatarProps, DefaultAvatar } from './default-avatar'
-import { Grid } from './grid'
 import { INITIAL_STATE, reducer } from './state'
 import { TOOL_OPTIONS } from './tools'
 
@@ -138,9 +137,17 @@ const MapContent = ({
 
   return (
     <Svg
+      fill="black"
+      fillOpacity={1}
       style={[styles.mapView]}
       viewBox={`${extents.x} ${extents.y} ${extents.width} ${extents.height}`}
     >
+      <Rect
+        {...extents}
+        fill="black"
+      />
+      {/* <Things /> */}
+      <AreasRenderer />
       <Grid
         gridSpacing={10}
         mapHeight={500}

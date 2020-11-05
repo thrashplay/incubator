@@ -18,31 +18,13 @@
   ],
   "references": [
     {
-      "path": "../../thrashlib/canvas-with-tools/tsconfig.json"
+      "path": "../../thrashlib/fp/tsconfig.json"
     },
     {
       "path": "../../thrashlib/math/tsconfig.json"
     },
     {
-      "path": "../../thrashlib/react-helpers/tsconfig.json"
-    },
-    {
-      "path": "../../thrashlib/tool-selector/tsconfig.json"
-    },
-    {
-      "path": "../engine/tsconfig.json"
-    },
-    {
-      "path": "../map-model/tsconfig.json"
-    },
-    {
-      "path": "../map-ui/tsconfig.json"
-    },
-    {
       "path": "../model/tsconfig.json"
-    },
-    {
-      "path": "../ui-core/tsconfig.json"
     }
   ]
 }

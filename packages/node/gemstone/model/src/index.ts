@@ -9,6 +9,5 @@ export * from './movement-utils'
 export * from './rules'
 export * from './scene'
 export * from './selectors'
-export * from './types'
 
 export { CharacterModel, RulesModel, SceneModel }

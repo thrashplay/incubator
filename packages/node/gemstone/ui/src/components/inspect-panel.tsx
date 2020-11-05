@@ -22,10 +22,8 @@ import {
   Point,
   SelectorParameters,
 } from '@thrashplay/gemstone-model'
+import { useDispatch, useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
 import { WithViewStyles } from '@thrashplay/react-helpers'
-
-import { useFrameQuery } from '../frame-context'
-import { useDispatch, useValue } from '../store'
 
 export interface InspectPanelProps extends WithViewStyles<'style'> {
   /** the ID of the character to control */

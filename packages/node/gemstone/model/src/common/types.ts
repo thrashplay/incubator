@@ -2,7 +2,8 @@
 
 import { isFinite } from 'lodash/fp'
 
-export type Dictionary<K extends string | number | symbol = string, T = unknown> = Partial<Record<K, T>>
+// TODO: is T | never actually valid, compared to optiona/undefined
+export type Dictionary<K extends string | number | symbol = string, T = unknown> = { [k in K]: T | never }
 
 export type AtLeastOneOfIdOrName = { id: string } | { name: string} | { id: string; name: string }
 

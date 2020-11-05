@@ -13,10 +13,9 @@ import {
   FrameEvents,
   getClosestActor,
 } from '@thrashplay/gemstone-model'
+import { useDispatch, useFrameQuery, useSelector } from '@thrashplay/gemstone-ui-core'
 import { Point } from '@thrashplay/math'
 
-import { useFrameQuery } from '../../../frame-context'
-import { useDispatch, useSelector } from '../../../store'
 import { SceneMapData } from '../scene-map'
 
 // maximum distance between cursor and actor that we consider a click

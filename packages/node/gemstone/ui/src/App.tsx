@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper'
 
 import 'react-native-gesture-handler'
+import { StoreProvider } from '@thrashplay/gemstone-ui-core'
+
 import { TestScreen } from './components/test-screen'
-import { StoreProvider } from './store/context'
 // import { Provider } from 'react-redux'
 
 // import { createApplicationStore } from './store'

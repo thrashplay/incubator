@@ -33,16 +33,7 @@
       "path": "../engine/tsconfig.json"
     },
     {
-      "path": "../map-model/tsconfig.json"
-    },
-    {
-      "path": "../map-ui/tsconfig.json"
-    },
-    {
       "path": "../model/tsconfig.json"
-    },
-    {
-      "path": "../ui-core/tsconfig.json"
     }
   ]
 }

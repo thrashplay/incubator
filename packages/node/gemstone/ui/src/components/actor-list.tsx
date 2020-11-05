@@ -5,10 +5,8 @@ import { List } from 'react-native-paper'
 
 import { getPublicActionDescription } from '@thrashplay/gemstone-engine'
 import { Actor, CharacterId, getActors } from '@thrashplay/gemstone-model'
+import { useFrameQuery, useSelector, useValue } from '@thrashplay/gemstone-ui-core'
 import { WithTextStyles, WithViewStyles } from '@thrashplay/react-helpers'
-
-import { useFrameQuery } from '../frame-context'
-import { useSelector, useValue } from '../store'
 
 const NO_STYLES = {}
 

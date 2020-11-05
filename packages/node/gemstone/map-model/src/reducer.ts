@@ -3,19 +3,23 @@ import { getType } from 'typesafe-actions'
 import { CommonEvent, CommonEvents } from '@thrashplay/gemstone-model'
 
 import { buildMap, MapBuilder } from './builders/map-data'
-import { buildSquareRoom } from './builders/room'
+import { MapEvent, MapEvents } from './events'
 import { MapData } from './state'
 
-const { addArea } = MapBuilder
+const DEFAULT_MAP = buildMap()
 
-const DEFAULT_MAP = buildMap(
-  addArea(buildSquareRoom({ width: 500, height: 150 }))
-)
+const { addArea, removeArea } = MapBuilder
 
-export const reduceMapState = (state: MapData, event: CommonEvent): MapData => {
+export const reduceMapState = (state: MapData, event: MapEvent | CommonEvent): MapData => {
   switch (event.type) {
     case getType(CommonEvents.initialized):
       return DEFAULT_MAP
+
+    case getType(MapEvents.areaCreated):
+      return addArea(event.payload)(state)
+
+    case getType(MapEvents.areaRemoved):
+      return removeArea(event.payload)(state)
 
     default:
       return state

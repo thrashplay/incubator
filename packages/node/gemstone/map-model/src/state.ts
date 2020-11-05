@@ -9,7 +9,7 @@ export interface Thing {
 }
 
 /** Type for a general region in a map space (room, chamber, hallway) */
-export interface Area {
+export type Area = {
   /** unique identifier for this area */
   id: string
 
@@ -27,4 +27,8 @@ export interface MapData {
 
   /** Dictionary of Thing instances, allowing lookup by ID */
   things: Dictionary<string, Thing>
+}
+
+export interface MapStateContainer {
+  map: MapData
 }

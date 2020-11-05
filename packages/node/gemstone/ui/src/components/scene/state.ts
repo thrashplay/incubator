@@ -4,6 +4,7 @@ import { isNil } from 'lodash'
 import { calculateScale, PanAndZoomEvent, ToolEvent } from '@thrashplay/canvas-with-tools'
 import { Dimensions, Extents } from '@thrashplay/math'
 
+import { SelectMapAreaEvent } from './tools/map-editor'
 import { MoveEvent } from './tools/move'
 import { SetTargetEvent } from './tools/set-target'
 
@@ -13,6 +14,7 @@ export type ToolName = 'attack' | 'move' | 'set-target' | 'zoom-and-pan'
 export interface MapViewState {
   extents: Extents
   highlights: { [k in string]?: boolean }
+  selectedMapArea?: string
   selectedToolId: string
   viewport?: Dimensions
 }
@@ -32,6 +34,7 @@ export type MapViewAction =
   | Action<'set-viewport', Dimensions>
   | PanAndZoomEvent
   | MoveEvent
+  | SelectMapAreaEvent
   | SetHighlightsEvent
   | SetTargetEvent
 
@@ -66,6 +69,12 @@ export const reducer = (state: MapViewState, event: MapViewAction): MapViewState
       return {
         ...state,
         extents: event.payload.extents,
+      }
+
+    case 'select-map-area':
+      return {
+        ...state,
+        selectedMapArea: event.payload,
       }
 
     case 'select-tool':

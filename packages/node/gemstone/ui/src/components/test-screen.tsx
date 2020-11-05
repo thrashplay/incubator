@@ -7,6 +7,7 @@ import {
   MovementCommands,
   SceneCommands,
 } from '@thrashplay/gemstone-engine'
+import { createSquareRoom } from '@thrashplay/gemstone-map-model'
 import {
   addCharacter,
   Character,
@@ -31,12 +32,22 @@ const initializeTestScene = () => (_state: GameState) => {
     ...stats,
   })
 
+  const INITIAL_ROOM_BOUNDS = {
+    x: 100,
+    y: 100,
+    width: 300,
+    height: 300,
+  }
+
   const createRandomPosition = () => ({
-    x: Math.random() * 500,
-    y: Math.random() * 500,
+    x: INITIAL_ROOM_BOUNDS.x + 10 + Math.random() * (INITIAL_ROOM_BOUNDS.width - 20),
+    y: INITIAL_ROOM_BOUNDS.y + 10 + Math.random() * (INITIAL_ROOM_BOUNDS.height - 20),
   })
 
   return [
+    // create the map
+    createSquareRoom(INITIAL_ROOM_BOUNDS),
+
     // add the PCs
     addCharacter(createCharacter('Human', 90)),
     addCharacter(createCharacter('Ogre', 60, { reach: 25, size: 10 })),

@@ -1,7 +1,6 @@
 import { useContext } from 'react'
 
-import { GameState } from '@thrashplay/gemstone-engine'
-import { SelectorParameters } from '@thrashplay/gemstone-model'
+import { GameState, SelectorParameters } from '@thrashplay/gemstone-engine'
 
 import { StoreContext } from './context'
 

@@ -1,13 +1,13 @@
 import { find, flow, get, map, matches } from 'lodash/fp'
 import React, { useCallback, useMemo, useReducer } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
-import { Rect, Svg } from 'react-native-svg'
+import { CommonPathProps, Rect, Svg } from 'react-native-svg'
 
 import { Canvas, ContentViewProps } from '@thrashplay/canvas-with-tools'
-import { Area } from '@thrashplay/gemstone-map-model'
-import { AreasRenderer, Grid } from '@thrashplay/gemstone-map-ui'
+import { Area, getArea } from '@thrashplay/gemstone-map-model'
+import { AreaShape, AreasRenderer, Grid } from '@thrashplay/gemstone-map-ui'
 import { Actor } from '@thrashplay/gemstone-model'
-import { WithFrameQuery } from '@thrashplay/gemstone-ui-core'
+import { useValue, WithFrameQuery } from '@thrashplay/gemstone-ui-core'
 import { Dimensions, Extents } from '@thrashplay/math'
 import { WithViewStyles } from '@thrashplay/react-helpers'
 import { ToolSelectorButtonBar } from '@thrashplay/tool-selector'
@@ -22,6 +22,13 @@ const DEFAULT_EXTENTS = {
   width: 500,
   x: 0,
   y: 0,
+}
+
+const SELECTED_MAP_AREA_STYLES: CommonPathProps = {
+  fillOpacity: 0,
+  stroke: 'red',
+  strokeOpacity: 1,
+  strokeWidth: 2,
 }
 
 export type MoveActionHandler = (x: number, y: number) => void
@@ -53,7 +60,7 @@ export interface SceneMapData extends Omit<SceneMapProps, 'extents'> {
   renderAvatar: (props: AvatarProps) => React.ReactNode
 
   /** ID of the map area currently selected */
-  selectedMapArea?: Area['id']
+  selectedMapAreaId?: Area['id']
 }
 
 export const SceneMap = ({
@@ -70,7 +77,7 @@ export const SceneMap = ({
     extents: initialExtents,
   }))
 
-  const { extents, highlights, selectedMapArea, selectedToolId } = state
+  const { extents, highlights, selectedMapAreaId, selectedToolId } = state
 
   const selectedTool = useMemo(() => {
     const option = find(
@@ -102,7 +109,7 @@ export const SceneMap = ({
       />
 
       <Canvas
-        data={{ actors, highlights, renderAvatar, selectedMapArea, style, selectedActor, timeOffset }}
+        data={{ actors, highlights, renderAvatar, selectedMapAreaId, style, selectedActor, timeOffset }}
         extents={extents}
         toolEventDispatch={dispatch}
         onViewportChange={handleViewportChange}
@@ -119,7 +126,8 @@ const MapContent = ({
   data,
   extents,
 }: ContentViewProps<SceneMapData>) => {
-  const { actors, highlights, renderAvatar, selectedActor, timeOffset } = data
+  const { actors, highlights, renderAvatar, selectedActor, selectedMapAreaId, timeOffset } = data
+  const selectedMapArea = useValue(getArea, { areaId: selectedMapAreaId })
 
   const createAvatarRenderProps = useCallback((actor: Actor): AvatarAnimationProps => {
     const position = actor.status.position
@@ -151,12 +159,18 @@ const MapContent = ({
         fill="black"
       />
       {/* <Things /> */}
+      <AreasRenderer />
       <Grid
         gridSpacing={10}
         mapHeight={500}
         mapWidth={500}
       />
-      <AreasRenderer />
+      {selectedMapArea && (
+        <AreaShape
+          {...SELECTED_MAP_AREA_STYLES}
+          area={selectedMapArea}
+        />
+      )}
       {renderAvatars()}
     </Svg>
   )

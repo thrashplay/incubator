@@ -1,5 +1,6 @@
 import { ActionType } from 'typesafe-actions'
 
+import { MapEvents } from '@thrashplay/gemstone-map-model'
 import {
   CharacterEvents,
   CommonEvents,
@@ -13,6 +14,7 @@ export const NOOP = { type: 'noop' } as const
 export const AllEvents = {
   ...CharacterEvents,
   ...CommonEvents,
+  ...MapEvents,
   ...RulesEvents,
   ...SceneEvents,
   ...FrameEvents,

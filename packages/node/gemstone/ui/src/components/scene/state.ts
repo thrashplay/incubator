@@ -14,14 +14,14 @@ export type ToolName = 'attack' | 'move' | 'set-target' | 'zoom-and-pan'
 export interface MapViewState {
   extents: Extents
   highlights: { [k in string]?: boolean }
-  selectedMapArea?: string
+  selectedMapAreaId?: string
   selectedToolId: string
   viewport?: Dimensions
 }
 
 export const INITIAL_STATE: Omit<MapViewState, 'extents'> = {
   highlights: {},
-  selectedToolId: 'pan-and-zoom',
+  selectedToolId: 'map-editor',
 }
 
 export interface Action<TType extends string = string, TPayload extends any = any> {
@@ -74,7 +74,7 @@ export const reducer = (state: MapViewState, event: MapViewAction): MapViewState
     case 'select-map-area':
       return {
         ...state,
-        selectedMapArea: event.payload,
+        selectedMapAreaId: event.payload,
       }
 
     case 'select-tool':

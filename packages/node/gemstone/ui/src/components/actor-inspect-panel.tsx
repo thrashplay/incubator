@@ -1,10 +1,8 @@
-import { flow } from 'lodash'
-import { get, identity, join, map } from 'lodash/fp'
+import { map } from 'lodash/fp'
 import React from 'react'
 import { StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native'
 import { Button } from 'react-native-paper'
 
-import { GameState } from '@thrashplay/gemstone-engine'
 import {
   Actor,
   CharacterId,
@@ -19,56 +17,21 @@ import {
   getTarget,
   MovementMode,
   MovementModeId,
-  Point,
-  SelectorParameters,
 } from '@thrashplay/gemstone-model'
-import { useDispatch, useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
+import { Format, useDispatch, useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
 import { WithViewStyles } from '@thrashplay/react-helpers'
 
-export interface InspectPanelProps extends WithViewStyles<'style'> {
+import { AttributeRow, AttributeRowProps } from './attribute-row'
+
+export interface ActorInspectPanelProps extends WithViewStyles<'style'> {
   /** the ID of the character to control */
   actorId: CharacterId
 }
 
-interface AttributeRowProps<TAttribute> extends WithViewStyles<'style'> {
-  actorId: CharacterId
-
-  /** function used to convert the selected value into a string for display */
-  format?: (value: TAttribute) => string
-  name: string
-  selector: (state: GameState, params: SelectorParameters) => TAttribute
-}
-
-const AttributeRow = <TAttribute extends unknown = any>({
-  actorId,
-  format = identity,
-  name,
-  selector,
-  style,
-}: AttributeRowProps<TAttribute>) => {
-  const frameQuery = useFrameQuery()
-  const value = useValue(selector, { characterId: actorId, ...frameQuery })
-
-  return (
-    <View style={[styles.attributeRow, style]}>
-      <Text style={styles.attributeLabel}>{name}:</Text>
-      <Text style={styles.attributeValue}>{format(value)}</Text>
-    </View>
-  )
-}
-
-const appendDistanceUnit = (value: any) => value === undefined ? 'None' : `${value} ft`
-const formatMovementMode = (mode: MovementMode) => `${mode?.name ?? 'unknown'} (${mode?.multiplier ?? 1}x)`
-const formatPoint = ({ x, y }: Point) => `(${Math.round(x)}, ${Math.round(y)})`
-const getActorNames = (value: Actor[]) => flow(
-  map(get('name')),
-  join(', ')
-)(value)
-
-export const InspectPanel = ({
+export const ActorInspectPanel = ({
   actorId,
   style,
-}: InspectPanelProps) => {
+}: ActorInspectPanelProps) => {
   const dispatch = useDispatch()
 
   const frameQuery = useFrameQuery()
@@ -106,9 +69,9 @@ export const InspectPanel = ({
     ) => actorId === undefined ? null : (
       <AttributeRow
         key={name}
-        actorId={actorId}
         name={name}
         selector={selector}
+        selectorParams={{ characterId: actorId, ...frameQuery }}
         {...rest}
       />
     )
@@ -116,12 +79,12 @@ export const InspectPanel = ({
     return (
       <>
         <View style={styles.content}>
-          {createAttributeRow('Position', getPosition, { format: formatPoint })}
+          {createAttributeRow('Position', getPosition, { format: Format.point })}
           {createAttributeRow('Target', getTarget)}
-          {createAttributeRow('Speed', getCurrentSpeed, { format: appendDistanceUnit })}
-          {createAttributeRow('Reach', getReach, { format: appendDistanceUnit })}
-          {createAttributeRow('In Range', getReachableTargets, { format: getActorNames })}
-          {createAttributeRow('Movement Mode', getActiveMovementMode, { format: formatMovementMode })}
+          {createAttributeRow('Speed', getCurrentSpeed, { format: Format.distance })}
+          {createAttributeRow('Reach', getReach, { format: Format.distance })}
+          {createAttributeRow('In Range', getReachableTargets, { format: Format.actorList })}
+          {createAttributeRow('Movement Mode', getActiveMovementMode, { format: Format.movementMode })}
           <View style={styles.smallOptionRow}>
             {map(createMovementModeButton)(movementModes)}
           </View>
@@ -137,21 +100,6 @@ export const InspectPanel = ({
       {actor && renderControls(actor)}
     </View>
   )
-}
-
-const attributeLabel: TextStyle = {
-  fontWeight: 'bold',
-  marginRight: 8,
-}
-
-const attributeRow: ViewStyle = {
-  flexDirection: 'row',
-  marginBottom: 8,
-  marginTop: 8,
-}
-
-const attributeValue: TextStyle = {
-
 }
 
 const content: ViewStyle = {
@@ -190,9 +138,6 @@ const smallOptionRow: ViewStyle = {
 }
 
 const styles = StyleSheet.create({
-  attributeLabel,
-  attributeRow,
-  attributeValue,
   content,
   firstRow,
   smallOptionButton,

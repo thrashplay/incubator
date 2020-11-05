@@ -4,7 +4,7 @@ import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper'
 import 'react-native-gesture-handler'
 import { StoreProvider } from '@thrashplay/gemstone-ui-core'
 
-import { TestScreen } from './components/test-screen'
+import { GameScreen } from './components/game-screen'
 // import { Provider } from 'react-redux'
 
 // import { createApplicationStore } from './store'
@@ -24,7 +24,7 @@ export class App extends Component {
     return (
       <StoreProvider>
         <PaperProvider theme={theme}>
-          <TestScreen />
+          <GameScreen />
         </PaperProvider>
       </StoreProvider>
     )

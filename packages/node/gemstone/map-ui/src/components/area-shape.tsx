@@ -14,8 +14,6 @@ export interface AreaShapeProps extends Omit<CommonPathProps, 'x' | 'y'> {
  **/
 export const AreaShape = ({ area, ...rest }: AreaShapeProps) => {
   const { bounds } = area
-  console.log('sphp:', JSON.stringify(area))
-  console.log('sphp:', JSON.stringify(rest))
   return (
     <Rect
       {...bounds}

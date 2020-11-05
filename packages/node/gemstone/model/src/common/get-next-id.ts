@@ -1,4 +1,4 @@
-export const getNextId = (base: string) => {
+export const getNextId = (_base: string) => {
   let id = 1
-  return () => `${base}/${id++}`
+  return () => `${id++}`
 }

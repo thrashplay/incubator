@@ -3,7 +3,7 @@ import { isNil, noop } from 'lodash'
 import React, { ReactElement, useCallback, useRef, useState } from 'react'
 import { LayoutChangeEvent, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 
-import { Dimensions, Extents } from '@thrashplay/geometry'
+import { Dimensions, Extents } from '@thrashplay/math'
 
 import { CanvasEventEmitter, DragEvent, TapEvent, ZoomEvent } from './canvas-events'
 import { ContentViewProps } from './content-view-props'

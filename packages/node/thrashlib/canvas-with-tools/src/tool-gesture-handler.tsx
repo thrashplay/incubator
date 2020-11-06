@@ -13,7 +13,7 @@ import {
   TapGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler'
 
-import { Dimensions, Extents, XY } from '@thrashplay/geometry'
+import { Dimensions, Extents, XY } from '@thrashplay/math'
 
 import { DragEvent, TapEvent, ZoomEvent } from './canvas-events'
 

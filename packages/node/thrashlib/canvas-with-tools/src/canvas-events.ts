@@ -1,6 +1,6 @@
 import TypedEmitter from 'typed-emitter'
 
-import { Dimensions, Extents } from '@thrashplay/geometry'
+import { Dimensions, Extents } from '@thrashplay/math'
 
 /* Canvas event types */
 export interface CanvasEvent {

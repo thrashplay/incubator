@@ -1,9 +1,29 @@
-import React from 'react'
+import { useCallback } from 'react'
 
-import { ToolProps } from '../tool-component'
+import { DragEvent } from '../canvas-events'
+import { calculateScale } from '../coordinate-helpers'
+import { useCanvasEvent } from '../hooks/use-canvas-event'
 
-import { PanAndZoomEvent, PanAndZoomTool } from './pan-and-zoom'
+import { ExtentsControllerProps } from './extents-controller-props'
 
-export const PanTool = (props: ToolProps<PanAndZoomEvent>) => {
-  return <PanAndZoomTool disableZoom={true} {...props} />
+export const PanTool = ({ onExtentsChanged }: ExtentsControllerProps) => {
+  const handleDrag = useCallback(({
+    dx,
+    dy,
+    extents,
+    viewport,
+  }: DragEvent) => {
+    const scale = calculateScale(extents, viewport)
+    onExtentsChanged({
+      ...extents,
+      x: extents.x - dx / scale,
+      y: extents.y - dy / scale,
+    })
+  }, [onExtentsChanged])
+
+  useCanvasEvent('drag', handleDrag)
+
+  return (
+    null
+  )
 }

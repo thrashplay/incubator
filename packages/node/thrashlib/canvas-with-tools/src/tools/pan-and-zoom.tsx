@@ -1,28 +1,12 @@
 import { useCallback } from 'react'
 
-import { Extents } from '@thrashplay/geometry'
-
 import { DragEvent, ZoomEvent } from '../canvas-events'
 import { calculateScale } from '../coordinate-helpers'
-import { ToolProps } from '../tool-component'
-import { ToolEvent } from '../tool-events'
-import { useCanvasEvent } from '../use-canvas-event'
+import { useCanvasEvent } from '../hooks/use-canvas-event'
 
-export type PanAndZoomEvent = ToolEvent<'canvas/pan-and-zoom', { extents: Extents }>
+import { ExtentsControllerProps } from './extents-controller-props'
 
-export type PanAndZoomToolProps = ToolProps<PanAndZoomEvent> & {
-  /** if true, the pan function is disabled */
-  disablePan?: boolean
-
-  /** if true, the zoom function is disabled */
-  disableZoom?: boolean
-}
-
-export const PanAndZoomTool = ({
-  disablePan = false,
-  disableZoom = false,
-  toolEventDispatch,
-}: PanAndZoomToolProps) => {
+export const PanAndZoomTool = ({ onExtentsChanged }: ExtentsControllerProps) => {
   const handleDrag = useCallback(({
     dx,
     dy,
@@ -30,20 +14,12 @@ export const PanAndZoomTool = ({
     viewport,
   }: DragEvent) => {
     const scale = calculateScale(extents, viewport)
-
-    if (!disablePan) {
-      toolEventDispatch({
-        type: 'canvas/pan-and-zoom',
-        payload: {
-          extents: {
-            ...extents,
-            x: extents.x - dx / scale,
-            y: extents.y - dy / scale,
-          },
-        },
-      })
-    }
-  }, [disablePan, toolEventDispatch])
+    onExtentsChanged({
+      ...extents,
+      x: extents.x - dx / scale,
+      y: extents.y - dy / scale,
+    })
+  }, [onExtentsChanged])
 
   // https://stackoverflow.com/a/30992764/517254
   const handleZoom = useCallback(({
@@ -60,20 +36,13 @@ export const PanAndZoomTool = ({
     const xRatio = x / viewport.width
     const yRatio = y / viewport.height
 
-    if (!disableZoom) {
-      toolEventDispatch({
-        type: 'canvas/pan-and-zoom',
-        payload: {
-          extents: {
-            x: extents.x - (xGrow * xRatio),
-            y: extents.y - (yGrow * yRatio),
-            width: newWidth,
-            height: newHeight,
-          },
-        },
-      })
-    }
-  }, [disableZoom, toolEventDispatch])
+    onExtentsChanged({
+      x: extents.x - (xGrow * xRatio),
+      y: extents.y - (yGrow * yRatio),
+      width: newWidth,
+      height: newHeight,
+    })
+  }, [onExtentsChanged])
 
   useCanvasEvent('drag', handleDrag)
   useCanvasEvent('zoom', handleZoom)

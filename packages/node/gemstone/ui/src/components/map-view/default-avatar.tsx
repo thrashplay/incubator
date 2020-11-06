@@ -244,7 +244,6 @@ export const DefaultAvatar = (props: AvatarProps) => {
           {take(1)(name)}
         </Text>
       </AnimatedG>
-      <RenderAction {...props} />
       {!isAnimating && <RenderAction {...props} />}
       {!isAnimating && <RenderTarget {...props} />}
     </G>

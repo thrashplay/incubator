@@ -1,6 +1,6 @@
 import { map } from 'lodash/fp'
 import React from 'react'
-import { StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native'
+import { ScrollView, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native'
 import { Button } from 'react-native-paper'
 
 import {
@@ -79,16 +79,17 @@ export const ActorInspectPanel = ({
     return (
       <>
         <View style={styles.content}>
-          {createAttributeRow('Position', getPosition, { format: Format.point })}
-          {createAttributeRow('Target', getTarget)}
-          {createAttributeRow('Speed', getCurrentSpeed, { format: Format.distance })}
-          {createAttributeRow('Reach', getReach, { format: Format.distance })}
-          {createAttributeRow('In Range', getReachableTargets, { format: Format.actorList })}
-          {createAttributeRow('Movement Mode', getActiveMovementMode, { format: Format.movementMode })}
-          <View style={styles.smallOptionRow}>
-            {map(createMovementModeButton)(movementModes)}
-          </View>
-
+          <ScrollView>
+            {createAttributeRow('Position', getPosition, { format: Format.point })}
+            {createAttributeRow('Target', getTarget)}
+            {createAttributeRow('Speed', getCurrentSpeed, { format: Format.distance })}
+            {createAttributeRow('Reach', getReach, { format: Format.distance })}
+            {createAttributeRow('In Range', getReachableTargets, { format: Format.actorList })}
+            {createAttributeRow('Movement Mode', getActiveMovementMode, { format: Format.movementMode })}
+            <View style={styles.smallOptionRow}>
+              {map(createMovementModeButton)(movementModes)}
+            </View>
+          </ScrollView>
         </View>
       </>
     )

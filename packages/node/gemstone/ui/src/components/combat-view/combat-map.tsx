@@ -7,7 +7,7 @@ import { WithFrameQuery } from '@thrashplay/gemstone-ui-core'
 import { WithViewStyles } from '@thrashplay/react-helpers'
 
 import { ViewEventDispatch } from '../dispatch-view-event'
-import { AvatarAnimation } from '../map-view/avatar-animation'
+import { AnimatedAvatar } from '../map-view/animated-avatar'
 import { MapView } from '../map-view/map-view'
 import { PanAndZoomOption } from '../map-view/pan-and-zoom-option'
 import { ToolOption } from '../map-view/tool-option'
@@ -56,10 +56,9 @@ export const CombatMap = ({
         toolOptions={[PanAndZoomOption, ...TOOL_OPTIONS]}
       >
         {selectedActorId && (
-          <AvatarAnimation
+          <AnimatedAvatar
             actorId={selectedActorId}
             selected={true}
-            timeOffset={0}
           />)}
         {SelectedTool && <SelectedTool.component dispatchViewEvent={dispatch} viewState={props} />}
       </MapView>

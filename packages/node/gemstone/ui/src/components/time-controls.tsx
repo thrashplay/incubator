@@ -39,7 +39,9 @@ export const TimeControls = ({
   }, [dispatch])
 
   const selectTime = useCallback((time: number) => {
-    selectFrame(time / segmentDuration)
+    if (isFinite(time / segmentDuration)) {
+      selectFrame(time / segmentDuration)
+    }
   }, [segmentDuration, selectFrame])
 
   const jumpToPresent = useCallback(() => {

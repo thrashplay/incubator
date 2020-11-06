@@ -1,6 +1,7 @@
 import { map, noop } from 'lodash/fp'
 import React, { useState } from 'react'
 import { StyleSheet, Text, TextStyle, ViewStyle } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
 import { List } from 'react-native-paper'
 
 import { getPublicActionDescription } from '@thrashplay/gemstone-engine'
@@ -69,7 +70,9 @@ export const ActorList = ({
   return (
     <List.Section style={[styles.container, style]}>
       {title && <List.Subheader style={[styles.title, titleStyle]}>{title}</List.Subheader>}
-      {map(createListItem)(actors)}
+      <ScrollView>
+        {map(createListItem)(actors)}
+      </ScrollView>
     </List.Section>
   )
 }

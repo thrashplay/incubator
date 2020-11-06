@@ -5,6 +5,7 @@ import { LayoutChangeEvent, StyleProp, StyleSheet, View, ViewStyle } from 'react
 
 import { Dimensions, Extents } from '@thrashplay/math'
 
+import { adjustExtentsForViewport } from './adjust-extents-for-viewport'
 import { CanvasEventEmitter, DragEvent, TapEvent, ZoomEvent } from './canvas-events'
 import { CanvasContext } from './context'
 import { ToolGestureHandler } from './tool-gesture-handler'
@@ -45,11 +46,15 @@ export const Canvas = ({
       width: event.nativeEvent.layout.width,
       height: event.nativeEvent.layout.height,
     }
-    console.log('nvp', newViewport)
+
+    const oldViewport = viewport
+
     setViewport(newViewport)
     onViewportChanged(newViewport)
-  }
 
+    const newExtents = adjustExtentsForViewport(extents, oldViewport, newViewport)
+    handleExtentsChange(newExtents)
+  }
   const handleDrag = useCallback((event: DragEvent) => eventEmitter.current.emit('drag', event), [])
   const handleTap = useCallback((event: TapEvent) => eventEmitter.current.emit('tap', event), [])
   const handleZoom = useCallback((event: ZoomEvent) => eventEmitter.current.emit('zoom', event), [])

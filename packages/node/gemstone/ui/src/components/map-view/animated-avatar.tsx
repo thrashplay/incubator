@@ -2,22 +2,20 @@ import { isEqual } from 'lodash'
 import React, { useRef, useState } from 'react'
 import { Animated } from 'react-native'
 
-import { getPosition, Point } from '@thrashplay/gemstone-model'
+import { getPosition, getTime, Point } from '@thrashplay/gemstone-model'
 import { useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
 
 import { AvatarProps, DefaultAvatar } from './default-avatar'
 
-export interface AvatarAnimationProps extends Omit<AvatarProps, 'animatedX' | 'animatedY' | 'isAnimating'> {
-  /** the time offset, in seconds, of the frame currently being rendered */
-  timeOffset: number
-}
+export type AnimatedAvatarProps = Omit<AvatarProps, 'animatedX' | 'animatedY' | 'isAnimating'>
 
-export const AvatarAnimation = (props: AvatarAnimationProps) => {
-  const { actorId, renderAvatar, timeOffset } = props
+export const AnimatedAvatar = (props: AnimatedAvatarProps) => {
+  const { actorId, renderAvatar } = props
 
   const frameQuery = useFrameQuery()
   const query = { ...frameQuery, characterId: actorId }
   const position = useValue(getPosition, query)
+  const timeOffset = useValue(getTime, frameQuery)
 
   const [isAnimating, setIsAnimating] = useState(false)
 
@@ -53,7 +51,7 @@ export const AvatarAnimation = (props: AvatarAnimationProps) => {
     <DefaultAvatar {...props}
       animatedX={animationCurrent.x}
       animatedY={animationCurrent.y}
-      isAnimating={true}
+      isAnimating={isAnimating}
     />
   )
 }

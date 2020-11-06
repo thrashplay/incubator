@@ -1,5 +1,5 @@
 import { filter, flow, reduce } from 'lodash/fp'
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 
 import {
   CoordinateConverter,
@@ -24,10 +24,7 @@ import { ToolProps } from '../../dispatch-view-event'
 import { CombatViewEvent } from '../reducer'
 import { CombatViewState } from '../state'
 
-export const MoveTool = ({
-  dispatchViewEvent,
-  viewState,
-}: ToolProps<CombatViewState, CombatViewEvent>) => {
+export const MoveTool = ({ viewState }: ToolProps<CombatViewState, CombatViewEvent>) => {
   const { selectedActorId } = viewState
 
   const { extents, viewport } = useViewport()

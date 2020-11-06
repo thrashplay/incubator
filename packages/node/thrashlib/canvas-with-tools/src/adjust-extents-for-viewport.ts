@@ -1,5 +1,3 @@
-import { isNil } from 'lodash'
-
 import { Dimensions, Extents } from '@thrashplay/math'
 
 import { calculateScale } from './coordinate-helpers'
@@ -12,7 +10,7 @@ export const adjustExtentsForViewport = (
   newViewport: Dimensions
 ) => {
   // if we didn't have an old viewport, center the extents in the current viewport by adjusting for aspect ratio
-  if (isNil(oldViewport)) {
+  if (oldViewport?.width === 0 || oldViewport?.height === 0) {
     const scale = calculateScale(extents, newViewport)
 
     const extentsWidthInPixels = extents.width * scale

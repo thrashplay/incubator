@@ -68,19 +68,18 @@ const actorList: ViewStyle = {
   borderStyle: 'solid',
   borderWidth: 1,
   flexBasis: 0,
-  flexGrow: 1,
+  flexGrow: 3,
 }
 
 const container: ViewStyle = {
-  display: 'flex',
   flexDirection: 'row',
+  alignItems: 'stretch',
 }
 
 const inspectPanel: ViewStyle = {
   borderColor: '#999',
   borderStyle: 'solid',
   borderWidth: 1,
-  flexBasis: 0,
   flexGrow: 1,
   marginTop: 8,
 }
@@ -90,9 +89,8 @@ const mapView: ViewStyle = {
 }
 
 const sidebar: ViewStyle = {
-  display: 'flex',
   flexDirection: 'column',
-  marginRight: 16,
+  marginRight: 8,
   width: 300,
 }
 

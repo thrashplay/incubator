@@ -1,5 +1,5 @@
 import { find, matches } from 'lodash/fp'
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 
 import { Actor } from '@thrashplay/gemstone-model'
@@ -12,7 +12,7 @@ import { MapView } from '../map-view/map-view'
 import { PanAndZoomOption } from '../map-view/pan-and-zoom-option'
 import { ToolOption } from '../map-view/tool-option'
 
-import { CombatViewEvent } from './reducer'
+import { CombatViewEvent, CombatViewEvents } from './reducer'
 import { CombatViewState } from './state'
 import { TOOL_OPTIONS } from './tools'
 
@@ -43,10 +43,15 @@ export const CombatMap = ({
     return option
   }, [selectedToolId])
 
+  const handleToolSelected = useCallback((toolId: string) => {
+    dispatch(CombatViewEvents.toolSelected(toolId))
+  }, [dispatch])
+
   return (
     <View style={[styles.container, style]}>
       <MapView
         extents={extents}
+        onToolSelected={handleToolSelected}
         selectedToolId={selectedToolId}
         toolOptions={[PanAndZoomOption, ...TOOL_OPTIONS]}
       >

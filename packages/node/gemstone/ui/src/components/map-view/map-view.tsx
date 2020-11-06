@@ -1,7 +1,7 @@
 import { noop } from 'lodash'
 import { find, flow, isEmpty, map, matches } from 'lodash/fp'
 import React, { PropsWithChildren, useCallback, useMemo } from 'react'
-import { StyleSheet, View, ViewStyle } from 'react-native'
+import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 import { Svg } from 'react-native-svg'
 
 import { Canvas, useViewport } from '@thrashplay/canvas-with-tools'
@@ -52,6 +52,11 @@ export const MapView = <TViewEvent extends ViewEvent = any>({
     return option
   }, [selectedToolId, toolOptions])
 
+  // const handleContentErrors = (error: Error) => {
+  //   console.log('Error rendering map-view child content.', error)
+  //   return null
+  // }
+
   return (
     <View style={[styles.container, style]}>
       {!isEmpty(toolOptions) && (
@@ -95,9 +100,9 @@ const MapContent = ({ children }: PropsWithChildren<any>) => {
 
   return (
     <Svg
-      height={viewport.height}
       viewBox={`${extents.x} ${extents.y} ${extents.width} ${extents.height}`}
-      width={viewport.width}
+      height={viewport.height}
+      // width={viewport.width}
     >
       <AreasRenderer />
       <Grid
@@ -115,7 +120,6 @@ const canvas: ViewStyle = {
   alignContent: 'stretch',
   backgroundColor: 'black',
   flex: 1,
-  flexDirection: 'row',
   marginBottom: 0,
   marginTop: 4,
 }
@@ -125,7 +129,9 @@ const container: ViewStyle = {
 }
 
 const toolSelector: ViewStyle = {
-  backgroundColor: '#ddd',
+  backgroundColor: '#eee',
+  borderColor: '#ccc',
+  borderWidth: 1,
 }
 
 const styles = StyleSheet.create({

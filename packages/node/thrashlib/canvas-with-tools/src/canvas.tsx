@@ -72,6 +72,15 @@ export const Canvas = ({
   const renderZoomToolIfEnabled = () =>
     panAndZoomMode === 'zoom' && <ZoomTool onExtentsChanged={handleExtentsChange} />
 
+  const renderContent = () => (
+    <>
+      {children}
+      {renderPanToolIfEnabled()}
+      {renderZoomToolIfEnabled()}
+      {renderPanAndZoomToolIfEnabled()}
+    </>
+  )
+
   // ////////////////////////
   // tool event listener management
   // ////////////////////////
@@ -87,25 +96,20 @@ export const Canvas = ({
         onLayout={handleLayout}
         style={styles.fillParent}
       >
-        {viewport.width > 0 && viewport.height > 0 && !isNil(extents) && (
-          <CanvasContext.Provider value={{
-            emit: eventEmitter.current,
-            extents,
-            viewport,
-          }}>
-            <ToolGestureHandler
-              extents={extents}
-              onDrag={handleDrag}
-              onTap={handleTap}
-              onZoom={handleZoom}
-              viewport={viewport}
-            />
-            {children}
-            {renderPanToolIfEnabled()}
-            {renderZoomToolIfEnabled()}
-            {renderPanAndZoomToolIfEnabled()}
-          </CanvasContext.Provider>
-        )}
+        <CanvasContext.Provider value={{
+          emit: eventEmitter.current,
+          extents,
+          viewport,
+        }}>
+          <ToolGestureHandler
+            extents={extents}
+            onDrag={handleDrag}
+            onTap={handleTap}
+            onZoom={handleZoom}
+            viewport={viewport}
+          />
+          {viewport.width > 0 && viewport.height > 0 && !isNil(extents) && renderContent()}
+        </CanvasContext.Provider>
       </View>
     </View>
   )

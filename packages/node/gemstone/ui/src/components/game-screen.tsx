@@ -1,8 +1,7 @@
 import { toLower } from 'lodash'
-import { noop } from 'lodash/fp'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
-import { Button, ToggleButton } from 'react-native-paper'
+import { Appbar } from 'react-native-paper'
 
 import {
   GameState,
@@ -14,16 +13,12 @@ import {
   addCharacter,
   Character,
   CharacterId,
-  getActor,
-  getActors,
   getTime,
 } from '@thrashplay/gemstone-model'
 import { FrameProvider, useDispatch, useValue } from '@thrashplay/gemstone-ui-core'
 
-import { ActorInspectPanel } from './actor-inspect-panel'
-import { ActorList } from './actor-list'
-import { CombatMap } from './combat-map/combat-map'
-import { MapAreaInspectPanel } from './map-editor/map-editor-inspect-panel'
+import { CombatView } from './combat-view/combat-view'
+import { MapAreaInspectPanel } from './map-editor-view/map-editor-inspect-panel'
 import { TimeControls } from './time-controls'
 
 type Mode = 'combat' | 'gm' | 'map-editor'
@@ -83,37 +78,33 @@ export const GameScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const [selectedMode, setSelectedMode] = useState<Mode>('map-editor')
-  const [selectedActorId, setSelectedActorId] = useState<CharacterId | undefined>(undefined)
+  const [selectedMode, setSelectedMode] = useState<Mode>('combat')
   const [selectedAreaId, setSelectedAreaId] = useState<Area['id'] | undefined>(undefined)
 
-  const actors = useValue(getActors, { fallback: true, frameTag: 'selected' })
   const selectedTime = useValue(getTime, { fallback: true, frameTag: 'selected' })
 
-  const handleSelectActor = (id: CharacterId) => setSelectedActorId(id)
   const handleSelectArea = (id: Area['id']) => setSelectedAreaId(id)
 
-  const getToggleStatusForMode = (mode: Mode) => selectedMode === mode ? 'checked' : 'unchecked'
-  const handleModeSelect = (mode: Mode) => () => setSelectedMode(mode)
+  const getModeTitle = () => {
+    switch (selectedMode) {
+      case 'combat':
+        return 'Combat'
 
-  const renderCombatControls = () => {
-    return (
-      <>
-        <ActorList
-          actors={actors}
-          onSelect={handleSelectActor}
-          style={styles.actorList}
-          title="Combatants"
-        />
-        {selectedActorId && (
-          <ActorInspectPanel
-            actorId={selectedActorId}
-            style={styles.inspectPanel}
-          />
-        )}
-      </>
-    )
+      case 'gm':
+        return 'GM Tools'
+
+      case 'map-editor':
+        return 'Map Editor'
+
+      default:
+        return 'Gemstone'
+    }
   }
+  const getButtonStylesForMode = (mode: Mode) => selectedMode === mode
+    ? [styles.modeSelectButton, styles.selected]
+    : styles.modeSelectButton
+
+  const handleModeSelect = (mode: Mode) => () => setSelectedMode(mode)
 
   const renderMapEditorControls = () => {
     return (
@@ -128,54 +119,29 @@ export const GameScreen = () => {
     )
   }
 
+  const createModeButton = (mode: Mode, icon: string) => (
+    <Appbar.Action
+      color={selectedMode === mode ? '#333' : '#fff'}
+      icon={icon}
+      onPress={handleModeSelect(mode)}
+      style={getButtonStylesForMode(mode)}
+    />
+  )
+
   return (
     <FrameProvider frameQuery={{ fallback: true, frameTag: 'selected' }}>
+      <Appbar.Header>
+        <Appbar.Content title={getModeTitle()} />
+        {createModeButton('combat', 'sword-cross')}
+        {createModeButton('map-editor', 'map-legend')}
+        {createModeButton('gm', 'pencil')}
+      </Appbar.Header>
       <View style={styles.container}>
-        <View style={styles.content}>
-          <View style={styles.sidebar}>
-            <View style={styles.modeSelectBar}>
-              <ToggleButton
-                icon="map-legend"
-                onPress={handleModeSelect('map-editor')}
-                status={getToggleStatusForMode('map-editor')}
-                style={styles.modeSelectButton}
-              />
-              <ToggleButton
-                icon="sword-cross"
-                onPress={handleModeSelect('combat')}
-                status={getToggleStatusForMode('combat')}
-                style={styles.modeSelectButton}
-              />
-              <ToggleButton
-                icon="pencil"
-                onPress={handleModeSelect('gm')}
-                status={getToggleStatusForMode('gm')}
-                style={styles.modeSelectButton}
-              />
-            </View>
-            {selectedMode === 'combat' && renderCombatControls()}
-            {selectedMode === 'map-editor' && renderMapEditorControls()}
-          </View>
-          <CombatMap
-            selectedActorId={selectedActorId}
-            style={styles.locationMap}
-            timeOffset={0}
-          />
-        </View>
-        <TimeControls
-          style={styles.timeBar}
-        />
+        <CombatView style={styles.content}/>
       </View>
+      <TimeControls style={styles.timeControls}/>
     </FrameProvider>
   )
-}
-
-const actorList: ViewStyle = {
-  borderColor: '#999',
-  borderStyle: 'solid',
-  borderWidth: 1,
-  flexBasis: 0,
-  flexGrow: 1,
 }
 
 const inspectPanel: ViewStyle = {
@@ -189,7 +155,6 @@ const inspectPanel: ViewStyle = {
 
 const container: ViewStyle = {
   display: 'flex',
-  flexDirection: 'column',
   flexGrow: 1,
   marginBottom: 8,
   marginLeft: 8,
@@ -198,42 +163,24 @@ const container: ViewStyle = {
 }
 
 const content: ViewStyle = {
-  flexDirection: 'row',
   flexGrow: 1,
-}
-
-const locationMap: ViewStyle = {
-  flexGrow: 1,
-}
-
-const modeSelectBar: ViewStyle = {
-  flexDirection: 'row',
-  marginBottom: 4,
 }
 
 const modeSelectButton: ViewStyle = {
-  flex: 1,
 }
 
-const sidebar: ViewStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  marginRight: 16,
-  width: 300,
+const selected: ViewStyle = {
+  backgroundColor: '#ffffff99',
 }
 
-const timeBar: ViewStyle = {
-  marginTop: 8,
+const timeControls: ViewStyle = {
 }
 
 const styles = StyleSheet.create({
-  actorList,
   container,
   content,
   inspectPanel,
-  locationMap,
-  modeSelectBar,
   modeSelectButton,
-  sidebar,
-  timeBar,
+  selected,
+  timeControls,
 })

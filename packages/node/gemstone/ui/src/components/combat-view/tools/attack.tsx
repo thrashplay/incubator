@@ -3,8 +3,6 @@ import { useCallback } from 'react'
 import {
   CoordinateConverter,
   TapEvent,
-  ToolEvent,
-  ToolProps,
   useCanvasEvent,
 } from '@thrashplay/canvas-with-tools'
 import { createAction } from '@thrashplay/gemstone-engine'
@@ -15,8 +13,6 @@ import {
 } from '@thrashplay/gemstone-model'
 import { useDispatch, useFrameQuery, useSelector } from '@thrashplay/gemstone-ui-core'
 import { Point } from '@thrashplay/math'
-
-import { SceneMapData } from '../scene-map'
 
 // maximum distance between cursor and actor that we consider a click
 const MAX_CLICK_DISTANCE = 24

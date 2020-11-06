@@ -130,16 +130,16 @@ export const GameScreen = () => {
 
   return (
     <FrameProvider frameQuery={{ fallback: true, frameTag: 'selected' }}>
-      <Appbar.Header>
-        <Appbar.Content title={getModeTitle()} />
-        {createModeButton('combat', 'sword-cross')}
-        {createModeButton('map-editor', 'map-legend')}
-        {createModeButton('gm', 'pencil')}
-      </Appbar.Header>
       <View style={styles.container}>
+        <Appbar.Header>
+          <Appbar.Content title={getModeTitle()} />
+          {createModeButton('combat', 'sword-cross')}
+          {createModeButton('map-editor', 'map-legend')}
+          {createModeButton('gm', 'pencil')}
+        </Appbar.Header>
         <CombatView style={styles.content}/>
+        <TimeControls style={styles.timeControls}/>
       </View>
-      <TimeControls style={styles.timeControls}/>
     </FrameProvider>
   )
 }
@@ -149,21 +149,21 @@ const inspectPanel: ViewStyle = {
   borderStyle: 'solid',
   borderWidth: 1,
   flexBasis: 0,
-  flexGrow: 1,
+  // flexGrow: 1,
   marginTop: 8,
 }
 
 const container: ViewStyle = {
-  display: 'flex',
+  flexDirection: 'column',
+  flexGrow: 1,
+}
+
+const content: ViewStyle = {
   flexGrow: 1,
   marginBottom: 8,
   marginLeft: 8,
   marginRight: 8,
   marginTop: 8,
-}
-
-const content: ViewStyle = {
-  flexGrow: 1,
 }
 
 const modeSelectButton: ViewStyle = {

@@ -6,6 +6,7 @@ import {
   DragEvent,
   TapEvent,
   useCanvasEvent,
+  useViewport,
 } from '@thrashplay/canvas-with-tools'
 import { createAction } from '@thrashplay/gemstone-engine'
 import {
@@ -20,25 +21,31 @@ import { useDispatch, useFrameQuery, useSelector, useValue } from '@thrashplay/g
 import { calculateDistance, Point } from '@thrashplay/math'
 
 import { ToolProps } from '../../dispatch-view-event'
-import { MapViewEvent } from '../../map-view/reducer'
+import { CombatViewEvent } from '../reducer'
+import { CombatViewState } from '../state'
 
-export const MoveTool = (
-  { dispatchViewEvent }: ToolProps<MapViewEvent>
-) => {
+export const MoveTool = ({
+  dispatchViewEvent,
+  viewState,
+}: ToolProps<CombatViewState, CombatViewEvent>) => {
+  const { selectedActorId } = viewState
+
+  const { extents, viewport } = useViewport()
+
   const dispatch = useDispatch()
   const frameQuery = useFrameQuery()
   const actors = useValue(getActors, frameQuery)
-  const reach = useValue(getReach, { ...frameQuery, characterId: selectedActor?.id })
+  const reach = useValue(getReach, { ...frameQuery, characterId: selectedActorId })
   const selectSize = useSelector(getSize)
 
   const dispatchMove = useCallback((destination: Point) => {
-    if (selectedActor !== undefined) {
+    if (selectedActorId !== undefined) {
       dispatch(FrameEvents.actionDeclared({
         action: createAction('move', destination),
-        characterId: selectedActor.id,
+        characterId: selectedActorId,
       }))
     }
-  }, [dispatch, selectedActor])
+  }, [dispatch, selectedActorId])
 
   const highlightTargetsInRange = useCallback((newLocation: Point) => {
     const closeEnoughToTarget = (target: Actor) => {
@@ -56,17 +63,17 @@ export const MoveTool = (
 
       const highlights = reduce(addActor)({})(actors)
 
-      dispatchToolEvent({
-        type: 'set-highlights',
-        payload: highlights,
-      })
+      // dispatchViewEvent({
+      //   type: 'set-highlights',
+      //   payload: highlights,
+      // })
     }
 
     flow(
       filter(closeEnoughToTarget),
       setHighlightedActors
     )(actors)
-  }, [actors, frameQuery, reach, selectSize, toolEventDispatch])
+  }, [actors, frameQuery, reach, selectSize])
 
   const handleDrag = useCallback(({
     x,
@@ -77,28 +84,28 @@ export const MoveTool = (
 
     highlightTargetsInRange(worldCoordinates)
 
-    toolEventDispatch({
-      type: 'move',
-      payload: worldCoordinates,
-    })
+    // toolEventDispatch({
+    //   type: 'move',
+    //   payload: worldCoordinates,
+    // })
 
     dispatchMove(worldCoordinates)
-  }, [dispatchMove, extents, highlightTargetsInRange, toolEventDispatch, viewport])
+  }, [dispatchMove, extents, highlightTargetsInRange, viewport])
 
   const handleTap = (coordinates: TapEvent) => {
     const convertCoordinates = new CoordinateConverter(extents, viewport)
     const worldCoordinates = convertCoordinates.toWorld(coordinates)
 
-    toolEventDispatch({
-      type: 'move',
-      payload: worldCoordinates,
-    })
+    // toolEventDispatch({
+    //   type: 'move',
+    //   payload: worldCoordinates,
+    // })
   }
 
   useCanvasEvent('tap', handleTap)
   useCanvasEvent('drag', handleDrag)
 
   return (
-    <ZoomComponent {...props} />
+    null
   )
 }

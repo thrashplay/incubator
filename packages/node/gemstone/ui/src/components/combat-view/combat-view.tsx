@@ -6,10 +6,13 @@ import { useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
 import { Extents } from '@thrashplay/math'
 import { WithViewStyles } from '@thrashplay/react-helpers'
 
+import { LayoutStyles } from '../layout-styles'
+
 import { ActorInspectPanel } from './actor-inspect-panel'
 import { ActorList } from './actor-list'
 import { CombatMap } from './combat-map'
-import { CombatViewEvents, reducer } from './reducer'
+import { CombatViewEvents } from './events'
+import { reducer } from './reducer'
 import { DEFAULT_EXTENTS, INITIAL_STATE } from './state'
 
 export interface CombatViewProps extends WithViewStyles<'style'> {
@@ -71,11 +74,6 @@ const actorList: ViewStyle = {
   flexGrow: 3,
 }
 
-const container: ViewStyle = {
-  flexDirection: 'row',
-  alignItems: 'stretch',
-}
-
 const inspectPanel: ViewStyle = {
   borderColor: '#999',
   borderStyle: 'solid',
@@ -84,20 +82,10 @@ const inspectPanel: ViewStyle = {
   marginTop: 8,
 }
 
-const mapView: ViewStyle = {
-  flexGrow: 1,
+const styles = {
+  ...LayoutStyles,
+  ...StyleSheet.create({
+    actorList,
+    inspectPanel,
+  }),
 }
-
-const sidebar: ViewStyle = {
-  flexDirection: 'column',
-  marginRight: 8,
-  width: 300,
-}
-
-const styles = StyleSheet.create({
-  actorList,
-  container,
-  inspectPanel,
-  mapView,
-  sidebar,
-})

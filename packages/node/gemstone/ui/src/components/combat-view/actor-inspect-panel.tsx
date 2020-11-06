@@ -21,7 +21,7 @@ import {
 import { Format, useDispatch, useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
 import { WithViewStyles } from '@thrashplay/react-helpers'
 
-import { AttributeRow, AttributeRowProps } from './attribute-row'
+import { AttributeRow, AttributeRowProps } from '../attribute-row'
 
 export interface ActorInspectPanelProps extends WithViewStyles<'style'> {
   /** the ID of the character to control */

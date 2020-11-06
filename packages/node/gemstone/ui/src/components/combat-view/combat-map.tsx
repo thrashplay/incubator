@@ -12,11 +12,11 @@ import { MapView } from '../map-view/map-view'
 import { PanAndZoomOption } from '../map-view/pan-and-zoom-option'
 import { ToolOption } from '../map-view/tool-option'
 
-import { CombatViewEvent, CombatViewEvents } from './reducer'
+import { CombatViewEvent, CombatViewEvents } from './events'
 import { CombatViewState } from './state'
 import { TOOL_OPTIONS } from './tools'
 
-export interface CombatMapProps extends CombatViewState, WithFrameQuery, WithViewStyles<'style'> {
+export interface CombatMapProps extends CombatViewState, WithViewStyles<'style'> {
   /** dispatc function for sending view events */
   dispatch: ViewEventDispatch<CombatViewEvent>
 

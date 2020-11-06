@@ -21,7 +21,7 @@ import { useDispatch, useFrameQuery, useSelector, useValue } from '@thrashplay/g
 import { calculateDistance, Point } from '@thrashplay/math'
 
 import { ToolProps } from '../../dispatch-view-event'
-import { CombatViewEvent } from '../reducer'
+import { CombatViewEvent } from '../events'
 import { CombatViewState } from '../state'
 
 export const MoveTool = ({ viewState }: ToolProps<CombatViewState, CombatViewEvent>) => {

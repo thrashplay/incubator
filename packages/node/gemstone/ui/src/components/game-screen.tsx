@@ -18,6 +18,7 @@ import {
 import { FrameProvider, useDispatch, useValue } from '@thrashplay/gemstone-ui-core'
 
 import { CombatView } from './combat-view/combat-view'
+import { MapEditorView } from './map-editor-view'
 import { MapAreaInspectPanel } from './map-editor-view/map-editor-inspect-panel'
 import { TimeControls } from './time-controls'
 
@@ -137,7 +138,8 @@ export const GameScreen = () => {
           {createModeButton('map-editor', 'map-legend')}
           {createModeButton('gm', 'pencil')}
         </Appbar.Header>
-        <CombatView style={styles.content}/>
+        {selectedMode === 'combat' && <CombatView style={styles.content}/>}
+        {selectedMode === 'map-editor' && <MapEditorView style={styles.content}/>}
         <TimeControls style={styles.timeControls}/>
       </View>
     </FrameProvider>

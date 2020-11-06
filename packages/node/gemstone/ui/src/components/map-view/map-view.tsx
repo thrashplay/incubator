@@ -1,7 +1,7 @@
 import { noop } from 'lodash'
 import { find, flow, isEmpty, map, matches } from 'lodash/fp'
 import React, { PropsWithChildren, useCallback, useMemo } from 'react'
-import { StyleSheet, Text, View, ViewStyle } from 'react-native'
+import { StyleSheet, View, ViewStyle } from 'react-native'
 import { Svg } from 'react-native-svg'
 
 import { Canvas, useViewport } from '@thrashplay/canvas-with-tools'
@@ -14,7 +14,7 @@ import { ToolSelectorButtonBar } from '@thrashplay/tool-selector'
 
 import { ViewEvent } from '../dispatch-view-event'
 
-import { AvatarAnimation, AvatarAnimationProps } from './avatar-animation'
+import { AnimatedAvatar, AnimatedAvatarProps } from './animated-avatar'
 import { ToolOption } from './tool-option'
 
 export interface MapViewProps<
@@ -86,16 +86,15 @@ const MapContent = ({ children }: PropsWithChildren<any>) => {
   const frameQuery = useFrameQuery()
   const actors = useValue(getActors, frameQuery)
 
-  const createAvatarRenderProps = useCallback((actor: Actor): AvatarAnimationProps => {
+  const createAvatarRenderProps = useCallback((actor: Actor): AnimatedAvatarProps => {
     return {
       actorId: actor.id,
-      timeOffset: 0,
     }
   }, [])
 
   const renderAvatars = useCallback(() => flow(
     map(createAvatarRenderProps),
-    map((props: AvatarAnimationProps) => <AvatarAnimation key={props.actorId} {...props} />)
+    map((props: AnimatedAvatarProps) => <AnimatedAvatar key={props.actorId} {...props} />)
   )(actors), [actors, createAvatarRenderProps])
 
   return (

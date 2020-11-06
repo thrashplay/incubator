@@ -1,76 +1,71 @@
-import { find, flow, isEmpty, map, matches, noop } from 'lodash/fp'
-import React, { ReactElement, useCallback, useMemo, useReducer } from 'react'
+import { noop } from 'lodash'
+import { find, flow, isEmpty, map, matches } from 'lodash/fp'
+import React, { PropsWithChildren, ReactElement, useCallback, useMemo, useReducer } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 import { Rect, Svg } from 'react-native-svg'
 
 import {
   Canvas,
-  ContentViewProps,
-  PanAndZoomTool,
-  ToolEvent,
-  ToolEventDispatch,
-  ToolProps,
+  PanAndZoomMode,
+  useViewport,
 } from '@thrashplay/canvas-with-tools'
-import { Area } from '@thrashplay/gemstone-map-model'
 import { AreasRenderer, Grid } from '@thrashplay/gemstone-map-ui'
 import { Actor, getActors } from '@thrashplay/gemstone-model'
 import { useFrameQuery, useValue, WithFrameQuery } from '@thrashplay/gemstone-ui-core'
-import { Dimensions, Extents } from '@thrashplay/math'
+import { Extents } from '@thrashplay/math'
 import { WithViewStyles } from '@thrashplay/react-helpers'
 import { ToolSelectorButtonBar } from '@thrashplay/tool-selector'
 
-import { AvatarAnimation, AvatarAnimationProps } from './avatar-animation'
-import { INITIAL_STATE, MapViewAction, reducer } from './map-view-state'
+import { ToolProps, ViewEvent, ViewEventDispatch } from '../dispatch-view-event'
 
-const DEFAULT_EXTENTS = {
-  height: 500,
-  width: 500,
-  x: 0,
-  y: 0,
-}
+import { AvatarAnimation, AvatarAnimationProps } from './avatar-animation'
+import { MapViewEvent, MapViewEvents, reducer } from './reducer'
+import { DEFAULT_EXTENTS, INITIAL_STATE } from './state'
 
 export type MoveActionHandler = (x: number, y: number) => void
 
-export interface ToolOption<TData extends any = any> {
-  component: (props: ToolProps<any, TData>) => ReactElement | null
+export interface ToolOption<TState extends unknown = any, TViewEvent extends ViewEvent = any> {
+  component: (props: ToolProps<TState, TViewEvent>) => ReactElement | null
   icon: string
   id: string
+
+  /** the pan/zoom mode to enable while using this tool, defaults to 'none' */
+  panAndZoomMode?: PanAndZoomMode
 }
 
 const PanAndZoomOption = {
-  component: PanAndZoomTool,
+  component: null,
   icon: 'hand',
   id: 'pan-and-zoom',
+  panAndZoomMode: 'pan-and-zoom',
 }
 
-export interface SceneMapProps<TData extends any = any> extends WithFrameQuery, WithViewStyles<'style'> {
-  /** extents for the map view, defaults to [0, 0]-[1000, 1000] */
-  extents?: Extents
-
-  overlay?: (props: ContentViewProps<TData>) => JSX.Element
-
-  /** time offset, in seconds, of the frame being rendered */
-  timeOffset: number
+export interface MapViewProps<
+  TViewState extends unknown = any,
+  TViewEvent extends ViewEvent = any
+> extends WithFrameQuery, WithViewStyles<'style'> {
+  /** React nodes to render as overlays on top of the rendered map */
+  children?: React.ReactNode
 
   /** dispatch function called by tool implementations */
-  toolEventDispatch?: ToolEventDispatch<any>
+  dispatchViewEvent?: ViewEventDispatch<TViewEvent>
 
-  /** set of tools available for this map */
-  toolOptions?: readonly ToolOption<TData>[]
+  /** extents for the map view, defaults to [0, 0]-[500, 500] */
+  extents?: Extents
+
+  panAndZoomMode?: PanAndZoomMode
+
+  /** set of tools available for this view */
+  toolOptions?: readonly ToolOption<TViewState, MapViewEvent>[]
 }
 
-export interface SceneMapData extends Omit<SceneMapProps, 'extents'> {
-  /** ID of the map area currently selected */
-  selectedMapAreaId?: Area['id']
-}
-
-export const MapView = <TData extends any = any>({
+export const MapView = <TViewEvent extends ViewEvent = any>({
+  children = null,
+  dispatchViewEvent = noop,
   extents: initialExtents = DEFAULT_EXTENTS,
   style,
-  timeOffset,
-  toolEventDispatch = noop,
   toolOptions = [],
-}: SceneMapProps<TData>) => {
+}: MapViewProps<TViewEvent>) => {
   // zoom to full extents the when the map is first displayed
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE, (initialState) => ({
     ...initialState,
@@ -79,31 +74,18 @@ export const MapView = <TData extends any = any>({
 
   const { extents, selectedToolId } = state
 
-  const selectedTool = useMemo(() => {
+  const toolOption = useMemo(() => {
     const option = find(
       matches({ id: selectedToolId })
     )([PanAndZoomOption, ...toolOptions]) as ToolOption | undefined
-    return option?.component
+    return option
   }, [selectedToolId, toolOptions])
 
+  const { component: SelectedTool, panAndZoomMode } = toolOption ?? { }
+
   const handleToolSelect = useCallback((toolId: string) => {
-    dispatch({
-      type: 'select-tool',
-      payload: toolId,
-    })
+    dispatch(MapViewEvents.toolSelected(toolId))
   }, [dispatch])
-
-  const handleViewportChange = useCallback((viewport: Dimensions) => {
-    dispatch({
-      type: 'set-viewport',
-      payload: viewport,
-    })
-  }, [])
-
-  const handleToolEvent = useCallback((event: ToolEvent) => {
-    dispatch(event as MapViewAction)
-    toolEventDispatch(event)
-  }, [dispatch, toolEventDispatch])
 
   return (
     <View style={[styles.container, style]}>
@@ -116,37 +98,31 @@ export const MapView = <TData extends any = any>({
       )}
 
       <Canvas
-        data={{ style, timeOffset }}
         extents={extents}
-        toolEventDispatch={handleToolEvent}
-        onViewportChange={handleViewportChange}
-        selectedTool={selectedTool}
+        panAndZoomMode={panAndZoomMode ?? 'none'}
         style={{ flex: 1 }}
       >
-        {MapContent}
+        <MapContent>
+          {SelectedTool && <SelectedTool dispatchViewEvent={dispatchViewEvent} viewState={state} />}
+          {children}
+        </MapContent>
       </Canvas>
     </View>
   )
 }
 
-const MapContent = ({
-  data,
-  extents,
-}: ContentViewProps<SceneMapData>) => {
-  const { timeOffset } = data
+const MapContent = ({ children }: PropsWithChildren<any>) => {
+  const { extents } = useViewport()
 
   const frameQuery = useFrameQuery()
   const actors = useValue(getActors, frameQuery)
 
   const createAvatarRenderProps = useCallback((actor: Actor): AvatarAnimationProps => {
-    const position = actor.status.position
     return {
       actorId: actor.id,
-      timeOffset,
-      x: position.x,
-      y: position.y,
+      timeOffset: 0,
     }
-  }, [timeOffset])
+  }, [])
 
   const renderAvatars = useCallback(() => flow(
     map(createAvatarRenderProps),
@@ -171,6 +147,7 @@ const MapContent = ({
         mapWidth={500}
       />
       {renderAvatars()}
+      {children}
     </Svg>
   )
 }
@@ -178,6 +155,7 @@ const MapContent = ({
 const container: ViewStyle = {
   flex: 1,
   flexDirection: 'column',
+  alignContent: 'stretch',
 }
 
 const mapView: ViewStyle = {

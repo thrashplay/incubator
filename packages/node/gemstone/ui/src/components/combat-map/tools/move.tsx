@@ -4,12 +4,8 @@ import React, { useCallback } from 'react'
 import {
   CoordinateConverter,
   DragEvent,
-  PanAndZoomEvent,
   TapEvent,
-  ToolEvent,
-  ToolProps,
   useCanvasEvent,
-  ZoomComponent,
 } from '@thrashplay/canvas-with-tools'
 import { createAction } from '@thrashplay/gemstone-engine'
 import {
@@ -23,17 +19,12 @@ import {
 import { useDispatch, useFrameQuery, useSelector, useValue } from '@thrashplay/gemstone-ui-core'
 import { calculateDistance, Point } from '@thrashplay/math'
 
-import { SceneMapData } from '../scene-map'
-import { SetHighlightsEvent } from '../state'
-
-export type MoveEvent = ToolEvent<'move', Point>
+import { ToolProps } from '../../dispatch-view-event'
+import { MapViewEvent } from '../../map-view/reducer'
 
 export const MoveTool = (
-  { data, ...props }: ToolProps<SetHighlightsEvent | MoveEvent | PanAndZoomEvent, SceneMapData>
+  { dispatchViewEvent }: ToolProps<MapViewEvent>
 ) => {
-  const { extents, toolEventDispatch, viewport } = props
-  const { selectedActor } = data
-
   const dispatch = useDispatch()
   const frameQuery = useFrameQuery()
   const actors = useValue(getActors, frameQuery)
@@ -65,7 +56,7 @@ export const MoveTool = (
 
       const highlights = reduce(addActor)({})(actors)
 
-      toolEventDispatch({
+      dispatchToolEvent({
         type: 'set-highlights',
         payload: highlights,
       })

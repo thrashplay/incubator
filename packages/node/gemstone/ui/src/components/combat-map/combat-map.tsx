@@ -28,17 +28,15 @@ const DEFAULT_EXTENTS = {
 
 export type MoveActionHandler = (x: number, y: number) => void
 
-export interface CombatMapData {
-  /** the actor currently selected */
-  selectedActor?: Actor
-}
-
-export interface CombatMapProps extends CombatMapData, WithFrameQuery, WithViewStyles<'style'> {
+export interface CombatMapProps extends WithFrameQuery, WithViewStyles<'style'> {
   /** extents for the map view, defaults to [0, 0]-[1000, 1000] */
   extents?: Extents
 
   /** handler called when the user attempts to set a move action */
   onMove?: MoveActionHandler
+
+  /** the ID of the selected actor, or undefined if none */
+  selectedActorId?: Actor['id']
 
   /** time offset, in seconds, of the frame being rendered */
   timeOffset: number
@@ -46,6 +44,7 @@ export interface CombatMapProps extends CombatMapData, WithFrameQuery, WithViewS
 
 export const CombatMap = ({
   extents: initialExtents = DEFAULT_EXTENTS,
+  selectedActorId,
   style,
 }: CombatMapProps) => {
   // zoom to full extents the when the map is first displayed
@@ -54,32 +53,21 @@ export const CombatMap = ({
     extents: initialExtents,
   }))
 
-  const bleh = Bleh
   return (
     <View style={[styles.container, style]}>
       <MapView
-        data={need to supply this}
-        overlay={Bleh}
         toolEventDispatch={dispatch}
         timeOffset={0}
         toolOptions={TOOL_OPTIONS}
-      />
+      >
+        {selectedActorId && (
+          <AvatarAnimation
+            actorId={selectedActorId}
+            selected={true}
+            timeOffset={0}
+          />)}
+      </MapView>
     </View>
-  )
-}
-
-const Bleh = ({ data }: ContentViewProps<number>) => {
-  const { selectedActor } = data
-  return (
-    <>
-      {selectedActor &&
-        <AvatarAnimation
-          actorId={selectedActor.id}
-          selected={true}
-          timeOffset={0}
-        />
-      }
-    </>
   )
 }
 

@@ -89,7 +89,6 @@ export const GameScreen = () => {
 
   const actors = useValue(getActors, { fallback: true, frameTag: 'selected' })
   const selectedTime = useValue(getTime, { fallback: true, frameTag: 'selected' })
-  const selectedActor = useValue(getActor, { characterId: selectedActorId, fallback: true, frameTag: 'selected' })
 
   const handleSelectActor = (id: CharacterId) => setSelectedActorId(id)
   const handleSelectArea = (id: Area['id']) => setSelectedAreaId(id)
@@ -156,15 +155,12 @@ export const GameScreen = () => {
             </View>
             {selectedMode === 'combat' && renderCombatControls()}
             {selectedMode === 'map-editor' && renderMapEditorControls()}
-
           </View>
-          {/* <SceneMap
-            actors={actors}
-            selectedActor={selectedActor as any}
+          <CombatMap
+            selectedActorId={selectedActorId}
             style={styles.locationMap}
-            timeOffset={selectedTime}
-          /> */}
-          <CombatMap />
+            timeOffset={0}
+          />
         </View>
         <TimeControls
           style={styles.timeBar}

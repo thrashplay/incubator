@@ -1,6 +1,3 @@
-
-import { isNil } from 'lodash'
-
 import { calculateScale, PanAndZoomEvent, ToolEvent } from '@thrashplay/canvas-with-tools'
 import { Dimensions, Extents } from '@thrashplay/math'
 
@@ -28,16 +25,3 @@ export type CombatMapEvent =
   | MoveEvent
   | SetHighlightsEvent
   | SetTargetEvent
-
-export const reducer = (state: CombatMapState, event: CombatMapEvent): CombatMapState => {
-  switch (event.type) {
-    case 'set-highlights':
-      return {
-        ...state,
-        highlights: event.payload,
-      }
-
-    default:
-      return state
-  }
-}

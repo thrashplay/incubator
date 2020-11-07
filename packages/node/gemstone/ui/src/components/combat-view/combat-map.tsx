@@ -2,8 +2,8 @@ import { find, matches } from 'lodash/fp'
 import React, { useCallback, useMemo } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 
-import { Actor } from '@thrashplay/gemstone-model'
-import { WithFrameQuery } from '@thrashplay/gemstone-ui-core'
+import { Actor, getActors } from '@thrashplay/gemstone-model'
+import { useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
 import { WithViewStyles } from '@thrashplay/react-helpers'
 
 import { ViewEventDispatch } from '../dispatch-view-event'
@@ -13,6 +13,7 @@ import { PanAndZoomOption } from '../map-view/pan-and-zoom-option'
 import { ToolOption } from '../map-view/tool-option'
 
 import { CombatViewEvent, CombatViewEvents } from './events'
+import { ReachOverlay } from './overlays/reach'
 import { CombatViewState } from './state'
 import { TOOL_OPTIONS } from './tools'
 
@@ -36,6 +37,9 @@ export const CombatMap = ({
     selectedToolId,
   } = props
 
+  const frameQuery = useFrameQuery()
+  const actors = useValue(getActors, frameQuery)
+
   const SelectedTool = useMemo(() => {
     const option = find(
       matches({ id: selectedToolId })
@@ -46,6 +50,12 @@ export const CombatMap = ({
   const handleToolSelected = useCallback((toolId: string) => {
     dispatch(CombatViewEvents.toolSelected(toolId))
   }, [dispatch])
+
+  // const renderReachOverlay = useCallback((actor: Actor) => (
+  //   <ReachOverlay key={actor.id}
+  //     actorId={actor.id}
+  //   />
+  // ), [])
 
   return (
     <View style={[styles.container, style]}>

@@ -16,7 +16,7 @@ import { reducer } from './reducer'
 import { DEFAULT_EXTENTS, INITIAL_STATE } from './state'
 
 export interface CombatViewProps extends WithViewStyles<'style'> {
-  /** extents for the map view, defaults to [0, 0]-[500, 500] */
+  /** extents for the map view, defaults to [-250, -250]-[250, 250] */
   extents?: Extents
 }
 

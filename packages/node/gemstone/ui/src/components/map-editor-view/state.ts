@@ -11,8 +11,8 @@ export interface MapEditorViewState {
 export const DEFAULT_EXTENTS = {
   height: 500,
   width: 500,
-  x: 0,
-  y: 0,
+  x: -250,
+  y: -250,
 }
 
 export const INITIAL_STATE: MapEditorViewState = {

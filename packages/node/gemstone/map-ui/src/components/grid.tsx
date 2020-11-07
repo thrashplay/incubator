@@ -28,8 +28,8 @@ export const Grid = ({
 }: GridProps) => {
   const createHorizontalLine = (position: number) => <StyledGridLine
     key={`h@${position}`}
-    x1={0}
-    x2={mapWidth}
+    x1={-mapWidth / 2}
+    x2={mapWidth / 2}
     y1={position}
     y2={position}
   />
@@ -38,14 +38,14 @@ export const Grid = ({
     key={`v@${position}`}
     x1={position}
     x2={position}
-    y1={0}
-    y2={mapHeight}
+    y1={-mapHeight / 2}
+    y2={mapHeight / 2}
   />
 
   return (
     <G>
-      {map(createVerticalLine)(range(0, mapWidth, gridSpacing))}
-      {map(createHorizontalLine)(range(0, mapHeight, gridSpacing))}
+      {map(createVerticalLine)(range(-mapWidth / 2, mapWidth / 2, gridSpacing))}
+      {map(createHorizontalLine)(range(-mapHeight / 2, mapHeight / 2, gridSpacing))}
     </G>
   )
 }

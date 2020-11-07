@@ -225,12 +225,6 @@ export const DefaultAvatar = (props: AvatarProps) => {
         <Circle
           cx={0}
           cy={0}
-          r={feetToPixels(reach)}
-          {...getStyles('reachCircle')}
-        />
-        <Circle
-          cx={0}
-          cy={0}
           r={feetToPixels(size)}
           {...getStyles('bodyCircle')}
         />

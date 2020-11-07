@@ -62,7 +62,7 @@ export const MapEditorMap = ({
             area={area}
             fillOpacity={0}
             stroke="red"
-            strokeWidth={2}
+            strokeWidth={1}
           />)}
       </MapView>
     </View>

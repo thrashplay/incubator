@@ -11,12 +11,10 @@ import {
 import { Area, createSquareRoom } from '@thrashplay/gemstone-map-model'
 import {
   addCharacter,
-  buildRandomTable,
   Character,
   getTableRoller,
   getTime,
-  RandomTable,
-  RandomTableBuilder,
+  TableRollerFunction,
 } from '@thrashplay/gemstone-model'
 import { FrameProvider, useDispatch, useValue } from '@thrashplay/gemstone-ui-core'
 import { Dimensions } from '@thrashplay/math'
@@ -36,18 +34,23 @@ const initializeTestScene = () => (state: GameState) => {
     ...stats,
   })
 
+  const getRandomRoomDimensions = getTableRoller(state, { tableId: '1' }) as TableRollerFunction<Dimensions>
+
+  const MULTIPLIER = 1
+  const size1 = getRandomRoomDimensions()
   const INITIAL_ROOM_BOUNDS = {
-    x: 100,
-    y: 100,
-    width: 300,
-    height: 300,
+    x: -(size1.width * MULTIPLIER) / 2,
+    y: -(size1.height * MULTIPLIER) / 2,
+    height: size1.height * MULTIPLIER,
+    width: size1.width * MULTIPLIER,
   }
 
+  const size2 = getRandomRoomDimensions()
   const SIDE_ROOM_BOUNDS = {
     x: 425,
     y: 150,
-    width: 100,
-    height: 200,
+    height: size2.height * MULTIPLIER,
+    width: size2.width * MULTIPLIER,
   }
 
   const createRandomPosition = () => ({
@@ -55,28 +58,17 @@ const initializeTestScene = () => (state: GameState) => {
     y: INITIAL_ROOM_BOUNDS.y + 10 + Math.random() * (INITIAL_ROOM_BOUNDS.height - 20),
   })
 
-  const roller = getTableRoller(state, { tableId: '1' })
-  console.log('result:', roller())
-  console.log('result:', roller())
-  console.log('result:', roller())
-  console.log('result:', roller())
-  console.log('result:', roller())
-  console.log('result:', roller())
-  console.log('result:', roller())
-  console.log('result:', roller())
-  console.log('result:', roller())
-
   return [
     // create the map
     createSquareRoom(INITIAL_ROOM_BOUNDS),
-    createSquareRoom(SIDE_ROOM_BOUNDS),
+    // createSquareRoom(SIDE_ROOM_BOUNDS),
 
     // add the PCs
-    addCharacter(createCharacter('Human', 90)),
-    addCharacter(createCharacter('Ogre', 60, { reach: 25, size: 10 })),
+    // addCharacter(createCharacter('Human', 90)),
+    // addCharacter(createCharacter('Ogre', 60, { reach: 25, size: 10 })),
     // addCharacter(createCharacter('Pixie', 120, { reach: 5, size: 1 })),
     // addCharacter(createCharacter('Dan')),
-    // addCharacter(createCharacter('Nate')),
+    addCharacter(createCharacter('Nate')),
     // addCharacter(createCharacter('Seth')),
     // addCharacter(createCharacter('Tom')),
 
@@ -84,10 +76,11 @@ const initializeTestScene = () => (state: GameState) => {
     SceneCommands.startNewScene(),
 
     // move PCs to random starting positions
-    MovementCommands.moveTo('human', createRandomPosition()),
-    MovementCommands.moveTo('ogre', createRandomPosition()),
+    // MovementCommands.moveTo('human', createRandomPosition()),
+    // MovementCommands.moveTo('ogre', createRandomPosition()),
     // MovementCommands.moveTo('pixie', createRandomPosition()),
-    // MovementCommands.moveTo('nate', createRandomPosition()),
+    // MovementCommands.moveTo('dan', createRandomPosition()),
+    MovementCommands.moveTo('nate', createRandomPosition()),
     // MovementCommands.moveTo('seth', createRandomPosition()),
     // MovementCommands.moveTo('tom', createRandomPosition()),
 
@@ -103,7 +96,7 @@ export const GameScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const [selectedMode, setSelectedMode] = useState<Mode>('combat')
+  const [selectedMode, setSelectedMode] = useState<Mode>('map-editor')
   const [selectedAreaId, setSelectedAreaId] = useState<Area['id'] | undefined>(undefined)
 
   const selectedTime = useValue(getTime, { fallback: true, frameTag: 'selected' })

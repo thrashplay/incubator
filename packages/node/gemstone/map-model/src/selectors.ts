@@ -1,4 +1,4 @@
-import { find } from 'lodash/fp'
+import { filter, find, isUndefined, negate, values } from 'lodash/fp'
 import { createSelector } from 'reselect'
 
 import { createParameterSelector } from '@thrashplay/gemstone-model'
@@ -22,17 +22,41 @@ const getPositionParam = createParameterSelector((params?: MapSelectorParameters
 export const getMapData = (state: MapStateContainer) => state.map ?? buildMap()
 
 /** Selects the Dictionary containing all areas */
-export const getAreacollection = createSelector(
+export const getAreaCollection = createSelector(
   [getMapData],
   (mapData) => mapData.areas
 )
 
+/** Selects an array containing all map areas. */
+export const getAreas = createSelector(
+  [getAreaCollection],
+  (areas) => filter<Area>(negate(isUndefined))(values(areas))
+)
+
 /** Selects the area with the ID specified by the areaId parameter */
 export const getArea = createSelector(
-  [getAreacollection, getAreaIdParam],
+  [getAreaCollection, getAreaIdParam],
   (areas, id) => id === undefined
     ? undefined
     : areas[id]
+)
+
+/** Calculates a basic text description of the size and shape of this area. */
+export const getBasicAreaDescription = createSelector(
+  [getArea],
+  (area) => area === undefined
+    ? 'an unknown area'
+    : `${area.bounds.width}' x ${area.bounds.height}' room`
+)
+
+export const getAreaType = createSelector(
+  [getArea],
+  (area) => 'unknown'
+)
+
+export const getAreaDimensions = createSelector(
+  [getArea],
+  (area) => area === undefined ? 'unknown' : `${area.bounds.width}' x ${area.bounds.height}'`
 )
 
 /**
@@ -42,7 +66,7 @@ export const getArea = createSelector(
  * TODO: make handling multiple areas work better
  */
 export const getAreaAtPosition = createSelector(
-  [getAreacollection, getPositionParam],
+  [getAreaCollection, getPositionParam],
   (areas, position) => position === undefined
     ? undefined
     : find((area: Area) => rectangleContains(area.bounds, position))(areas)

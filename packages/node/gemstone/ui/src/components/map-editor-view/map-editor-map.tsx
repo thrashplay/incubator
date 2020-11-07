@@ -16,7 +16,7 @@ import { MapEditorViewState } from './state'
 import { ToolOptions } from './tools'
 
 export interface MapEditorMapProps extends MapEditorViewState, WithViewStyles<'style'> {
-  /** dispatc function for sending view events */
+  /** dispatch function for sending view events */
   dispatch: ViewEventDispatch<MapEditorViewEvent>
 
   /** the ID of the selected area, or undefined if none */

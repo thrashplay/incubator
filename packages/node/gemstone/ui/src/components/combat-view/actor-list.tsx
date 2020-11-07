@@ -78,8 +78,6 @@ export const ActorList = ({
 }
 
 const container: ViewStyle = {
-  // borderWidth: 1,
-  // borderColor: '#666',
   backgroundColor: 'white',
   marginBottom: 0,
   marginTop: 0,

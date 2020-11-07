@@ -6,7 +6,7 @@ import { useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
 import { Extents } from '@thrashplay/math'
 import { WithViewStyles } from '@thrashplay/react-helpers'
 
-import { LayoutStyles } from '../layout-styles'
+import { LayoutStyles } from '../../styles'
 
 import { ActorInspectPanel } from './actor-inspect-panel'
 import { ActorList } from './actor-list'
@@ -46,13 +46,13 @@ export const CombatView = ({
         <ActorList
           actors={actors}
           onSelect={handleSelectActor}
-          style={styles.actorList}
+          style={styles.sidebarList}
           title="Combatants"
         />
         {selectedActorId && (
           <ActorInspectPanel
             actorId={selectedActorId}
-            style={styles.inspectPanel}
+            style={styles.sidebarDetails}
           />
         )}
       </View>
@@ -66,26 +66,6 @@ export const CombatView = ({
   )
 }
 
-const actorList: ViewStyle = {
-  borderColor: '#999',
-  borderStyle: 'solid',
-  borderWidth: 1,
-  flexBasis: 0,
-  flexGrow: 3,
-}
-
-const inspectPanel: ViewStyle = {
-  borderColor: '#999',
-  borderStyle: 'solid',
-  borderWidth: 1,
-  flexGrow: 1,
-  marginTop: 8,
-}
-
-const styles = {
+const styles = StyleSheet.create({
   ...LayoutStyles,
-  ...StyleSheet.create({
-    actorList,
-    inspectPanel,
-  }),
-}
+})

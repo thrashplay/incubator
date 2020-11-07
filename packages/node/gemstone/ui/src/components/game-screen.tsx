@@ -12,14 +12,12 @@ import { Area, createSquareRoom } from '@thrashplay/gemstone-map-model'
 import {
   addCharacter,
   Character,
-  CharacterId,
   getTime,
 } from '@thrashplay/gemstone-model'
 import { FrameProvider, useDispatch, useValue } from '@thrashplay/gemstone-ui-core'
 
 import { CombatView } from './combat-view/combat-view'
 import { MapEditorView } from './map-editor-view'
-import { MapAreaInspectPanel } from './map-editor-view/map-editor-inspect-panel'
 import { TimeControls } from './time-controls'
 
 type Mode = 'combat' | 'gm' | 'map-editor'
@@ -40,6 +38,13 @@ const initializeTestScene = () => (_state: GameState) => {
     height: 300,
   }
 
+  const SIDE_ROOM_BOUNDS = {
+    x: 425,
+    y: 150,
+    width: 100,
+    height: 200,
+  }
+
   const createRandomPosition = () => ({
     x: INITIAL_ROOM_BOUNDS.x + 10 + Math.random() * (INITIAL_ROOM_BOUNDS.width - 20),
     y: INITIAL_ROOM_BOUNDS.y + 10 + Math.random() * (INITIAL_ROOM_BOUNDS.height - 20),
@@ -48,6 +53,7 @@ const initializeTestScene = () => (_state: GameState) => {
   return [
     // create the map
     createSquareRoom(INITIAL_ROOM_BOUNDS),
+    createSquareRoom(SIDE_ROOM_BOUNDS),
 
     // add the PCs
     addCharacter(createCharacter('Human', 90)),
@@ -84,8 +90,6 @@ export const GameScreen = () => {
 
   const selectedTime = useValue(getTime, { fallback: true, frameTag: 'selected' })
 
-  const handleSelectArea = (id: Area['id']) => setSelectedAreaId(id)
-
   const getModeTitle = () => {
     switch (selectedMode) {
       case 'combat':
@@ -106,19 +110,6 @@ export const GameScreen = () => {
     : styles.modeSelectButton
 
   const handleModeSelect = (mode: Mode) => () => setSelectedMode(mode)
-
-  const renderMapEditorControls = () => {
-    return (
-      <>
-        {selectedAreaId && (
-          <MapAreaInspectPanel
-            areaId={selectedAreaId}
-            style={styles.inspectPanel}
-          />
-        )}
-      </>
-    )
-  }
 
   const createModeButton = (mode: Mode, icon: string) => (
     <Appbar.Action

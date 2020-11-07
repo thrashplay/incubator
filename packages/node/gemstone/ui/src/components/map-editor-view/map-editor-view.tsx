@@ -1,18 +1,20 @@
-import React, { useEffect, useReducer } from 'react'
-import { View } from 'react-native'
+import React, { useCallback, useEffect, useReducer } from 'react'
+import { StyleSheet, View } from 'react-native'
 
+import { Area, getAreas } from '@thrashplay/gemstone-map-model'
+import { useValue } from '@thrashplay/gemstone-ui-core'
 import { Extents } from '@thrashplay/math'
 import { WithViewStyles } from '@thrashplay/react-helpers'
 
-import { ActorInspectPanel } from '../combat-view/actor-inspect-panel'
-import { ActorList } from '../combat-view/actor-list'
-import { LayoutStyles } from '../layout-styles'
+import { LayoutStyles } from '../../styles'
 
+import { AreaInspectPanel } from './area-inspect-panel'
+import { AreaList } from './area-list'
 import { MapEditorViewEvents } from './events'
-import { MapAreaInspectPanel } from './map-editor-inspect-panel'
 import { MapEditorMap } from './map-editor-map'
 import { reducer } from './reducer'
 import { DEFAULT_EXTENTS, INITIAL_STATE } from './state'
+'s'
 
 export interface MapEditorViewProps extends WithViewStyles<'style'> {
   /** extents for the map view, defaults to [0, 0]-[500, 500] */
@@ -23,6 +25,8 @@ export const MapEditorView = ({
   extents: initialExtents,
   style,
 }: MapEditorViewProps) => {
+  const areas = useValue(getAreas)
+
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE)
 
   const { selectedAreaId } = state
@@ -31,12 +35,24 @@ export const MapEditorView = ({
     dispatch(MapEditorViewEvents.extentsChanged(initialExtents ?? DEFAULT_EXTENTS))
   }, [dispatch, initialExtents])
 
+  const handleSelectArea = useCallback((areaId: Area['id']) => {
+    dispatch(MapEditorViewEvents.areaSelected(areaId))
+  }, [dispatch])
+
   return (
     <View style={[styles.container, style]}>
       <View style={styles.sidebar}>
+        <AreaList
+          areas={areas}
+          onSelect={handleSelectArea}
+          selectedAreaId={selectedAreaId}
+          style={styles.sidebarList}
+          title="Map Areas"
+        />
         {selectedAreaId && (
-          <MapAreaInspectPanel
+          <AreaInspectPanel
             areaId={selectedAreaId}
+            style={styles.sidebarDetails}
           />)}
       </View>
       <MapEditorMap
@@ -48,6 +64,6 @@ export const MapEditorView = ({
   )
 }
 
-const styles = {
+const styles = StyleSheet.create({
   ...LayoutStyles,
-}
+})

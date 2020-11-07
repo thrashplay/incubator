@@ -65,8 +65,8 @@ const initializeTestScene = () => (state: GameState) => {
 
     // add the PCs
     // addCharacter(createCharacter('Human', 90)),
-    // addCharacter(createCharacter('Ogre', 60, { reach: 10, size: 6 })),
-    // addCharacter(createCharacter('Pixie', 120, { reach: 5, size: 1 })),
+    addCharacter(createCharacter('Ogre', 60, { reach: 10, size: 6 })),
+    addCharacter(createCharacter('Pixie', 120, { reach: 5, size: 1 })),
     // addCharacter(createCharacter('Dan')),
     addCharacter(createCharacter('Nate')),
     // addCharacter(createCharacter('Seth')),
@@ -77,8 +77,8 @@ const initializeTestScene = () => (state: GameState) => {
 
     // move PCs to random starting positions
     // MovementCommands.moveTo('human', createRandomPosition()),
-    // MovementCommands.moveTo('ogre', createRandomPosition()),
-    // MovementCommands.moveTo('pixie', createRandomPosition()),
+    MovementCommands.moveTo('ogre', createRandomPosition()),
+    MovementCommands.moveTo('pixie', createRandomPosition()),
     // MovementCommands.moveTo('dan', createRandomPosition()),
     MovementCommands.moveTo('nate', createRandomPosition()),
     // MovementCommands.moveTo('seth', createRandomPosition()),

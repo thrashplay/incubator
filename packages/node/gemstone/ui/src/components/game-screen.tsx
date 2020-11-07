@@ -11,10 +11,15 @@ import {
 import { Area, createSquareRoom } from '@thrashplay/gemstone-map-model'
 import {
   addCharacter,
+  buildRandomTable,
   Character,
+  getTableRoller,
   getTime,
+  RandomTable,
+  RandomTableBuilder,
 } from '@thrashplay/gemstone-model'
 import { FrameProvider, useDispatch, useValue } from '@thrashplay/gemstone-ui-core'
+import { Dimensions } from '@thrashplay/math'
 
 import { CombatView } from './combat-view/combat-view'
 import { MapEditorView } from './map-editor-view'
@@ -22,7 +27,7 @@ import { TimeControls } from './time-controls'
 
 type Mode = 'combat' | 'gm' | 'map-editor'
 
-const initializeTestScene = () => (_state: GameState) => {
+const initializeTestScene = () => (state: GameState) => {
   const createCharacter = (name: string, speed = 90, stats?: Partial<Character>): Character => ({
     id: toLower(name),
     name,
@@ -50,6 +55,17 @@ const initializeTestScene = () => (_state: GameState) => {
     y: INITIAL_ROOM_BOUNDS.y + 10 + Math.random() * (INITIAL_ROOM_BOUNDS.height - 20),
   })
 
+  const roller = getTableRoller(state, { tableId: '1' })
+  console.log('result:', roller())
+  console.log('result:', roller())
+  console.log('result:', roller())
+  console.log('result:', roller())
+  console.log('result:', roller())
+  console.log('result:', roller())
+  console.log('result:', roller())
+  console.log('result:', roller())
+  console.log('result:', roller())
+
   return [
     // create the map
     createSquareRoom(INITIAL_ROOM_BOUNDS),
@@ -74,6 +90,8 @@ const initializeTestScene = () => (_state: GameState) => {
     // MovementCommands.moveTo('nate', createRandomPosition()),
     // MovementCommands.moveTo('seth', createRandomPosition()),
     // MovementCommands.moveTo('tom', createRandomPosition()),
+
+    // create random tables
   ]
 }
 

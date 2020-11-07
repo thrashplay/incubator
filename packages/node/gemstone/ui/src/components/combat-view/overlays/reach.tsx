@@ -4,13 +4,9 @@ import { Animated } from 'react-native'
 import { Circle, CircleProps, G } from 'react-native-svg'
 
 import { getReach } from '@thrashplay/gemstone-model'
-import { useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
+import { feetToPixels, useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
 
 import { AvatarProps } from '../../map-view/default-avatar'
-
-const PIXELS_PER_FOOT = 1
-
-const feetToPixels = (feet: number) => feet * PIXELS_PER_FOOT
 
 export const ReachOverlay = (props: AvatarProps) => {
   const {

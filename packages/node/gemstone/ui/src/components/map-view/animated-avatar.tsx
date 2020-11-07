@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react'
 import { Animated } from 'react-native'
 
 import { getPosition, getTime, Point } from '@thrashplay/gemstone-model'
-import { useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
+import { useFrameQuery, useValue, useWorldCoordinateConverter } from '@thrashplay/gemstone-ui-core'
 
 import { AvatarProps, DefaultAvatar } from './default-avatar'
 
@@ -12,9 +12,11 @@ export type AnimatedAvatarProps = Omit<AvatarProps, 'animatedX' | 'animatedY' | 
 export const AnimatedAvatar = (props: AnimatedAvatarProps) => {
   const { actorId, renderAvatar } = props
 
+  const { toCanvas } = useWorldCoordinateConverter()
+
   const frameQuery = useFrameQuery()
   const query = { ...frameQuery, characterId: actorId }
-  const position = useValue(getPosition, query)
+  const position = toCanvas(useValue(getPosition, query))
   const timeOffset = useValue(getTime, frameQuery)
 
   const [isAnimating, setIsAnimating] = useState(false)

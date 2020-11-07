@@ -70,7 +70,7 @@ const INITIAL_DISTANCE = {
 /** determines if an actor is in melee range, given an attacker's position and reach */
 const isInRange = (position: Point, reach: number) => (target: Actor) => {
   const targetSize = calculateSizeFromCharacter(target)
-  return calculateDistance(position, target.status.position) - targetSize + 1 <= reach
+  return calculateDistance(position, target.status.position) - (targetSize / 2) + 1 <= reach
 }
 
 /** retrieves a list of all actors that can be reached in melee by the specified actor */

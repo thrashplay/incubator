@@ -13,12 +13,10 @@ import {
   getSize,
   getTarget,
 } from '@thrashplay/gemstone-model'
-import { useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
+import { feetToPixels, useFrameQuery, useValue, useWorldCoordinateConverter } from '@thrashplay/gemstone-ui-core'
 import { calculateDistance } from '@thrashplay/math'
 
 import { SegmentedVector } from './segmented-vector'
-
-const PIXELS_PER_FOOT = 1
 
 export interface AvatarProps {
   actorId: Actor['id']
@@ -28,14 +26,6 @@ export interface AvatarProps {
   isAnimating: boolean
   selected?: boolean
 }
-
-const getTextProps = (selected: boolean): TextProps => selected
-  ? {
-    fontSize: 8,
-  }
-  : {
-    fontSize: 8,
-  }
 
 const NO_LINE = {
   strokeWidth: 0,
@@ -58,12 +48,11 @@ const setColor = (color: string) => (props: LineProps) => ({
   stroke: color,
 })
 
-const feetToPixels = (feet: number) => feet * PIXELS_PER_FOOT
-
 const RenderAction = ({
   actorId,
   selected,
 }: AvatarProps) => {
+  const { toCanvas } = useWorldCoordinateConverter()
   const frameQuery = useFrameQuery()
   const query = { ...frameQuery, characterId: actorId }
 
@@ -79,7 +68,8 @@ const RenderAction = ({
 
   switch (action.type) {
     case 'move': {
-      const destination = get('data')(action)
+      const canvasPosition = toCanvas(position)
+      const destination = toCanvas(get('data')(action))
       const totalDistance = calculateDistance(position, destination)
 
       return (
@@ -89,12 +79,12 @@ const RenderAction = ({
               <Circle
                 cx={destination.x}
                 cy={destination.y}
-                r={feetToPixels(size)}
+                r={feetToPixels(size / 2)}
                 fillOpacity={0}
                 stroke="gray"
                 strokeWidth={0.5}
               />
-              <Circle
+              {/* <Circle
                 cx={destination.x}
                 cy={destination.y}
                 r={feetToPixels(reach)}
@@ -102,24 +92,24 @@ const RenderAction = ({
                 stroke="gray"
                 strokeDasharray={[1, 1]}
                 strokeWidth={0.5}
-              />
+              /> */}
             </>
           )}
           {selected
             ? (
               <SegmentedVector
-                breakpoints={map(feetToPixels)([size, totalDistance - size])}
+                breakpoints={map(feetToPixels)([size / 2, totalDistance - size / 2])}
                 destination={destination}
                 segmentStyles={map(setColor('black'))([NO_LINE, DASHED_LINE, NO_LINE])}
-                start={position}
+                start={canvasPosition}
               />
             )
             : (
               <SegmentedVector
-                breakpoints={map(feetToPixels)([size, totalDistance - size])}
+                breakpoints={map(feetToPixels)([size / 2, totalDistance - size / 2])}
                 destination={destination}
                 segmentStyles={map(setColor('black'))([NO_LINE, NO_LINE, NO_LINE])}
-                start={position}
+                start={canvasPosition}
               />
             )}
         </G>
@@ -127,6 +117,8 @@ const RenderAction = ({
     }
 
     case 'attack': {
+      const canvasPosition = toCanvas(position)
+      const canvasTargetPosition = toCanvas(targetPosition)
       const totalDistance = calculateDistance(position, targetPosition)
 
       return (
@@ -154,10 +146,10 @@ const RenderAction = ({
           )} */}
           {(
             <SegmentedVector
-              breakpoints={map(feetToPixels)([size, totalDistance - targetSize])}
-              destination={targetPosition}
+              breakpoints={map(feetToPixels)([size / 2, totalDistance - targetSize / 2])}
+              destination={canvasTargetPosition}
               segmentStyles={map(setColor('red'))([NO_LINE, DASHED_LINE, NO_LINE])}
-              start={position}
+              start={canvasPosition}
             />
           )}
         </G>
@@ -225,15 +217,20 @@ export const DefaultAvatar = (props: AvatarProps) => {
         <Circle
           cx={0}
           cy={0}
-          r={feetToPixels(size)}
+          r={feetToPixels(size / 2)}
           {...getStyles('bodyCircle')}
         />
+        {/* <Circle
+          cx={0}
+          cy={0}
+          r={feetToPixels(reach)}
+          {...getStyles('reachCircle')}
+        /> */}
         <Text
-          fontSize={8}
+          fontSize={18}
           textAnchor="middle"
           x={0}
-          y={-size - 2}
-          {...getTextProps(selected)}
+          y={6}
         >
           {take(1)(name)}
         </Text>
@@ -269,6 +266,10 @@ const HighlightedStyles: { [k in string]?: CircleProps } = {
 }
 
 const SelectedStyles: { [k in string]?: CircleProps } = {
+  bodyCircle: {
+    fillOpacity: 0.25,
+    fill: 'red',
+  },
   reachCircle: {
     fillOpacity: 0.25,
     fill: 'red',

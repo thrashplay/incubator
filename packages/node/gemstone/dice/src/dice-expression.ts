@@ -2,6 +2,9 @@ export interface DiceExpressionPart {
   /** The number of dice represented by this expression part, defaulting to 1. */
   diceNumber?: number
 
+  /** The sign for this part, either 1 or -1 (Defaults to 1) */
+  multiplier?: number
+
   /** The size of the die. */
   size: number
 }

@@ -7,7 +7,7 @@ import { toId } from '../common/builder'
 
 import { MovementMode, MovementModeId, RuleSet } from './state'
 
-const DEFAULT_MELEE_RANGE = 10
+const DEFAULT_MELEE_RANGE = 5
 const DEFAULT_SEGMENT_DURATION = 5
 
 const DEFAULT_RULES: RuleSet = {

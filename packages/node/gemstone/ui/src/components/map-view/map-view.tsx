@@ -117,7 +117,7 @@ const MapContent = ({ children }: PropsWithChildren<any>) => {
 
 const canvas: ViewStyle = {
   alignContent: 'stretch',
-  backgroundColor: 'black',
+  backgroundColor: '#ccc',
   flex: 1,
   marginBottom: 0,
   marginTop: 4,

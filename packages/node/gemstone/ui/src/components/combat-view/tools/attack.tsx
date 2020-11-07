@@ -12,22 +12,22 @@ import {
   FrameEvents,
   getClosestActor,
 } from '@thrashplay/gemstone-model'
-import { useDispatch, useFrameQuery, useSelector } from '@thrashplay/gemstone-ui-core'
+import { RENDER_SCALE, useCanvasCoordinateConverter, useDispatch, useFrameQuery, useSelector } from '@thrashplay/gemstone-ui-core'
 import { Point } from '@thrashplay/math'
 
 import { ToolProps } from '../../dispatch-view-event'
-import { CombatViewEvent } from '../reducer'
+import { CombatViewEvent } from '../events'
 import { CombatViewState } from '../state'
 
 // maximum distance between cursor and actor that we consider a click
-const MAX_CLICK_DISTANCE = 24
+const MAX_CLICK_DISTANCE = 24 / RENDER_SCALE
 
 export const AttackTool = ({
   viewState,
 }: ToolProps<CombatViewState, CombatViewEvent>) => {
   const { selectedActorId } = viewState
 
-  const { extents, viewport } = useViewport()
+  const { toWorld } = useCanvasCoordinateConverter()
 
   const dispatch = useDispatch()
   const frameQuery = useFrameQuery()
@@ -45,8 +45,7 @@ export const AttackTool = ({
   }, [frameQuery, selectClosestActor, selectedActorId])
 
   const handleTap = (coordinates: TapEvent) => {
-    const convertCoordinates = new CoordinateConverter(extents, viewport)
-    const worldCoordinates = convertCoordinates.toWorld(coordinates)
+    const worldCoordinates = toWorld(coordinates)
 
     const targetId = pickTarget(worldCoordinates)
     if (targetId !== undefined && selectedActorId !== undefined) {
@@ -56,6 +55,11 @@ export const AttackTool = ({
           characterId: selectedActorId,
         })
       )
+    } else if (selectedActorId !== undefined) {
+      dispatch(FrameEvents.actionDeclared({
+        action: createAction('idle'),
+        characterId: selectedActorId,
+      }))
     }
   }
 

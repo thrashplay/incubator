@@ -3,6 +3,8 @@ import { map } from 'lodash/fp'
 import React from 'react'
 import { G, Line } from 'react-native-svg'
 
+import { feetToPixels, pixelsToFeet } from '@thrashplay/gemstone-ui-core'
+
 export interface GridProps {
   /** space between grid lines, in view coordinates */
   gridSpacing: number
@@ -28,18 +30,18 @@ export const Grid = ({
 }: GridProps) => {
   const createHorizontalLine = (position: number) => <StyledGridLine
     key={`h@${position}`}
-    x1={-mapWidth / 2}
-    x2={mapWidth / 2}
-    y1={position}
-    y2={position}
+    x1={feetToPixels(-mapWidth / 2)}
+    x2={feetToPixels(mapWidth / 2)}
+    y1={feetToPixels(position)}
+    y2={feetToPixels(position)}
   />
 
   const createVerticalLine = (position: number) => <StyledGridLine
     key={`v@${position}`}
-    x1={position}
-    x2={position}
-    y1={-mapHeight / 2}
-    y2={mapHeight / 2}
+    x1={feetToPixels(position)}
+    x2={feetToPixels(position)}
+    y1={feetToPixels(-mapHeight / 2)}
+    y2={feetToPixels(mapHeight / 2)}
   />
 
   return (

@@ -65,7 +65,7 @@ const initializeTestScene = () => (state: GameState) => {
 
     // add the PCs
     // addCharacter(createCharacter('Human', 90)),
-    // addCharacter(createCharacter('Ogre', 60, { reach: 25, size: 10 })),
+    // addCharacter(createCharacter('Ogre', 60, { reach: 10, size: 6 })),
     // addCharacter(createCharacter('Pixie', 120, { reach: 5, size: 1 })),
     // addCharacter(createCharacter('Dan')),
     addCharacter(createCharacter('Nate')),

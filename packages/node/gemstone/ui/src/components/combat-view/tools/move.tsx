@@ -2,11 +2,9 @@ import { filter, flow, reduce } from 'lodash/fp'
 import { useCallback } from 'react'
 
 import {
-  CoordinateConverter,
   DragEvent,
   TapEvent,
   useCanvasEvent,
-  useViewport,
 } from '@thrashplay/canvas-with-tools'
 import { createAction } from '@thrashplay/gemstone-engine'
 import {
@@ -17,7 +15,13 @@ import {
   getReach,
   getSize,
 } from '@thrashplay/gemstone-model'
-import { useDispatch, useFrameQuery, useSelector, useValue } from '@thrashplay/gemstone-ui-core'
+import {
+  useCanvasCoordinateConverter,
+  useDispatch,
+  useFrameQuery,
+  useSelector,
+  useValue,
+} from '@thrashplay/gemstone-ui-core'
 import { calculateDistance, Point } from '@thrashplay/math'
 
 import { ToolProps } from '../../dispatch-view-event'
@@ -27,7 +31,7 @@ import { CombatViewState } from '../state'
 export const MoveTool = ({ viewState }: ToolProps<CombatViewState, CombatViewEvent>) => {
   const { selectedActorId } = viewState
 
-  const { extents, viewport } = useViewport()
+  const { toWorld } = useCanvasCoordinateConverter()
 
   const dispatch = useDispatch()
   const frameQuery = useFrameQuery()
@@ -76,28 +80,16 @@ export const MoveTool = ({ viewState }: ToolProps<CombatViewState, CombatViewEve
     x,
     y,
   }: DragEvent) => {
-    const convertCoordinates = new CoordinateConverter(extents, viewport)
-    const worldCoordinates = convertCoordinates.toWorld({ x, y })
+    const worldCoordinates = toWorld({ x, y })
 
     highlightTargetsInRange(worldCoordinates)
-
-    // toolEventDispatch({
-    //   type: 'move',
-    //   payload: worldCoordinates,
-    // })
-
     dispatchMove(worldCoordinates)
-  }, [dispatchMove, extents, highlightTargetsInRange, viewport])
+  }, [dispatchMove, highlightTargetsInRange, toWorld])
 
-  const handleTap = (coordinates: TapEvent) => {
-    const convertCoordinates = new CoordinateConverter(extents, viewport)
-    const worldCoordinates = convertCoordinates.toWorld(coordinates)
-
-    // toolEventDispatch({
-    //   type: 'move',
-    //   payload: worldCoordinates,
-    // })
-  }
+  const handleTap = useCallback((coordinates: TapEvent) => {
+    const worldCoordinates = toWorld(coordinates)
+    dispatchMove(worldCoordinates)
+  }, [dispatchMove, toWorld])
 
   useCanvasEvent('tap', handleTap)
   useCanvasEvent('drag', handleDrag)

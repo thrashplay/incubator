@@ -1,5 +1,5 @@
 import { parseInt } from 'lodash'
-import { flow, isArray, isEmpty, isNumber, isString, negate, reduce, startsWith, stubString, tap } from 'lodash/fp'
+import { flow, isArray, isEmpty, isNumber, isString, negate, reduce, startsWith, stubString } from 'lodash/fp'
 
 import { mapIf, transformIf } from '@thrashplay/fp'
 

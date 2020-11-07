@@ -22,6 +22,9 @@
     },
     {
       "path": "../../thrashlib/math/tsconfig.json"
+    },
+    {
+      "path": "../dice/tsconfig.json"
     }
   ]
 }

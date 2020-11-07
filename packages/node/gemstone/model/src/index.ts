@@ -6,6 +6,7 @@ export * from './common'
 export * from './character'
 export * from './monster'
 export * from './movement-utils'
+export * from './random-tables'
 export * from './rules'
 export * from './scene'
 

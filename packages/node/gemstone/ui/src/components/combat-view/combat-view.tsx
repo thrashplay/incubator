@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useReducer } from 'react'
-import { StyleSheet, View, ViewStyle } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 import { Actor, getActors } from '@thrashplay/gemstone-model'
 import { useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'

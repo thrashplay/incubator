@@ -6,14 +6,14 @@ import { Actor, getActors } from '@thrashplay/gemstone-model'
 import { useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
 import { WithViewStyles } from '@thrashplay/react-helpers'
 
+import { ActorBodyCircles } from '../../map-elements/actor-body-circle'
 import { ViewEventDispatch } from '../dispatch-view-event'
-import { AnimatedAvatar } from '../map-view/animated-avatar'
 import { MapView } from '../map-view/map-view'
 import { PanAndZoomOption } from '../map-view/pan-and-zoom-option'
 import { ToolOption } from '../map-view/tool-option'
 
 import { CombatViewEvent, CombatViewEvents } from './events'
-import { ReachOverlay } from './overlays/reach'
+import { SelectionIndicator } from './overlays/selection-indicator'
 import { CombatViewState } from './state'
 import { TOOL_OPTIONS } from './tools'
 
@@ -37,9 +37,6 @@ export const CombatMap = ({
     selectedToolId,
   } = props
 
-  const frameQuery = useFrameQuery()
-  const actors = useValue(getActors, frameQuery)
-
   const SelectedTool = useMemo(() => {
     const option = find(
       matches({ id: selectedToolId })
@@ -51,25 +48,19 @@ export const CombatMap = ({
     dispatch(CombatViewEvents.toolSelected(toolId))
   }, [dispatch])
 
-  // const renderReachOverlay = useCallback((actor: Actor) => (
-  //   <ReachOverlay key={actor.id}
-  //     actorId={actor.id}
-  //   />
-  // ), [])
+  const getActorDecorators = useCallback((actorId: Actor['id']) => {
+    return actorId === selectedActorId ? ActorBodyCircles.Selected : undefined
+  }, [selectedActorId])
 
   return (
     <View style={[styles.container, style]}>
       <MapView
+        getActorDecorators={getActorDecorators}
         extents={extents}
         onToolSelected={handleToolSelected}
         selectedToolId={selectedToolId}
         toolOptions={[PanAndZoomOption, ...TOOL_OPTIONS]}
       >
-        {selectedActorId && (
-          <AnimatedAvatar
-            actorId={selectedActorId}
-            selected={true}
-          />)}
         {SelectedTool && <SelectedTool.component dispatchViewEvent={dispatch} viewState={props} />}
       </MapView>
     </View>

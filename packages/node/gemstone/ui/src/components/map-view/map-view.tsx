@@ -1,26 +1,25 @@
 import { noop } from 'lodash'
-import { find, flow, isEmpty, map, matches } from 'lodash/fp'
-import React, { PropsWithChildren, useCallback, useMemo } from 'react'
+import { find, isEmpty, matches } from 'lodash/fp'
+import React, { useMemo } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
-import { Svg } from 'react-native-svg'
 
-import { Canvas, useViewport } from '@thrashplay/canvas-with-tools'
-import { AreasRenderer, Grid } from '@thrashplay/gemstone-map-ui'
-import { Actor, getActors } from '@thrashplay/gemstone-model'
-import { useFrameQuery, useValue, WithFrameQuery } from '@thrashplay/gemstone-ui-core'
+import { Canvas } from '@thrashplay/canvas-with-tools'
+import { WithFrameQuery } from '@thrashplay/gemstone-ui-core'
 import { Extents } from '@thrashplay/math'
 import { WithViewStyles } from '@thrashplay/react-helpers'
 import { ToolSelectorButtonBar } from '@thrashplay/tool-selector'
 
 import { ViewEvent } from '../dispatch-view-event'
 
-import { AnimatedAvatar, AnimatedAvatarProps } from './animated-avatar'
+import { getDefaultActorDecorators as getDefaultActorDecoratorsImpl } from './default-actor-decorators'
+import { getDefaultMapAreaDecorators as getDefaultMapAreaDecoratorsImpl } from './default-area-decorators'
+import { MapContent, MapContentProps } from './map-content'
 import { ToolOption } from './tool-option'
 
 export interface MapViewProps<
   TViewState extends unknown = any,
   TViewEvent extends ViewEvent = any
-> extends WithFrameQuery, WithViewStyles<'style'> {
+> extends WithFrameQuery, WithViewStyles<'style'>, MapContentProps {
   /** React nodes to render as overlays (tools and content) on top of the rendered map */
   children?: React.ReactNode | React.ReactNode
 
@@ -39,11 +38,14 @@ export interface MapViewProps<
 
 export const MapView = <TViewEvent extends ViewEvent = any>({
   children = null,
+  getDefaultActorDecorators = getDefaultActorDecoratorsImpl,
+  getDefaultMapAreaDecorators = getDefaultMapAreaDecoratorsImpl,
   extents,
   onToolSelected = noop,
   selectedToolId,
   style,
   toolOptions = [],
+  ...otherContentProps
 }: MapViewProps<TViewEvent>) => {
   const toolOption = useMemo(() => {
     const option = find(
@@ -51,11 +53,6 @@ export const MapView = <TViewEvent extends ViewEvent = any>({
     )(toolOptions) as ToolOption | undefined
     return option
   }, [selectedToolId, toolOptions])
-
-  // const handleContentErrors = (error: Error) => {
-  //   console.log('Error rendering map-view child content.', error)
-  //   return null
-  // }
 
   return (
     <View style={[styles.container, style]}>
@@ -73,45 +70,15 @@ export const MapView = <TViewEvent extends ViewEvent = any>({
         panAndZoomMode={toolOption?.panAndZoomMode ?? 'none'}
         style={styles.canvas}
       >
-        <MapContent>
+        <MapContent
+          {...otherContentProps}
+          getDefaultActorDecorators={getDefaultActorDecorators}
+          getDefaultMapAreaDecorators={getDefaultMapAreaDecorators}
+        >
           {children}
         </MapContent>
       </Canvas>
     </View>
-  )
-}
-
-const MapContent = ({ children }: PropsWithChildren<any>) => {
-  const { extents, viewport } = useViewport()
-  const frameQuery = useFrameQuery()
-  const actors = useValue(getActors, frameQuery)
-
-  const createAvatarRenderProps = useCallback((actor: Actor): AnimatedAvatarProps => {
-    return {
-      actorId: actor.id,
-    }
-  }, [])
-
-  const renderAvatars = useCallback(() => flow(
-    map(createAvatarRenderProps),
-    map((props: AnimatedAvatarProps) => <AnimatedAvatar key={props.actorId} {...props} />)
-  )(actors), [actors, createAvatarRenderProps])
-
-  return (
-    <Svg
-      viewBox={`${extents.x} ${extents.y} ${extents.width} ${extents.height}`}
-      height={viewport.height}
-      // width={viewport.width}
-    >
-      <AreasRenderer />
-      <Grid
-        gridSpacing={10}
-        mapHeight={500}
-        mapWidth={500}
-      />
-      {renderAvatars()}
-      {children}
-    </Svg>
   )
 }
 

@@ -1,32 +1,40 @@
-import { isEqual } from 'lodash'
-import React, { useRef, useState } from 'react'
+import { castArray, isEqual, map } from 'lodash/fp'
+import React, { useCallback, useRef, useState } from 'react'
 import { Animated } from 'react-native'
 
-import { getPosition, getTime, Point } from '@thrashplay/gemstone-model'
+import { Actor, getPosition, getTime, Point } from '@thrashplay/gemstone-model'
 import { useFrameQuery, useValue, useWorldCoordinateConverter } from '@thrashplay/gemstone-ui-core'
 
-import { AvatarProps, DefaultAvatar } from './default-avatar'
+import { AnimatedAnchor } from '../../map-elements/anchor'
 
-export type AnimatedAvatarProps = Omit<AvatarProps, 'animatedX' | 'animatedY' | 'isAnimating'>
+import { ActorDecoratorFunction } from './decorators'
 
-export const AnimatedAvatar = (props: AnimatedAvatarProps) => {
-  const { actorId, renderAvatar } = props
+export interface AnimatedAvatarProps {
+  actorId: Actor['id']
+  children?: ActorDecoratorFunction | ActorDecoratorFunction[]
+}
 
+export const AnimatedAvatar = ({ actorId, children }: AnimatedAvatarProps) => {
   const { toCanvas } = useWorldCoordinateConverter()
 
   const frameQuery = useFrameQuery()
   const query = { ...frameQuery, characterId: actorId }
-  const position = toCanvas(useValue(getPosition, query))
+  const worldPosition = useValue(getPosition, query)
+  const canvasPosition = toCanvas(worldPosition)
   const timeOffset = useValue(getTime, frameQuery)
 
   const [isAnimating, setIsAnimating] = useState(false)
 
   const lastPosition = useRef<undefined | Point>(undefined)
   const lastTime = useRef(0)
-  const animationTarget = useRef(new Animated.ValueXY(position)).current
-  const animationCurrent = useRef(new Animated.ValueXY(position)).current
+  const animationTarget = useRef(new Animated.ValueXY(canvasPosition)).current
+  const animationCurrent = useRef(new Animated.ValueXY(canvasPosition)).current
 
-  if (!isEqual(lastPosition.current, position)) {
+  const renderDecorator = useCallback((decorator: ActorDecoratorFunction) => {
+    return decorator({ actorId })
+  }, [actorId])
+
+  if (!isEqual(lastPosition.current, canvasPosition)) {
     const MAX_ANIMATION_DURATION = 625
     const ANIMATION_DURATION_FACTOR = 0.05
 
@@ -45,15 +53,15 @@ export const AnimatedAvatar = (props: AnimatedAvatarProps) => {
       setIsAnimating(() => x !== lastPosition.current?.x || y !== lastPosition.current?.y)
     })
 
-    animationTarget.setValue(position)
-    lastPosition.current = position
+    animationTarget.setValue(canvasPosition)
+    lastPosition.current = canvasPosition
   }
 
   return (
-    <DefaultAvatar {...props}
-      animatedX={animationCurrent.x}
-      animatedY={animationCurrent.y}
-      isAnimating={isAnimating}
-    />
+    <>
+      <AnimatedAnchor x={animationCurrent.x} y={animationCurrent.y}>
+        {children && map(renderDecorator)(castArray(children))}
+      </AnimatedAnchor>
+    </>
   )
 }

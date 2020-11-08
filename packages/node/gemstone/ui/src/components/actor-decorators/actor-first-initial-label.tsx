@@ -1,11 +1,11 @@
 import React from 'react'
 import { CircleProps, TextProps } from 'react-native-svg'
 
+import { ActorDecoratorFunction, ActorDecoratorProps } from '@thrashplay/gemstone-map-ui'
 import { getPublicCharacterName } from '@thrashplay/gemstone-model'
 import { useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
 
 import { TextDecorator } from '../../map-elements/text-decorator'
-import { ActorDecoratorFunction, ActorDecoratorProps } from '../map-view/decorators'
 
 /**
  * Creates an ActorBodyCircle decorator with the specified circle props.

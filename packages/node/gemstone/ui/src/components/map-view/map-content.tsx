@@ -3,13 +3,12 @@ import React, { PropsWithChildren, useCallback } from 'react'
 import { Svg } from 'react-native-svg'
 
 import { useViewport } from '@thrashplay/canvas-with-tools'
-import { Area } from '@thrashplay/gemstone-map-model'
-import { AreasRenderer, Grid } from '@thrashplay/gemstone-map-ui'
+import { Area, getAreas } from '@thrashplay/gemstone-map-model'
+import { ActorDecoratorFunction, AreasRenderer, Grid, MapAreaDecoratorFunction } from '@thrashplay/gemstone-map-ui'
 import { Actor, getActors } from '@thrashplay/gemstone-model'
 import { useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
 
 import { AnimatedAvatar } from './animated-avatar'
-import { ActorDecoratorFunction, MapAreaDecoratorFunction } from './decorators'
 
 const EMPTY_DECORATOR_ARRAY = [] as const
 const EMPTY_DECORATOR_GETTER = () => EMPTY_DECORATOR_ARRAY
@@ -28,14 +27,14 @@ export interface MapContentProps {
   getDefaultActorDecorators?: () => readonly ActorDecoratorFunction[] | ActorDecoratorFunction
 
   /** Function that returns a set of decorators to use for rendering all map areas, before view-specific ones */
-  getDefaultMapAreaDecorators?: () => readonly MapAreaDecoratorFunction[] | ActorDecoratorFunction
+  getDefaultMapAreaDecorators?: () => readonly MapAreaDecoratorFunction[] | MapAreaDecoratorFunction
   /**
    * Function that provides an array of MapAreaDecoratorFunctions for map areas based on their ID.
    * Can be used to provide custom rendering behavior based on game state.
    */
   getMapAreaDecorators?: (
     areaId: Area['id']
-  ) => readonly MapAreaDecoratorFunction[] | ActorDecoratorFunction | undefined
+  ) => readonly MapAreaDecoratorFunction[] | MapAreaDecoratorFunction | undefined
 }
 
 export const MapContent = ({
@@ -48,6 +47,16 @@ export const MapContent = ({
   const { extents, viewport } = useViewport()
   const frameQuery = useFrameQuery()
   const actors = useValue(getActors, frameQuery)
+  const areas = useValue(getAreas)
+
+  const renderArea = useCallback((area: Area) => {
+    const defaults = getDefaultMapAreaDecorators()
+    const extra = getMapAreaDecorators(area.id) ?? EMPTY_DECORATOR_ARRAY
+
+    const invokeDecorator = (decorator: MapAreaDecoratorFunction) => decorator({ areaId: area.id })
+
+    return map(invokeDecorator)([...castArray(defaults), ...castArray(extra)])
+  }, [getDefaultMapAreaDecorators, getMapAreaDecorators])
 
   const renderAvatar = useCallback((actor: Actor) => {
     const defaults = getDefaultActorDecorators()
@@ -66,7 +75,7 @@ export const MapContent = ({
       height={viewport.height}
       // width={viewport.width}
     >
-      <AreasRenderer />
+      {map(renderArea)(areas)}
       <Grid
         gridSpacing={5}
         mapHeight={500}

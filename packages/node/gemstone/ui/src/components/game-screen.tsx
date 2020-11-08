@@ -96,10 +96,8 @@ export const GameScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const [selectedMode, setSelectedMode] = useState<Mode>('combat')
+  const [selectedMode, setSelectedMode] = useState<Mode>('map-editor')
   const [selectedAreaId, setSelectedAreaId] = useState<Area['id'] | undefined>(undefined)
-
-  const selectedTime = useValue(getTime, { fallback: true, frameTag: 'selected' })
 
   const getModeTitle = () => {
     switch (selectedMode) {

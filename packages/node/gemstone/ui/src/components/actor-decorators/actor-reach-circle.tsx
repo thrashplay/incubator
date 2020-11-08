@@ -1,11 +1,11 @@
 import React from 'react'
 import { CircleProps } from 'react-native-svg'
 
+import { ActorDecoratorFunction, ActorDecoratorProps } from '@thrashplay/gemstone-map-ui'
 import { getReach } from '@thrashplay/gemstone-model'
 import { feetToPixels, useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
 
 import { CircleDecorator } from '../../map-elements/circle-decorator'
-import { ActorDecoratorFunction, ActorDecoratorProps } from '../map-view/decorators'
 
 /**
  * Creates an ActorReachCircle decorator with the specified circle props.

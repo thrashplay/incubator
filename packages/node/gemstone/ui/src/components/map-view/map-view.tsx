@@ -4,22 +4,21 @@ import React, { useMemo } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 
 import { Canvas } from '@thrashplay/canvas-with-tools'
-import { feetToPixels, useWorldCoordinateConverter, WithFrameQuery } from '@thrashplay/gemstone-ui-core'
 import { Extents } from '@thrashplay/math'
 import { WithViewStyles } from '@thrashplay/react-helpers'
 import { ToolSelectorButtonBar } from '@thrashplay/tool-selector'
 
 import { getDefaultActorDecorators as getDefaultActorDecoratorsImpl } from '../actor-decorators'
+import { getDefaultMapAreaDecorators as getDefaultMapAreaDecoratorsImpl } from '../area-decorators'
 import { ViewEvent } from '../dispatch-view-event'
 
-import { getDefaultMapAreaDecorators as getDefaultMapAreaDecoratorsImpl } from './default-area-decorators'
 import { MapContent, MapContentProps } from './map-content'
 import { ToolOption } from './tool-option'
 
 export interface MapViewProps<
   TViewState extends unknown = any,
   TViewEvent extends ViewEvent = any
-> extends WithFrameQuery, WithViewStyles<'style'>, MapContentProps {
+> extends WithViewStyles<'style'>, MapContentProps {
   /** React nodes to render as overlays (tools and content) on top of the rendered map */
   children?: React.ReactNode | React.ReactNode
 

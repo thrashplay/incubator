@@ -1,5 +1,5 @@
 import { useCoordinateConverter } from '@thrashplay/canvas-with-tools'
-import { Point } from '@thrashplay/math'
+import { Extents, Point } from '@thrashplay/math'
 
 import { RENDER_SCALE } from '../constants'
 
@@ -15,7 +15,15 @@ export const useWorldCoordinateConverter = (renderScale = RENDER_SCALE) => {
     y: y * renderScale,
   })
 
+  const extentsToCanvas = ({ x, y, width, height }: Extents) => ({
+    height: height * renderScale,
+    width: width * renderScale,
+    x: x * renderScale,
+    y: y * renderScale,
+  })
+
   return {
+    extentsToCanvas,
     toViewport,
     toCanvas,
   }

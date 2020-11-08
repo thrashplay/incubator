@@ -41,6 +41,14 @@ export const getArea = createSelector(
     : areas[id]
 )
 
+/** Selects the bounds of an area w */
+export const getAreaBounds = createSelector(
+  [getAreaCollection, getAreaIdParam],
+  (areas, id) => id === undefined
+    ? { x: 0, y: 0, width: 0, height: 0 }
+    : areas[id].bounds
+)
+
 /** Calculates a basic text description of the size and shape of this area. */
 export const getBasicAreaDescription = createSelector(
   [getArea],

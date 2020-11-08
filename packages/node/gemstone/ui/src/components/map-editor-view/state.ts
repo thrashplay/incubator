@@ -1,4 +1,5 @@
 import { Area } from '@thrashplay/gemstone-map-model'
+import { feetToPixels } from '@thrashplay/gemstone-ui-core'
 import { Dimensions, Extents } from '@thrashplay/math'
 
 export interface MapEditorViewState {
@@ -9,10 +10,10 @@ export interface MapEditorViewState {
 }
 
 export const DEFAULT_EXTENTS = {
-  height: 500,
-  width: 500,
-  x: -250,
-  y: -250,
+  height: feetToPixels(120),
+  width: feetToPixels(120),
+  x: feetToPixels(-60),
+  y: feetToPixels(-60),
 }
 
 export const INITIAL_STATE: MapEditorViewState = {

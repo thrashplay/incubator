@@ -4,8 +4,8 @@ import {
   isValidPoint,
 } from '@thrashplay/gemstone-model'
 
-import { error } from '../command-error-handler'
-import { GameState } from '../state'
+import { error } from '../../command-error-handler'
+import { GameState } from '../../state'
 
 import { approachLocation } from './approach-location'
 import { MovementOptions } from './options'

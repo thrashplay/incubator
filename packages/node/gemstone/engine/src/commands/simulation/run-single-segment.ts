@@ -2,7 +2,7 @@ import {
   SceneEvents,
 } from '@thrashplay/gemstone-model'
 
-import { GameState } from '../state'
+import { GameState } from '../../state'
 
 import { calculateNextSegment } from './calculate-next-segment'
 

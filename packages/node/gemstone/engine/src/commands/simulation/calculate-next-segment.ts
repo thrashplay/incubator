@@ -2,10 +2,10 @@ import { flatten, flow, map, values } from 'lodash/fp'
 
 import { FrameEvents, getCurrentFrame, getSegmentDuration } from '@thrashplay/gemstone-model'
 
-import { createActionHandler } from '../actions'
-import { Event } from '../events'
-import { GameState } from '../state'
-import { Command, Dispatchable } from '../store'
+import { createActionHandler } from '../../actions'
+import { Event } from '../../events'
+import { GameState } from '../../state'
+import { Command, Dispatchable } from '../../store'
 
 import { isInputRequired } from './is-input-required'
 

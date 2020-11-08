@@ -1,7 +1,7 @@
 
 import { ActorStatus, Point } from '@thrashplay/gemstone-model'
 
-import { MovementCommands } from '../../movement'
+import { MovementCommands } from '../../commands/movement'
 import { GameState } from '../../state'
 import { Command } from '../../store'
 import { beginIdling } from '../commands'

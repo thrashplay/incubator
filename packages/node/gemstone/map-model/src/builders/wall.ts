@@ -65,6 +65,7 @@ export const buildWall = createBuilder(({
   return {
     id: getNextThingId(),
     bounds,
+    breaks: [],
     kind: 'wall',
     p1: start,
     p2: end,

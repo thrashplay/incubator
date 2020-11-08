@@ -2,18 +2,19 @@ import { find, matches } from 'lodash/fp'
 import React, { useCallback, useMemo } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 
-import { Actor, getActors } from '@thrashplay/gemstone-model'
-import { useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
+import { Actor } from '@thrashplay/gemstone-model'
 import { WithViewStyles } from '@thrashplay/react-helpers'
 
-import { ActorBodyCircles } from '../../map-elements/actor-body-circle'
+import { ActorBodyCircles, ActorFirstInitialLabels, ActorReachCircles, createMovementPreview } from '../actor-decorators'
 import { ViewEventDispatch } from '../dispatch-view-event'
+import { getNoDecorators } from '../map-view/decorators'
 import { MapView } from '../map-view/map-view'
 import { PanAndZoomOption } from '../map-view/pan-and-zoom-option'
 import { ToolOption } from '../map-view/tool-option'
 
+import { NonSelectedActorMovementPreview } from './decorators/non-selected-actor-movement-preview copy'
+import { SelectedActorMovementPreview } from './decorators/selected-actor-movement-preview'
 import { CombatViewEvent, CombatViewEvents } from './events'
-import { SelectionIndicator } from './overlays/selection-indicator'
 import { CombatViewState } from './state'
 import { TOOL_OPTIONS } from './tools'
 
@@ -24,6 +25,20 @@ export interface CombatMapProps extends CombatViewState, WithViewStyles<'style'>
   /** the ID of the selected actor, or undefined if none */
   selectedActorId?: Actor['id']
 }
+
+const SELECTED_ACTOR_DECORATORS = [
+  ActorReachCircles.Default,
+  SelectedActorMovementPreview,
+  ActorBodyCircles.Selected,
+  ActorFirstInitialLabels.Default,
+]
+
+const DEFAULT_ACTOR_DECORATORS = [
+  ActorReachCircles.Default,
+  NonSelectedActorMovementPreview,
+  ActorBodyCircles.Default,
+  ActorFirstInitialLabels.Default,
+]
 
 /** Component responsible for rendering combat-specific content on top of an area map. */
 export const CombatMap = ({
@@ -49,13 +64,16 @@ export const CombatMap = ({
   }, [dispatch])
 
   const getActorDecorators = useCallback((actorId: Actor['id']) => {
-    return actorId === selectedActorId ? ActorBodyCircles.Selected : undefined
+    return actorId === selectedActorId
+      ? SELECTED_ACTOR_DECORATORS
+      : DEFAULT_ACTOR_DECORATORS
   }, [selectedActorId])
 
   return (
     <View style={[styles.container, style]}>
       <MapView
         getActorDecorators={getActorDecorators}
+        getDefaultActorDecorators={getNoDecorators}
         extents={extents}
         onToolSelected={handleToolSelected}
         selectedToolId={selectedToolId}

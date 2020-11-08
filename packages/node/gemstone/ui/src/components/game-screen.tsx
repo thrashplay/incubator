@@ -36,7 +36,7 @@ const initializeTestScene = () => (state: GameState) => {
 
   const getRandomRoomDimensions = getTableRoller(state, { tableId: '1' }) as TableRollerFunction<Dimensions>
 
-  const MULTIPLIER = 1
+  const MULTIPLIER = 1.5
   const size1 = getRandomRoomDimensions()
   const INITIAL_ROOM_BOUNDS = {
     x: -(size1.width * MULTIPLIER) / 2,
@@ -66,7 +66,7 @@ const initializeTestScene = () => (state: GameState) => {
     // add the PCs
     // addCharacter(createCharacter('Human', 90)),
     addCharacter(createCharacter('Ogre', 60, { reach: 10, size: 6 })),
-    addCharacter(createCharacter('Pixie', 120, { reach: 5, size: 1 })),
+    // addCharacter(createCharacter('Pixie', 120, { reach: 5, size: 1 })),
     // addCharacter(createCharacter('Dan')),
     addCharacter(createCharacter('Nate')),
     // addCharacter(createCharacter('Seth')),
@@ -78,7 +78,7 @@ const initializeTestScene = () => (state: GameState) => {
     // move PCs to random starting positions
     // MovementCommands.moveTo('human', createRandomPosition()),
     MovementCommands.moveTo('ogre', createRandomPosition()),
-    MovementCommands.moveTo('pixie', createRandomPosition()),
+    // MovementCommands.moveTo('pixie', createRandomPosition()),
     // MovementCommands.moveTo('dan', createRandomPosition()),
     MovementCommands.moveTo('nate', createRandomPosition()),
     // MovementCommands.moveTo('seth', createRandomPosition()),
@@ -96,7 +96,7 @@ export const GameScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const [selectedMode, setSelectedMode] = useState<Mode>('map-editor')
+  const [selectedMode, setSelectedMode] = useState<Mode>('combat')
   const [selectedAreaId, setSelectedAreaId] = useState<Area['id'] | undefined>(undefined)
 
   const selectedTime = useValue(getTime, { fallback: true, frameTag: 'selected' })

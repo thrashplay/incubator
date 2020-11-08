@@ -4,9 +4,8 @@ import { CircleProps } from 'react-native-svg'
 import { getSize } from '@thrashplay/gemstone-model'
 import { feetToPixels, useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
 
-import { ActorDecoratorFunction, ActorDecoratorProps } from '../components/map-view/decorators'
-
-import { CircleDecorator } from './circle-decorator'
+import { CircleDecorator } from '../../map-elements/circle-decorator'
+import { ActorDecoratorFunction, ActorDecoratorProps } from '../map-view/decorators'
 
 /**
  * Creates an ActorBodyCircle decorator with the specified circle props.

@@ -4,14 +4,14 @@ import React, { useMemo } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 
 import { Canvas } from '@thrashplay/canvas-with-tools'
-import { WithFrameQuery } from '@thrashplay/gemstone-ui-core'
+import { feetToPixels, useWorldCoordinateConverter, WithFrameQuery } from '@thrashplay/gemstone-ui-core'
 import { Extents } from '@thrashplay/math'
 import { WithViewStyles } from '@thrashplay/react-helpers'
 import { ToolSelectorButtonBar } from '@thrashplay/tool-selector'
 
+import { getDefaultActorDecorators as getDefaultActorDecoratorsImpl } from '../actor-decorators'
 import { ViewEvent } from '../dispatch-view-event'
 
-import { getDefaultActorDecorators as getDefaultActorDecoratorsImpl } from './default-actor-decorators'
 import { getDefaultMapAreaDecorators as getDefaultMapAreaDecoratorsImpl } from './default-area-decorators'
 import { MapContent, MapContentProps } from './map-content'
 import { ToolOption } from './tool-option'
@@ -84,7 +84,7 @@ export const MapView = <TViewEvent extends ViewEvent = any>({
 
 const canvas: ViewStyle = {
   alignContent: 'stretch',
-  backgroundColor: '#ccc',
+  backgroundColor: '#021',
   flex: 1,
   marginBottom: 0,
   marginTop: 4,

@@ -25,20 +25,7 @@ export interface SegmentedVectorProps {
   start: Point
 }
 
-const calculateLocationAlongVector = (start: Point, destination: Point) => (distance: number) => {
-  const totalDistance = Math.sqrt(
-    (destination.y - start.y) * (destination.y - start.y) +
-    (destination.x - start.x) * (destination.x - start.x)
-  )
-
-  return {
-    x: ((destination.x - start.x) * (distance / totalDistance)) + start.x,
-    y: ((destination.y - start.y) * (distance / totalDistance)) + start.y,
-  }
-}
-
-const lessThanOrEq = (limit: number) => (value: number) => value <= limit
-
+/** Renders a line segment between start and destination, with line styles that transition at various breapoints. */
 export const SegmentedVector = ({
   breakpoints = [],
   destination,
@@ -85,3 +72,17 @@ export const SegmentedVector = ({
     </G>
   )
 }
+
+const calculateLocationAlongVector = (start: Point, destination: Point) => (distance: number) => {
+  const totalDistance = Math.sqrt(
+    (destination.y - start.y) * (destination.y - start.y) +
+    (destination.x - start.x) * (destination.x - start.x)
+  )
+
+  return {
+    x: ((destination.x - start.x) * (distance / totalDistance)) + start.x,
+    y: ((destination.y - start.y) * (distance / totalDistance)) + start.y,
+  }
+}
+
+const lessThanOrEq = (limit: number) => (value: number) => value <= limit

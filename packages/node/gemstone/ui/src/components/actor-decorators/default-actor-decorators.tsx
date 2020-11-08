@@ -1,5 +1,5 @@
-import { ActorBodyCircles } from '../../map-elements/actor-body-circle'
-import { ActorFirstInitialLabels } from '../../map-elements/actor-first-initial-label'
+import { ActorBodyCircles } from './actor-body-circle'
+import { ActorFirstInitialLabels } from './actor-first-initial-label'
 
 export const ActorDecoratorSets = {
   Default: [

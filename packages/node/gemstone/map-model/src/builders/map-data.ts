@@ -1,8 +1,14 @@
-import { flow, map } from 'lodash/fp'
+import { flow, get, map } from 'lodash/fp'
 
 import { addItem, BuilderFunction, createBuilder, removeItem, updateItem } from '@thrashplay/fp'
+import { Extents } from '@thrashplay/math'
 
 import { Area, MapData, Thing } from '../state'
+import { isWall } from '../things/predicates'
+import { Wall } from '../things/wall'
+
+import { buildRectangularRoom } from './rooms'
+import { buildEnclosingWalls } from './walls'
 
 export const buildMap = createBuilder((): MapData => ({
   areas: {},
@@ -35,11 +41,45 @@ const addThings = (things: Thing[]) => (mapData: MapData) => flow(
 /** Removes a Thing (in-game object) from a map */
 const removeThing = (id: Thing['id']) => (map: MapData) => ({ ...map, things: removeItem(map.things, id) })
 
+/**
+ * Updates a wall with the given ThingID by using a number of builder functions.
+ * If the thing ID does not reference an existing thing, with 'kind == "wall"', the state is not changed.
+ */
+const updateWall = (
+  id: Thing['id'],
+  ...updaters: BuilderFunction<Wall>[]
+) => (mapData: MapData) => !isWall(mapData.things[id])
+  ? mapData
+  : {
+    ...mapData,
+    // we take wall builders, but pass in things.. should be safe because of our check above, but tsc doesn't know that
+    things: updateItem(mapData.things, id, ...updaters as any),
+  }
+
+/**
+ * Adds a rectangular room, and the walls enclosing it, to a map.
+ * Optionally specify a list of builder functions that can be used to enhance the 'Area' created for the room.
+ **/
+const addRectangularRoom = (
+  bounds: Extents,
+  wallThickness = 1,
+  ...roomBuilderFunctions: BuilderFunction<Area>[]
+) => (mapData: MapData) => {
+  const walls = buildEnclosingWalls({ bounds, wallThickness })
+  return flow(
+    ...map(addThing)(walls),
+    addArea(buildRectangularRoom({ bounds }, ...roomBuilderFunctions))
+  )(mapData)
+}
+
 export const MapBuilder = {
   addArea,
+  addRectangularRoom,
   addThing,
   addThings,
   removeArea,
   removeThing,
+  setOnThing: (values: Partial<Thing>) => (initial: Thing) => ({ ...initial, ...values }),
   updateArea,
+  updateWall,
 }

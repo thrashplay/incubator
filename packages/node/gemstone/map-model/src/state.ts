@@ -2,9 +2,8 @@ import { Dictionary } from '@thrashplay/gemstone-model'
 import { Extents } from '@thrashplay/math'
 
 /** A physical person or object in the game world */
-export interface Thing {
+export type Thing = {
   id: string
-  bounds: Extents
   kind: string
 }
 

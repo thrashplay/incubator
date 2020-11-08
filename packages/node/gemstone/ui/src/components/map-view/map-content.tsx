@@ -1,12 +1,12 @@
 import { castArray, map } from 'lodash/fp'
 import React, { PropsWithChildren, useCallback } from 'react'
-import { Rect, Svg } from 'react-native-svg'
+import { Svg } from 'react-native-svg'
 
 import { useViewport } from '@thrashplay/canvas-with-tools'
-import { Area, getAreas, getThings, Thing } from '@thrashplay/gemstone-map-model'
-import { ActorDecoratorFunction, AreasRenderer, Grid, MapAreaDecoratorFunction } from '@thrashplay/gemstone-map-ui'
+import { Area, getAreas, getThingBounds, getThings, isWall, Thing } from '@thrashplay/gemstone-map-model'
+import { ActorDecoratorFunction, Grid, MapAreaDecoratorFunction, WallView } from '@thrashplay/gemstone-map-ui'
 import { Actor, getActors } from '@thrashplay/gemstone-model'
-import { useFrameQuery, useValue, useWorldCoordinateConverter } from '@thrashplay/gemstone-ui-core'
+import { useFrameQuery, useSelector, useValue, useWorldCoordinateConverter } from '@thrashplay/gemstone-ui-core'
 
 import { AnimatedAvatar } from './animated-avatar'
 
@@ -50,6 +50,7 @@ export const MapContent = ({
   const actors = useValue(getActors, frameQuery)
   const areas = useValue(getAreas)
   const things = useValue(getThings)
+  const selectThingBounds = useSelector(getThingBounds)
 
   const renderArea = useCallback((area: Area) => {
     const defaults = getDefaultMapAreaDecorators()
@@ -71,19 +72,9 @@ export const MapContent = ({
     )
   }, [getActorDecorators, getDefaultActorDecorators])
 
-  const renderThing = useCallback((thing: Thing) => {
-    const { x, y, width, height } = extentsToCanvas(thing.bounds)
-
-    return (
-      <Rect key={thing.id}
-        fill="black"
-        height={height}
-        width={width}
-        x={x}
-        y={y}
-      />
-    )
-  }, [extentsToCanvas])
+  const renderIfWall = useCallback((thing: Thing) => {
+    return !isWall(thing) ? null : <WallView key={thing.id} wall={thing} />
+  }, [])
 
   return (
     <Svg
@@ -97,7 +88,7 @@ export const MapContent = ({
         mapHeight={500}
         mapWidth={500}
       />
-      {map(renderThing)(things)}
+      {map(renderIfWall)(things)}
       {map(renderAvatar)(actors)}
       {children}
     </Svg>

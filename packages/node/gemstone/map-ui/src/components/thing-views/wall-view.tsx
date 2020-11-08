@@ -1,7 +1,7 @@
 import React from 'react'
 import { Rect } from 'react-native-svg'
 
-import { Wall } from '@thrashplay/gemstone-model'
+import { Wall } from '@thrashplay/gemstone-map-model'
 
 export interface WallViewProps {
   wall: Wall

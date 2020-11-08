@@ -1,16 +1,23 @@
+import { flow } from 'lodash'
+import { get, map } from 'lodash/fp'
+
 import { createBuilder } from '@thrashplay/fp'
 import { Extents } from '@thrashplay/math'
 
-import { Area } from '../state'
+import { Area, MapData } from '../state'
+import { Wall } from '../things/wall'
 
 import { getNextAreaId } from './get-next-area-id'
+import { MapBuilder } from './map-data'
 import { buildWall } from './wall'
+
+const { addArea, addThing } = MapBuilder
 
 // Room Builders
 
 export interface RoomSpecification {
-  width: number
-  height: number
+  bounds: Extents
+  walls: Wall[]
 }
 
 const horizontalWall = (x1: number, x2: number, y: number) => buildWall({
@@ -25,16 +32,26 @@ const verticalWall = (x: number, y1: number, y2: number) => buildWall({
 })
 
 /** Builds a square room area with the specified bounds */
-export const buildSquareRoom = createBuilder((bounds: Extents): Area => ({
+export const buildRectangularRoom = createBuilder(({ bounds, walls }: RoomSpecification): Area => ({
   id: getNextAreaId(),
   bounds,
-  things: [
-    // horizontalWall(0, width, 0 + 300),
-    // horizontalWall(0, width, height + 300),
-    // verticalWall(0, 0, height),
-    // verticalWall(width, 0, height),
-  ],
+  things: map(get('id'))(walls),
 }))
+
+export const addRectangularRoom = (bounds: Extents) => (mapData: MapData) => {
+  const north = horizontalWall(bounds.x + bounds.width, bounds.x, bounds.y)
+  const west = verticalWall(bounds.x, bounds.y, bounds.y + bounds.height)
+  const south = horizontalWall(bounds.x, bounds.x + bounds.width, bounds.y + bounds.height)
+  const east = verticalWall(bounds.x + bounds.width, bounds.y + bounds.height, bounds.y)
+
+  return flow(
+    addThing(north),
+    addThing(west),
+    addThing(south),
+    addThing(east),
+    addArea(buildRectangularRoom({ bounds, walls: [north, west, south, east] }))
+  )(mapData)
+}
 
 /** Updates a room area with new values */
 const set = (values: Partial<Area>) => (initial: Area) => ({ ...initial, ...values })

@@ -83,7 +83,7 @@ export const MapView = <TViewEvent extends ViewEvent = any>({
 
 const canvas: ViewStyle = {
   alignContent: 'stretch',
-  backgroundColor: '#021',
+  backgroundColor: '#396',
   flex: 1,
   marginBottom: 0,
   marginTop: 4,

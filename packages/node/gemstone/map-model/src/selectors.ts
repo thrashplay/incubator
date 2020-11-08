@@ -5,7 +5,7 @@ import { createParameterSelector } from '@thrashplay/gemstone-model'
 import { Point, rectangleContains } from '@thrashplay/math'
 
 import { buildMap } from './builders/map-data'
-import { Area, MapStateContainer } from './state'
+import { Area, MapStateContainer, Thing } from './state'
 
 export interface MapSelectorParameters {
   /** ID of a specific Area instance to query */
@@ -78,4 +78,18 @@ export const getAreaAtPosition = createSelector(
   (areas, position) => position === undefined
     ? undefined
     : find((area: Area) => rectangleContains(area.bounds, position))(areas)
+)
+
+/** things -------- */
+
+/** Selects the Dictionary containing all things in a  map. */
+export const getThingCollection = createSelector(
+  [getMapData],
+  (mapData) => mapData.things
+)
+
+/** Selects an array containing all things in a map. */
+export const getThings = createSelector(
+  [getThingCollection],
+  (things) => filter<Thing>(negate(isUndefined))(values(things))
 )

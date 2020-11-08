@@ -1,12 +1,12 @@
 import { castArray, map } from 'lodash/fp'
 import React, { PropsWithChildren, useCallback } from 'react'
-import { Svg } from 'react-native-svg'
+import { Rect, Svg } from 'react-native-svg'
 
 import { useViewport } from '@thrashplay/canvas-with-tools'
-import { Area, getAreas } from '@thrashplay/gemstone-map-model'
+import { Area, getAreas, getThings, Thing } from '@thrashplay/gemstone-map-model'
 import { ActorDecoratorFunction, AreasRenderer, Grid, MapAreaDecoratorFunction } from '@thrashplay/gemstone-map-ui'
 import { Actor, getActors } from '@thrashplay/gemstone-model'
-import { useFrameQuery, useValue } from '@thrashplay/gemstone-ui-core'
+import { useFrameQuery, useValue, useWorldCoordinateConverter } from '@thrashplay/gemstone-ui-core'
 
 import { AnimatedAvatar } from './animated-avatar'
 
@@ -45,9 +45,11 @@ export const MapContent = ({
   getMapAreaDecorators = EMPTY_DECORATOR_GETTER,
 }: PropsWithChildren<MapContentProps>) => {
   const { extents, viewport } = useViewport()
+  const { extentsToCanvas } = useWorldCoordinateConverter()
   const frameQuery = useFrameQuery()
   const actors = useValue(getActors, frameQuery)
   const areas = useValue(getAreas)
+  const things = useValue(getThings)
 
   const renderArea = useCallback((area: Area) => {
     const defaults = getDefaultMapAreaDecorators()
@@ -69,6 +71,21 @@ export const MapContent = ({
     )
   }, [getActorDecorators, getDefaultActorDecorators])
 
+  const renderThing = useCallback((thing: Thing) => {
+    const { x, y, width, height } = extentsToCanvas(thing.bounds)
+    console.log('bzxcvzxcv', thing.bounds)
+
+    return (
+      <Rect key={thing.id}
+        fill="black"
+        height={height}
+        width={width}
+        x={x}
+        y={y}
+      />
+    )
+  }, [extentsToCanvas])
+
   return (
     <Svg
       viewBox={`${extents.x} ${extents.y} ${extents.width} ${extents.height}`}
@@ -81,6 +98,7 @@ export const MapContent = ({
         mapHeight={500}
         mapWidth={500}
       />
+      {map(renderThing)(things)}
       {map(renderAvatar)(actors)}
       {children}
     </Svg>

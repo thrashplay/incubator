@@ -1,7 +1,7 @@
 import { createBuilder } from '@thrashplay/fp'
 import { Extents, Point } from '@thrashplay/math'
 
-import { Wall } from '../things/wall'
+import { Break, Wall } from '../things/wall'
 
 import { getNextThingId } from './get-next-thing-id'
 
@@ -44,27 +44,8 @@ export const buildWall = createBuilder(({
   start,
   thickness = DEFAULT_WALL_THICKNESS,
 }: WallSpecification): Wall => {
-  const createVerticalBounds = () => ({
-    x: Math.min(start.x, end.x) - (thickness / 2),
-    y: Math.min(start.y, end.y),
-    width: thickness,
-    height: Math.abs(end.y - start.y),
-  })
-
-  const createHorizontalBounds = () => ({
-    x: Math.min(start.x, end.x),
-    y: Math.min(start.y, end.y) - (thickness / 2),
-    width: Math.abs(start.x - end.x),
-    height: thickness,
-  })
-
-  const bounds = (end.x - start.x) === 0
-    ? createVerticalBounds()
-    : createHorizontalBounds()
-
   return {
     id: getNextThingId(),
-    bounds,
     breaks: [],
     kind: 'wall',
     p1: start,
@@ -74,7 +55,7 @@ export const buildWall = createBuilder(({
 })
 
 /** Builds a vertical wall segment for the given specification. */
-export const buildVerticalWall = ({
+export const buildVerticalWall = createBuilder(({
   length,
   thickness = DEFAULT_WALL_THICKNESS,
   x,
@@ -83,10 +64,10 @@ export const buildVerticalWall = ({
   end: { x, y: y + length },
   start: { x, y },
   thickness,
-})
+}))
 
 /** Builds a horizontal wall segment for the given specification. */
-export const buildHorizontalWall = ({
+export const buildHorizontalWall = createBuilder(({
   length,
   thickness = DEFAULT_WALL_THICKNESS,
   x,
@@ -95,7 +76,7 @@ export const buildHorizontalWall = ({
   end: { x: x + length, y },
   start: { x, y },
   thickness,
-})
+}))
 
 /**
  * Builds a set of enclosing walls for a rectangular region.
@@ -157,6 +138,12 @@ export const WallSides = {
   East: 3,
 }
 
+const addBreak = (newBreak: Break) => (wall: Wall) => ({
+  ...wall,
+  breaks: [...wall.breaks, newBreak],
+})
+
 export const WallBuilder = {
+  addBreak,
   set: (values: Partial<Wall>) => (initial: Wall) => ({ ...initial, ...values }),
 }

@@ -1,19 +1,9 @@
-import { calculateDistance } from '@thrashplay/math'
+import { calculateDistance, calculateLocationAlongVector } from '@thrashplay/math'
 
 import { Point } from './common'
 
 // the maximimum distance from a point to consider having 'arrived' for movement purposes
 const MAX_ARRIVAL_DELTA = 1
-
-/** calculates a point that is 'distance' feet away from the start point, in the direction of destination */
-export const calculateLocationAlongVector = (start: Point, end: Point) => (distance: number) => {
-  const totalDistance = calculateDistance(start, end)
-
-  return {
-    x: ((end.x - start.x) * (distance / totalDistance)) + start.x,
-    y: ((end.y - start.y) * (distance / totalDistance)) + start.y,
-  }
-}
 
 /**
  * Calculates how far a character with the given speed could move towards a goal in one segment

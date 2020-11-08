@@ -1,7 +1,7 @@
 import { map, values } from 'lodash/fp'
 import React from 'react'
 
-import { Thing, Wall } from '@thrashplay/gemstone-model'
+import { Thing, Wall } from '@thrashplay/gemstone-map-model'
 import { useStore } from '@thrashplay/gemstone-ui-core'
 
 import { WallView } from './thing-views/wall-view'

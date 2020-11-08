@@ -12,13 +12,13 @@ export type BreakType = 'passage'
 /** Represents an opening in a wall, such as a door, window, passage, etc. */
 export interface Break {
   /** Type of break, such as a door or passage. */
-  type: BreakType
+  kind: BreakType
 
   /** Position of the break's centerpoint, given as a distance along the wall from it's starting point. */
   position: number
 
   /** Width of this break in the wall, in feet. */
-  width: number
+  length: number
 }
 
 export interface Wall extends Thing {

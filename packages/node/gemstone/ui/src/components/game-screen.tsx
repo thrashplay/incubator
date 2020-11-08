@@ -63,7 +63,9 @@ const initializeTestScene = () => (state: GameState) => {
     // create the map
     // createSquareRoom(INITIAL_ROOM_BOUNDS),
     // createSquareRoom(SIDE_ROOM_BOUNDS),
-    MapCommands.createRectangularRoom({ bounds: INITIAL_ROOM_BOUNDS }),
+    MapCommands.createRectangularRoom(INITIAL_ROOM_BOUNDS),
+    MapCommands.addBreakInWall('1', 10),
+    MapCommands.addBreakInWall('3', 5),
 
     // add the PCs
     // addCharacter(createCharacter('Human', 90)),

@@ -4,6 +4,7 @@ import React from 'react'
 import { G, Line, LineProps } from 'react-native-svg'
 
 import { Point } from '@thrashplay/gemstone-model'
+import { calculateLocationAlongVector } from '@thrashplay/math'
 
 // segment style to use if we are given an empty array
 const DEFAULT_SEGMENT_STYLE = {
@@ -71,18 +72,6 @@ export const SegmentedVector = ({
       {_.map(tail(breakpointLocations), createLine)}
     </G>
   )
-}
-
-const calculateLocationAlongVector = (start: Point, destination: Point) => (distance: number) => {
-  const totalDistance = Math.sqrt(
-    (destination.y - start.y) * (destination.y - start.y) +
-    (destination.x - start.x) * (destination.x - start.x)
-  )
-
-  return {
-    x: ((destination.x - start.x) * (distance / totalDistance)) + start.x,
-    y: ((destination.y - start.y) * (distance / totalDistance)) + start.y,
-  }
 }
 
 const lessThanOrEq = (limit: number) => (value: number) => value <= limit

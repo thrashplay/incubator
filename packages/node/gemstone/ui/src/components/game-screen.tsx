@@ -8,7 +8,7 @@ import {
   MovementCommands,
   SceneCommands,
 } from '@thrashplay/gemstone-engine'
-import { Area, createSquareRoom } from '@thrashplay/gemstone-map-model'
+import { Area, createRectangularRoom } from '@thrashplay/gemstone-map-model'
 import {
   addCharacter,
   Character,
@@ -60,8 +60,9 @@ const initializeTestScene = () => (state: GameState) => {
 
   return [
     // create the map
-    createSquareRoom(INITIAL_ROOM_BOUNDS),
+    // createSquareRoom(INITIAL_ROOM_BOUNDS),
     // createSquareRoom(SIDE_ROOM_BOUNDS),
+    createRectangularRoom({ bounds: INITIAL_ROOM_BOUNDS }),
 
     // add the PCs
     // addCharacter(createCharacter('Human', 90)),

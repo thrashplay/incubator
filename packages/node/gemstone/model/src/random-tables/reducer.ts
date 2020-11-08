@@ -24,6 +24,20 @@ const roomsTable = buildRandomTable(
   RandomTableBuilder.addResults(18, 20, { width: 50, height: 50 })
 )
 
+const passageWidthTable = buildRandomTable(
+  {
+    defaultResult: 10,
+    diceExpression: '1d20',
+    name: 'Passage Width',
+  },
+  RandomTableBuilder.addResult(1, 5),
+  RandomTableBuilder.addResults(2, 13, 10),
+  RandomTableBuilder.addResults(14, 17, 20),
+  RandomTableBuilder.addResult(18, 30),
+  // this is 'special' in the actual book
+  RandomTableBuilder.addResults(19, 20, 40)
+)
+
 export const reduceRandomTablesState = (
   state: RandomTableSet,
   event: RandomTablesEvent | CommonEvent
@@ -32,6 +46,7 @@ export const reduceRandomTablesState = (
     case getType(CommonEvents.initialized):
       return {
         1: roomsTable,
+        2: passageWidthTable,
       }
 
     default:

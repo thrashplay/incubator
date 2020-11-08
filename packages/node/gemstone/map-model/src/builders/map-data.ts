@@ -32,10 +32,14 @@ const addThings = (things: Thing[]) => (mapData: MapData) => flow(
   ...map(addThing)(things)
 )(mapData)
 
+/** Removes a Thing (in-game object) from a map */
+const removeThing = (id: Thing['id']) => (map: MapData) => ({ ...map, things: removeItem(map.things, id) })
+
 export const MapBuilder = {
   addArea,
   addThing,
   addThings,
   removeArea,
+  removeThing,
   updateArea,
 }

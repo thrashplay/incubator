@@ -8,7 +8,7 @@ import { MapData } from './state'
 
 const DEFAULT_MAP = buildMap()
 
-const { addArea, removeArea } = MapBuilder
+const { addArea, addThing, removeArea, removeThing } = MapBuilder
 
 export const reduceMapState = (state: MapData, event: MapEvent | CommonEvent): MapData => {
   switch (event.type) {
@@ -20,6 +20,12 @@ export const reduceMapState = (state: MapData, event: MapEvent | CommonEvent): M
 
     case getType(MapEvents.areaRemoved):
       return removeArea(event.payload)(state)
+
+    case getType(MapEvents.thingCreated):
+      return addThing(event.payload)(state)
+
+    case getType(MapEvents.thingRemoved):
+      return removeThing(event.payload)(state)
 
     default:
       return state

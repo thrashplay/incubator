@@ -12,7 +12,13 @@ import {
   FrameEvents,
   getClosestActor,
 } from '@thrashplay/gemstone-model'
-import { RENDER_SCALE, useCanvasCoordinateConverter, useDispatch, useFrameQuery, useSelector } from '@thrashplay/gemstone-ui-core'
+import {
+  RENDER_SCALE,
+  useCanvasCoordinateConverter,
+  useDispatch,
+  useFrameQuery,
+  useSelector,
+} from '@thrashplay/gemstone-ui-core'
 import { Point } from '@thrashplay/math'
 
 import { ToolProps } from '../../dispatch-view-event'

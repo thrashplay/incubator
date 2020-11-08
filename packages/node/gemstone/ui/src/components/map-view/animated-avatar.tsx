@@ -2,12 +2,11 @@ import { castArray, isEqual, map } from 'lodash/fp'
 import React, { useCallback, useRef, useState } from 'react'
 import { Animated } from 'react-native'
 
+import { ActorDecoratorFunction } from '@thrashplay/gemstone-map-ui'
 import { Actor, getPosition, getTime, Point } from '@thrashplay/gemstone-model'
 import { useFrameQuery, useValue, useWorldCoordinateConverter } from '@thrashplay/gemstone-ui-core'
 
 import { AnimatedAnchor } from '../../map-elements/anchor'
-
-import { ActorDecoratorFunction } from './decorators'
 
 export interface AnimatedAvatarProps {
   actorId: Actor['id']

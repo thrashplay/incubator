@@ -2,13 +2,13 @@ import { get } from 'lodash/fp'
 import React from 'react'
 import { Circle, CircleProps, LineProps } from 'react-native-svg'
 
+import { ActorDecoratorFunction, ActorDecoratorProps } from '@thrashplay/gemstone-map-ui'
 import { getAction, getReach, getSize } from '@thrashplay/gemstone-model'
 import { feetToPixels, useFrameQuery, useValue, useWorldCoordinateConverter } from '@thrashplay/gemstone-ui-core'
 import { calculateDistance, Point } from '@thrashplay/math'
 
 import { useAnchorPoint } from '../../map-elements'
 import { SegmentedVector } from '../../map-elements/segmented-vector'
-import { ActorDecoratorFunction, ActorDecoratorProps } from '../map-view/decorators'
 
 export interface MovementPreviewProps {
   /** SVG styles to use for rendering the movement vector line (defaults to a gray dashed line) */

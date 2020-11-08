@@ -5,6 +5,7 @@
 * Issuing actions when a previous frame is selected is confusing, since it appears to do nothing
 * Rewinding/Fast-Forwarding jumps straight to the end state instead of replaying the whole path
 * If two targets attack each other, they do not move
+* Characters currently 'slow down' even when they aren't near each other, due to likely coordinate conversion error
 
 ## Enhancements
 * 'Pick' logic for characters uses a hard-coded max distance instead of the target's size

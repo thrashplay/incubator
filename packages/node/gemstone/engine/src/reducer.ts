@@ -20,7 +20,7 @@ export const reducer = (state: GameState, event: Event): GameState => {
   }
 
   // eslint-disable-next-line no-console
-  console.log('Event:', event, '; New State:', result)
+  // console.log('Event:', event, '; New State:', result)
 
   return result
 }

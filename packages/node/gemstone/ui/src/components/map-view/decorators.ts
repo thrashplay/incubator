@@ -10,3 +10,6 @@ export type MapAreaDecoratorFunction = (props: MapAreaDecoratorProps) => JSX.Ele
 
 export type ActorDecoratorMap = Dictionary<Actor['id'], ActorDecoratorFunction[]>
 export type MapAreaDecoratorMap = Dictionary<Area['id'], MapAreaDecoratorFunction[]>
+
+export const NO_DECORATORS = [] as const
+export const getNoDecorators = () => NO_DECORATORS

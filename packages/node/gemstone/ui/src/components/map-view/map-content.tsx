@@ -68,7 +68,7 @@ export const MapContent = ({
     >
       <AreasRenderer />
       <Grid
-        gridSpacing={10}
+        gridSpacing={5}
         mapHeight={500}
         mapWidth={500}
       />

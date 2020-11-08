@@ -1,7 +1,7 @@
 import { ActorStatus, CharacterId } from '@thrashplay/gemstone-model'
 
 import { GameState } from '../..//state'
-import { MovementCommands } from '../../movement'
+import { MovementCommands } from '../../commands/movement'
 import { getRangeCalculations } from '../selectors'
 import { SimulationContext } from '../types'
 

@@ -5,10 +5,11 @@ import { Appbar } from 'react-native-paper'
 
 import {
   GameState,
+  MapCommands,
   MovementCommands,
   SceneCommands,
 } from '@thrashplay/gemstone-engine'
-import { Area, createRectangularRoom } from '@thrashplay/gemstone-map-model'
+import { Area } from '@thrashplay/gemstone-map-model'
 import {
   addCharacter,
   Character,
@@ -62,7 +63,7 @@ const initializeTestScene = () => (state: GameState) => {
     // create the map
     // createSquareRoom(INITIAL_ROOM_BOUNDS),
     // createSquareRoom(SIDE_ROOM_BOUNDS),
-    createRectangularRoom({ bounds: INITIAL_ROOM_BOUNDS }),
+    MapCommands.createRectangularRoom({ bounds: INITIAL_ROOM_BOUNDS }),
 
     // add the PCs
     // addCharacter(createCharacter('Human', 90)),

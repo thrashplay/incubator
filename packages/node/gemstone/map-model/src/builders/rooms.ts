@@ -31,7 +31,7 @@ const verticalWall = (x: number, y1: number, y2: number) => buildWall({
   end: { x: x, y: y2 },
 })
 
-/** Builds a square room area with the specified bounds */
+/** Builds a rectangular room area with the specified bounds */
 export const buildRectangularRoom = createBuilder(({ bounds, walls }: RoomSpecification): Area => ({
   id: getNextAreaId(),
   bounds,

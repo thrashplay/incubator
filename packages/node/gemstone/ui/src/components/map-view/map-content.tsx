@@ -73,7 +73,6 @@ export const MapContent = ({
 
   const renderThing = useCallback((thing: Thing) => {
     const { x, y, width, height } = extentsToCanvas(thing.bounds)
-    console.log('bzxcvzxcv', thing.bounds)
 
     return (
       <Rect key={thing.id}

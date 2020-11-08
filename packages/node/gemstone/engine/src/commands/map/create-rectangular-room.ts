@@ -1,10 +1,15 @@
 import { map } from 'lodash/fp'
 
+import {
+  buildEnclosingWalls,
+  buildRectangularRoom,
+  MapEvents,
+  RectangleEnclosureSpecification,
+  Thing,
+} from '@thrashplay/gemstone-map-model'
 import { Extents } from '@thrashplay/math'
 
-import { buildRectangularRoom } from './builders/room'
-import { buildEnclosingWalls, RectangleEnclosureSpecification } from './builders/wall'
-import { MapEvents } from './events'
+import { GameState } from '../..'
 
 export interface RoomDefinition {
   /** Size of the room's interior, not including walls. */
@@ -25,4 +30,16 @@ export const createRectangularRoom = (specification: RectangleEnclosureSpecifica
       walls,
     })),
   ]
+}
+
+/**
+ * Creates a gap in the center of a wall, with the specified length.
+ *
+ * The gap is created by removing the original wall, and replacing it with two new walls that fall
+ * on either side of the gap.
+ *
+ * TODO: allow the gap to be placed along the all, but not in the center
+ */
+export const createWallGap = (wallId: Thing['id'], length: number) => (state: GameState) => {
+
 }

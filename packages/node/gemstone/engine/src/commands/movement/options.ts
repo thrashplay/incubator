@@ -1,8 +1,8 @@
 import _ from 'lodash'
 
-import { Action } from '../actions'
-import { GameState } from '../state'
-import { Command } from '../store'
+import { Action } from '../../actions'
+import { GameState } from '../../state'
+import { Command } from '../../store'
 
 export interface MovementOptions {
   // minimum distance to try and maintain from a movement destination, defaults to zero

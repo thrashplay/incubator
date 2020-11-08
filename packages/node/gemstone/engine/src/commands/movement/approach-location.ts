@@ -8,8 +8,8 @@ import {
   Point,
 } from '@thrashplay/gemstone-model'
 
-import { error } from '../command-error-handler'
-import { GameState } from '../state'
+import { error } from '../../command-error-handler'
+import { GameState } from '../../state'
 
 import { moveTo } from './move-to'
 import { MovementOptions, withDefaultOptions } from './options'

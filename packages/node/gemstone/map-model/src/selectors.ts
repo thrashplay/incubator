@@ -1,7 +1,7 @@
 import { filter, find, isUndefined, negate, values } from 'lodash/fp'
 import { createSelector } from 'reselect'
 
-import { createParameterSelector } from '@thrashplay/gemstone-model'
+import { createParameterSelector, getNextId } from '@thrashplay/gemstone-model'
 import { calculateDistance, Point, rectangleContains } from '@thrashplay/math'
 
 import { buildMap } from './builders/map-data'
@@ -69,12 +69,17 @@ export const getBasicAreaDescription = createSelector(
 
 export const getAreaType = createSelector(
   [getArea],
-  (area) => 'unknown'
+  (area) => area?.kind ?? 'unknown'
 )
 
 export const getAreaDimensions = createSelector(
   [getArea],
   (area) => area === undefined ? 'unknown' : `${area.bounds.width}' x ${area.bounds.height}'`
+)
+
+export const getAreaWallIds = createSelector(
+  [getArea],
+  (area) => area?.wallIds ?? []
 )
 
 /**
@@ -170,3 +175,8 @@ export const getWallLength = createSelector(
   [getWall],
   (wall) => wall === undefined ? 0 : calculateDistance(wall.p1, wall.p2)
 )
+
+/** non-memoized selectors for generating IDs */
+
+export const getNextAreaId = getNextId('area')
+export const getNextThingId = getNextId('thing')

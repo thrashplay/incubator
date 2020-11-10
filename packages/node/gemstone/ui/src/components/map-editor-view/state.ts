@@ -10,10 +10,10 @@ export interface MapEditorViewState {
 }
 
 export const DEFAULT_EXTENTS = {
-  height: feetToPixels(120),
-  width: feetToPixels(120),
+  height: feetToPixels(255),
+  width: feetToPixels(275),
   x: feetToPixels(-60),
-  y: feetToPixels(-60),
+  y: feetToPixels(-205),
 }
 
 export const INITIAL_STATE: MapEditorViewState = {

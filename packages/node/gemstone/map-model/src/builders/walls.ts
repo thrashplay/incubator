@@ -1,9 +1,9 @@
 import { createBuilder } from '@thrashplay/fp'
 import { Extents, Point } from '@thrashplay/math'
 
+import { getNextThingId } from '..'
+import { isHorizontalWall } from '../things/predicates'
 import { Break, Wall } from '../things/wall'
-
-import { getNextThingId } from './get-next-thing-id'
 
 const DEFAULT_WALL_THICKNESS = 1
 
@@ -27,6 +27,13 @@ export interface PerpendicularWallSpecification {
 
   /** Y-coordinate of the wall's starting point. */
   y: number
+}
+
+export interface PassageSpecification {
+  p1: Point
+  p2: Point
+  wallThickness?: number
+  width?: number
 }
 
 /** Build parameters for a set of alls that enclose a rectangle. */
@@ -130,13 +137,74 @@ export const buildEnclosingWalls = ({
   }),
 ]
 
+/**
+ * Builds a pair of side walls for an axis-aligned straight passage.
+ * Walls of the desired thickness will be created adjacent to the passage, which will have
+ * the request width.
+ *
+ * The walls are returned in the following order:
+ *
+ * - For horizontal passages:
+ *   - North
+ *   - South
+ *
+ * - For vertical passages:
+ *   - East
+ *   - West
+ */
+export const buildPassageWalls = ({
+  p1,
+  p2,
+  wallThickness = DEFAULT_WALL_THICKNESS,
+  width = 5,
+}: PassageSpecification) => {
+  const isVertical = p1.x === p2.x
+  const isHorizontal = p1.y === p2.y
+
+  return !isHorizontal && !isVertical
+    ? []
+    : isVertical
+      ? [
+        // west
+        buildVerticalWall({
+          length: (p2.y - p1.y) + (wallThickness * 2),
+          thickness: wallThickness,
+          x: p1.x - (wallThickness / 2),
+          y: p1.y - wallThickness,
+        }),
+        // east
+        buildVerticalWall({
+          length: (p2.y - p1.y) + (wallThickness * 2),
+          thickness: wallThickness,
+          x: (p1.x + width) + (wallThickness / 2),
+          y: p1.y - wallThickness,
+        }),
+      ] : [
+        // north
+        buildHorizontalWall({
+          length: (p2.x - p1.x) + (wallThickness * 2),
+          thickness: wallThickness,
+          x: p1.x - wallThickness,
+          y: p1.y - (wallThickness / 2),
+        }),
+        // south
+        buildHorizontalWall({
+          length: (p2.x - p1.x) + (wallThickness * 2),
+          thickness: wallThickness,
+          x: p1.x - wallThickness,
+          y: (p1.y + width) + (wallThickness / 2),
+        }),
+      ]
+}
+
 /** Constants containing the indices for the walls returned by buildEnclosingWalls */
 export const WallSides = {
   North: 0,
   West: 1,
   South: 2,
   East: 3,
-}
+} as const
+export type WallSide = keyof typeof WallSides
 
 const addBreak = (newBreak: Break) => (wall: Wall) => ({
   ...wall,

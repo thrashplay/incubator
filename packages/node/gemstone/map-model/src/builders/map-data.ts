@@ -1,14 +1,14 @@
 import { flow, get, map } from 'lodash/fp'
 
 import { addItem, BuilderFunction, createBuilder, removeItem, updateItem } from '@thrashplay/fp'
-import { Extents } from '@thrashplay/math'
+import { Extents, Point } from '@thrashplay/math'
 
 import { Area, MapData, Thing } from '../state'
 import { isWall } from '../things/predicates'
 import { Wall } from '../things/wall'
 
-import { buildRectangularRoom } from './rooms'
-import { buildEnclosingWalls } from './walls'
+import { buildRectangularArea, buildRectangularRoom } from './rooms'
+import { buildEnclosingWalls, buildPassageWalls } from './walls'
 
 export const buildMap = createBuilder((): MapData => ({
   areas: {},
@@ -66,9 +66,40 @@ const addRectangularRoom = (
   ...roomBuilderFunctions: BuilderFunction<Area>[]
 ) => (mapData: MapData) => {
   const walls = buildEnclosingWalls({ bounds, wallThickness })
+
+  const getWallId = (wall: Thing) => wall.id
+
   return flow(
     ...map(addThing)(walls),
-    addArea(buildRectangularRoom({ bounds }, ...roomBuilderFunctions))
+    addArea(buildRectangularRoom({ bounds, wallIds: map(getWallId)(walls) }, ...roomBuilderFunctions))
+  )(mapData)
+}
+
+/**
+ * Adds a passage, and the walls enclosing it, to a map.
+ * Optionally specify a list of builder functions that can be used to enhance the 'Area' created for the room.
+ **/
+const addPassage = (
+  start: Point,
+  end: Point,
+  width = 5,
+  wallThickness = 1,
+  ...roomBuilderFunctions: BuilderFunction<Area>[]
+) => (mapData: MapData) => {
+  const walls = buildPassageWalls({ p1: start, p2: end, wallThickness, width })
+
+  const getWallId = (wall: Thing) => wall.id
+
+  const bounds = {
+    x: Math.min(start.x, end.x),
+    y: Math.min(start.y, end.y),
+    width: start.x === end.x ? width : Math.abs(end.x - start.x),
+    height: start.x === end.x ? Math.abs(end.y - start.y) : width,
+  }
+
+  return flow(
+    ...map(addThing)(walls),
+    addArea(buildRectangularArea({ bounds, kind: 'passage', wallIds: map(getWallId)(walls) }, ...roomBuilderFunctions))
   )(mapData)
 }
 

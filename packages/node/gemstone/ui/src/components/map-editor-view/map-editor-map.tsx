@@ -2,9 +2,8 @@ import { find, matches } from 'lodash/fp'
 import React, { useCallback, useMemo } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 
-import { Area, getArea } from '@thrashplay/gemstone-map-model'
+import { Area } from '@thrashplay/gemstone-map-model'
 import { NO_DECORATORS } from '@thrashplay/gemstone-map-ui'
-import { useValue } from '@thrashplay/gemstone-ui-core'
 import { WithViewStyles } from '@thrashplay/react-helpers'
 
 import { ViewEventDispatch } from '../dispatch-view-event'

@@ -45,12 +45,10 @@ export const MapContent = ({
   getMapAreaDecorators = EMPTY_DECORATOR_GETTER,
 }: PropsWithChildren<MapContentProps>) => {
   const { extents, viewport } = useViewport()
-  const { extentsToCanvas } = useWorldCoordinateConverter()
   const frameQuery = useFrameQuery()
   const actors = useValue(getActors, frameQuery)
   const areas = useValue(getAreas)
   const things = useValue(getThings)
-  const selectThingBounds = useSelector(getThingBounds)
 
   const renderArea = useCallback((area: Area) => {
     const defaults = getDefaultMapAreaDecorators()
@@ -88,7 +86,7 @@ export const MapContent = ({
         mapHeight={500}
         mapWidth={500}
       />
-      {map(renderIfWall)(things)}
+      {/* {map(renderIfWall)(things)} */}
       {map(renderAvatar)(actors)}
       {children}
     </Svg>

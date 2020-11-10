@@ -1,4 +1,3 @@
-import { useCoordinateConverter } from '@thrashplay/canvas-with-tools'
 import { Extents, Point } from '@thrashplay/math'
 
 import { RENDER_SCALE } from '../constants'
@@ -8,8 +7,6 @@ import { RENDER_SCALE } from '../constants'
  * These functions are used to convert coordinates in one coordinate system to the other.
  */
 export const useWorldCoordinateConverter = (renderScale = RENDER_SCALE) => {
-  const { toViewport } = useCoordinateConverter()
-
   const toCanvas = ({ x, y }: Point) => ({
     x: x * renderScale,
     y: y * renderScale,
@@ -24,7 +21,6 @@ export const useWorldCoordinateConverter = (renderScale = RENDER_SCALE) => {
 
   return {
     extentsToCanvas,
-    toViewport,
     toCanvas,
   }
 }

@@ -5,6 +5,7 @@ import {
   CharacterEvents,
   CommonEvents,
   FrameEvents,
+  RandomTablesEvents,
   RulesEvents,
   SceneEvents,
 } from '@thrashplay/gemstone-model'
@@ -15,6 +16,7 @@ export const AllEvents = {
   ...CharacterEvents,
   ...CommonEvents,
   ...MapEvents,
+  ...RandomTablesEvents,
   ...RulesEvents,
   ...SceneEvents,
   ...FrameEvents,

@@ -10,19 +10,20 @@ import { RandomTable } from './state'
 export interface InitialRandomTableValues<TResult extends unknown = any> {
   defaultResult: TResult
   diceExpression: string
+  id?: RandomTable['id']
   name?: string
 }
 
 export const buildRandomTable = createBuilder((initialValues: InitialRandomTableValues): RandomTable => {
-  const { defaultResult, diceExpression, name } = initialValues
+  const { defaultResult, diceExpression, id, name } = initialValues
 
-  const id = getNextTableId()
+  const derivedId = id ?? getNextTableId()
 
   return {
-    id,
+    id: derivedId,
     defaultResult,
     diceExpression,
-    name: name ?? id,
+    name: name ?? derivedId,
     results: {},
   }
 })

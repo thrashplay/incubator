@@ -1,12 +1,15 @@
-import { toLower } from 'lodash'
+import { range, toLower } from 'lodash'
+import { map } from 'lodash/fp'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 import { Appbar } from 'react-native-paper'
 
+import { roll } from '@thrashplay/gemstone-dice'
 import {
   GameState,
   MapCommands,
   MovementCommands,
+  OsricDungeonCommands,
   SceneCommands,
 } from '@thrashplay/gemstone-engine'
 import { Area } from '@thrashplay/gemstone-map-model'
@@ -26,7 +29,66 @@ import { TimeControls } from './time-controls'
 
 type Mode = 'combat' | 'gm' | 'map-editor'
 
-const initializeTestScene = () => (state: GameState) => {
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const TEMP__loadData = (_: GameState) => [
+  OsricDungeonCommands.initialize(),
+]
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const TEMP__createMap = (state: GameState) => {
+  const room = (width: number, height: number, cx: number, cy: number) => ({
+    x: cx - width / 2,
+    y: cy - height / 2,
+    width,
+    height,
+  })
+
+  const passage = (x1: number, y1: number, w: number, h: number) => ({
+    x: x1,
+    y: y1,
+    width: w,
+    height: h,
+  })
+
+  const createRoom = () => {
+    return MapCommands.createRectangularRoom(room(
+      roll('1d91+9'),
+      roll('1d91+9'),
+      roll('1d500-250'),
+      roll('1d500-250')
+    ))
+  }
+
+  const createPassage = () => {
+    return MapCommands.createRectangularRoom(passage(
+      roll('1d500-250'),
+      roll('1d500-250'),
+      roll('5d10+5'),
+      roll('3d6')
+    ))
+  }
+
+  return [...map(createRoom)(range(1, 25)), ...map(createPassage)(range(1, 25))]
+  // [
+  //   MapCommands.createRectangularRoom(room(60, 60, 0, 0)),
+  //   MapCommands.createRectangularRoom(room(45, 60, -30, -90)),
+  //   MapCommands.createRectangularRoom(room(90, 60, 60, -75)),
+  //   MapCommands.createRectangularRoom(room(80, 30, 160, -75)),
+  //   MapCommands.createRectangularRoom(room(60, 60, 10, -160)),
+
+  //   MapCommands.createRectangularRoom(passage(-20, -60, 5, 30)),
+  //   MapCommands.createRectangularRoom(passage(20, -45, 5, 15)),
+  //   MapCommands.createRectangularRoom(passage(-15, -130, 5, 10)),
+  //   MapCommands.createRectangularRoom(passage(20, -130, 15, 25)),
+  //   MapCommands.createRectangularRoom(passage(105, -77.5, 15, 5)),
+
+  //   // MapCommands.addBreakInWall('1', 10),
+  //   // MapCommands.addBreakInWall('3', 5),
+  // ]
+}
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const TEMP__initializeScene = (state: GameState) => {
   const createCharacter = (name: string, speed = 90, stats?: Partial<Character>): Character => ({
     id: toLower(name),
     name,
@@ -35,25 +97,7 @@ const initializeTestScene = () => (state: GameState) => {
     ...stats,
   })
 
-  const getRandomRoomDimensions = getTableRoller(state, { tableId: '1' }) as TableRollerFunction<Dimensions>
-
-  const MULTIPLIER = 1.5
-  const size1 = getRandomRoomDimensions()
-  const INITIAL_ROOM_BOUNDS = {
-    x: -(size1.width * MULTIPLIER) / 2,
-    y: -(size1.height * MULTIPLIER) / 2,
-    height: size1.height * MULTIPLIER,
-    width: size1.width * MULTIPLIER,
-  }
-
-  const size2 = getRandomRoomDimensions()
-  const SIDE_ROOM_BOUNDS = {
-    x: 425,
-    y: 150,
-    height: size2.height * MULTIPLIER,
-    width: size2.width * MULTIPLIER,
-  }
-
+  const INITIAL_ROOM_BOUNDS = { x: -30, y: -30, width: 60, height: 60 }
   const createRandomPosition = () => ({
     x: INITIAL_ROOM_BOUNDS.x + 10 + Math.random() * (INITIAL_ROOM_BOUNDS.width - 20),
     y: INITIAL_ROOM_BOUNDS.y + 10 + Math.random() * (INITIAL_ROOM_BOUNDS.height - 20),
@@ -63,9 +107,6 @@ const initializeTestScene = () => (state: GameState) => {
     // create the map
     // createSquareRoom(INITIAL_ROOM_BOUNDS),
     // createSquareRoom(SIDE_ROOM_BOUNDS),
-    MapCommands.createRectangularRoom(INITIAL_ROOM_BOUNDS),
-    MapCommands.addBreakInWall('1', 10),
-    MapCommands.addBreakInWall('3', 5),
 
     // add the PCs
     // addCharacter(createCharacter('Human', 90)),
@@ -92,11 +133,17 @@ const initializeTestScene = () => (state: GameState) => {
   ]
 }
 
+const initializeApp = (_: GameState) => [
+  TEMP__loadData,
+  TEMP__createMap,
+  TEMP__initializeScene,
+]
+
 export const GameScreen = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(initializeTestScene())
+    dispatch(initializeApp)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

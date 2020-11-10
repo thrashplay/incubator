@@ -33,6 +33,9 @@ export const reduceMapState = (state: MapData, event: MapEvent | CommonEvent): M
     case getType(MapEvents.rectangularRoomCreated):
       return addRectangularRoom(event.payload.bounds, event.payload.wallThickness ?? 1)(state)
 
+    case getType(MapEvents.rectangularRoomCreated):
+      return addRectangularRoom(event.payload.bounds, event.payload.wallThickness ?? 1)(state)
+
     case getType(MapEvents.thingCreated):
       return addThing(event.payload)(state)
 

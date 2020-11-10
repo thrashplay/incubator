@@ -57,3 +57,11 @@ export const getTableRoller = <TResult extends unknown = any>(
     tableId,
   }) as TResult
 }
+
+export const getSingleResult = <TResult extends unknown = any>(
+  state: RandomTablesStateContainer,
+  { tableId }: RandomTablesSelectorParameters
+) => {
+  const rollResult = Dice.roll(getDiceExpression(state, { tableId }))
+  return getRandomTableResult(state, { rollResult, tableId }) as TResult
+}

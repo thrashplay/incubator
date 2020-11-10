@@ -68,23 +68,24 @@ const TEMP__createMap = (state: GameState) => {
     ))
   }
 
-  return [...map(createRoom)(range(1, 25)), ...map(createPassage)(range(1, 25))]
-  // [
-  //   MapCommands.createRectangularRoom(room(60, 60, 0, 0)),
-  //   MapCommands.createRectangularRoom(room(45, 60, -30, -90)),
-  //   MapCommands.createRectangularRoom(room(90, 60, 60, -75)),
-  //   MapCommands.createRectangularRoom(room(80, 30, 160, -75)),
-  //   MapCommands.createRectangularRoom(room(60, 60, 10, -160)),
+  // return [...map(createRoom)(range(1, 25)), ...map(createPassage)(range(1, 25))]
 
-  //   MapCommands.createRectangularRoom(passage(-20, -60, 5, 30)),
-  //   MapCommands.createRectangularRoom(passage(20, -45, 5, 15)),
-  //   MapCommands.createRectangularRoom(passage(-15, -130, 5, 10)),
-  //   MapCommands.createRectangularRoom(passage(20, -130, 15, 25)),
-  //   MapCommands.createRectangularRoom(passage(105, -77.5, 15, 5)),
+  return [
+    MapCommands.createRectangularRoom(room(60, 60, 0, 0)),
+    MapCommands.createRectangularRoom(room(45, 60, -30, -90)),
+    MapCommands.createRectangularRoom(room(90, 60, 60, -75)),
+    MapCommands.createRectangularRoom(room(80, 30, 160, -75)),
+    MapCommands.createRectangularRoom(room(60, 60, 10, -160)),
 
-  //   // MapCommands.addBreakInWall('1', 10),
-  //   // MapCommands.addBreakInWall('3', 5),
-  // ]
+    MapCommands.createRectangularRoom(passage(-20, -60, 5, 30)),
+    MapCommands.createRectangularRoom(passage(20, -45, 5, 15)),
+    MapCommands.createRectangularRoom(passage(-15, -130, 5, 10)),
+    MapCommands.createRectangularRoom(passage(20, -130, 15, 25)),
+    MapCommands.createRectangularRoom(passage(105, -77.5, 15, 5)),
+
+    // MapCommands.addBreakInWall('1', 10),
+    // MapCommands.addBreakInWall('3', 5),
+  ]
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

@@ -22,11 +22,13 @@ export const createAreaShape = (pathProps: Omit<CommonPathProps, 'x' | 'y'>): Ma
  * Renders the shape of a map Area (i.e. room, hallway, etc)
  * Rendering can be customized using any of the SVG common path props.
  **/
-export const AreaShape = ({ areaId, ...pathProps }: AreaShapeProps) => {
+export const AreaShape = React.memo(({ areaId, ...pathProps }: AreaShapeProps) => {
   const { extentsToCanvas } = useWorldCoordinateConverter()
   const bounds = useValue(getAreaBounds, { areaId })
 
   const canvasBounds = extentsToCanvas(bounds)
+
+  console.log('new shape')
 
   return (
     <Rect
@@ -37,7 +39,7 @@ export const AreaShape = ({ areaId, ...pathProps }: AreaShapeProps) => {
       height={canvasBounds.height}
     />
   )
-}
+})
 
 export const AreaShapes = {
   Default: createAreaShape({

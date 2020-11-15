@@ -29,6 +29,8 @@
       "@thrashplay/gemstone-*": ["gemstone/*/src"],
       "@thrashplay/hexmarch-*": ["hexmarch/*/src"],
       "@thrashplay/sophia-*": ["sophia/*/src"],
+      "@thrashplay/fp": ["thrashlib/fp/src"],
+      "@thrashplay/fp/*": ["thrashlib/fp/src/*"],
       "@thrashplay/*": ["thrashlib/*/src"]
     },
     "noUnusedParameters": true,

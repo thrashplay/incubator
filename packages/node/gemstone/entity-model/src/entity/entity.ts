@@ -1,5 +1,7 @@
 import { Dictionary } from '@thrashplay/gemstone-model'
 
+export type AnyFacets = Dictionary<string, any>
+
 type RequiredEntityFields = {
   /** ID of this entity. */
   id: string
@@ -9,7 +11,7 @@ type RequiredEntityFields = {
 }
 
 export type Entity<
-  TFacets extends Dictionary<string, any> = Dictionary<string, any>
+  TFacets extends AnyFacets = AnyFacets
 > = RequiredEntityFields & TFacets
 
 export type MightBe<

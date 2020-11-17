@@ -1,11 +1,10 @@
-import { isString } from 'lodash/fp'
-
-import { just, Maybe, none, NoValue } from '@thrashplay/fp/maybe'
+import { Maybe, none, NoValue } from '@thrashplay/fp/maybe'
 import { Dictionary } from '@thrashplay/gemstone-model'
 
-import { Entity, MightBe } from '../entity'
-import { getEntity } from '../entity/selectors'
+import { AnyFacets, Entity, MightBe } from '../entity'
 import { EntitiesContainer } from '../state'
+
+import { resolveEntity } from './resolve-entity'
 
 /**
  * Creates a flexible selector for entity data that may or may not exist. The created selector has the
@@ -23,7 +22,7 @@ import { EntitiesContainer } from '../state'
  */
 export const createEntitySelector = <
   TResult extends unknown = any,
-  TFacets extends Dictionary<string, any> = Dictionary<string, any>,
+  TFacets extends AnyFacets = AnyFacets,
   TArgsType extends unknown = never,
   TArgs extends any[] = TArgsType extends never
     ? []
@@ -33,9 +32,7 @@ export const createEntitySelector = <
     ...args: TArgs) => Maybe<TResult>
 ) => (state: EntitiesContainer) =>
   (entityOrId: Maybe<MightBe<TFacets>> | MightBe<TFacets> | Entity['id'] | NoValue, ...args: TArgs) => {
-    const entity = isString(entityOrId)
-      ? getEntity<TFacets>(state)(entityOrId)
-      : just(entityOrId)
+    const entity = resolveEntity(entityOrId, state)
 
     return entity.exists
       ? selector(state, entity.value as MightBe<TFacets>, ...args)

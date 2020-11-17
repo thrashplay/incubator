@@ -69,6 +69,9 @@ export const bind = <T, TOut>(fn: Fn<T, Maybe<TOut>>): Fn<Maybe<T>, Maybe<TOut>>
 /** Returns the result of calling a function that returns a Maybe, passing it the value from the supplied Maybe. */
 export const chain = <T, TOut>(fn: Fn<T, Maybe<TOut>>) => (maybe: Maybe<T>) => maybe.chain(fn)
 
+/** Returns true if the specified Maybe has a value, or false if it is Nothing. */
+export const exists = <T>(maybe: Maybe<T>) => maybe.exists
+
 /**
  * Passes the value wrapped by the specified Maybe to a function, and returns a Maybe wrapping its result.
  * If the supplied Maybe is None, then None is returned and the function is not called.

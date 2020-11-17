@@ -5,3 +5,5 @@ import { Entity } from './entity'
 export type EntitiesContainer = {
   entities: RecordSet<Entity>
 }
+
+export const EMPTY_ARRAY = []

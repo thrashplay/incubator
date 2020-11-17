@@ -4,10 +4,12 @@ import { just, Maybe } from '@thrashplay/fp/maybe'
 import { Point } from '@thrashplay/math'
 
 import { createEntitySelector } from '../api/create-entity-selector'
-import { Containable, getContainer } from '../containable'
+import { Containable } from '../containable'
 import { MightBe } from '../entity'
 
 import { Positionable } from './positionable'
+
+const { getContainer } = Containable
 
 /**
  * Selects the position of an entity, if it is either (a) inside a Positionable container (in which case the container's

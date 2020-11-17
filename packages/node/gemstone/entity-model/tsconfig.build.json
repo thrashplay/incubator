@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "dist/**",
+    "lib/**",
+    "node_modules/**",
+    "src/**/*.test.ts",
+    "src/**/__fixtures__/**"
+  ],
+  "references": [
+    {
+      "path": "../../thrashlib/fp/tsconfig.build.json"
+    },
+    {
+      "path": "../../thrashlib/math/tsconfig.build.json"
+    },
+    {
+      "path": "../model/tsconfig.build.json"
+    }
+  ]
+}

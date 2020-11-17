@@ -5,6 +5,8 @@ import { isFinite } from 'lodash/fp'
 // TODO: is T | never actually valid, compared to optiona/undefined
 export type Dictionary<K extends string | number | symbol = string, T = unknown> = { [k in K]: T | never }
 
+export type RecordSet<T extends { id: string | number | symbol } = any> = Dictionary<T['id'], T>
+
 export type AtLeastOneOfIdOrName = { id: string } | { name: string} | { id: string; name: string }
 
 export interface Point {

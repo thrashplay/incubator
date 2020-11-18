@@ -4,7 +4,7 @@ import { Containable } from '../containable'
 import { Container } from '../container'
 import { addToContents } from '../mutators'
 
-import { getContentIds, getContents, isContainer } from './container'
+import { getContentIds, getContents, isContainerId } from './container'
 
 const { addEntity, updateEntity } = EntitySetBuilders
 
@@ -16,7 +16,7 @@ const smallBag = buildEntity({ id: 'smallBag' }, Container.extend)
  * A game with three entities (hammer, nail, and smallBag). None of them contain the others by default, but the
  * hammer and nail have the Containable facet and the smallBag has the Container facet.
  **/
-const BASE_GAME = buildEntitiesContainer(
+const BASE_STATE = buildEntitiesContainer(
   addEntity(hammer),
   addEntity(nail),
   addEntity(smallBag)
@@ -25,29 +25,29 @@ const BASE_GAME = buildEntitiesContainer(
 describe('container tests', () => {
   describe('isContainer', () => {
     it('returns false if the entity does not exist', () => {
-      const result = isContainer(BASE_GAME)('invalid-id')
+      const result = isContainerId(BASE_STATE)('invalid-id')
       expect(result).toBe(false)
     })
 
     it('returns false if the entity does NOT have the Container facet', () => {
-      const result = isContainer(BASE_GAME)(hammer.id)
+      const result = isContainerId(BASE_STATE)(hammer.id)
       expect(result).toBe(false)
     })
 
     it('returns true if the entity DOES have the Container facet', () => {
-      const result = isContainer(BASE_GAME)(smallBag.id)
+      const result = isContainerId(BASE_STATE)(smallBag.id)
       expect(result).toBe(true)
     })
   })
 
   describe('getContentIds', () => {
     it('returns nothing if the entity does not exist', () => {
-      const result = getContentIds(BASE_GAME)('invalid-id')
+      const result = getContentIds(BASE_STATE)('invalid-id')
       expect(result.isSome()).toBe(false)
     })
 
     it('returns nothing if the entity is not a container', () => {
-      const result = getContentIds(BASE_GAME)(hammer.id)
+      const result = getContentIds(BASE_STATE)(hammer.id)
       expect(result.isSome()).toBe(false)
     })
 
@@ -56,7 +56,7 @@ describe('container tests', () => {
         smallBag.id,
         addToContents(hammer.id),
         addToContents(nail.id)
-      )(BASE_GAME)
+      )(BASE_STATE)
 
       const result = getContentIds(input)(smallBag.id)
       expect(result.isSome()).toBe(true)
@@ -70,12 +70,12 @@ describe('container tests', () => {
 
   describe('getContents', () => {
     it('returns nothing if the entity does not exist', () => {
-      const result = getContents(BASE_GAME)('invalid-id')
+      const result = getContents(BASE_STATE)('invalid-id')
       expect(result.isSome()).toBe(false)
     })
 
     it('returns nothing if the entity is not a container', () => {
-      const result = getContents(BASE_GAME)(hammer.id)
+      const result = getContents(BASE_STATE)(hammer.id)
       expect(result.isSome()).toBe(false)
     })
 
@@ -84,7 +84,7 @@ describe('container tests', () => {
         smallBag.id,
         addToContents(hammer.id),
         addToContents(nail.id)
-      )(BASE_GAME)
+      )(BASE_STATE)
 
       const result = getContents(input)(smallBag.id)
       expect(result.isSome()).toBe(true)
@@ -101,7 +101,7 @@ describe('container tests', () => {
         addToContents(hammer.id),
         addToContents('invalid-id'),
         addToContents(nail.id)
-      )(BASE_GAME)
+      )(BASE_STATE)
 
       const result = getContents(input)(smallBag.id)
       expect(result.isSome()).toBe(true)

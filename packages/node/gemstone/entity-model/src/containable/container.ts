@@ -3,6 +3,7 @@ import { Dictionary } from '@thrashplay/gemstone-model'
 import { Entity } from '../entity'
 import { EMPTY_ARRAY } from '../state'
 
+import * as effects from './effects'
 import * as selectors from './selectors/container'
 
 export type Container = {
@@ -19,6 +20,7 @@ const extend = <
 })
 
 export const Container = {
+  ...effects,
   ...selectors,
   extend,
 }

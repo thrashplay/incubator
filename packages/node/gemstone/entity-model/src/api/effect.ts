@@ -28,7 +28,10 @@ export const applyIf = curry((
 export const effectSingle = curry((
   targetId: Entity['id'],
   effect: EntityEffect
-) => (entities: RecordSet<Entity>): RecordSet<Entity> => updateItem(entities, targetId, effect))
+) => (state: EntitiesContainer): EntitiesContainer => ({
+  ...state,
+  entities: updateItem(state.entities, targetId, effect),
+}))
 
 /** Applies a set of targeted effects, returning the new state. */
 export const applyEffects = curry((effects: Effect[], state: EntitiesContainer): EntitiesContainer => ({

@@ -1,5 +1,6 @@
-import { Maybe, none, NoValue } from '@thrashplay/fp/maybe'
-import { Dictionary } from '@thrashplay/gemstone-model'
+import { Maybe } from 'monet'
+
+import { NoValue } from '@thrashplay/fp/maybe'
 
 import { AnyFacets, Entity, MightBe } from '../entity'
 import { EntitiesContainer } from '../state'
@@ -21,20 +22,17 @@ import { resolveEntity } from './resolve-entity'
  *   - returns a Maybe
  */
 export const createEntitySelector = <
-  TResult extends unknown = any,
+  TResult extends NonNullable<unknown> = any,
   TFacets extends AnyFacets = AnyFacets,
   TArgsType extends unknown = never,
   TArgs extends any[] = TArgsType extends never
     ? []
     : TArgsType extends any[] ? TArgsType : [TArgsType],
 >(
-  selector: (state: EntitiesContainer, entity: MightBe<TFacets>,
-    ...args: TArgs) => Maybe<TResult>
+  selector: (state: EntitiesContainer, entity: MightBe<TFacets>, ...args: TArgs) => Maybe<TResult>
 ) => (state: EntitiesContainer) =>
   (entityOrId: Maybe<MightBe<TFacets>> | MightBe<TFacets> | Entity['id'] | NoValue, ...args: TArgs) => {
     const entity = resolveEntity(entityOrId, state)
 
-    return entity.exists
-      ? selector(state, entity.value as MightBe<TFacets>, ...args)
-      : none<TResult>()
+    return entity.chain((entity: MightBe<TFacets>) => selector(state, entity, ...args))
   }

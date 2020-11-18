@@ -1,6 +1,5 @@
-import { curry, filter, flow, has, map } from 'lodash/fp'
-
-import { exists, just, Maybe } from '@thrashplay/fp/maybe'
+import { curry, filter, flow, has, isNil, map, negate } from 'lodash/fp'
+import { Maybe } from 'monet'
 
 import { createEntitySelector } from '../../api/create-entity-selector'
 import { resolveEntity, UnresolvedEntity } from '../../api/resolve-entity'
@@ -14,7 +13,7 @@ export const isContainer = curry(<
   TFacets extends AnyFacets = AnyFacets
 >(state: EntitiesContainer, entityOrId: UnresolvedEntity<TFacets>): boolean => {
   const entity = resolveEntity(entityOrId, state)
-  return entity.fmap(has('contents')).orElse(false)
+  return entity.map(has('contents')).orJust(false)
 })
 
 /** Retrieves the entity IDs for the contents of a container. */
@@ -22,7 +21,9 @@ export const getContentIds = createEntitySelector((
   _,
   entity: MightBe<Container>
 ): Maybe<Entity['id'][]> => {
-  return just(entity.contents)
+  return isNil(entity.contents)
+    ? Maybe.Nothing<string[]>()
+    : Maybe.Just(entity.contents)
 })
 
 /** Retrieves the entity instances for the contents of a container. */
@@ -31,16 +32,13 @@ export const getContents = createEntitySelector((
   entity: MightBe<Container>
 ): Maybe<MightBe<Containable>[]> => {
   const lookupEntity = (entityId: string) => resolveEntity<Containable>(entityId, state)
+  const extractValuesOrUndefined = <T>(maybe: Maybe<T>) => maybe.orUndefined()
 
-  // TODO: need a much better way to get valid values out of a list
-  const lookupEntities = (entityIds: string[]): MightBe<Containable>[] => flow(
-    map(lookupEntity),
-    filter(exists),
-    map((maybe: Maybe<MightBe<Containable>>) => maybe.value)
-  )(entityIds)
-
-  const contents = just(entity.contents)
-    .fmap(lookupEntities)
-
-  return contents
+  return isNil(entity.contents)
+    ? Maybe.Nothing()
+    : Maybe.Just(flow(
+      map(lookupEntity),
+      map(extractValuesOrUndefined),
+      filter(negate(isNil))
+    )(entity.contents))
 })

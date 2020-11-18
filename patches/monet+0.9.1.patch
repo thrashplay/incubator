@@ -1,0 +1,31 @@
+diff --git a/node_modules/monet/dist/monet.d.ts b/node_modules/monet/dist/monet.d.ts
+index 48d6835..7bc793b 100644
+--- a/node_modules/monet/dist/monet.d.ts
++++ b/node_modules/monet/dist/monet.d.ts
+@@ -120,19 +120,20 @@ export const Identity: IIdentityStatic;
+  * Maybe
+  */
+ 
+-export interface Maybe<T extends NonNullable<{}>>
++// SK: changing this type might be horribly breaking, but we wanted Maybes of type [], so we did it
++export interface Maybe<T extends NonNullable<unknown>>
+   extends Setoid<Maybe<T>>, ITraversable<T>, Catamorphism<undefined, T>, Iterable<T> {
+   /* Inherited from Monad: */
+-  bind<V extends NonNullable<{}>>(fn: (val: T) => Maybe<V>): Maybe<V>;
+-  flatMap<V extends NonNullable<{}>>(fn: (val: T) => Maybe<V>): Maybe<V>;
+-  chain<V extends NonNullable<{}>>(fn: (val: T) => Maybe<V>): Maybe<V>;
+-  map<V extends NonNullable<{}>>(fn: (val: T) => V): Maybe<V>;
++  bind<V extends NonNullable<unknown>>(fn: (val: T) => Maybe<V>): Maybe<V>;
++  flatMap<V extends NonNullable<unknown>>(fn: (val: T) => Maybe<V>): Maybe<V>;
++  chain<V extends NonNullable<unknown>>(fn: (val: T) => Maybe<V>): Maybe<V>;
++  map<V extends NonNullable<unknown>>(fn: (val: T) => V): Maybe<V>;
+   join<V>(): T extends Maybe<V> ? V : never;
+   takeLeft(m: Maybe<T>): Maybe<T>;
+   takeRight(m: Maybe<T>): Maybe<T>;
+ 
+   /* Inherited from Applicative */
+-  ap<V extends NonNullable<{}>>(maybeFn: Maybe<(val: T) => V>): Maybe<V>;
++  ap<V extends NonNullable<unknown>>(maybeFn: Maybe<(val: T) => V>): Maybe<V>;
+ 
+   /* Maybe specific */
+   cata<Z>(none: () => Z, some: (val: T) => Z): Z;

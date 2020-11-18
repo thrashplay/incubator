@@ -1,6 +1,5 @@
 import { get, isNil } from 'lodash/fp'
-
-import { just, Maybe, none } from '@thrashplay/fp/maybe'
+import { Maybe } from 'monet'
 
 import { EntitiesContainer } from '../state'
 
@@ -10,7 +9,10 @@ import { AnyFacets, Entity, MightBe } from './entity'
 export const getEntity = <
   TPossibleFacets extends AnyFacets = AnyFacets,
   TEntity extends Entity = MightBe<TPossibleFacets>
->(state: EntitiesContainer) => (id: Entity['id'] | undefined): Maybe<TEntity> =>
-  isNil(id)
-    ? none<TEntity>()
-    : just(get(['entities', id], state) as TEntity | undefined)
+>(state: EntitiesContainer) => (id: Entity['id'] | undefined): Maybe<TEntity> => {
+  const entity = isNil(id) ? undefined : get(['entities', id], state)
+
+  return isNil(entity)
+    ? Maybe.Nothing()
+    : Maybe.Just(entity as TEntity)
+}

@@ -29,19 +29,19 @@ describe('positionable tests', () => {
   describe('getPosition', () => {
     it('returns nothing, if entity does not exist', () => {
       const result = getPosition(BASE_GAME)('non-existent-id')
-      expect(result.exists).toBe(false)
+      expect(result.isSome()).toBe(false)
     })
 
     describe('without container', () => {
       it('returns nothing, if entity has no position', () => {
         const result = getPosition(BASE_GAME)(hammer.id)
-        expect(result.exists).toBe(false)
+        expect(result.isSome()).toBe(false)
       })
 
       it('returns position, if entity has one', () => {
         const input = updateEntity(hammer.id, setPosition(ARBITRARY_POSITION))(BASE_GAME)
         const result = getPosition(input)(hammer.id)
-        expect(result.value).toEqual(ARBITRARY_POSITION)
+        expect(result.orUndefined()).toEqual(ARBITRARY_POSITION)
       })
     })
 
@@ -52,24 +52,24 @@ describe('positionable tests', () => {
       it('returns nothing, if container ID is invalid', () => {
         const input = updateEntity(hammer.id, setContainerId('invalid-container-id'))(game)
         const result = getPosition(input)(hammer.id)
-        expect(result.exists).toBe(false)
+        expect(result.isSome()).toBe(false)
       })
 
       it('returns nothing, if neither container nor entity have a position', () => {
         const result = getPosition(game)(hammer.id)
-        expect(result.exists).toBe(false)
+        expect(result.isSome()).toBe(false)
       })
 
       it('returns nothing, if container has no position but entity does', () => {
         const input = updateEntity(hammer.id, setPosition(ARBITRARY_POSITION))(game)
         const result = getPosition(input)(hammer.id)
-        expect(result.exists).toBe(false)
+        expect(result.isSome()).toBe(false)
       })
 
       it('returns container position, if entity has none', () => {
         const input = updateEntity(smallBag.id, setPosition(ARBITRARY_POSITION))(game)
         const result = getPosition(input)(hammer.id)
-        expect(result.value).toEqual(ARBITRARY_POSITION)
+        expect(result.orUndefined()).toEqual(ARBITRARY_POSITION)
       })
 
       it('returns container position, even if entity has its own position', () => {
@@ -79,7 +79,7 @@ describe('positionable tests', () => {
         )(game)
 
         const result = getPosition(input)(hammer.id)
-        expect(result.value).toEqual(ARBITRARY_POSITION)
+        expect(result.orUndefined()).toEqual(ARBITRARY_POSITION)
       })
     })
 
@@ -93,24 +93,24 @@ describe('positionable tests', () => {
       it('returns nothing, if container\'s container ID is invalid', () => {
         const input = updateEntity(smallBag.id, setContainerId('invalid-container-id'))(game)
         const result = getPosition(input)(hammer.id)
-        expect(result.exists).toBe(false)
+        expect(result.isSome()).toBe(false)
       })
 
       it('returns nothing, if no containers nor entity have a position', () => {
         const result = getPosition(game)(hammer.id)
-        expect(result.exists).toBe(false)
+        expect(result.isSome()).toBe(false)
       })
 
       it('returns nothing, if top-level container has no position but entity nested one does', () => {
         const input = updateEntity(smallBag.id, setPosition(ARBITRARY_POSITION))(game)
         const result = getPosition(input)(hammer.id)
-        expect(result.exists).toBe(false)
+        expect(result.isSome()).toBe(false)
       })
 
       it('returns top-level container position, if intermediate one has none', () => {
         const input = updateEntity(largeBag.id, setPosition(ARBITRARY_POSITION))(game)
         const result = getPosition(input)(hammer.id)
-        expect(result.value).toEqual(ARBITRARY_POSITION)
+        expect(result.orUndefined()).toEqual(ARBITRARY_POSITION)
       })
 
       it('returns top-level container position, even if intermediate container has its own position', () => {
@@ -121,7 +121,7 @@ describe('positionable tests', () => {
         )(game)
 
         const result = getPosition(input)(hammer.id)
-        expect(result.value).toEqual(ARBITRARY_POSITION)
+        expect(result.orUndefined()).toEqual(ARBITRARY_POSITION)
       })
     })
   })

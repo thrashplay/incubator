@@ -1,6 +1,5 @@
 import { curry, has } from 'lodash/fp'
-
-import { Maybe } from '@thrashplay/fp/maybe'
+import { Maybe } from 'monet'
 
 import { createEntitySelector } from '../../api/create-entity-selector'
 import { resolveEntity, UnresolvedEntity } from '../../api/resolve-entity'
@@ -26,5 +25,5 @@ export const isContainable = curry(<TFacets extends AnyFacets = AnyFacets>(
   entityOrId: UnresolvedEntity<TFacets>
 ): boolean => {
   const entity = resolveEntity(entityOrId, state)
-  return entity.fmap(has('containerId')).orElse(false)
+  return entity.map(has('containerId')).orJust(false)
 })

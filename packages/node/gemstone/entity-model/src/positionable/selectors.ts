@@ -1,6 +1,7 @@
+import { isNil } from 'lodash'
 import { get } from 'lodash/fp'
+import { Maybe } from 'monet'
 
-import { just, Maybe } from '@thrashplay/fp/maybe'
 import { Point } from '@thrashplay/math'
 
 import { createEntitySelector } from '../api/create-entity-selector'
@@ -20,7 +21,8 @@ const { getContainer } = Containable
 export const getPosition = createEntitySelector(
   (game, entity: MightBe<Containable & Positionable>): Maybe<Point> => {
     const container = getContainer(game)(entity)
-    return container.exists
+    const entityPosition = get('position', entity)
+    return container.isSome()
       ? getPosition(game)(container)
-      : just(get('position', entity))
+      : isNil(entityPosition) ? Maybe.Nothing() : Maybe.Just(entityPosition)
   })

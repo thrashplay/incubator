@@ -1,9 +1,9 @@
-import { curry, has } from 'lodash/fp'
+import { has } from 'lodash/fp'
 import { Maybe } from 'monet'
 
 import { createEntitySelector } from '../../api/create-entity-selector'
 import { resolveEntity, UnresolvedEntity } from '../../api/resolve-entity'
-import { AnyFacets, getEntity, MightBe } from '../../entity'
+import { AnyFacets, Entity, getEntity, MightBe } from '../../entity'
 import { EntitiesContainer } from '../../state'
 import { Containable } from '../containable'
 import { Container } from '../container'
@@ -19,11 +19,13 @@ export const getContainer = createEntitySelector((
   return getEntity(state)(entity.containerId)
 })
 
+/** Determines if an entity ID is associated with a Containable or not. */
+export const isContainableId = <TFacets extends AnyFacets = AnyFacets>(state: EntitiesContainer) =>
+  (entityOrId: UnresolvedEntity<TFacets>): boolean => {
+    return resolveEntity(entityOrId, state)
+      .map(isContainable)
+      .orJust(false)
+  }
+
 /** Determines if an entity is Containable or not. */
-export const isContainable = curry(<TFacets extends AnyFacets = AnyFacets>(
-  state: EntitiesContainer,
-  entityOrId: UnresolvedEntity<TFacets>
-): boolean => {
-  const entity = resolveEntity(entityOrId, state)
-  return entity.map(has('containerId')).orJust(false)
-})
+export const isContainable = (entity: MightBe<Containable>): entity is Entity<Containable> => has('containerId')(entity)

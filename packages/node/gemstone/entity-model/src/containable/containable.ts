@@ -2,6 +2,7 @@ import { Dictionary } from '@thrashplay/gemstone-model'
 
 import { Entity } from '../entity'
 
+import * as effects from './effects'
 import * as selectors from './selectors/containable'
 
 export type Containable = {
@@ -17,6 +18,7 @@ const extend = <
 })
 
 export const Containable = {
+  ...effects,
   ...selectors,
   extend,
 }

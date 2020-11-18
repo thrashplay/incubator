@@ -8,13 +8,17 @@ import { EntitiesContainer } from '../../state'
 import { Containable } from '../containable'
 import { Container } from '../container'
 
-/** Determines if an entity is a Container or not. */
-export const isContainer = curry(<
+/** Determines if an entity ID is associated with a Container or not. */
+export const isContainerId = curry(<
   TFacets extends AnyFacets = AnyFacets
 >(state: EntitiesContainer, entityOrId: UnresolvedEntity<TFacets>): boolean => {
-  const entity = resolveEntity(entityOrId, state)
-  return entity.map(has('contents')).orJust(false)
+  return resolveEntity(entityOrId, state)
+    .map(isContainer)
+    .orJust(false)
 })
+
+/** Determines if an entity is a Container or not. */
+export const isContainer = (entity: MightBe<Container>): entity is Entity<Container> => has('contents')(entity)
 
 /** Retrieves the entity IDs for the contents of a container. */
 export const getContentIds = createEntitySelector((

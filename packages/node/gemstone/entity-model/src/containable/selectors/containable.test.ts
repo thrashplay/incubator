@@ -24,19 +24,19 @@ describe('containable tests', () => {
   describe('getContainer', () => {
     it('returns nothing, if no container ID', () => {
       const result = getContainer(BASE_GAME)(hammer.id)
-      expect(result.exists).toBe(false)
+      expect(result.isSome()).toBe(false)
     })
 
     it('returns nothing, if container does not exist', () => {
       const input = updateEntity(hammer.id, setContainerId('invalid-id'))(BASE_GAME)
       const result = getContainer(input)(hammer.id)
-      expect(result.exists).toBe(false)
+      expect(result.isSome()).toBe(false)
     })
 
     it('returns container, if one exists', () => {
       const input = updateEntity(hammer.id, setContainerId(smallBag.id))(BASE_GAME)
       const result = getContainer(input)(hammer.id)
-      expect(result.value).toBe(smallBag)
+      expect(result.orUndefined()).toBe(smallBag)
     })
   })
 

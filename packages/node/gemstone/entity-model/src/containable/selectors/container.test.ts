@@ -43,12 +43,12 @@ describe('container tests', () => {
   describe('getContentIds', () => {
     it('returns nothing if the entity does not exist', () => {
       const result = getContentIds(BASE_GAME)('invalid-id')
-      expect(result.exists).toBe(false)
+      expect(result.isSome()).toBe(false)
     })
 
     it('returns nothing if the entity is not a container', () => {
       const result = getContentIds(BASE_GAME)(hammer.id)
-      expect(result.exists).toBe(false)
+      expect(result.isSome()).toBe(false)
     })
 
     it('returns the ids of contained entities', () => {
@@ -59,9 +59,9 @@ describe('container tests', () => {
       )(BASE_GAME)
 
       const result = getContentIds(input)(smallBag.id)
-      expect(result.exists).toBe(true)
+      expect(result.isSome()).toBe(true)
 
-      const ids = result.value
+      const ids = result.orUndefined()
       expect(ids).toHaveLength(2)
       expect(ids).toContain(hammer.id)
       expect(ids).toContain(nail.id)
@@ -71,12 +71,12 @@ describe('container tests', () => {
   describe('getContents', () => {
     it('returns nothing if the entity does not exist', () => {
       const result = getContents(BASE_GAME)('invalid-id')
-      expect(result.exists).toBe(false)
+      expect(result.isSome()).toBe(false)
     })
 
     it('returns nothing if the entity is not a container', () => {
       const result = getContents(BASE_GAME)(hammer.id)
-      expect(result.exists).toBe(false)
+      expect(result.isSome()).toBe(false)
     })
 
     it('returns the contained entities', () => {
@@ -87,9 +87,9 @@ describe('container tests', () => {
       )(BASE_GAME)
 
       const result = getContents(input)(smallBag.id)
-      expect(result.exists).toBe(true)
+      expect(result.isSome()).toBe(true)
 
-      const contents = result.value
+      const contents = result.orUndefined()
       expect(contents).toHaveLength(2)
       expect(contents).toContain(hammer)
       expect(contents).toContain(nail)
@@ -104,9 +104,9 @@ describe('container tests', () => {
       )(BASE_GAME)
 
       const result = getContents(input)(smallBag.id)
-      expect(result.exists).toBe(true)
+      expect(result.isSome()).toBe(true)
 
-      const contents = result.value
+      const contents = result.orUndefined()
       expect(contents).toHaveLength(2)
       expect(contents).toContain(hammer)
       expect(contents).toContain(nail)

@@ -1,6 +1,7 @@
-import { isString } from 'lodash/fp'
+import { has, isNil, isString } from 'lodash/fp'
+import { Maybe } from 'monet'
 
-import { just, Maybe, NoValue } from '@thrashplay/fp/maybe'
+import { NoValue } from '@thrashplay/fp/maybe'
 
 import { AnyFacets, Entity, MightBe } from '../entity'
 import { getEntity } from '../entity/selectors'
@@ -27,5 +28,7 @@ export const resolveEntity = <
 >(entityOrId: UnresolvedEntity<TFacets>, state: EntitiesContainer) => {
   return isString(entityOrId)
     ? getEntity<TFacets>(state)(entityOrId)
-    : just(entityOrId)
+    : isNil(entityOrId)
+      ? Maybe.Nothing<Entity<TFacets>>()
+      : has('id')(entityOrId) ? Maybe.Just(entityOrId as MightBe<TFacets>) : entityOrId as Maybe<MightBe<TFacets>>
 }

@@ -3,7 +3,7 @@ import React from 'react'
 import { Animated } from 'react-native'
 import { Circle, CircleProps, G, LineProps, Text } from 'react-native-svg'
 
-import { createAction } from '@thrashplay/gemstone-engine'
+import { createAction } from '@thrashplay/gemstone-engine-v1'
 import {
   Actor,
   getAction,

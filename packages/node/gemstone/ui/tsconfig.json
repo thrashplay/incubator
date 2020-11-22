@@ -30,7 +30,7 @@
       "path": "../../thrashlib/tool-selector/tsconfig.json"
     },
     {
-      "path": "../engine/tsconfig.json"
+      "path": "../engine-v1/tsconfig.json"
     },
     {
       "path": "../map-model/tsconfig.json"

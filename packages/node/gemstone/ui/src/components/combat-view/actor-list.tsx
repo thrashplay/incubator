@@ -4,7 +4,7 @@ import { StyleSheet, Text, TextStyle, ViewStyle } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { List } from 'react-native-paper'
 
-import { getPublicActionDescription } from '@thrashplay/gemstone-engine'
+import { getPublicActionDescription } from '@thrashplay/gemstone-engine-v1'
 import { Actor, CharacterId, getActors } from '@thrashplay/gemstone-model'
 import { useFrameQuery, useSelector, useValue } from '@thrashplay/gemstone-ui-core'
 import { WithTextStyles, WithViewStyles } from '@thrashplay/react-helpers'

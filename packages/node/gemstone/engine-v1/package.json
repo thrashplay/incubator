@@ -1,7 +1,7 @@
 {
-  "name": "@thrashplay/gemstone-engine",
+  "name": "@thrashplay/gemstone-engine-v1-v1",
   "version": "0.0.1",
-  "description": "Gemstone: 'Intentions' Engine",
+  "description": "Gemstone: 'Intentions' Engine (version 1)",
   "private": true,
   "license": "MIT",
   "author": "Sean Kleinjung <sean@thrashplay.com>",

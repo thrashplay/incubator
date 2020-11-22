@@ -11,7 +11,7 @@ import {
   MovementCommands,
   OsricDungeonCommands,
   SceneCommands,
-} from '@thrashplay/gemstone-engine'
+} from '@thrashplay/gemstone-engine-v1'
 import { Area } from '@thrashplay/gemstone-map-model'
 import {
   addCharacter,

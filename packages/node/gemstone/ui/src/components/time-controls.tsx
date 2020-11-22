@@ -3,7 +3,7 @@ import React, { useCallback } from 'react'
 import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 import { IconButton } from 'react-native-paper'
 
-import { SimulationCommands } from '@thrashplay/gemstone-engine'
+import { SimulationCommands } from '@thrashplay/gemstone-engine-v1'
 import {
   getCurrentFrameNumber,
   getFrameNumber,

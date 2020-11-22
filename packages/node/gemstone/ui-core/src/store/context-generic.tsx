@@ -1,7 +1,7 @@
 import { noop } from 'lodash/fp'
 import React, { PropsWithChildren, useCallback, useRef, useState } from 'react'
 
-import { createStore, Dispatch, Event, GameState, reducer } from '@thrashplay/gemstone-engine'
+import { createStore, Dispatch, Event, GameState, reducer } from '@thrashplay/gemstone-engine-v1'
 import { CommonEvents } from '@thrashplay/gemstone-model'
 
 export type StoreContextType<TState extends unknown = any, TEvent extends { type: string } = any> = {

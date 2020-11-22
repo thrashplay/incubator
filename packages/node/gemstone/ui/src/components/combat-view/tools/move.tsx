@@ -6,7 +6,7 @@ import {
   TapEvent,
   useCanvasEvent,
 } from '@thrashplay/canvas-with-tools'
-import { createAction } from '@thrashplay/gemstone-engine'
+import { createAction } from '@thrashplay/gemstone-engine-v1'
 import {
   Actor,
   CharacterId,

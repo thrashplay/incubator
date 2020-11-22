@@ -21,7 +21,7 @@
       "path": "../../thrashlib/tool-selector/tsconfig.build.json"
     },
     {
-      "path": "../engine/tsconfig.build.json"
+      "path": "../engine-v1/tsconfig.build.json"
     },
     {
       "path": "../map-model/tsconfig.build.json"

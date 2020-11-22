@@ -2,7 +2,7 @@ import { identity } from 'lodash'
 import React from 'react'
 import { StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native'
 
-import { GameState, SelectorParameters } from '@thrashplay/gemstone-engine'
+import { GameState, SelectorParameters } from '@thrashplay/gemstone-engine-v1'
 import { useValue } from '@thrashplay/gemstone-ui-core'
 import { WithViewStyles } from '@thrashplay/react-helpers'
 

@@ -7,3 +7,4 @@ export type WorldState = {
 }
 
 export const EMPTY_ARRAY = []
+export const WORLD_ID = '__world'

@@ -1,6 +1,6 @@
 import { Entity } from '../entity'
 import { Effect } from '../transformation'
-import { EMPTY_ARRAY, WorldState } from '../world'
+import { EMPTY_ARRAY, WorldState } from '../world-state'
 
 import { Action } from './action'
 

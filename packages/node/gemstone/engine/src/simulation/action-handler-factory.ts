@@ -1,9 +1,9 @@
 import { negate } from 'lodash'
 import { filter, flatten, flow, get, isNil, keyBy, map, some } from 'lodash/fp'
 
-import { ActionHandler, AnyAction } from './action/action-handler'
-import { Entity } from './entity'
-import { Facet } from './facet'
+import { ActionHandler, AnyAction } from '../action/action-handler'
+import { Entity } from '../entity'
+import { Facet } from '../facet'
 
 /** Creates an action handler for an entity, based on the characteristics of the entity. */
 export type ActionHandlerFactory = (entity: Entity) => ActionHandler

@@ -1,4 +1,6 @@
 export * from './action'
+export * from './action-handler-factory'
 export * from './entity'
+export * from './facet'
 export * from './transformation'
 export * from './world'

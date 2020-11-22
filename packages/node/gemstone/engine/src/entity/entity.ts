@@ -6,7 +6,7 @@ type RequiredEntityFields = {
   /** ID of this entity. */
   id: string
 
-  /** Facets that have been added to this entity. */
+  /** IDs of the facets that have been added to this entity. */
   facets: string[]
 }
 

@@ -1,13 +1,12 @@
 import { keys, reduce } from 'lodash/fp'
 
+import { WorldState } from '@thrashplay/gemstone-engine'
 import { Dictionary } from '@thrashplay/gemstone-model'
 
-import * as base from './entity/selectors'
 import * as positionable from './positionable/selectors'
-import { EntitiesContainer } from './state'
 
 type AnyFunction = (...args: any[]) => any
-type SelectorCreator = (state: EntitiesContainer) => AnyFunction
+type SelectorCreator = (state: WorldState) => AnyFunction
 type BoundSelectors<
   TSelectors extends Dictionary<string, SelectorCreator>
 > = { [k in keyof TSelectors]: ReturnType<TSelectors[k]> }
@@ -15,7 +14,7 @@ type BoundSelectors<
 /**
  * Creates a set of all selectors with the Game parameter partially applied.
  */
-export const selectFrom = (state: EntitiesContainer) => {
+export const selectFrom = (state: WorldState) => {
   const bindSelectors = <TSelectors extends Dictionary<string, SelectorCreator> = any>(
     selectors: TSelectors
   ): BoundSelectors<TSelectors> => {
@@ -28,7 +27,6 @@ export const selectFrom = (state: EntitiesContainer) => {
   }
 
   return {
-    ...bindSelectors(base),
     ...bindSelectors(positionable),
   }
 }

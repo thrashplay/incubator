@@ -1,17 +1,23 @@
 import { curry, filter, flow, has, isNil, map, negate } from 'lodash/fp'
 import { Maybe } from 'monet'
 
-import { createEntitySelector } from '../../api/create-entity-selector'
-import { resolveEntity, UnresolvedEntity } from '../../api/resolve-entity'
-import { AnyFacets, Entity, MightBe } from '../../entity'
-import { EntitiesContainer } from '../../state'
+import {
+  AnyFacets,
+  createEntitySelector,
+  Entity,
+  MightBe,
+  resolveEntity,
+  UnresolvedEntity,
+  WorldState,
+} from '@thrashplay/gemstone-engine'
+
 import { Containable } from '../containable'
 import { Container } from '../container'
 
 /** Determines if an entity ID is associated with a Container or not. */
 export const isContainerId = curry(<
   TFacets extends AnyFacets = AnyFacets
->(state: EntitiesContainer, entityOrId: UnresolvedEntity<TFacets>): boolean => {
+>(state: WorldState, entityOrId: UnresolvedEntity<TFacets>): boolean => {
   return resolveEntity(entityOrId, state)
     .map(isContainer)
     .orJust(false)

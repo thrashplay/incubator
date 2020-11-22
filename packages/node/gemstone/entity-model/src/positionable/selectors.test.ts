@@ -1,12 +1,13 @@
 import { flow } from 'lodash/fp'
 
+import { buildWorldState, WorldStateBuilders } from '@thrashplay/gemstone-engine'
+
 import { buildEntity, EntityBuilders } from '../entity-builders'
-import { buildEntitiesContainer, EntitySetBuilders } from '../entity-set-builders'
 
 import { getPosition } from './selectors'
 
 const { setPosition, setContainerId } = EntityBuilders
-const { addEntity, updateEntity } = EntitySetBuilders
+const { addEntity, updateEntity } = WorldStateBuilders
 
 const largeBag = buildEntity({ id: 'largeBag' })
 const smallBag = buildEntity({ id: 'smallBag' })
@@ -16,7 +17,7 @@ const hammer = buildEntity({ id: 'hammer' })
  * A game with three entities (hammer, smallBag, and largeBag);
  * None of them contain the others or have positions by default.
  **/
-const BASE_GAME = buildEntitiesContainer(
+const BASE_GAME = buildWorldState(
   addEntity(hammer),
   addEntity(smallBag),
   addEntity(largeBag)

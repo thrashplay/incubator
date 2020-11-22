@@ -1,15 +1,16 @@
 import { addItem, BuilderFunction, createBuilder, updateItem } from '@thrashplay/fp'
 
-import { Entity } from './entity'
-import { EntitiesContainer } from './state'
+import { Entity } from '../entity'
+
+import { WorldState } from './world-state'
 
 /** Builds a minimal Game instance. */
-export const buildEntitiesContainer = createBuilder((): EntitiesContainer => ({
+export const buildWorldState = createBuilder((): WorldState => ({
   entities: {},
 }))
 
 /** Adds an entity to a game instance. */
-const addEntity = (entity: Entity) => (state: EntitiesContainer) => ({
+const addEntity = (entity: Entity) => (state: WorldState) => ({
   ...state,
   entities: addItem(state.entities, entity),
 })
@@ -18,9 +19,9 @@ const addEntity = (entity: Entity) => (state: EntitiesContainer) => ({
 const updateEntity = (
   id: Entity['id'],
   ...updaters: BuilderFunction<Entity>[]
-) => (state: EntitiesContainer) => ({ ...state, entities: updateItem(state.entities, id, ...updaters) })
+) => (state: WorldState) => ({ ...state, entities: updateItem(state.entities, id, ...updaters) })
 
-export const EntitySetBuilders = {
+export const WorldStateBuilders = {
   addEntity,
   updateEntity,
 }

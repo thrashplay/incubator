@@ -1,7 +1,7 @@
 import { get, isNil } from 'lodash/fp'
 import { Maybe } from 'monet'
 
-import { EntitiesContainer } from '../state'
+import { WorldState } from '../world'
 
 import { AnyFacets, Entity, MightBe } from './entity'
 
@@ -9,7 +9,7 @@ import { AnyFacets, Entity, MightBe } from './entity'
 export const getEntity = <
   TPossibleFacets extends AnyFacets = AnyFacets,
   TEntity extends Entity = MightBe<TPossibleFacets>
->(state: EntitiesContainer) => (id: Entity['id'] | undefined): Maybe<TEntity> => {
+>(state: WorldState) => (id: Entity['id'] | undefined): Maybe<TEntity> => {
   const entity = isNil(id) ? undefined : get(['entities', id], state)
 
   return isNil(entity)

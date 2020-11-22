@@ -1,7 +1,5 @@
+import { EMPTY_ARRAY, Entity } from '@thrashplay/gemstone-engine'
 import { Dictionary } from '@thrashplay/gemstone-model'
-
-import { Entity } from '../entity'
-import { EMPTY_ARRAY } from '../state'
 
 import * as effects from './effects'
 import * as selectors from './selectors/container'

@@ -1,6 +1,5 @@
+import { Entity } from '@thrashplay/gemstone-engine'
 import { Point } from '@thrashplay/math'
-
-import { Entity } from '../entity'
 
 import { Positionable } from './positionable'
 

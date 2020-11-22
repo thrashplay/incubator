@@ -1,6 +1,5 @@
+import { Entity } from '@thrashplay/gemstone-engine'
 import { Dictionary } from '@thrashplay/gemstone-model'
-
-import { Entity } from '../entity'
 
 import * as effects from './effects'
 import * as selectors from './selectors/containable'

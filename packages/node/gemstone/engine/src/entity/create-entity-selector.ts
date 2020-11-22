@@ -3,7 +3,7 @@ import { Maybe } from 'monet'
 import { NoValue } from '@thrashplay/fp/maybe'
 
 import { AnyFacets, Entity, MightBe } from '../entity'
-import { EntitiesContainer } from '../state'
+import { WorldState } from '../world'
 
 import { resolveEntity } from './resolve-entity'
 
@@ -29,8 +29,8 @@ export const createEntitySelector = <
     ? []
     : TArgsType extends any[] ? TArgsType : [TArgsType],
 >(
-  selector: (state: EntitiesContainer, entity: MightBe<TFacets>, ...args: TArgs) => Maybe<TResult>
-) => (state: EntitiesContainer) =>
+  selector: (state: WorldState, entity: MightBe<TFacets>, ...args: TArgs) => Maybe<TResult>
+) => (state: WorldState) =>
   (entityOrId: Maybe<MightBe<TFacets>> | MightBe<TFacets> | Entity['id'] | NoValue, ...args: TArgs) => {
     const entity = resolveEntity(entityOrId, state)
 

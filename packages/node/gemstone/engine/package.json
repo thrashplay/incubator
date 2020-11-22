@@ -1,7 +1,7 @@
 {
-  "name": "@thrashplay/gemstone-entity-model",
+  "name": "@thrashplay/gemstone-engine",
   "version": "0.0.1",
-  "description": "Gemstone: Entity model",
+  "description": "Gemstone: Engine",
   "private": true,
   "license": "MIT",
   "author": "Sean Kleinjung <sean@thrashplay.com>",
@@ -16,7 +16,6 @@
   "dependencies": {
     "@babel/runtime": "7.6.2",
     "@thrashplay/fp": "0.1.0-next.24",
-    "@thrashplay/gemstone-engine": "0.0.1",
     "@thrashplay/gemstone-model": "0.0.1",
     "@thrashplay/math": "0.0.1",
     "lodash": "4.17.20",

@@ -1,10 +1,17 @@
 import { has } from 'lodash/fp'
 import { Maybe } from 'monet'
 
-import { createEntitySelector } from '../../api/create-entity-selector'
-import { resolveEntity, UnresolvedEntity } from '../../api/resolve-entity'
-import { AnyFacets, Entity, getEntity, MightBe } from '../../entity'
-import { EntitiesContainer } from '../../state'
+import {
+  AnyFacets,
+  createEntitySelector,
+  Entity,
+  getEntity,
+  MightBe,
+  resolveEntity,
+  UnresolvedEntity,
+  WorldState,
+} from '@thrashplay/gemstone-engine'
+
 import { Containable } from '../containable'
 import { Container } from '../container'
 
@@ -20,7 +27,7 @@ export const getContainer = createEntitySelector((
 })
 
 /** Determines if an entity ID is associated with a Containable or not. */
-export const isContainableId = <TFacets extends AnyFacets = AnyFacets>(state: EntitiesContainer) =>
+export const isContainableId = <TFacets extends AnyFacets = AnyFacets>(state: WorldState) =>
   (entityOrId: UnresolvedEntity<TFacets>): boolean => {
     return resolveEntity(entityOrId, state)
       .map(isContainable)

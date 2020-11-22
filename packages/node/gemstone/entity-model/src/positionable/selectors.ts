@@ -2,11 +2,10 @@ import { isNil } from 'lodash'
 import { get } from 'lodash/fp'
 import { Maybe } from 'monet'
 
+import { createEntitySelector, MightBe } from '@thrashplay/gemstone-engine'
 import { Point } from '@thrashplay/math'
 
-import { createEntitySelector } from '../api/create-entity-selector'
 import { Containable } from '../containable'
-import { MightBe } from '../entity'
 
 import { Positionable } from './positionable'
 

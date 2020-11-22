@@ -1,8 +1,8 @@
 import { RecordSet } from '@thrashplay/gemstone-model'
 
-import { Entity } from './entity'
+import { Entity } from '../entity'
 
-export type EntitiesContainer = {
+export type WorldState = {
   entities: RecordSet<Entity>
 }
 

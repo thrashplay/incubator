@@ -1,12 +1,13 @@
+import { buildWorldState, WorldStateBuilders } from '@thrashplay/gemstone-engine'
+
 import { buildEntity } from '../../entity-builders'
-import { buildEntitiesContainer, EntitySetBuilders } from '../../entity-set-builders'
 import { Containable } from '../containable'
 import { Container } from '../container'
 import { addToContents } from '../mutators'
 
 import { getContentIds, getContents, isContainerId } from './container'
 
-const { addEntity, updateEntity } = EntitySetBuilders
+const { addEntity, updateEntity } = WorldStateBuilders
 
 const hammer = buildEntity({ id: 'hammer' }, Containable.extend)
 const nail = buildEntity({ id: 'nail' }, Containable.extend)
@@ -16,7 +17,7 @@ const smallBag = buildEntity({ id: 'smallBag' }, Container.extend)
  * A game with three entities (hammer, nail, and smallBag). None of them contain the others by default, but the
  * hammer and nail have the Containable facet and the smallBag has the Container facet.
  **/
-const BASE_STATE = buildEntitiesContainer(
+const BASE_STATE = buildWorldState(
   addEntity(hammer),
   addEntity(nail),
   addEntity(smallBag)

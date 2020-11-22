@@ -4,7 +4,7 @@ import { updateItem } from '@thrashplay/fp'
 import { RecordSet } from '@thrashplay/gemstone-model'
 
 import { Entity } from '../entity'
-import { EntitiesContainer } from '../state'
+import { WorldState } from '../world'
 
 /**
  * A function that changes the state of an Entity, generally the result of an action taken upon or by it.
@@ -28,13 +28,13 @@ export const applyIf = curry((
 export const effectSingle = curry((
   targetId: Entity['id'],
   effect: EntityEffect
-) => (state: EntitiesContainer): EntitiesContainer => ({
+) => (state: WorldState): WorldState => ({
   ...state,
   entities: updateItem(state.entities, targetId, effect),
 }))
 
 /** Applies a set of targeted effects, returning the new state. */
-export const applyEffects = curry((effects: Effect[], state: EntitiesContainer): EntitiesContainer => ({
+export const applyEffects = curry((effects: Effect[], state: WorldState): WorldState => ({
   ...state,
   entities: flow(...effects)(state.entities),
 }))

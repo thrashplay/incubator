@@ -1,8 +1,7 @@
 import { isArray, omit, without } from 'lodash/fp'
 
 import { add } from '@thrashplay/fp'
-
-import { Entity, MightBe } from '../entity'
+import { Entity, MightBe } from '@thrashplay/gemstone-engine'
 
 import { Containable } from './containable'
 import { Container } from './container'

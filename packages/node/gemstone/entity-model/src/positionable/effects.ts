@@ -1,8 +1,7 @@
 import { has } from 'lodash/fp'
 
+import { applyIf } from '@thrashplay/gemstone-engine'
 import { Point } from '@thrashplay/math'
-
-import { applyIf } from '../api/effect'
 
 import { setPosition } from './mutators'
 

@@ -1,5 +1,4 @@
-import { createAction } from '../api/action'
-import { Entity } from '../entity'
+import { createAction, Entity } from '@thrashplay/gemstone-engine'
 
 export type ContainerDetails = {
   containerId: Entity['id']

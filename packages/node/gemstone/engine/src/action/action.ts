@@ -4,8 +4,7 @@ import { createCustomAction, TypeConstant } from 'typesafe-actions'
 import { Dictionary, RecordSet } from '@thrashplay/gemstone-model'
 
 import { Entity } from '../entity'
-
-import { Effect } from './effect'
+import { Effect } from '../transformation'
 
 export type AnyAction = {
   details: unknown

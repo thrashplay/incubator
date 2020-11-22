@@ -3,9 +3,8 @@ import { Maybe } from 'monet'
 
 import { NoValue } from '@thrashplay/fp/maybe'
 
-import { AnyFacets, Entity, MightBe } from '../entity'
-import { getEntity } from '../entity/selectors'
-import { EntitiesContainer } from '../state'
+import { AnyFacets, Entity, getEntity, MightBe } from '../entity'
+import { WorldState } from '../world'
 
 /** Flexible entity parameter that handles Maybes, raw entities, IDs or nil values gracefully. */
 export type UnresolvedEntity<
@@ -25,7 +24,7 @@ export type UnresolvedEntity<
  */
 export const resolveEntity = <
   TFacets extends AnyFacets = AnyFacets,
->(entityOrId: UnresolvedEntity<TFacets>, state: EntitiesContainer) => {
+>(entityOrId: UnresolvedEntity<TFacets>, state: WorldState) => {
   return isString(entityOrId)
     ? getEntity<TFacets>(state)(entityOrId)
     : isNil(entityOrId)

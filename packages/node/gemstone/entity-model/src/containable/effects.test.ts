@@ -1,11 +1,12 @@
+import { buildWorldState, WorldStateBuilders } from '@thrashplay/gemstone-engine'
+
 import { buildEntity } from '../entity-builders'
-import { buildEntitiesContainer, EntitySetBuilders } from '../entity-set-builders'
 
 import { Containable } from './containable'
 import { Container } from './container'
 import { placeInside } from './effects'
 
-const { addEntity } = EntitySetBuilders
+const { addEntity } = WorldStateBuilders
 
 const animal = buildEntity({ id: 'animal' })
 const hammer = buildEntity({ id: 'hammer' }, Containable.extend)
@@ -15,7 +16,7 @@ const smallBag = buildEntity({ id: 'smallBag' }, Container.extend)
  * A game with three entities (animal, hammer and smallBag). None of them contain the other sby default, but the
  * hammer has the Containable facet and the smallBag has the Container facet. The animal has no facets.
  **/
-const BASE_STATE = buildEntitiesContainer(
+const BASE_STATE = buildWorldState(
   addEntity(hammer),
   addEntity(smallBag)
 )

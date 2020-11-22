@@ -7,7 +7,7 @@ import { AnyFacets, Entity, MightBe } from '../entity'
 import { getEntity } from '../entity/selectors'
 import { EntitiesContainer } from '../state'
 
-/** Represents the flexible entity input format handled by 'resolveEntity'. */
+/** Flexible entity parameter that handles Maybes, raw entities, IDs or nil values gracefully. */
 export type UnresolvedEntity<
   TFacets extends AnyFacets = AnyFacets
 > = Maybe<MightBe<TFacets>> | MightBe<TFacets> | Entity['id'] | NoValue

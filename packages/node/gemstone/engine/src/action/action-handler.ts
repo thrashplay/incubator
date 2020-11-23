@@ -1,11 +1,11 @@
 import { Entity } from '../entity'
-import { Effect } from '../transformation'
+import { Transformation } from '../transformation'
 import { EMPTY_ARRAY, WorldState } from '../world-state'
 
 import { Action } from './action'
 
 export type AnyAction = {
-  details: unknown
+  details?: unknown
   source: Entity['id']
   target: Entity['id']
   type: Action['type']
@@ -17,7 +17,7 @@ export type ActionResult = {
   reactions: Action[]
 
   /** Transformations to apply to the world state. */
-  transformations: Effect[]
+  transformations: Transformation<string, any>[]
 }
 
 /**
@@ -39,8 +39,8 @@ export type ActionHandlerFunction<TAction extends AnyAction = AnyAction> = (
  *
  */
 export type ActionHandler<TAction extends AnyAction = any> = {
-  supports: (action: AnyAction) => action is TAction
   handle: ActionHandlerFunction<TAction>
+  supports: (action: AnyAction) => action is TAction
 }
 
 export const EMPTY_ACTION_RESULT: ActionResult = {

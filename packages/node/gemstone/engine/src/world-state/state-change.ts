@@ -1,4 +1,5 @@
 import { LogEntry } from '../log'
+import { Transformation } from '../transformation'
 
 import { WorldState } from './world-state'
 
@@ -10,3 +11,12 @@ export interface StateChange {
   /** Retrieves the log entry acting as a record of what this change was. */
   getLogEntry: () => LogEntry
 }
+
+/**
+ * Converts a Transformation into a StateChange by "baking in" the parameter into the apply function,
+ * and generating an appropriate log entry.
+ */
+export const createStateChange = (transformation: Transformation<string, any>) => ({
+  apply: (world: WorldState) => transformation.transformFunction(world, transformation.parameter),
+  getLogEntry: () => 'Log entries for state changes have not been implemented yet.',
+})

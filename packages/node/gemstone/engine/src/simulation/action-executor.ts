@@ -1,8 +1,10 @@
+import { map } from 'lodash/fp'
 import { Either } from 'monet'
 
-import { Action } from '../action'
+import { Action, ActionResult } from '../action'
+import { Entity, getEntity } from '../entity'
 import { LogEntry } from '../log'
-import { StateChange, WorldState } from '../world-state'
+import { createStateChange, StateChange, WorldState } from '../world-state'
 
 import { ActionHandlerFactory } from './action-handler-factory'
 
@@ -15,8 +17,23 @@ import { ActionHandlerFactory } from './action-handler-factory'
 export type ActionExecutor = (action: Action, world: WorldState) => Either<LogEntry, StateChange[]>
 
 /** Creates an ActionExecutor, using the specified handler factory to create action handlers for entities. */
-export const createActionExecutor = (_actionHandlerFactory: ActionHandlerFactory): ActionExecutor => {
-  return (_action: Action, _world: WorldState) => {
-    return Either.Left('Action execution is not implemented yet!')
+export const createActionExecutor = (actionHandlerFactory: ActionHandlerFactory): ActionExecutor => {
+  return (action: Action, world: WorldState) => {
+    const entityOrError = getEntity(world)(action.target)
+      .cata<Either<string, Entity>>(
+      () => Either.Left(`Unknown target: '${action.target}'.`),
+      (entity: Entity) => Either.Right(entity)
+    )
+
+    const targetId = action.target
+    const actionType = action.type
+
+    return entityOrError
+      .map((entity) => actionHandlerFactory(entity))
+      .flatMap((handler) => handler.supports(action)
+        ? Either.Right(handler.handle(action, world))
+        : Either.Left<LogEntry, ActionResult>(`'${targetId}' does not know how to respond to action '${actionType}'.`)
+      )
+      .map((actionResult) => map(createStateChange)(actionResult.transformations))
   }
 }

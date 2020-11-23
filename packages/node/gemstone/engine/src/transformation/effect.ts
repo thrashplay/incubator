@@ -4,7 +4,7 @@ import { updateItem } from '@thrashplay/fp'
 import { RecordSet } from '@thrashplay/gemstone-model'
 
 import { Entity } from '../entity'
-import { WorldState } from '../world'
+import { WorldState } from '../world-state'
 
 /**
  * A function that changes the state of an Entity, generally the result of an action taken upon or by it.

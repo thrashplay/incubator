@@ -1,10 +1,11 @@
 import { isNil } from 'lodash'
 import { Maybe } from 'monet'
 
+import { WORLD_ID } from '../constants'
 import { createEntitySelector, MightBe } from '../entity'
-import { WORLD_ID, WorldState } from '../world-state'
+import { WorldState } from '../world-state'
 
-import { World } from './world'
+import { World } from './facet'
 
 const getTimeFromEntity = createEntitySelector((
   _state,

@@ -1,3 +1,3 @@
-export * from './actions/creators'
+export * from './actions'
+export * from './facet'
 export * from './selectors'
-export * from './world'

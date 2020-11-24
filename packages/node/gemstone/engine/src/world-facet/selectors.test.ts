@@ -1,8 +1,9 @@
+import { WORLD_ID } from '../constants'
 import { buildEntity } from '../entity'
-import { buildWorldState, WORLD_ID, WorldStateBuilders } from '../world-state'
+import { buildWorldState, WorldStateBuilders } from '../world-state'
 
+import { makeWorld } from './facet'
 import { getWorldTime } from './selectors'
-import { makeWorld } from './world'
 
 const { addEntity, updateEntity } = WorldStateBuilders
 

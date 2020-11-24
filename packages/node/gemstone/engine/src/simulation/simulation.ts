@@ -2,13 +2,11 @@ import { flow } from 'lodash'
 import { forEach, get, map } from 'lodash/fp'
 
 import { Action } from '../action'
-import { buildEntity } from '../entity'
+import { DEFAULT_WORLD } from '../constants'
 import { LogEntry } from '../log'
-import { buildWorldState, StateChange, WORLD_ID, WorldState, WorldStateBuilders } from '../world-state'
+import { StateChange, WorldState } from '../world-state'
 
 import { SimulationConfig } from './simulation-config'
-
-const { addEntity } = WorldStateBuilders
 
 /** Simulation that manages the world state and action pipeline. */
 export interface Simulation {
@@ -25,11 +23,10 @@ export interface Simulation {
 /** Creates a Simulation matching the specified configuration. */
 export const createSimulation = ({
   actionExecutor,
+  initialWorldState = DEFAULT_WORLD,
   log,
 }: SimulationConfig): Simulation => {
-  let world: WorldState = buildWorldState(
-    addEntity(buildEntity({ id: WORLD_ID }))
-  )
+  let world: WorldState = initialWorldState
 
   /**
    * If an action dispatch fails, adds the explanation message to the game log.
@@ -43,7 +40,7 @@ export const createSimulation = ({
   /**
    * After dispatching an action, applying the resulting state changes to the world and return the new world state. *
    */
-  const applyStateChanges = (stateChanges: StateChange[]) => {
+  const applyStateChanges = (stateChanges: readonly StateChange[]) => {
     forEach((stateChange: StateChange) => {
       log(stateChange.getLogEntry())
     })(stateChanges)

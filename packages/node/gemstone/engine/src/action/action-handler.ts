@@ -1,6 +1,10 @@
+import { Either } from 'monet'
+import { getType } from 'typesafe-actions'
+
 import { Entity } from '../entity'
+import { LogEntry } from '../log'
 import { Transformation } from '../transformation'
-import { EMPTY_ARRAY, WorldState } from '../world-state'
+import { WorldState } from '../world-state'
 
 import { Action } from './action'
 
@@ -14,10 +18,10 @@ export type AnyAction = {
 /** Result data structure for action handlers. */
 export type ActionResult = {
   /** Actions to take in response to the original action. */
-  reactions: Action[]
+  reactions?: Action | readonly Action[]
 
   /** Transformations to apply to the world state. */
-  transformations: Transformation<string, any>[]
+  transformations?: Transformation<string, any> | readonly Transformation<string, any>[]
 }
 
 /**
@@ -29,7 +33,7 @@ export type ActionResult = {
 export type ActionHandlerFunction<TAction extends AnyAction = AnyAction> = (
   action: TAction,
   world: WorldState
-) => ActionResult
+) => Either<LogEntry, ActionResult>
 
 /**
  * An action handler exposes two functions:
@@ -39,11 +43,29 @@ export type ActionHandlerFunction<TAction extends AnyAction = AnyAction> = (
  *
  */
 export type ActionHandler<TAction extends AnyAction = any> = {
-  handle: ActionHandlerFunction<TAction>
-  supports: (action: AnyAction) => action is TAction
+  handle: (action: TAction, world: WorldState) => Either<LogEntry, ActionResult>
+  supports: (action: AnyAction) => boolean
 }
 
-export const EMPTY_ACTION_RESULT: ActionResult = {
-  reactions: EMPTY_ARRAY,
-  transformations: EMPTY_ARRAY,
-} as const
+/**
+ * Creates an ActionHandler that has a builtin type guarantee, and will not call the 'handler' function
+ * unless the acton being handled has the same type as the requested action creator.
+ */
+export const createActionHandler = <TAction extends AnyAction = any>(
+  actionCreator: (...args: any) => TAction,
+  handler: ActionHandlerFunction<TAction>
+): ActionHandler<TAction> => {
+  const supportedType = getType(actionCreator)
+
+  const supports = (action: AnyAction) => action.type === supportedType
+  const handle = (action: TAction, world: WorldState) => supports(action)
+    ? handler(action, world)
+    : Either.Left<LogEntry, ActionResult>(
+      `[ERROR] Handler for '${supportedType}' actions called with invalid action: ${action}`
+    )
+
+  return {
+    handle,
+    supports,
+  }
+}

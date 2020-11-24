@@ -1,9 +1,12 @@
+import { Either } from 'monet'
+
 import { Dictionary } from '@thrashplay/gemstone-model'
 
-import { ActionHandler, ActionResult, AnyAction, EMPTY_ACTION_RESULT } from '../action'
+import { ActionHandler, ActionResult, AnyAction } from '../action'
+import { EMPTY_ACTION_RESULT, WORLD_ID } from '../constants'
 import { buildEntity, Entity } from '../entity'
 import { createEntityTransformation, createWorldTransformation } from '../transformation'
-import { buildWorldState, WORLD_ID, WorldState, WorldStateBuilders } from '../world-state'
+import { buildWorldState, WorldState, WorldStateBuilders } from '../world-state'
 
 import { createActionExecutor } from './action-executor'
 
@@ -18,7 +21,7 @@ const world = buildWorldState(
 )
 
 const actionHandlerForEntity1 = {
-  handle: jest.fn<ActionResult, [AnyAction, WorldState]>(() => EMPTY_ACTION_RESULT),
+  handle: jest.fn<Either<any, ActionResult>, [AnyAction, WorldState]>(() => Either.Right(EMPTY_ACTION_RESULT)),
   supports: jest.fn(() => false) as any,
 }
 
@@ -99,7 +102,7 @@ describe('ActionExecutor tests', () => {
           createAddEntityTransformation('newEntity'),
         ],
       }
-      actionHandlerForEntity1.handle.mockReturnValue(singleTransformationResult)
+      actionHandlerForEntity1.handle.mockReturnValue(Either.Right(singleTransformationResult))
 
       const result = executeAction(createActionTargeting(entity1.id), world)
       expect(result.isRight()).toBe(true)
@@ -118,7 +121,7 @@ describe('ActionExecutor tests', () => {
           createSetNameTransformer('newEntity', 'Expected Name'),
         ],
       }
-      actionHandlerForEntity1.handle.mockReturnValue(multipleTransformationResult)
+      actionHandlerForEntity1.handle.mockReturnValue(Either.Right(multipleTransformationResult))
 
       const result = executeAction(createActionTargeting(entity1.id), world)
       expect(result.isRight()).toBe(true)

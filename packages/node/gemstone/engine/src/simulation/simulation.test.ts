@@ -2,14 +2,15 @@ import { identity } from 'lodash'
 import { Either } from 'monet'
 
 import { Action } from '../action'
+import { EMPTY_ARRAY, WORLD_ID } from '../constants'
 import { buildEntity } from '../entity'
 import { LogEntry } from '../log'
-import { EMPTY_ARRAY, StateChange, WORLD_ID, WorldState } from '../world-state'
+import { StateChange, WorldState } from '../world-state'
 
 import { createSimulation } from './simulation'
 
 const mockLog = jest.fn<void, [LogEntry]>()
-const mockActionExecutor = jest.fn<Either<LogEntry, StateChange[]>, [Action, WorldState]>()
+const mockActionExecutor = jest.fn<Either<LogEntry, readonly StateChange[]>, [Action, WorldState]>()
 
 const ARBITRARY_ACTION: Action = {
   source: WORLD_ID,

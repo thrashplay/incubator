@@ -1,5 +1,9 @@
 import { head } from 'lodash'
-import { createCustomAction } from 'typesafe-actions'
+import {
+  ActionCreatorTypeMetadata,
+  createCustomAction,
+  ActionCreator as TypesafeActionsActionCreator,
+} from 'typesafe-actions'
 
 import { Dictionary } from '@thrashplay/gemstone-model'
 
@@ -28,3 +32,8 @@ export const createAction = <TType extends Action['type'] = Action['type']>(
   target: Entity['id'],
   ...rest: OptionalRestParameter<TDetails>
 ) => ({ source, target, details: head(rest) as TDetails }) as unknown as Omit<Action<TType, TDetails>, 'type'>)
+
+/** Type of action creator functions, used to build other types. */
+export type ActionCreator<
+  TType extends Action['type'] = Action['type']
+> = TypesafeActionsActionCreator<TType> & ActionCreatorTypeMetadata<TType>

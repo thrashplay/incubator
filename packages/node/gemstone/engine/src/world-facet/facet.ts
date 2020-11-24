@@ -1,6 +1,6 @@
 import { extend, Facet } from '@thrashplay/gemstone-engine'
 
-import { tickHandler } from './actions/tick'
+import { tickHandler } from './actions'
 
 export interface World {
   time: number

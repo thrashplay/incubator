@@ -1,0 +1,24 @@
+{
+  "name": "@thrashplay/gemstone-engine-api",
+  "version": "0.0.1",
+  "description": "Gemstone: Engine API",
+  "private": true,
+  "license": "MIT",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "files": [
+    "lib/**"
+  ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "@babel/runtime": "7.6.2",
+    "@thrashplay/fp": "0.1.0-next.24",
+    "@thrashplay/math": "0.0.1",
+    "lodash": "4.17.20",
+    "monet": "0.9.1",
+    "typesafe-actions": "5.1.0"
+  }
+}

@@ -11,6 +11,7 @@ The 'world' facet is a special facet that is applied to a single entity, represe
 
 ## Recognized Actions
 
+* **`spawn-entity`**: This action adds a new entity to the world.
 * **`tick`**: This action advances the world's time by one tick. (TBD: While currently 5 seconds, how is the tick length determined?)
 
 ## Recognized Transformations

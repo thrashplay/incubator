@@ -21,6 +21,9 @@
       "path": "../../thrashlib/fp/tsconfig.json"
     },
     {
+      "path": "../engine-api/tsconfig.json"
+    },
+    {
       "path": "../model/tsconfig.json"
     }
   ]

@@ -1,0 +1,259 @@
+features:
+  floodplains:
+    appeal: -1
+    defenseModifier: -2
+    name: Flood Plains
+    validResources:
+      - antiquitySite
+        cotton
+        niter
+        sugar
+        wheat
+    yield:
+      food: 3
+  ice:
+    impassable: true
+    name: Ice
+  marsh:
+    appeal: -1
+    defenseModifier: -2
+    movementChange: 1
+    name: Marsh
+    validResources:
+      - antiquitySite
+        oil
+        rice
+        sugar
+        truffles
+    yield:
+      food: 1
+  oasis:
+    appeal: 1
+    name: Oasis
+    validResources:
+      - antiquitySite
+    yield:
+      food: 3
+      gold: 1
+  rainforest:
+    appeal: -1
+    defenseModifier: 3
+    movementChange: 1
+    name: Rainforest
+    validResources:
+      - antiquitySite
+        bananas
+        cocoa
+        coffee
+        diamonds
+        dyes
+        ivory
+        spices
+        tobacco
+        truffles
+        uranium
+    yield:
+      food: 1
+  woods:
+   appeal: 1
+   defenseModifier: 3
+   movementChange: 1
+   name: Woods
+   validResources:
+      - antiquitySite
+        deer
+        dyes
+        furs
+        ivory
+        silk
+        spices
+        tobacco
+        truffles
+        uranium
+        wine
+   yield:
+      production: 1
+naturalWonders: {}
+terrains:
+  coastAndLake:
+    appeal: 1
+    name: Coast / Lake
+    shallowWater: true
+    validResources:
+      - crabs
+        fish
+        oil
+        pearls
+        shipwreck
+        whales
+    water: true
+    yield:
+      food: 1
+      gold: 1
+  desert:
+    name: Desert
+    validResources:
+      - aluminum
+        antiquitySite
+        incense
+        ivory
+        niter
+        oil
+        salt
+        silver
+        uranium
+  desertHills:
+    defenseModifier: 3
+    hills: true
+    movementChange: 1
+    name: Desert (Hills)
+    validResources:
+      - aluminum
+        antiquitySite
+        copper
+        diamonds
+        gypsum
+        iron
+        sheep
+        silver
+        uranium
+    yield:
+      production: 1
+  grassland:
+    name: Grassland
+    validResources:
+      - antiquitySite
+        cattle
+        citrus
+        coffee
+        cotton
+        horses
+        jade
+        marble
+        niter
+        rice
+        stone
+        tea
+        tobacco
+        uranium
+        wine
+    yield:
+      food: 2
+  grasslandHills:
+    defenseModifier: 3
+    hills: true
+    movementChange: 1
+    name: Grassland (Hills)
+    validResources:
+      - antiquitySite
+        coal
+        copper
+        diamonds
+        iron
+        marble
+        sheep
+        stone
+        tea
+        uranium
+    yield:
+      food: 2
+      production: 1
+  mountains:
+    appeal: 1
+    impassable: true
+    name: Mountains
+  ocean:
+    name: Ocean
+    water: true
+    yield:
+      food: 1
+  plains:
+    name: Plains
+    validResources:
+      - aluminum
+        antiquitySite
+        citrus
+        cotton
+        gypsum
+        horses
+        incense
+        ivory
+        jade
+        mercury
+        niter
+        salt
+        tobacco
+        uranium
+        wheat
+        wine
+    yield:
+      food: 1
+      production: 1
+  plainsHills:
+    defenseModifier: 3
+    hills: true
+    movementChange: 1
+    name: Plains (Hills)
+    validResources:
+      - antiquitySite
+        coal
+        copper
+        diamonds
+        gypsum
+        iron
+        ivory
+        marble
+        sheep
+        uranium
+    yield:
+      food: 1
+      production: 2
+  snow:
+    name: Snow
+    validResources:
+      - antiquitySite
+        oil
+        uranium
+  snowHills:
+    defenseModifier: 3
+    hills: true
+    movementChange: 1
+    name: Snow (Hills)
+    validResources:
+      - antiquitySite
+        copper
+        uranium
+    yield:
+      production: 1
+  tundra:
+    name: Tundra
+    validResources:
+      - antiquitySite
+        deer
+        furs
+        jade
+        niter
+        oil
+        salt
+        silver
+        uranium
+    yield:
+      food: 1
+  tundraHills:
+    defenseModifier: 3
+    hills: true
+    movementChange: 1
+    name: Tundra (Hills)
+    validResources:
+      - antiquitySite
+        copper
+        deer
+        diamonds
+        gypsum
+        iron
+        sheep
+        silver
+        uranium
+    yield:
+      food: 1
+      production: 1

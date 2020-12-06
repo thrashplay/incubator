@@ -1,0 +1,22 @@
+{
+  "name": "@thrashplay/civsim",
+  "version": "0.0.1",
+  "description": "Civilization VI Analysis Tools",
+  "private": true,
+  "license": "MIT",
+  "author": "Sean Kleinjung <sean@thrashplay.com>",
+  "files": [
+    "lib/**"
+  ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "@babel/runtime": "7.6.2",
+    "@thrashplay/fp": "0.1.0-next.24",
+    "js-yaml": "3.14.0",
+    "lodash": "4.17.20"
+  }
+}

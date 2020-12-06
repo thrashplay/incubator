@@ -30,7 +30,9 @@ export type UniversalTransformationFunction <TParameter extends any = never> = (
   ...parameters: OptionalRestParameter<TParameter>
 ) => WorldState
 
-export type TransformationSet = { [k in string]: TransformationFunction<any> | UniversalTransformationFunction<any> }
+export type TransformationSet = Readonly<{
+  [k in string]: TransformationFunction<any> | UniversalTransformationFunction<any>
+}>
 
 /**
  * The union of all possible Transformation shapes handled by a collection of TransformationFunctions.

@@ -17,7 +17,7 @@ import {
  * A TransformationApplicator is a function that updates a WorldState by applying the transform encoded
  * in a TransformationDescriptor to it, and returning the resulting WorldState. The updated WorldState
  * is contained in the right-side of an Either monad. Errors -- such as an unrecognized transformation type
- * or invalid TransformationDescriptor -- are returned in the Either's left isde.
+ * or invalid TransformationDescriptor -- are returned in the Either's left side.
  */
 export type TransformationApplicator<TTransformations extends TransformationSet = any> = (
   transformation: TransformationTypes<TTransformations>, world: WorldState

@@ -1,0 +1,167 @@
+resources:
+  bananas:
+    harvest:
+      technology: irrigation
+      yield:
+        food: 20
+    name: Bananas
+    requirements:
+      improvement: 
+      - plantation
+      placement:
+        feature: 
+        - rainforest
+    type: bonus
+    yield:
+      food: 1
+  cattle:
+    harvest:
+      technology: animalHusbandry
+      yield:
+        food: 20
+    name: Cattle
+    requirements:
+      improvement: 
+      - pasture
+      placement:
+        terrain: 
+        - grassland
+    type: bonus
+    yield:
+      food: 1
+  copper:
+    harvest:
+      technology: mining
+      yield:
+        gold: 40
+    name: Copper
+    requirements:
+      improvement: 
+      - mine
+      placement:
+        terrain:
+        - desertHills
+          grasslandHills
+          plainsHills
+          snowHills
+          tundraHills
+    type: bonus
+    yield:
+      gold: 2
+  crabs:
+    harvest:
+      technology: celestialNavigation
+      yield:
+        gold: 40
+    name: Crabs
+    requirements:
+      improvement: 
+      - fishingBoats
+      placement:
+        terrain:
+        - coastAndLake
+    type: bonus
+    yield:
+      gold: 2
+  deer:
+    harvest:
+      technology: animalHusbandry
+      yield:
+        production: 20
+    name: Deer
+    requirements:
+      improvements:
+      - camp
+      placement:
+        features:
+        - woods
+        terrain:
+        - tundra
+          tundraHills
+    type: bonus
+    yield:
+      production: 1
+  fish:
+    harvest:
+      technology: celestialNavigation
+      yield:
+        food: 20
+    name: Fish
+    requirements:
+      improvements:
+      - fishingBoats
+      placement:
+        terrain:
+        - coastAndLake
+    type: bonus
+    yield:
+      food: 1
+  rice:
+    harvest:
+      technology: pottery
+      yield:
+        food: 20
+    name: Rice
+    requirements:
+      improvements:
+      - farm
+      placement:
+        feature:
+        - marsh
+        terrain:
+        - grassland
+    type: bonus
+    yield:
+      food: 1
+  sheep:
+    harvest:
+      technology: animalHusbandry
+      yield:
+        food: 20
+    name: Sheep
+    requirements:
+      improvements:
+      - pasture
+      placement:
+        terrain:
+        - desertHills
+          grasslandHills
+          plainsHills
+          tundraHills
+    type: bonus
+    yield:
+      food: 1
+  stone:
+    harvest:
+      technology: masonry
+      yield:
+        production: 20
+    name: Stone
+    requirements:
+      improvements:
+      - quarry
+      placement:
+        terrain:
+        - grassland
+          grasslandHills
+    type: bonus
+    yield:
+      production: 1
+  wheat:
+    harvest:
+      technology: pottery
+      yield:
+        food: 20
+    name: Wheat
+    requirements:
+      improvements:
+      - farm
+      placement:
+        feature:
+        - floodplains
+        terrain:
+        - plains
+    type: bonus
+    yield:
+      food: 1  
+        

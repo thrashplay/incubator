@@ -1,0 +1,91 @@
+resources:
+  cinnamon:
+    name: Cinnamon
+    type: luxury
+  citrus:
+    name: Citrus
+    type: luxury
+  cloves:
+    name: Cloves
+    type: luxury
+  cocoa:
+    name: Cocoa
+    type: luxury
+  coffee:
+    name: Coffee
+    type: luxury
+  cosmetics:
+    name: Cosmetics
+    type: luxury
+  cotton:
+    name: Cotton
+    type: luxury
+  diamonds:
+    name: Diamonds
+    type: luxury
+  dyes:
+    name: Dyes
+    type: luxury
+  furs:
+    name: Furs
+    type: luxury
+  gypsum:
+    name: Gypsum
+    type: luxury
+  incense:
+    name: Incense
+    type: luxury
+  ivory:
+    name: Ivory
+    type: luxury
+  jade:
+    name: Jade
+    type: luxury
+  jeans:
+    name: Jeans
+    type: luxury
+  marble:
+    name: Marble
+    type: luxury
+  mercury:
+    name: Mercury
+    type: luxury
+  pearls:
+    name: Pearls
+    type: luxury
+  perfume:
+    name: Perfume
+    type: luxury
+  salt:
+    name: Salt
+    type: luxury
+  silk:
+    name: Silk
+    type: luxury
+  silver:
+    name: Silver
+    type: luxury
+  spices:
+    name: Spices
+    type: luxury
+  sugar:
+    name: Sugar
+    type: luxury
+  tea:
+    name: Tea
+    type: luxury
+  tobacco:
+    name: Tobacco
+    type: luxury
+  toys:
+    name: Toys
+    type: luxury
+  truffles:
+    name: Truffles
+    type: luxury
+  whales:
+    name: Whales
+    type: luxury
+  wine:
+    name: Wine
+    type: luxury

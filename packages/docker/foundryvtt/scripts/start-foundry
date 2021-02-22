@@ -1,0 +1,49 @@
+#!/bin/sh
+# shellcheck disable=SC2039
+# busybox supports more features than POSIX /bin/sh
+
+set -o nounset
+set -o errexit
+set -o pipefail
+
+DATA_DIR="/srv/foundryvtt"
+CONFIG_DIR="${DATA_DIR}/Config"
+ADMIN_KEY_FILE="${CONFIG_DIR}/admin.txt"
+CONFIG_FILE="${CONFIG_DIR}/options.json"
+LICENSE_FILE="${CONFIG_DIR}/license.json"
+
+echo "Ensuring ${CONFIG_DIR} directory exists."
+mkdir -p "${CONFIG_DIR}"
+
+# Save admin access key to file if set.  Delete file if unset.
+if [[ "${FOUNDRY_ADMIN_PASSWORD_FILE:-}" && -f "${FOUNDRY_ADMIN_PASSWORD_FILE:-}" ]]; then
+  echo "Setting admin access key from: ${FOUNDRY_ADMIN_PASSWORD_FILE}"
+  cat "${FOUNDRY_ADMIN_PASSWORD_FILE}" | ./encrypt-admin-password.js > "${ADMIN_KEY_FILE}"
+else
+  echo "No Admin Access Key has been configured."
+  rm "${ADMIN_KEY_FILE}" >& /dev/null || true
+fi
+
+# Save default options to file if set.  Delete file if unset.
+if [[ "${FOUNDRY_OPTIONS_FILE:-}" && -f "${FOUNDRY_OPTIONS_FILE:-}" ]]; then
+  echo "Setting options from: ${FOUNDRY_OPTIONS_FILE}"
+  cp "${FOUNDRY_OPTIONS_FILE}" "${CONFIG_FILE}"
+else
+  echo "No options set, using default."
+  rm "${CONFIG_FILE}" >& /dev/null || true
+fi
+
+# Create license file
+if [[ "${FOUNDRY_LICENSE_KEY_FILE:-}" && -f "${FOUNDRY_LICENSE_KEY_FILE:-}" ]]; then
+  echo "Setting license key from: ${FOUNDRY_LICENSE_KEY_FILE}"
+  cp "${FOUNDRY_LICENSE_KEY_FILE}" "${LICENSE_FILE}"
+else
+  echo "No license specified. Set FOUNDRY_LICENSE_KEY_FILE to pre-authorize a license."
+  rm "${LICENSE_FILE}" >& /dev/null || true
+fi
+
+echo "Using Foundry options: --noupdate --dataPath=${DATA_DIR} $@"
+echo "Starting Foundry Virtual Tabletop."
+
+# Spawn node with clean environment to prevent credential leaks
+env -i HOME="$HOME" node "app/resources/app/main.js" --noupdate "--dataPath=${DATA_DIR}" "$@"

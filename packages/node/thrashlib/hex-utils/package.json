@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@babel/runtime": "7.6.2",
-    "lodash": "4.17.20",
+    "lodash": "4.17.21",
     "transformation-matrix": "2.4.0"
   }
 }

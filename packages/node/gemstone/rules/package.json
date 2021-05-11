@@ -16,6 +16,6 @@
   "dependencies": {
     "@babel/runtime": "7.6.2",
     "@thrashplay/gemstone-document-reader": "0.0.1",
-    "lodash": "4.17.20"
+    "lodash": "4.17.21"
   }
 }

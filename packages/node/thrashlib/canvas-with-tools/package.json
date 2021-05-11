@@ -16,7 +16,7 @@
   "dependencies": {
     "@babel/runtime": "7.6.2",
     "@thrashplay/math": "0.0.1",
-    "lodash": "4.17.20",
+    "lodash": "4.17.21",
     "transformation-matrix": "2.4.0"
   },
   "peerDependencies": {

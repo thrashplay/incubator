@@ -134,7 +134,7 @@
     "jest": "24.9.0",
     "jest-enzyme": "7.1.2",
     "jest-extended": "0.11.5",
-    "jsdom": "16.2.2",
+    "jsdom": "16.5.0",
     "lerna": "3.20.2",
     "lint-staged": "9.3.0",
     "lodash": "4.17.20",
